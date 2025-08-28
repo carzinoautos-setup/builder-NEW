@@ -83,6 +83,7 @@ export default function Index() {
     transmissionSpeed: true,
     exteriorColor: true,
     interiorColor: true,
+    sellerType: true,
     dealer: true,
     state: true,
     city: true
