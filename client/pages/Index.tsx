@@ -308,43 +308,255 @@ export default function Index() {
     { name: "Wagon", count: 43 }
   ];
 
-  const allMakes = [
-    { name: "Audi", count: 143 },
-    { name: "BMW", count: 189 },
-    { name: "Chevrolet", count: 287 },
-    { name: "Ford", count: 523 },
-    { name: "Honda", count: 234 },
-    { name: "Hyundai", count: 176 },
-    { name: "Mercedes-Benz", count: 156 },
-    { name: "Nissan", count: 198 },
-    { name: "Subaru", count: 122 },
-    { name: "Tesla", count: 45 },
-    { name: "Toyota", count: 412 },
-    { name: "Volkswagen", count: 134 }
-  ];
+  // Make-to-Model mapping for conditional filtering
+  const vehicleDatabase = {
+    "Audi": {
+      count: 143,
+      models: [
+        { name: "A3", count: 15 },
+        { name: "A4", count: 38 },
+        { name: "A6", count: 22 },
+        { name: "Q5", count: 31 },
+        { name: "Q7", count: 18 },
+        { name: "Q8", count: 19 }
+      ],
+      trims: [
+        { name: "Premium", count: 45 },
+        { name: "Premium Plus", count: 38 },
+        { name: "Prestige", count: 32 },
+        { name: "S Line", count: 28 }
+      ]
+    },
+    "BMW": {
+      count: 189,
+      models: [
+        { name: "3 Series", count: 67 },
+        { name: "5 Series", count: 43 },
+        { name: "X3", count: 34 },
+        { name: "X5", count: 28 },
+        { name: "X7", count: 17 }
+      ],
+      trims: [
+        { name: "Base", count: 52 },
+        { name: "Sport", count: 48 },
+        { name: "Luxury", count: 41 },
+        { name: "M Package", count: 48 }
+      ]
+    },
+    "Chevrolet": {
+      count: 287,
+      models: [
+        { name: "Silverado", count: 98 },
+        { name: "Equinox", count: 56 },
+        { name: "Malibu", count: 43 },
+        { name: "Traverse", count: 38 },
+        { name: "Camaro", count: 32 },
+        { name: "Tahoe", count: 20 }
+      ],
+      trims: [
+        { name: "Base", count: 87 },
+        { name: "LT", count: 95 },
+        { name: "LTZ", count: 62 },
+        { name: "Premier", count: 43 }
+      ]
+    },
+    "Ford": {
+      count: 523,
+      models: [
+        { name: "F-150", count: 156 },
+        { name: "Escape", count: 87 },
+        { name: "Explorer", count: 76 },
+        { name: "Mustang", count: 64 },
+        { name: "Edge", count: 53 },
+        { name: "Expedition", count: 42 },
+        { name: "Ranger", count: 45 }
+      ],
+      trims: [
+        { name: "Base", count: 134 },
+        { name: "XLT", count: 156 },
+        { name: "Lariat", count: 123 },
+        { name: "Limited", count: 78 },
+        { name: "Platinum", count: 32 }
+      ]
+    },
+    "Honda": {
+      count: 234,
+      models: [
+        { name: "Civic", count: 89 },
+        { name: "Accord", count: 67 },
+        { name: "CR-V", count: 45 },
+        { name: "Pilot", count: 23 },
+        { name: "HR-V", count: 10 }
+      ],
+      trims: [
+        { name: "LX", count: 78 },
+        { name: "EX", count: 89 },
+        { name: "EX-L", count: 45 },
+        { name: "Touring", count: 22 }
+      ]
+    },
+    "Hyundai": {
+      count: 176,
+      models: [
+        { name: "Elantra", count: 54 },
+        { name: "Sonata", count: 43 },
+        { name: "Tucson", count: 38 },
+        { name: "Santa Fe", count: 25 },
+        { name: "Palisade", count: 16 }
+      ],
+      trims: [
+        { name: "SE", count: 56 },
+        { name: "SEL", count: 67 },
+        { name: "Limited", count: 53 }
+      ]
+    },
+    "Mercedes-Benz": {
+      count: 156,
+      models: [
+        { name: "C-Class", count: 45 },
+        { name: "E-Class", count: 34 },
+        { name: "GLC", count: 28 },
+        { name: "GLE", count: 23 },
+        { name: "S-Class", count: 15 },
+        { name: "A-Class", count: 11 }
+      ],
+      trims: [
+        { name: "Base", count: 43 },
+        { name: "Premium", count: 54 },
+        { name: "AMG", count: 34 },
+        { name: "Luxury", count: 25 }
+      ]
+    },
+    "Nissan": {
+      count: 198,
+      models: [
+        { name: "Altima", count: 76 },
+        { name: "Sentra", count: 45 },
+        { name: "Rogue", count: 38 },
+        { name: "Pathfinder", count: 23 },
+        { name: "Murano", count: 16 }
+      ],
+      trims: [
+        { name: "S", count: 67 },
+        { name: "SV", count: 78 },
+        { name: "SL", count: 34 },
+        { name: "Platinum", count: 19 }
+      ]
+    },
+    "Subaru": {
+      count: 122,
+      models: [
+        { name: "Outback", count: 52 },
+        { name: "Forester", count: 34 },
+        { name: "Impreza", count: 21 },
+        { name: "Ascent", count: 15 }
+      ],
+      trims: [
+        { name: "Base", count: 34 },
+        { name: "Premium", count: 43 },
+        { name: "Limited", count: 28 },
+        { name: "Touring", count: 17 }
+      ]
+    },
+    "Tesla": {
+      count: 45,
+      models: [
+        { name: "Model 3", count: 23 },
+        { name: "Model Y", count: 12 },
+        { name: "Model S", count: 6 },
+        { name: "Model X", count: 4 }
+      ],
+      trims: [
+        { name: "Standard Range", count: 15 },
+        { name: "Long Range", count: 18 },
+        { name: "Performance", count: 12 }
+      ]
+    },
+    "Toyota": {
+      count: 412,
+      models: [
+        { name: "Camry", count: 134 },
+        { name: "Corolla", count: 89 },
+        { name: "RAV4", count: 76 },
+        { name: "Highlander", count: 54 },
+        { name: "Prius", count: 32 },
+        { name: "Tacoma", count: 27 }
+      ],
+      trims: [
+        { name: "L", count: 89 },
+        { name: "LE", count: 123 },
+        { name: "XLE", count: 98 },
+        { name: "Limited", count: 67 },
+        { name: "Platinum", count: 35 }
+      ]
+    },
+    "Volkswagen": {
+      count: 134,
+      models: [
+        { name: "Jetta", count: 43 },
+        { name: "Passat", count: 32 },
+        { name: "Tiguan", count: 28 },
+        { name: "Atlas", count: 19 },
+        { name: "Golf", count: 12 }
+      ],
+      trims: [
+        { name: "S", count: 45 },
+        { name: "SE", count: 54 },
+        { name: "SEL", count: 35 }
+      ]
+    }
+  };
 
-  const allModels = [
-    { name: "3 Series", count: 67 },
-    { name: "A4", count: 38 },
-    { name: "Altima", count: 76 },
-    { name: "C-Class", count: 45 },
-    { name: "Camry", count: 134 },
-    { name: "Civic", count: 89 },
-    { name: "Elantra", count: 54 },
-    { name: "F-150", count: 156 },
-    { name: "Jetta", count: 43 },
-    { name: "Model 3", count: 23 },
-    { name: "Outback", count: 52 },
-    { name: "Silverado", count: 98 }
-  ];
+  const allMakes = Object.entries(vehicleDatabase).map(([name, data]) => ({
+    name,
+    count: data.count
+  }));
 
-  const allTrims = [
-    { name: "Base", count: 234 },
-    { name: "EX", count: 89 },
-    { name: "Limited", count: 145 },
-    { name: "Premium", count: 178 },
-    { name: "Sport", count: 134 }
-  ];
+  // Get conditional models based on selected makes
+  const getAvailableModels = () => {
+    if (appliedFilters.make.length === 0) {
+      // If no makes selected, show all models
+      return Object.values(vehicleDatabase).flatMap(makeData =>
+        makeData.models.map(model => ({ ...model, make: Object.keys(vehicleDatabase).find(key => vehicleDatabase[key] === makeData) }))
+      );
+    }
+
+    // Show only models for selected makes
+    return appliedFilters.make.flatMap(selectedMake =>
+      vehicleDatabase[selectedMake]?.models.map(model => ({ ...model, make: selectedMake })) || []
+    );
+  };
+
+  // Get conditional trims based on selected makes and models
+  const getAvailableTrims = () => {
+    if (appliedFilters.make.length === 0) {
+      // If no makes selected, show all trims
+      return Object.values(vehicleDatabase).flatMap(makeData => makeData.trims);
+    }
+
+    // Show only trims for selected makes
+    const availableTrims: { name: string; count: number; }[] = [];
+    appliedFilters.make.forEach(selectedMake => {
+      if (vehicleDatabase[selectedMake]) {
+        availableTrims.push(...vehicleDatabase[selectedMake].trims);
+      }
+    });
+
+    // Remove duplicates and combine counts
+    const trimMap = new Map();
+    availableTrims.forEach(trim => {
+      if (trimMap.has(trim.name)) {
+        trimMap.set(trim.name, { name: trim.name, count: trimMap.get(trim.name).count + trim.count });
+      } else {
+        trimMap.set(trim.name, trim);
+      }
+    });
+
+    return Array.from(trimMap.values());
+  };
+
+  const availableModels = getAvailableModels();
+  const availableTrims = getAvailableTrims();
 
   const exteriorColors = [
     { name: "White", count: 9427, color: "#FFFFFF" },
