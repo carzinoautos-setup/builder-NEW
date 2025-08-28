@@ -20,37 +20,17 @@ interface Vehicle {
 
 interface VehicleCardProps {
   vehicle: Vehicle;
-  currentImageIndex: { [key: number]: number };
-  setCurrentImageIndex: React.Dispatch<React.SetStateAction<{ [key: number]: number }>>;
   favorites: { [key: number]: Vehicle };
   onToggleFavorite: (vehicle: Vehicle) => void;
   keeperMessage: number | null;
 }
 
-export const VehicleCard: React.FC<VehicleCardProps> = ({ 
-  vehicle, 
-  currentImageIndex, 
-  setCurrentImageIndex, 
-  favorites, 
-  onToggleFavorite, 
-  keeperMessage 
+export const VehicleCard: React.FC<VehicleCardProps> = ({
+  vehicle,
+  favorites,
+  onToggleFavorite,
+  keeperMessage
 }) => {
-  const currentIndex = currentImageIndex[vehicle.id] || 0;
-  const totalImages = vehicle.images?.length || 1;
-
-  const nextImage = () => {
-    setCurrentImageIndex(prev => ({
-      ...prev,
-      [vehicle.id]: (currentIndex + 1) % totalImages
-    }));
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex(prev => ({
-      ...prev,
-      [vehicle.id]: currentIndex === 0 ? totalImages - 1 : currentIndex - 1
-    }));
-  };
 
   const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
 
