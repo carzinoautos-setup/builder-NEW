@@ -531,6 +531,10 @@ export default function Index() {
         { name: "Pathfinder", count: 23 },
         { name: "Murano", count: 16 }
       ],
+      bodyTypes: [
+        { name: "Sedan", count: 121 },
+        { name: "SUV / Crossover", count: 77 }
+      ],
       trims: [
         { name: "S", count: 67 },
         { name: "SV", count: 78 },
