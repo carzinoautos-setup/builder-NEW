@@ -36,7 +36,6 @@ export default function Index() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [sortBy, setSortBy] = useState('relevance');
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: number]: number }>({});
   const [viewMode, setViewMode] = useState('all');
   const [favorites, setFavorites] = useState<{ [key: number]: Vehicle }>({});
   const [keeperMessage, setKeeperMessage] = useState<number | null>(null);
@@ -2109,11 +2108,9 @@ export default function Index() {
                 <div>
                   <div className="vehicle-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                     {displayedVehicles.map((vehicle) => (
-                      <VehicleCard 
-                        key={vehicle.id} 
-                        vehicle={vehicle} 
-                        currentImageIndex={currentImageIndex}
-                        setCurrentImageIndex={setCurrentImageIndex}
+                      <VehicleCard
+                        key={vehicle.id}
+                        vehicle={vehicle}
                         favorites={favorites}
                         onToggleFavorite={toggleFavorite}
                         keeperMessage={keeperMessage}
@@ -2212,11 +2209,9 @@ export default function Index() {
               <div>
                 <div className="vehicle-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                   {displayedVehicles.map((vehicle) => (
-                    <VehicleCard 
-                      key={vehicle.id} 
-                      vehicle={vehicle} 
-                      currentImageIndex={currentImageIndex}
-                      setCurrentImageIndex={setCurrentImageIndex}
+                    <VehicleCard
+                      key={vehicle.id}
+                      vehicle={vehicle}
                       favorites={favorites}
                       onToggleFavorite={toggleFavorite}
                       keeperMessage={keeperMessage}
