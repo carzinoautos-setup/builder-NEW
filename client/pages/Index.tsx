@@ -383,6 +383,10 @@ export default function Index() {
         { name: "Q7", count: 18 },
         { name: "Q8", count: 19 }
       ],
+      bodyTypes: [
+        { name: "Sedan", count: 75 },
+        { name: "SUV / Crossover", count: 68 }
+      ],
       trims: [
         { name: "Premium", count: 45 },
         { name: "Premium Plus", count: 38 },
