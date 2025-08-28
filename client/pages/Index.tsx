@@ -1,61 +1,1673 @@
-import { DemoResponse } from "@shared/api";
-import { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, Gauge, Settings, ChevronDown, X, Heart, Sliders, Check } from 'lucide-react';
+import { VehicleCard } from '@/components/VehicleCard';
+import { FilterSection } from '@/components/FilterSection';
+import { VehicleTypeCard } from '@/components/VehicleTypeCard';
+import { Pagination } from '@/components/Pagination';
+
+interface Vehicle {
+  id: number;
+  featured: boolean;
+  viewed: boolean;
+  images: string[];
+  badges: string[];
+  title: string;
+  mileage: string;
+  transmission: string;
+  doors: string;
+  salePrice: string | null;
+  payment: string | null;
+  dealer: string;
+  location: string;
+  phone: string;
+}
 
 export default function Index() {
-  const [exampleFromServer, setExampleFromServer] = useState("");
-  // Fetch users on component mount
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 47;
+  const totalResults = 8527;
+  const resultsPerPage = 25;
+  const [showMoreMakes, setShowMoreMakes] = useState(false);
+  const [showMoreModels, setShowMoreModels] = useState(false);
+  const [showMoreTrims, setShowMoreTrims] = useState(false);
+  const [zipCode, setZipCode] = useState('');
+  const [radius, setRadius] = useState('10');
+  const [vehicleImages, setVehicleImages] = useState<{ [key: string]: string }>({});
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [sortBy, setSortBy] = useState('relevance');
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: number]: number }>({});
+  const [viewMode, setViewMode] = useState('all');
+  const [favorites, setFavorites] = useState<{ [key: number]: Vehicle }>({});
+  const [keeperMessage, setKeeperMessage] = useState<number | null>(null);
+  
+  // Price range state
+  const [priceMin, setPriceMin] = useState('');
+  const [priceMax, setPriceMax] = useState('');
+  
+  // Payment range state  
+  const [paymentMin, setPaymentMin] = useState('');
+  const [paymentMax, setPaymentMax] = useState('');
+  
+  // Payment calculator state
+  const [termLength, setTermLength] = useState('72');
+  const [interestRate, setInterestRate] = useState('8');
+  const [downPayment, setDownPayment] = useState('2000');
+  
+  // Applied filters state
+  const [appliedFilters, setAppliedFilters] = useState({
+    condition: ['New'],
+    make: ['Audi'],
+    model: [] as string[],
+    trim: [] as string[],
+    vehicleType: [] as string[],
+    driveType: [] as string[],
+    mileage: '',
+    exteriorColor: [] as string[],
+    priceMin: '',
+    priceMax: '',
+    paymentMin: '',
+    paymentMax: ''
+  });
+  
+  const [collapsedFilters, setCollapsedFilters] = useState({
+    vehicleType: true,
+    condition: false,
+    mileage: false,
+    make: false,
+    model: false,
+    trim: false,
+    price: false,
+    payment: false,
+    driveType: false,
+    transmissionSpeed: true,
+    exteriorColor: true,
+    interiorColor: true,
+    dealer: true,
+    state: true,
+    city: true
+  });
+
+  // Sample vehicle data
+  const sampleVehicles: Vehicle[] = [
+    {
+      id: 1,
+      featured: true,
+      viewed: true,
+      images: [
+        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop",
+        "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=450&h=300&fit=crop",
+        "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=450&h=300&fit=crop",
+        "https://images.unsplash.com/photo-1580414155477-c81e8ce44a14?w=450&h=300&fit=crop"
+      ],
+      badges: ["New", "4WD"],
+      title: "2025 Ford F-150 Lariat SuperCrew",
+      mileage: "8",
+      transmission: "Auto",
+      doors: "4 doors",
+      salePrice: "$67,899",
+      payment: "$789",
+      dealer: "Bayside Ford",
+      location: "Lakewood, WA",
+      phone: "(253) 555-0123"
+    },
+    {
+      id: 2,
+      featured: false,
+      viewed: false,
+      images: [
+        "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=450&h=300&fit=crop",
+        "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=450&h=300&fit=crop"
+      ],
+      badges: ["Used", "AWD"],
+      title: "2024 Tesla Model 3 Long Range",
+      mileage: "2,847",
+      transmission: "Auto",
+      doors: "4 doors",
+      salePrice: null,
+      payment: null,
+      dealer: "Premium Auto Group",
+      location: "Tacoma, WA",
+      phone: "(253) 555-0187"
+    },
+    {
+      id: 3,
+      featured: false,
+      viewed: true,
+      images: [
+        "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=450&h=300&fit=crop"
+      ],
+      badges: ["New", "AWD"],
+      title: "2024 Honda CR-V Hybrid EX-L",
+      mileage: "15",
+      transmission: "CVT",
+      doors: "4 doors",
+      salePrice: "$39,899",
+      payment: "$489",
+      dealer: "Downtown Honda",
+      location: "Federal Way, WA",
+      phone: "(253) 555-0156"
+    },
+    {
+      id: 4,
+      featured: false,
+      viewed: false,
+      images: [
+        "https://images.unsplash.com/photo-1563720223185-11003d516935?w=450&h=300&fit=crop"
+      ],
+      badges: ["Used", "FWD"],
+      title: "2023 Toyota Camry LE",
+      mileage: "12,450",
+      transmission: "Auto",
+      doors: "4 doors",
+      salePrice: "$28,500",
+      payment: "$395",
+      dealer: "City Toyota",
+      location: "Seattle, WA",
+      phone: "(206) 555-0198"
+    },
+    {
+      id: 5,
+      featured: true,
+      viewed: true,
+      images: [
+        "https://images.unsplash.com/photo-1494976793431-05c5c2b1b1b1?w=450&h=300&fit=crop"
+      ],
+      badges: ["Certified", "AWD"],
+      title: "2022 BMW X3 xDrive30i",
+      mileage: "18,920",
+      transmission: "Auto",
+      doors: "4 doors",
+      salePrice: null,
+      payment: null,
+      dealer: "Luxury Motors",
+      location: "Bellevue, WA",
+      phone: "(425) 555-0234"
+    },
+    {
+      id: 6,
+      featured: false,
+      viewed: false,
+      images: [
+        "https://images.unsplash.com/photo-1550355191-aa8a80b41353?w=450&h=300&fit=crop"
+      ],
+      badges: ["New", "RWD"],
+      title: "2025 Chevrolet Silverado 1500 LT",
+      mileage: "5",
+      transmission: "Auto",
+      doors: "4 doors",
+      salePrice: "$45,995",
+      payment: "$599",
+      dealer: "Northwest Chevrolet",
+      location: "Everett, WA",
+      phone: "(425) 555-0267"
+    }
+  ];
+
   useEffect(() => {
-    fetchDemo();
+    const savedFavorites = JSON.parse(localStorage.getItem('carzino_favorites') || '{}');
+    setFavorites(savedFavorites);
   }, []);
 
-  // Example of how to fetch data from the server (if needed)
-  const fetchDemo = async () => {
-    try {
-      const response = await fetch("/api/demo");
-      const data = (await response.json()) as DemoResponse;
-      setExampleFromServer(data.message);
-    } catch (error) {
-      console.error("Error fetching hello:", error);
-    }
+  const saveFavorites = (newFavorites: { [key: number]: Vehicle }) => {
+    setFavorites(newFavorites);
+    localStorage.setItem('carzino_favorites', JSON.stringify(newFavorites));
   };
 
+  const toggleFavorite = (vehicle: Vehicle) => {
+    const newFavorites = { ...favorites };
+    const wasAlreadyFavorited = !!newFavorites[vehicle.id];
+    
+    if (wasAlreadyFavorited) {
+      delete newFavorites[vehicle.id];
+    } else {
+      newFavorites[vehicle.id] = vehicle;
+      setKeeperMessage(vehicle.id);
+      setTimeout(() => setKeeperMessage(null), 2000);
+    }
+    saveFavorites(newFavorites);
+  };
+
+  const getDisplayedVehicles = () => {
+    if (viewMode === 'favorites') {
+      return Object.values(favorites);
+    }
+    return sampleVehicles;
+  };
+
+  const displayedVehicles = getDisplayedVehicles();
+  const favoritesCount = Object.keys(favorites).length;
+
+  useEffect(() => {
+    const loadImages = async () => {
+      const imageMapping = {
+        'Convertible': 'https://via.placeholder.com/80x60/f3f4f6/6b7280?text=Convertible',
+        'Coupe': 'https://via.placeholder.com/80x60/f3f4f6/6b7280?text=Coupe',
+        'Hatchback': 'https://via.placeholder.com/80x60/f3f4f6/6b7280?text=Hatchback',
+        'Sedan': 'https://via.placeholder.com/80x60/f3f4f6/6b7280?text=Sedan',
+        'SUV / Crossover': 'https://via.placeholder.com/80x60/f3f4f6/6b7280?text=SUV',
+        'Truck': 'https://via.placeholder.com/80x60/f3f4f6/6b7280?text=Truck',
+        'Van / Minivan': 'https://via.placeholder.com/80x60/f3f4f6/6b7280?text=Van',
+        'Wagon': 'https://via.placeholder.com/80x60/f3f4f6/6b7280?text=Wagon'
+      };
+
+      const loadedImages: { [key: string]: string } = {};
+      
+      for (const [vehicleType, imageUrl] of Object.entries(imageMapping)) {
+        loadedImages[vehicleType] = imageUrl;
+      }
+      
+      setVehicleImages(loadedImages);
+    };
+
+    loadImages();
+  }, []);
+
+  const toggleFilter = (filterName: string) => {
+    setCollapsedFilters(prev => ({
+      ...prev,
+      [filterName]: !prev[filterName]
+    }));
+  };
+
+  const removeAppliedFilter = (category: string, value: string) => {
+    setAppliedFilters(prev => ({
+      ...prev,
+      [category]: (prev[category as keyof typeof prev] as string[]).filter((item: string) => item !== value)
+    }));
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters({
+      condition: [],
+      make: [],
+      model: [],
+      trim: [],
+      vehicleType: [],
+      driveType: [],
+      mileage: '',
+      exteriorColor: [],
+      priceMin: '',
+      priceMax: '',
+      paymentMin: '',
+      paymentMax: ''
+    });
+    setPriceMin('10000');
+    setPriceMax('100000');
+  };
+
+  // Vehicle data
+  const bodyTypes = [
+    { name: "Convertible", count: 196 },
+    { name: "Coupe", count: 419 },
+    { name: "Hatchback", count: 346 },
+    { name: "Sedan", count: 1698 },
+    { name: "SUV / Crossover", count: 3405 },
+    { name: "Truck", count: 2217 },
+    { name: "Van / Minivan", count: 203 },
+    { name: "Wagon", count: 43 }
+  ];
+
+  const allMakes = [
+    { name: "Audi", count: 143 },
+    { name: "BMW", count: 189 },
+    { name: "Chevrolet", count: 287 },
+    { name: "Ford", count: 523 },
+    { name: "Honda", count: 234 },
+    { name: "Hyundai", count: 176 },
+    { name: "Mercedes-Benz", count: 156 },
+    { name: "Nissan", count: 198 },
+    { name: "Subaru", count: 122 },
+    { name: "Tesla", count: 45 },
+    { name: "Toyota", count: 412 },
+    { name: "Volkswagen", count: 134 }
+  ];
+
+  const allModels = [
+    { name: "3 Series", count: 67 },
+    { name: "A4", count: 38 },
+    { name: "Altima", count: 76 },
+    { name: "C-Class", count: 45 },
+    { name: "Camry", count: 134 },
+    { name: "Civic", count: 89 },
+    { name: "Elantra", count: 54 },
+    { name: "F-150", count: 156 },
+    { name: "Jetta", count: 43 },
+    { name: "Model 3", count: 23 },
+    { name: "Outback", count: 52 },
+    { name: "Silverado", count: 98 }
+  ];
+
+  const allTrims = [
+    { name: "Base", count: 234 },
+    { name: "EX", count: 89 },
+    { name: "Limited", count: 145 },
+    { name: "Premium", count: 178 },
+    { name: "Sport", count: 134 }
+  ];
+
+  const exteriorColors = [
+    { name: "White", count: 9427, color: "#FFFFFF" },
+    { name: "Black", count: 8363, color: "#000000" },
+    { name: "Gray", count: 7502, color: "#808080" },
+    { name: "Silver", count: 5093, color: "#C0C0C0" },
+    { name: "Blue", count: 4266, color: "#0066CC" },
+    { name: "Red", count: 3436, color: "#CC0000" }
+  ];
+
+  const interiorColors = [
+    { name: "Black", count: 12363, color: "#000000" },
+    { name: "Gray", count: 8502, color: "#808080" },
+    { name: "Beige", count: 3160, color: "#F5F5DC" },
+    { name: "Brown", count: 2353, color: "#8B4513" }
+  ];
+
+  const displayedMakes = showMoreMakes ? allMakes : allMakes.slice(0, 8);
+  const displayedModels = showMoreModels ? allModels : allModels.slice(0, 8);
+  const displayedTrims = showMoreTrims ? allTrims : allTrims.slice(0, 8);
+
+  const ColorSwatch = ({ color, name, count }: { color: string; name: string; count: number }) => (
+    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+      <input type="checkbox" className="mr-2" />
+      <div 
+        className="w-4 h-4 rounded border border-gray-300 mr-2" 
+        style={{ backgroundColor: color }}
+      ></div>
+      <span className="carzino-filter-option">{name}</span>
+      <span className="carzino-filter-count ml-1">({count})</span>
+    </label>
+  );
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="text-center">
-        {/* TODO: FUSION_GENERATION_APP_PLACEHOLDER replace everything here with the actual app! */}
-        <h1 className="text-2xl font-semibold text-slate-800 flex items-center justify-center gap-3">
-          <svg
-            className="animate-spin h-8 w-8 text-slate-400"
-            viewBox="0 0 50 50"
-          >
-            <circle
-              className="opacity-30"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-            />
-            <circle
-              className="text-slate-600"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-              strokeDasharray="100"
-              strokeDashoffset="75"
-            />
-          </svg>
-          Generating your app...
-        </h1>
-        <p className="mt-4 text-slate-600 max-w-md">
-          Watch the chat on the left for updates that might need your attention
-          to finish generating
-        </p>
-        <p className="mt-4 hidden max-w-md">{exampleFromServer}</p>
+    <div className="min-h-screen bg-white main-container" style={{ fontFamily: 'Albert Sans, sans-serif' }}>
+      <style>{`
+        :root {
+          --carzino-featured-badge: 12px;
+          --carzino-badge-label: 12px;
+          --carzino-vehicle-title: 16px;
+          --carzino-vehicle-details: 12px;
+          --carzino-price-label: 12px;
+          --carzino-price-value: 16px;
+          --carzino-dealer-info: 10px;
+          --carzino-image-counter: 12px;
+          --carzino-filter-title: 16px;
+          --carzino-filter-option: 14px;
+          --carzino-filter-count: 14px;
+          --carzino-search-input: 14px;
+          --carzino-location-label: 14px;
+          --carzino-dropdown-option: 14px;
+          --carzino-vehicle-type-name: 12px;
+          --carzino-vehicle-type-count: 11px;
+          --carzino-show-more: 14px;
+        }
+
+        @media (max-width: 768px) {
+          :root {
+            --carzino-vehicle-title: 17px;
+            --carzino-price-value: 17px;
+            --carzino-dealer-info: 11px;
+            --carzino-filter-title: 17px;
+            --carzino-filter-option: 15px;
+            --carzino-filter-count: 15px;
+            --carzino-search-input: 15px;
+            --carzino-location-label: 15px;
+            --carzino-dropdown-option: 15px;
+            --carzino-vehicle-type-name: 13px;
+            --carzino-vehicle-type-count: 12px;
+            --carzino-show-more: 15px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          :root {
+            --carzino-featured-badge: 14px;
+            --carzino-badge-label: 14px;
+            --carzino-vehicle-title: 18px;
+            --carzino-vehicle-details: 13px;
+            --carzino-price-label: 14px;
+            --carzino-price-value: 18px;
+            --carzino-dealer-info: 12px;
+            --carzino-image-counter: 14px;
+            --carzino-filter-title: 18px;
+            --carzino-filter-option: 16px;
+            --carzino-filter-count: 16px;
+            --carzino-search-input: 16px;
+            --carzino-location-label: 16px;
+            --carzino-dropdown-option: 16px;
+            --carzino-vehicle-type-name: 14px;
+            --carzino-vehicle-type-count: 13px;
+            --carzino-show-more: 16px;
+          }
+        }
+
+        .carzino-featured-badge { font-size: var(--carzino-featured-badge) !important; font-weight: 500 !important; }
+        .carzino-badge-label { font-size: var(--carzino-badge-label) !important; font-weight: 500 !important; }
+        .carzino-vehicle-title { font-size: var(--carzino-vehicle-title) !important; font-weight: 600 !important; }
+        .carzino-vehicle-details { font-size: var(--carzino-vehicle-details) !important; font-weight: 400 !important; }
+        .carzino-price-label { font-size: var(--carzino-price-label) !important; font-weight: 400 !important; }
+        .carzino-price-value { font-size: var(--carzino-price-value) !important; font-weight: 700 !important; }
+        .carzino-dealer-info { font-size: 12px !important; font-weight: 500 !important; }
+        .carzino-image-counter { font-size: var(--carzino-image-counter) !important; font-weight: 400 !important; }
+        .carzino-filter-title { font-size: var(--carzino-filter-title) !important; font-weight: 600 !important; }
+        .carzino-filter-option { font-size: var(--carzino-filter-option) !important; font-weight: 400 !important; }
+        .carzino-filter-count { font-size: var(--carzino-filter-count) !important; font-weight: 400 !important; color: #6B7280 !important; }
+        .carzino-search-input { font-size: var(--carzino-search-input) !important; font-weight: 400 !important; }
+        .carzino-location-label { font-size: var(--carzino-location-label) !important; font-weight: 500 !important; }
+        .carzino-dropdown-option { font-size: var(--carzino-dropdown-option) !important; font-weight: 400 !important; }
+        .carzino-vehicle-type-name { font-size: var(--carzino-vehicle-type-name) !important; font-weight: 500 !important; }
+        .carzino-vehicle-type-count { font-size: var(--carzino-vehicle-type-count) !important; font-weight: 400 !important; color: #6B7280 !important; }
+        .carzino-show-more { font-size: var(--carzino-show-more) !important; font-weight: 500 !important; }
+
+        input[type="checkbox"] {
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #d1d5db;
+          border-radius: 3px;
+          background-color: white;
+          position: relative;
+          cursor: pointer;
+        }
+        
+        input[type="checkbox"]:hover {
+          border-color: #6b7280;
+          background-color: #f9fafb;
+        }
+        
+        input[type="checkbox"]:checked {
+          background-color: #dc2626;
+          border-color: #dc2626;
+        }
+        
+        input[type="checkbox"]:checked::after {
+          content: '✓';
+          position: absolute;
+          color: white;
+          font-size: 12px;
+          top: -2px;
+          left: 2px;
+        }
+
+        @media (max-width: 639px) {
+          .vehicle-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+          
+          .main-container {
+            padding: 0 !important;
+          }
+          
+          .vehicle-card {
+            border-radius: 8px !important;
+            margin: 0 12px !important;
+          }
+        }
+        
+        @media (min-width: 640px) and (max-width: 1023px) {
+          .vehicle-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 20px !important;
+          }
+        }
+        
+        @media (min-width: 1024px) {
+          .vehicle-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 24px !important;
+          }
+          
+          .main-container {
+            max-width: 1325px !important;
+            margin: 0 auto !important;
+          }
+        }
+
+        @media (max-width: 1023px) {
+          .mobile-filter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 35;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+          }
+          
+          .mobile-filter-overlay.open {
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .mobile-filter-sidebar {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background: white;
+            z-index: 40;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            display: block !important;
+            -webkit-overflow-scrolling: touch;
+          }
+          
+          .mobile-filter-sidebar.open {
+            transform: translateX(0);
+          }
+          
+          .mobile-chevron {
+            width: 22px !important;
+            height: 22px !important;
+          }
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+          outline: none;
+          border-color: #dc2626;
+        }
+
+        .filter-tag {
+          background-color: white;
+          border: 1px solid #e5e7eb;
+          color: #374151;
+        }
+
+        .filter-tag:hover .remove-x {
+          color: #dc2626;
+        }
+
+        .view-switcher {
+          display: inline-flex;
+          background: white;
+          border: 1px solid #e5e7eb;
+          border-radius: 6px;
+          padding: 2px;
+        }
+
+        .view-switcher button {
+          padding: 6px 12px;
+          border-radius: 4px;
+          font-size: 14px;
+          font-weight: 500;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .view-switcher button.active {
+          background: #dc2626;
+          color: white;
+        }
+
+        .view-switcher button:not(.active) {
+          background: transparent;
+          color: #6b7280;
+        }
+
+        .view-switcher button:not(.active):hover {
+          color: #374151;
+        }
+      `}</style>
+
+      <div className="flex flex-col lg:flex-row min-h-screen max-w-[1325px] mx-auto">
+        <div 
+          className={`mobile-filter-overlay lg:hidden ${mobileFiltersOpen ? 'open' : ''}`}
+          onClick={() => setMobileFiltersOpen(false)}
+        ></div>
+
+        {/* Sidebar - Hidden on mobile by default */}
+        <div 
+          className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block ${mobileFiltersOpen ? 'open' : ''}`} 
+          style={{ 
+            width: '280px', 
+            height: '100vh',
+            overflowY: 'auto',
+            overscrollBehavior: 'contain',
+            position: 'sticky',
+            top: 0
+          }}
+          onScroll={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <div className="lg:hidden flex justify-between items-center mb-4 pb-4 border-b px-4 pt-4">
+            <h2 className="text-lg font-semibold">Filters</h2>
+            <button 
+              onClick={() => setMobileFiltersOpen(false)}
+              className="p-2 text-gray-500 hover:text-gray-700"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="p-4">
+            {/* Search Section - Mobile Only */}
+            <div className="lg:hidden mb-4 pb-4 border-b border-gray-200">
+              <div className="relative mb-3">
+                <input
+                  type="text"
+                  placeholder="Search Vehicles"
+                  className="carzino-search-input w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:border-red-600"
+                />
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
+                  <Search className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Applied Filters in Mobile Filter Panel */}
+              {(appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 || appliedFilters.model.length > 0 || 
+                appliedFilters.trim.length > 0 || appliedFilters.driveType.length > 0 || appliedFilters.mileage || 
+                appliedFilters.exteriorColor.length > 0 || appliedFilters.priceMin || appliedFilters.priceMax || 
+                appliedFilters.paymentMin || appliedFilters.paymentMax) && (
+                <div className="flex flex-wrap gap-2">
+                  <button 
+                    onClick={clearAllFilters}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs"
+                  >
+                    Clear All
+                  </button>
+                  {appliedFilters.condition.map((item) => (
+                    <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button 
+                        onClick={() => removeAppliedFilter('condition', item)}
+                        className="ml-1 text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.make.map((item) => (
+                    <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button 
+                        onClick={() => removeAppliedFilter('make', item)}
+                        className="ml-1 text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Desktop Search Section */}
+            <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search Vehicles"
+                  className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
+                />
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
+                  <Search className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop Applied Filters */}
+            {(appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 || appliedFilters.model.length > 0 || 
+              appliedFilters.trim.length > 0 || appliedFilters.driveType.length > 0 || appliedFilters.mileage || 
+              appliedFilters.exteriorColor.length > 0 || appliedFilters.priceMin || appliedFilters.priceMax || 
+              appliedFilters.paymentMin || appliedFilters.paymentMax) && (
+              <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="carzino-filter-title">Applied Filters</h3>
+                  <button 
+                    onClick={clearAllFilters}
+                    className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium hover:bg-red-700"
+                  >
+                    Clear All
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {appliedFilters.condition.map((item) => (
+                    <span key={item} className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button 
+                        onClick={() => removeAppliedFilter('condition', item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.make.map((item) => (
+                    <span key={item} className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button 
+                        onClick={() => removeAppliedFilter('make', item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Distance */}
+            <div className="mb-4 pb-4 border border-gray-200 rounded-lg p-3">
+              <label className="carzino-location-label block mb-2">Distance</label>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  placeholder="ZIP Code"
+                  value={zipCode}
+                  onChange={(e) => setZipCode(e.target.value)}
+                  className="carzino-search-input w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none"
+                />
+                <select 
+                  value={radius}
+                  onChange={(e) => setRadius(e.target.value)}
+                  className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none"
+                >
+                  <option value="10">10 Miles</option>
+                  <option value="25">25 Miles</option>
+                  <option value="50">50 Miles</option>
+                  <option value="100">100 Miles</option>
+                  <option value="200">200 Miles</option>
+                  <option value="500">500 Miles</option>
+                  <option value="nationwide">Nationwide</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Make */}
+            <FilterSection 
+              title="Make"
+              isCollapsed={collapsedFilters.make}
+              onToggle={() => toggleFilter('make')}
+            >
+              <div className="space-y-1">
+                {displayedMakes.map((make, index) => (
+                  <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      className="mr-2" 
+                      checked={appliedFilters.make.includes(make.name)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setAppliedFilters(prev => ({
+                            ...prev,
+                            make: [...prev.make, make.name]
+                          }));
+                        } else {
+                          removeAppliedFilter('make', make.name);
+                        }
+                      }}
+                    />
+                    <span className="carzino-filter-option">{make.name}</span>
+                    <span className="carzino-filter-count ml-1">({make.count})</span>
+                  </label>
+                ))}
+                {allMakes.length > 8 && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setShowMoreMakes(!showMoreMakes);
+                    }}
+                    className="carzino-show-more text-red-600 hover:text-red-700 mt-1"
+                  >
+                    {showMoreMakes ? 'Show Less' : 'Show More'}
+                  </button>
+                )}
+              </div>
+            </FilterSection>
+
+            {/* Model */}
+            <FilterSection 
+              title="Model"
+              isCollapsed={collapsedFilters.model}
+              onToggle={() => toggleFilter('model')}
+            >
+              <div className="space-y-1">
+                {displayedModels.map((model, index) => (
+                  <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      className="mr-2"
+                      checked={appliedFilters.model.includes(model.name)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setAppliedFilters(prev => ({
+                            ...prev,
+                            model: [...prev.model, model.name]
+                          }));
+                        } else {
+                          removeAppliedFilter('model', model.name);
+                        }
+                      }}
+                    />
+                    <span className="carzino-filter-option">{model.name}</span>
+                    <span className="carzino-filter-count ml-1">({model.count})</span>
+                  </label>
+                ))}
+                {allModels.length > 8 && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setShowMoreModels(!showMoreModels);
+                    }}
+                    className="carzino-show-more text-red-600 hover:text-red-700 mt-1"
+                  >
+                    {showMoreModels ? 'Show Less' : 'Show More'}
+                  </button>
+                )}
+              </div>
+            </FilterSection>
+
+            {/* Trim */}
+            <FilterSection 
+              title="Trim"
+              isCollapsed={collapsedFilters.trim}
+              onToggle={() => toggleFilter('trim')}
+            >
+              <div className="space-y-1">
+                {displayedTrims.map((trim, index) => (
+                  <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      className="mr-2"
+                      checked={appliedFilters.trim.includes(trim.name)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setAppliedFilters(prev => ({
+                            ...prev,
+                            trim: [...prev.trim, trim.name]
+                          }));
+                        } else {
+                          removeAppliedFilter('trim', trim.name);
+                        }
+                      }}
+                    />
+                    <span className="carzino-filter-option">{trim.name}</span>
+                    <span className="carzino-filter-count ml-1">({trim.count})</span>
+                  </label>
+                ))}
+              </div>
+            </FilterSection>
+
+            {/* Filter by Price */}
+            <FilterSection 
+              title="Filter by Price"
+              isCollapsed={collapsedFilters.price}
+              onToggle={() => toggleFilter('price')}
+            >
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="$10,000"
+                    value={priceMin}
+                    onChange={(e) => {
+                      setPriceMin(e.target.value);
+                    }}
+                    onBlur={(e) => {
+                      setAppliedFilters(prev => ({ ...prev, priceMin: e.target.value }));
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="carzino-search-input w-1/2 px-2 py-1 border border-gray-300 rounded focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    placeholder="$100,000"
+                    value={priceMax}
+                    onChange={(e) => {
+                      setPriceMax(e.target.value);
+                    }}
+                    onBlur={(e) => {
+                      setAppliedFilters(prev => ({ ...prev, priceMax: e.target.value }));
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="carzino-search-input w-1/2 px-2 py-1 border border-gray-300 rounded focus:outline-none"
+                  />
+                </div>
+              </div>
+            </FilterSection>
+
+            {/* Search by Payment */}
+            <FilterSection 
+              title="Search by Payment"
+              isCollapsed={collapsedFilters.payment}
+              onToggle={() => toggleFilter('payment')}
+            >
+              <div className="space-y-3">
+                {/* Min/Max Payment Range */}
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                    <input
+                      type="text"
+                      placeholder="100"
+                      value={paymentMin}
+                      onChange={(e) => {
+                        setPaymentMin(e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        setAppliedFilters(prev => ({ ...prev, paymentMin: e.target.value }));
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
+                    />
+                    <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                  </div>
+                  <div className="relative flex-1">
+                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                    <input
+                      type="text"
+                      placeholder="2,000"
+                      value={paymentMax}
+                      onChange={(e) => {
+                        setPaymentMax(e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        setAppliedFilters(prev => ({ ...prev, paymentMax: e.target.value }));
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
+                    />
+                    <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                  </div>
+                </div>
+                
+                {/* Term Length and Interest Rate */}
+                <div className="flex gap-2">
+                  <select 
+                    value={termLength}
+                    onChange={(e) => {
+                      setTermLength(e.target.value);
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                  >
+                    <option value="24">24 Months</option>
+                    <option value="36">36 Months</option>
+                    <option value="48">48 Months</option>
+                    <option value="60">60 Months</option>
+                    <option value="72">72 Months</option>
+                    <option value="84">84 Months</option>
+                  </select>
+                  <select 
+                    value={interestRate}
+                    onChange={(e) => {
+                      setInterestRate(e.target.value);
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                  >
+                    <option value="0">0% APR</option>
+                    <option value="3">3% APR</option>
+                    <option value="4">4% APR</option>
+                    <option value="5">5% APR</option>
+                    <option value="6">6% APR</option>
+                    <option value="7">7% APR</option>
+                    <option value="8">8% APR</option>
+                    <option value="9">9% APR</option>
+                    <option value="10">10% APR</option>
+                    <option value="12">12% APR</option>
+                    <option value="16">16% APR</option>
+                  </select>
+                </div>
+                
+                {/* Down Payment */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Down Payment: $2,000"
+                    value={`Down Payment: ${downPayment}`}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^\d]/g, '');
+                      setDownPayment(value);
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="carzino-search-input w-full px-2 py-1.5 border border-gray-300 rounded focus:outline-none text-gray-500"
+                  />
+                </div>
+              </div>
+            </FilterSection>
+
+            {/* Condition */}
+            <FilterSection 
+              title="Condition"
+              isCollapsed={collapsedFilters.condition}
+              onToggle={() => toggleFilter('condition')}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="mr-2" 
+                    checked={appliedFilters.condition.includes('New')}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters(prev => ({
+                          ...prev,
+                          condition: [...prev.condition, 'New']
+                        }));
+                      } else {
+                        removeAppliedFilter('condition', 'New');
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }}
+                  />
+                  <span className="carzino-filter-option">New</span>
+                  <span className="carzino-filter-count ml-1">(125,989)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="mr-2"
+                    checked={appliedFilters.condition.includes('Used')}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters(prev => ({
+                          ...prev,
+                          condition: [...prev.condition, 'Used']
+                        }));
+                      } else {
+                        removeAppliedFilter('condition', 'Used');
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }}
+                  />
+                  <span className="carzino-filter-option">Used</span>
+                  <span className="carzino-filter-count ml-1">(78,800)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="mr-2"
+                    checked={appliedFilters.condition.includes('Certified')}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters(prev => ({
+                          ...prev,
+                          condition: [...prev.condition, 'Certified']
+                        }));
+                      } else {
+                        removeAppliedFilter('condition', 'Certified');
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }}
+                  />
+                  <span className="carzino-filter-option">Certified</span>
+                  <span className="carzino-filter-count ml-1">(9,889)</span>
+                </label>
+              </div>
+            </FilterSection>
+
+            {/* Mileage */}
+            <FilterSection 
+              title="Mileage"
+              isCollapsed={collapsedFilters.mileage}
+              onToggle={() => toggleFilter('mileage')}
+            >
+              <div className="space-y-1">
+                <select 
+                  className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none bg-white"
+                  value={appliedFilters.mileage}
+                  onChange={(e) => setAppliedFilters(prev => ({ ...prev, mileage: e.target.value }))}
+                >
+                  <option value="">Any Mileage</option>
+                  <option value="10000">10,000 or less</option>
+                  <option value="20000">20,000 or less</option>
+                  <option value="30000">30,000 or less</option>
+                  <option value="40000">40,000 or less</option>
+                  <option value="50000">50,000 or less</option>
+                  <option value="60000">60,000 or less</option>
+                  <option value="70000">70,000 or less</option>
+                  <option value="80000">80,000 or less</option>
+                  <option value="90000">90,000 or less</option>
+                  <option value="100000">100,000 or less</option>
+                  <option value="100001">100,000 or more</option>
+                </select>
+              </div>
+            </FilterSection>
+
+            {/* Search by Vehicle Type */}
+            <FilterSection 
+              title="Search by Vehicle Type"
+              isCollapsed={collapsedFilters.vehicleType}
+              onToggle={() => toggleFilter('vehicleType')}
+            >
+              <div className="grid grid-cols-2 gap-2">
+                {bodyTypes.map((type, index) => (
+                  <VehicleTypeCard key={index} type={type.name} count={type.count} vehicleImages={vehicleImages} />
+                ))}
+              </div>
+            </FilterSection>
+
+            {/* Drive Type */}
+            <FilterSection 
+              title="Drive Type"
+              isCollapsed={collapsedFilters.driveType}
+              onToggle={() => toggleFilter('driveType')}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="mr-2"
+                    checked={appliedFilters.driveType.includes('AWD/4WD')}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters(prev => ({
+                          ...prev,
+                          driveType: [...prev.driveType, 'AWD/4WD']
+                        }));
+                      } else {
+                        removeAppliedFilter('driveType', 'AWD/4WD');
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }}
+                  />
+                  <span className="carzino-filter-option">AWD/4WD</span>
+                  <span className="carzino-filter-count ml-1">(25,309)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="mr-2"
+                    checked={appliedFilters.driveType.includes('FWD')}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters(prev => ({
+                          ...prev,
+                          driveType: [...prev.driveType, 'FWD']
+                        }));
+                      } else {
+                        removeAppliedFilter('driveType', 'FWD');
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }}
+                  />
+                  <span className="carzino-filter-option">FWD</span>
+                  <span className="carzino-filter-count ml-1">(12,057)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="mr-2"
+                    checked={appliedFilters.driveType.includes('RWD')}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters(prev => ({
+                          ...prev,
+                          driveType: [...prev.driveType, 'RWD']
+                        }));
+                      } else {
+                        removeAppliedFilter('driveType', 'RWD');
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }}
+                  />
+                  <span className="carzino-filter-option">RWD</span>
+                  <span className="carzino-filter-count ml-1">(5,883)</span>
+                </label>
+              </div>
+            </FilterSection>
+
+            {/* Transmission Speed */}
+            <FilterSection 
+              title="Transmission Speed"
+              isCollapsed={collapsedFilters.transmissionSpeed}
+              onToggle={() => toggleFilter('transmissionSpeed')}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">4-Speed Automatic</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">6-Speed Automatic</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">8-Speed Automatic</span>
+                </label>
+              </div>
+            </FilterSection>
+
+            {/* Exterior Color */}
+            <FilterSection 
+              title="Exterior Color"
+              isCollapsed={collapsedFilters.exteriorColor}
+              onToggle={() => toggleFilter('exteriorColor')}
+            >
+              <div className="space-y-1">
+                {exteriorColors.map((color, index) => (
+                  <label key={index} className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+                    <input 
+                      type="checkbox" 
+                      className="mr-2"
+                      checked={appliedFilters.exteriorColor.includes(color.name)}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        if (e.target.checked) {
+                          setAppliedFilters(prev => ({
+                            ...prev,
+                            exteriorColor: [...prev.exteriorColor, color.name]
+                          }));
+                        } else {
+                          removeAppliedFilter('exteriorColor', color.name);
+                        }
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                      }}
+                    />
+                    <div 
+                      className="w-4 h-4 rounded border border-gray-300 mr-2" 
+                      style={{ backgroundColor: color.color }}
+                    ></div>
+                    <span className="carzino-filter-option">{color.name}</span>
+                    <span className="carzino-filter-count ml-1">({color.count})</span>
+                  </label>
+                ))}
+              </div>
+            </FilterSection>
+
+            {/* Interior Color */}
+            <FilterSection 
+              title="Interior Color"
+              isCollapsed={collapsedFilters.interiorColor}
+              onToggle={() => toggleFilter('interiorColor')}
+            >
+              <div className="space-y-1">
+                {interiorColors.map((color, index) => (
+                  <ColorSwatch
+                    key={index}
+                    color={color.color}
+                    name={color.name}
+                    count={color.count}
+                  />
+                ))}
+              </div>
+            </FilterSection>
+
+            {/* Dealer */}
+            <FilterSection 
+              title="Dealer"
+              isCollapsed={collapsedFilters.dealer}
+              onToggle={() => toggleFilter('dealer')}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">Bayside Auto Sales</span>
+                  <span className="carzino-filter-count ml-1">(234)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">ABC Car Sales</span>
+                  <span className="carzino-filter-count ml-1">(156)</span>
+                </label>
+              </div>
+            </FilterSection>
+
+            {/* State */}
+            <FilterSection 
+              title="State"
+              isCollapsed={collapsedFilters.state}
+              onToggle={() => toggleFilter('state')}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">Washington</span>
+                  <span className="carzino-filter-count ml-1">(12,456)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">Oregon</span>
+                  <span className="carzino-filter-count ml-1">(8,234)</span>
+                </label>
+              </div>
+            </FilterSection>
+
+            {/* City */}
+            <FilterSection 
+              title="City"
+              isCollapsed={collapsedFilters.city}
+              onToggle={() => toggleFilter('city')}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">Seattle</span>
+                  <span className="carzino-filter-count ml-1">(4,567)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input type="checkbox" className="mr-2" />
+                  <span className="carzino-filter-option">Portland</span>
+                  <span className="carzino-filter-count ml-1">(3,234)</span>
+                </label>
+              </div>
+            </FilterSection>
+
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 bg-white w-full">
+          {/* Mobile Header */}
+          <div className="lg:hidden">
+            {/* Non-sticky title and search */}
+            <div className="p-3 bg-white">
+              <h1 className="text-lg font-semibold text-gray-900 mb-3">
+                {viewMode === 'favorites' ? 'My Favorites' : 'Vehicles for Sale'}
+              </h1>
+              
+              {/* Search Bar */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search vehicles..."
+                  className="w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-red-600"
+                />
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
+                  <Search className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Sticky wrapper - will stick throughout the entire scrollable area */}
+            <div className={mobileFiltersOpen ? '' : 'sticky top-0 z-50'}>
+              {/* Applied Filters Pills */}
+              {(appliedFilters.condition.length > 0 || appliedFilters.make.length > 0) && (
+                <div className="px-3 pt-3 bg-white">
+                  <div className="flex gap-2 overflow-x-auto pb-3">
+                    <button 
+                      onClick={clearAllFilters}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                    >
+                      Clear All
+                    </button>
+                    {appliedFilters.condition.map((item) => (
+                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button 
+                          onClick={() => removeAppliedFilter('condition', item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.make.map((item) => (
+                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button 
+                          onClick={() => removeAppliedFilter('make', item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Filter, Sort, Favorites Bar */}
+              <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md">
+                <button 
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
+                  onClick={() => setMobileFiltersOpen(true)}
+                >
+                  <Sliders className="w-4 h-4" />
+                  Filter
+                  {(appliedFilters.condition.length + appliedFilters.make.length) > 0 && (
+                    <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                      {appliedFilters.condition.length + appliedFilters.make.length}
+                    </span>
+                  )}
+                </button>
+                
+                <div className="border-l border-gray-400 h-8"></div>
+                
+                <div className="relative">
+                  <button 
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
+                    onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M2 4h12M2 8h8M2 12h4" />
+                    </svg>
+                    Sort
+                  </button>
+                  {sortDropdownOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-48">
+                      <button onClick={() => { setSortBy('relevance'); setSortDropdownOpen(false); }} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Relevance</button>
+                      <button onClick={() => { setSortBy('price-low'); setSortDropdownOpen(false); }} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Price: Low to High</button>
+                      <button onClick={() => { setSortBy('price-high'); setSortDropdownOpen(false); }} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Price: High to Low</button>
+                      <button onClick={() => { setSortBy('year-new'); setSortDropdownOpen(false); }} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Year: Newest</button>
+                      <button onClick={() => { setSortBy('mileage-low'); setSortDropdownOpen(false); }} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Mileage: Lowest</button>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="border-l border-gray-400 h-8"></div>
+                
+                <button 
+                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium ${viewMode === 'favorites' ? 'text-red-600' : ''}`}
+                  onClick={() => setViewMode(viewMode === 'favorites' ? 'all' : 'favorites')}
+                >
+                  Favorites
+                  <div className="relative">
+                    <div className={`w-12 h-6 rounded-full ${viewMode === 'favorites' ? 'bg-red-600' : 'bg-gray-300'} transition-colors`}>
+                      <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${viewMode === 'favorites' ? 'translate-x-6' : 'translate-x-0.5'}`} />
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+            
+            {/* Results Count - NOT in sticky */}
+            <div className="px-3 py-2 bg-gray-50 text-sm">
+              <span className="font-medium">
+                {viewMode === 'favorites' 
+                  ? `${favoritesCount} Saved Vehicles` 
+                  : `${appliedFilters.condition.join(', ')}${appliedFilters.condition.length > 0 && appliedFilters.make.length > 0 ? ', ' : ''}${appliedFilters.make.join(', ')}${appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 ? ' for sale' : 'All Vehicles'} - ${totalResults.toLocaleString()} Results`}
+              </span>
+            </div>
+            
+            {/* Product Grid - NOW IN SAME CONTAINER AS STICKY */}
+            <div className="p-4 bg-white min-h-screen">
+              {viewMode === 'favorites' && favoritesCount === 0 ? (
+                <div className="text-center py-12 bg-white rounded-lg">
+                  <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No favorites yet</h3>
+                  <p className="text-gray-500 mb-4">Start browsing vehicles and save your favorites by clicking the heart icon.</p>
+                  <button
+                    onClick={() => setViewMode('all')}
+                    className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Browse Vehicles
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <div className="vehicle-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    {displayedVehicles.map((vehicle) => (
+                      <VehicleCard 
+                        key={vehicle.id} 
+                        vehicle={vehicle} 
+                        currentImageIndex={currentImageIndex}
+                        setCurrentImageIndex={setCurrentImageIndex}
+                        favorites={favorites}
+                        onToggleFavorite={toggleFavorite}
+                        keeperMessage={keeperMessage}
+                      />
+                    ))}
+                  </div>
+                  
+                  {viewMode === 'all' && (
+                    <Pagination 
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      totalResults={totalResults}
+                      resultsPerPage={resultsPerPage}
+                      onPageChange={setCurrentPage}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="hidden md:block p-4 bg-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">
+                  {viewMode === 'favorites' ? 'My Favorites' : 'New and Used Vehicles for sale'}
+                </h1>
+                <p className="text-gray-600 text-sm mt-1">
+                  {viewMode === 'favorites' ? `${favoritesCount} Vehicles` : `${totalResults.toLocaleString()} Matches`}
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                {/* Desktop View Switcher - Only show when in favorites mode */}
+                {viewMode === 'favorites' ? (
+                  <div className="view-switcher">
+                    <button 
+                      className={viewMode === 'all' ? 'active' : ''}
+                      onClick={() => setViewMode('all')}
+                    >
+                      All Results
+                    </button>
+                    <button 
+                      className={viewMode === 'favorites' ? 'active' : ''}
+                      onClick={() => setViewMode('favorites')}
+                    >
+                      <Heart className="w-4 h-4" />
+                      Saved ({favoritesCount})
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    className="p-2 border border-gray-300 rounded hover:bg-gray-50 bg-white relative"
+                    onClick={() => setViewMode('favorites')}
+                  >
+                    <Heart className={`w-5 h-5 ${favoritesCount > 0 ? 'text-red-600 fill-red-600' : 'text-red-600'}`} />
+                    {favoritesCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {favoritesCount}
+                      </span>
+                    )}
+                  </button>
+                )}
+                
+                <select className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none bg-white">
+                  <option value="relevance">Sort by Relevance</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="year-new">Year: Newest First</option>
+                  <option value="mileage-low">Mileage: Low to High</option>
+                </select>
+                <select className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none bg-white">
+                  <option value="30">View: 30</option>
+                  <option value="60">View: 60</option>
+                  <option value="100">View: 100</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          {/* Desktop Product Grid */}
+          <div className="hidden md:block p-4 lg:p-4 bg-white min-h-screen">
+            {viewMode === 'favorites' && favoritesCount === 0 ? (
+              <div className="text-center py-12 bg-white rounded-lg">
+                <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No favorites yet</h3>
+                <p className="text-gray-500 mb-4">Start browsing vehicles and save your favorites by clicking the heart icon.</p>
+                <button
+                  onClick={() => setViewMode('all')}
+                  className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Browse Vehicles
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div className="vehicle-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                  {displayedVehicles.map((vehicle) => (
+                    <VehicleCard 
+                      key={vehicle.id} 
+                      vehicle={vehicle} 
+                      currentImageIndex={currentImageIndex}
+                      setCurrentImageIndex={setCurrentImageIndex}
+                      favorites={favorites}
+                      onToggleFavorite={toggleFavorite}
+                      keeperMessage={keeperMessage}
+                    />
+                  ))}
+                </div>
+                
+                {viewMode === 'all' && (
+                  <Pagination 
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalResults={totalResults}
+                    resultsPerPage={resultsPerPage}
+                    onPageChange={setCurrentPage}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
