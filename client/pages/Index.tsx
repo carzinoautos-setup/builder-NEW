@@ -1115,20 +1115,11 @@ export default function Index() {
               <div className="space-y-1">
                 {displayedTrims.map((trim, index) => (
                   <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       className="mr-2"
                       checked={appliedFilters.trim.includes(trim.name)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setAppliedFilters(prev => ({
-                            ...prev,
-                            trim: [...prev.trim, trim.name]
-                          }));
-                        } else {
-                          removeAppliedFilter('trim', trim.name);
-                        }
-                      }}
+                      onChange={(e) => handleTrimChange(trim.name, e.target.checked)}
                     />
                     <span className="carzino-filter-option">{trim.name}</span>
                     <span className="carzino-filter-count ml-1">({trim.count})</span>
