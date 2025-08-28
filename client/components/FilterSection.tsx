@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import React from "react";
+import { ChevronDown } from "lucide-react";
 
 interface FilterSectionProps {
   title: string;
@@ -8,7 +8,12 @@ interface FilterSectionProps {
   onToggle: () => void;
 }
 
-export const FilterSection: React.FC<FilterSectionProps> = ({ title, children, isCollapsed, onToggle }) => {
+export const FilterSection: React.FC<FilterSectionProps> = ({
+  title,
+  children,
+  isCollapsed,
+  onToggle,
+}) => {
   return (
     <div className="border-b border-gray-200 pb-3 mb-3">
       <button
@@ -19,15 +24,11 @@ export const FilterSection: React.FC<FilterSectionProps> = ({ title, children, i
         <h3 className="carzino-filter-title">{title}</h3>
         <ChevronDown
           className={`w-5 h-5 lg:w-5 lg:h-5 md:w-6 md:h-6 text-red-600 transition-transform mobile-chevron ${
-            !isCollapsed ? 'rotate-180' : ''
+            !isCollapsed ? "rotate-180" : ""
           }`}
         />
       </button>
-      {!isCollapsed && (
-        <div className="mt-2">
-          {children}
-        </div>
-      )}
+      {!isCollapsed && <div className="mt-2">{children}</div>}
     </div>
   );
 };
