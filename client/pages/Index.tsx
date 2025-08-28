@@ -63,6 +63,7 @@ export default function Index() {
     driveType: [] as string[],
     mileage: '',
     exteriorColor: [] as string[],
+    sellerType: [] as string[],
     priceMin: '',
     priceMax: '',
     paymentMin: '',
