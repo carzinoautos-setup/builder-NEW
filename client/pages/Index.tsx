@@ -1119,24 +1119,34 @@ export default function Index() {
             </FilterSection>
 
             {/* Trim */}
-            <FilterSection 
-              title="Trim"
+            <FilterSection
+              title={`Trim ${appliedFilters.make.length > 0 ? `(${appliedFilters.make.join(', ')})` : ''}`}
               isCollapsed={collapsedFilters.trim}
               onToggle={() => toggleFilter('trim')}
             >
               <div className="space-y-1">
-                {displayedTrims.map((trim, index) => (
-                  <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      checked={appliedFilters.trim.includes(trim.name)}
-                      onChange={(e) => handleTrimChange(trim.name, e.target.checked)}
-                    />
-                    <span className="carzino-filter-option">{trim.name}</span>
-                    <span className="carzino-filter-count ml-1">({trim.count})</span>
-                  </label>
-                ))}
+                {appliedFilters.make.length === 0 ? (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    Select a make first to see available trims
+                  </div>
+                ) : displayedTrims.length === 0 ? (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    No trims available for selected make(s)
+                  </div>
+                ) : (
+                  displayedTrims.map((trim, index) => (
+                    <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.trim.includes(trim.name)}
+                        onChange={(e) => handleTrimChange(trim.name, e.target.checked)}
+                      />
+                      <span className="carzino-filter-option">{trim.name}</span>
+                      <span className="carzino-filter-count ml-1">({trim.count})</span>
+                    </label>
+                  ))
+                )}
               </div>
             </FilterSection>
 
