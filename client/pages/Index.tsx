@@ -1693,16 +1693,26 @@ export default function Index() {
               onToggle={() => toggleFilter('vehicleType')}
             >
               <div className="grid grid-cols-2 gap-2">
-                {bodyTypes.map((type, index) => (
-                  <VehicleTypeCard
-                    key={index}
-                    type={type.name}
-                    count={type.count}
-                    vehicleImages={vehicleImages}
-                    isSelected={appliedFilters.vehicleType.includes(type.name)}
-                    onToggle={handleVehicleTypeToggle}
-                  />
-                ))}
+                {appliedFilters.make.length === 0 ? (
+                  <div className="col-span-2 text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    Select a make first to see available vehicle types
+                  </div>
+                ) : availableBodyTypes.length === 0 ? (
+                  <div className="col-span-2 text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    No vehicle types available for selected make(s)
+                  </div>
+                ) : (
+                  availableBodyTypes.map((type, index) => (
+                    <VehicleTypeCard
+                      key={index}
+                      type={type.name}
+                      count={type.count}
+                      vehicleImages={vehicleImages}
+                      isSelected={appliedFilters.vehicleType.includes(type.name)}
+                      onToggle={handleVehicleTypeToggle}
+                    />
+                  ))
+                )}
               </div>
             </FilterSection>
 
