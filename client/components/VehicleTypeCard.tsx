@@ -15,19 +15,15 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
   isSelected, 
   onToggle 
 }) => (
-  <div 
+  <div
     onClick={() => onToggle(type)}
     className={`text-center cursor-pointer p-2 rounded group transition-all ${
-      isSelected 
-        ? 'bg-red-50 border-2 border-red-600' 
+      isSelected
+        ? 'border-2 border-red-600'
         : 'hover:bg-gray-50 border-2 border-transparent'
     }`}
   >
-    <div className={`rounded-lg p-3 mb-2 h-14 flex items-center justify-center transition-colors ${
-      isSelected 
-        ? 'bg-red-100 group-hover:bg-red-200' 
-        : 'bg-gray-100 group-hover:bg-gray-200'
-    }`}>
+    <div className="rounded-lg p-3 mb-2 h-14 flex items-center justify-center transition-colors bg-gray-100 group-hover:bg-gray-200">
       {vehicleImages[type] ? (
         <img
           src={vehicleImages[type]}
