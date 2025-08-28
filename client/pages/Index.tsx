@@ -1045,20 +1045,11 @@ export default function Index() {
               <div className="space-y-1">
                 {displayedMakes.map((make, index) => (
                   <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      className="mr-2" 
+                    <input
+                      type="checkbox"
+                      className="mr-2"
                       checked={appliedFilters.make.includes(make.name)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setAppliedFilters(prev => ({
-                            ...prev,
-                            make: [...prev.make, make.name]
-                          }));
-                        } else {
-                          removeAppliedFilter('make', make.name);
-                        }
-                      }}
+                      onChange={(e) => handleMakeChange(make.name, e.target.checked)}
                     />
                     <span className="carzino-filter-option">{make.name}</span>
                     <span className="carzino-filter-count ml-1">({make.count})</span>
