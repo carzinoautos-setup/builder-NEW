@@ -424,6 +424,12 @@ export default function Index() {
         { name: "Camaro", count: 32 },
         { name: "Tahoe", count: 20 }
       ],
+      bodyTypes: [
+        { name: "Truck", count: 98 },
+        { name: "SUV / Crossover", count: 114 },
+        { name: "Sedan", count: 43 },
+        { name: "Coupe", count: 32 }
+      ],
       trims: [
         { name: "Base", count: 87 },
         { name: "LT", count: 95 },
