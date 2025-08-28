@@ -1519,9 +1519,9 @@ export default function Index() {
             >
               <div className="space-y-1">
                 <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    className="mr-2" 
+                  <input
+                    type="checkbox"
+                    className="mr-2"
                     checked={appliedFilters.condition.includes('New')}
                     onChange={(e) => {
                       e.stopPropagation();
@@ -1534,17 +1534,13 @@ export default function Index() {
                         removeAppliedFilter('condition', 'New');
                       }
                     }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }}
                   />
                   <span className="carzino-filter-option">New</span>
                   <span className="carzino-filter-count ml-1">(125,989)</span>
                 </label>
                 <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     className="mr-2"
                     checked={appliedFilters.condition.includes('Used')}
                     onChange={(e) => {
@@ -1558,17 +1554,13 @@ export default function Index() {
                         removeAppliedFilter('condition', 'Used');
                       }
                     }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }}
                   />
                   <span className="carzino-filter-option">Used</span>
                   <span className="carzino-filter-count ml-1">(78,800)</span>
                 </label>
                 <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     className="mr-2"
                     checked={appliedFilters.condition.includes('Certified')}
                     onChange={(e) => {
@@ -1581,10 +1573,6 @@ export default function Index() {
                       } else {
                         removeAppliedFilter('condition', 'Certified');
                       }
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
                     }}
                   />
                   <span className="carzino-filter-option">Certified</span>
