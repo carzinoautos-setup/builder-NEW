@@ -654,8 +654,36 @@ export default function Index() {
     return Array.from(trimMap.values());
   };
 
+  const getAvailableBodyTypes = () => {
+    // If no makes selected, show all body types
+    if (appliedFilters.make.length === 0) {
+      return bodyTypes;
+    }
+
+    // Show only body types for selected makes
+    const availableBodyTypes: { name: string; count: number; }[] = [];
+    appliedFilters.make.forEach(selectedMake => {
+      if (vehicleDatabase[selectedMake] && vehicleDatabase[selectedMake].bodyTypes) {
+        availableBodyTypes.push(...vehicleDatabase[selectedMake].bodyTypes);
+      }
+    });
+
+    // Remove duplicates and combine counts
+    const bodyTypeMap = new Map();
+    availableBodyTypes.forEach(bodyType => {
+      if (bodyTypeMap.has(bodyType.name)) {
+        bodyTypeMap.set(bodyType.name, { name: bodyType.name, count: bodyTypeMap.get(bodyType.name).count + bodyType.count });
+      } else {
+        bodyTypeMap.set(bodyType.name, bodyType);
+      }
+    });
+
+    return Array.from(bodyTypeMap.values());
+  };
+
   const availableModels = getAvailableModels();
   const availableTrims = getAvailableTrims();
+  const availableBodyTypes = getAvailableBodyTypes();
 
   const exteriorColors = [
     { name: "White", count: 9427, color: "#FFFFFF" },
