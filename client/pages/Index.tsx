@@ -491,6 +491,10 @@ export default function Index() {
         { name: "Santa Fe", count: 25 },
         { name: "Palisade", count: 16 }
       ],
+      bodyTypes: [
+        { name: "Sedan", count: 97 },
+        { name: "SUV / Crossover", count: 79 }
+      ],
       trims: [
         { name: "SE", count: 56 },
         { name: "SEL", count: 67 },
