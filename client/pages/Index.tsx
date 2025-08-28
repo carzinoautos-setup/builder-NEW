@@ -350,6 +350,16 @@ export default function Index() {
     }));
   };
 
+  // Handle vehicle type selection
+  const handleVehicleTypeToggle = (vehicleType: string) => {
+    setAppliedFilters(prev => ({
+      ...prev,
+      vehicleType: prev.vehicleType.includes(vehicleType)
+        ? prev.vehicleType.filter(item => item !== vehicleType)
+        : [...prev.vehicleType, vehicleType]
+    }));
+  };
+
   // Vehicle data
   const bodyTypes = [
     { name: "Convertible", count: 196 },
