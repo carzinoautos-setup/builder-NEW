@@ -627,18 +627,10 @@ export default function Index() {
         ></div>
 
         {/* Sidebar - Hidden on mobile by default */}
-        <div 
-          className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block ${mobileFiltersOpen ? 'open' : ''}`} 
-          style={{ 
-            width: '280px', 
-            height: '100vh',
-            overflowY: 'auto',
-            overscrollBehavior: 'contain',
-            position: 'sticky',
-            top: 0
-          }}
-          onScroll={(e) => {
-            e.stopPropagation();
+        <div
+          className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block ${mobileFiltersOpen ? 'open' : ''}`}
+          style={{
+            width: '280px'
           }}
         >
           <div className="lg:hidden flex justify-between items-center mb-4 pb-4 border-b px-4 pt-4">
