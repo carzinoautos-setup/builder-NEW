@@ -1629,7 +1629,14 @@ export default function Index() {
             >
               <div className="grid grid-cols-2 gap-2">
                 {bodyTypes.map((type, index) => (
-                  <VehicleTypeCard key={index} type={type.name} count={type.count} vehicleImages={vehicleImages} />
+                  <VehicleTypeCard
+                    key={index}
+                    type={type.name}
+                    count={type.count}
+                    vehicleImages={vehicleImages}
+                    isSelected={appliedFilters.vehicleType.includes(type.name)}
+                    onToggle={handleVehicleTypeToggle}
+                  />
                 ))}
               </div>
             </FilterSection>
