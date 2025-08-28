@@ -470,6 +470,11 @@ export default function Index() {
         { name: "Pilot", count: 23 },
         { name: "HR-V", count: 10 }
       ],
+      bodyTypes: [
+        { name: "Sedan", count: 156 },
+        { name: "SUV / Crossover", count: 68 },
+        { name: "Hatchback", count: 10 }
+      ],
       trims: [
         { name: "LX", count: 78 },
         { name: "EX", count: 89 },
