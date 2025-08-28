@@ -271,10 +271,22 @@ export default function Index() {
   };
 
   const removeAppliedFilter = (category: string, value: string) => {
-    setAppliedFilters(prev => ({
-      ...prev,
-      [category]: (prev[category as keyof typeof prev] as string[]).filter((item: string) => item !== value)
-    }));
+    setAppliedFilters(prev => {
+      const newFilters = {
+        ...prev,
+        [category]: (prev[category as keyof typeof prev] as string[]).filter((item: string) => item !== value)
+      };
+
+      // Clear dependent filters when parent filter is removed
+      if (category === 'make') {
+        newFilters.model = [];
+        newFilters.trim = [];
+      } else if (category === 'model') {
+        newFilters.trim = [];
+      }
+
+      return newFilters;
+    });
   };
 
   const clearAllFilters = () => {
