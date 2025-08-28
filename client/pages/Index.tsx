@@ -1072,36 +1072,48 @@ export default function Index() {
             </FilterSection>
 
             {/* Model */}
-            <FilterSection 
-              title="Model"
+            <FilterSection
+              title={`Model ${appliedFilters.make.length > 0 ? `(${appliedFilters.make.join(', ')})` : ''}`}
               isCollapsed={collapsedFilters.model}
               onToggle={() => toggleFilter('model')}
             >
               <div className="space-y-1">
-                {displayedModels.map((model, index) => (
-                  <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      checked={appliedFilters.model.includes(model.name)}
-                      onChange={(e) => handleModelChange(model.name, e.target.checked)}
-                    />
-                    <span className="carzino-filter-option">{model.name}</span>
-                    <span className="carzino-filter-count ml-1">({model.count})</span>
-                  </label>
-                ))}
-                {availableModels.length > 8 && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setShowMoreModels(!showMoreModels);
-                    }}
-                    className="carzino-show-more text-red-600 hover:text-red-700 mt-1"
-                  >
-                    {showMoreModels ? 'Show Less' : 'Show More'}
-                  </button>
+                {appliedFilters.make.length === 0 ? (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    Select a make first to see available models
+                  </div>
+                ) : displayedModels.length === 0 ? (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    No models available for selected make(s)
+                  </div>
+                ) : (
+                  <>
+                    {displayedModels.map((model, index) => (
+                      <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={appliedFilters.model.includes(model.name)}
+                          onChange={(e) => handleModelChange(model.name, e.target.checked)}
+                        />
+                        <span className="carzino-filter-option">{model.name}</span>
+                        <span className="carzino-filter-count ml-1">({model.count})</span>
+                      </label>
+                    ))}
+                    {availableModels.length > 8 && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setShowMoreModels(!showMoreModels);
+                        }}
+                        className="carzino-show-more text-red-600 hover:text-red-700 mt-1"
+                      >
+                        {showMoreModels ? 'Show Less' : 'Show More'}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </FilterSection>
