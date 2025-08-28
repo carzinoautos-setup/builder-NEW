@@ -296,6 +296,48 @@ export default function Index() {
     setPriceMax('100000');
   };
 
+  // Handle make selection with cascading filter clearing
+  const handleMakeChange = (makeName: string, isChecked: boolean) => {
+    setAppliedFilters(prev => {
+      const newMakes = isChecked
+        ? [...prev.make, makeName]
+        : prev.make.filter(item => item !== makeName);
+
+      // Clear dependent filters (models and trims) when make changes
+      return {
+        ...prev,
+        make: newMakes,
+        model: [], // Clear all selected models when make changes
+        trim: []   // Clear all selected trims when make changes
+      };
+    });
+  };
+
+  // Handle model selection with trim clearing
+  const handleModelChange = (modelName: string, isChecked: boolean) => {
+    setAppliedFilters(prev => {
+      const newModels = isChecked
+        ? [...prev.model, modelName]
+        : prev.model.filter(item => item !== modelName);
+
+      return {
+        ...prev,
+        model: newModels,
+        trim: [] // Clear trims when model selection changes
+      };
+    });
+  };
+
+  // Handle trim selection (no cascading needed)
+  const handleTrimChange = (trimName: string, isChecked: boolean) => {
+    setAppliedFilters(prev => ({
+      ...prev,
+      trim: isChecked
+        ? [...prev.trim, trimName]
+        : prev.trim.filter(item => item !== trimName)
+    }));
+  };
+
   // Vehicle data
   const bodyTypes = [
     { name: "Convertible", count: 196 },
