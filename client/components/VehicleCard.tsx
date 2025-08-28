@@ -57,8 +57,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
       <div className="relative">
-        <img 
-          src={vehicle.images ? vehicle.images[currentIndex] : vehicle.images[0]} 
+        <img
+          src={vehicle.images ? vehicle.images[0] : ''}
           alt={vehicle.title}
           className="w-full object-cover"
           style={{ height: '200px' }}
@@ -67,26 +67,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1.5 rounded-full carzino-featured-badge font-medium">
             Featured!
           </div>
-        )}
-        
-        {vehicle.images && vehicle.images.length > 1 && (
-          <>
-            <button 
-              onClick={prevImage}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-1.5 rounded-full transition-all"
-            >
-              <ChevronDown className="w-4 h-4 transform rotate-90 text-white" />
-            </button>
-            <button 
-              onClick={nextImage}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-1.5 rounded-full transition-all"
-            >
-              <ChevronDown className="w-4 h-4 transform -rotate-90 text-white" />
-            </button>
-            <div className="absolute bottom-3 right-3 bg-black bg-opacity-60 text-white px-2 py-1 rounded-full carzino-image-counter">
-              {currentIndex + 1}/{totalImages}
-            </div>
-          </>
         )}
       </div>
 
