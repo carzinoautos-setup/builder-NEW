@@ -598,6 +598,11 @@ export default function Index() {
         { name: "Atlas", count: 19 },
         { name: "Golf", count: 12 }
       ],
+      bodyTypes: [
+        { name: "Sedan", count: 75 },
+        { name: "SUV / Crossover", count: 47 },
+        { name: "Hatchback", count: 12 }
+      ],
       trims: [
         { name: "S", count: 45 },
         { name: "SE", count: 54 },
