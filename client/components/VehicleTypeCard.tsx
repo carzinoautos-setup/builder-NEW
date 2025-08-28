@@ -29,10 +29,10 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
         : 'bg-gray-100 group-hover:bg-gray-200'
     }`}>
       {vehicleImages[type] ? (
-        <img 
-          src={vehicleImages[type]} 
+        <img
+          src={vehicleImages[type]}
           alt={`${type} vehicle type`}
-          className="max-w-full max-h-full object-contain"
+          className="max-w-full max-h-full object-contain rounded-lg overflow-hidden"
           style={{ width: 'auto', height: '35px' }}
         />
       ) : (
