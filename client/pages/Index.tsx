@@ -1080,26 +1080,17 @@ export default function Index() {
               <div className="space-y-1">
                 {displayedModels.map((model, index) => (
                   <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       className="mr-2"
                       checked={appliedFilters.model.includes(model.name)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setAppliedFilters(prev => ({
-                            ...prev,
-                            model: [...prev.model, model.name]
-                          }));
-                        } else {
-                          removeAppliedFilter('model', model.name);
-                        }
-                      }}
+                      onChange={(e) => handleModelChange(model.name, e.target.checked)}
                     />
                     <span className="carzino-filter-option">{model.name}</span>
                     <span className="carzino-filter-count ml-1">({model.count})</span>
                   </label>
                 ))}
-                {allModels.length > 8 && (
+                {availableModels.length > 8 && (
                   <button
                     type="button"
                     onClick={(e) => {
