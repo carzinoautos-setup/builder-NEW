@@ -300,6 +300,7 @@ export default function Index() {
       driveType: [],
       mileage: '',
       exteriorColor: [],
+      sellerType: [],
       priceMin: '',
       priceMax: '',
       paymentMin: '',
