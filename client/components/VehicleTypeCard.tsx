@@ -4,14 +4,33 @@ interface VehicleTypeCardProps {
   type: string;
   count: number;
   vehicleImages: { [key: string]: string };
+  isSelected: boolean;
+  onToggle: (type: string) => void;
 }
 
-export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({ type, count, vehicleImages }) => (
-  <div className="text-center cursor-pointer hover:bg-gray-50 p-2 rounded group">
-    <div className="bg-gray-100 rounded-lg p-3 mb-2 h-14 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
+  type,
+  count,
+  vehicleImages,
+  isSelected,
+  onToggle
+}) => (
+  <div
+    onClick={() => onToggle(type)}
+    className={`text-center cursor-pointer p-2 rounded group transition-all ${
+      isSelected
+        ? 'bg-red-50 border-2 border-red-600'
+        : 'hover:bg-gray-50 border-2 border-transparent'
+    }`}
+  >
+    <div className={`rounded-lg p-3 mb-2 h-14 flex items-center justify-center transition-colors ${
+      isSelected
+        ? 'bg-red-100 group-hover:bg-red-200'
+        : 'bg-gray-100 group-hover:bg-gray-200'
+    }`}>
       {vehicleImages[type] ? (
-        <img 
-          src={vehicleImages[type]} 
+        <img
+          src={vehicleImages[type]}
           alt={`${type} vehicle type`}
           className="max-w-full max-h-full object-contain"
           style={{ width: 'auto', height: '35px' }}
@@ -20,7 +39,9 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({ type, count, v
         <div className="text-gray-400 text-xs">{type}</div>
       )}
     </div>
-    <div className="carzino-vehicle-type-name">{type}</div>
+    <div className={`carzino-vehicle-type-name ${isSelected ? 'text-red-600 font-semibold' : ''}`}>
+      {type}
+    </div>
     <div className="carzino-vehicle-type-count">({count})</div>
   </div>
 );
