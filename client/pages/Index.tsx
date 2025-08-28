@@ -1892,10 +1892,13 @@ export default function Index() {
             {/* Sticky wrapper - will stick throughout the entire scrollable area */}
             <div className={mobileFiltersOpen ? '' : 'sticky top-0 z-50'}>
               {/* Applied Filters Pills */}
-              {(appliedFilters.condition.length > 0 || appliedFilters.make.length > 0) && (
+              {(appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 || appliedFilters.model.length > 0 ||
+                appliedFilters.trim.length > 0 || appliedFilters.vehicleType.length > 0 || appliedFilters.driveType.length > 0 ||
+                appliedFilters.exteriorColor.length > 0 || appliedFilters.mileage || appliedFilters.priceMin || appliedFilters.priceMax ||
+                appliedFilters.paymentMin || appliedFilters.paymentMax) && (
                 <div className="px-3 pt-3 bg-white">
                   <div className="flex gap-2 overflow-x-auto pb-3">
-                    <button 
+                    <button
                       onClick={clearAllFilters}
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                     >
@@ -1905,7 +1908,7 @@ export default function Index() {
                       <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
                         <Check className="w-3 h-3 text-red-600" />
                         {item}
-                        <button 
+                        <button
                           onClick={() => removeAppliedFilter('condition', item)}
                           className="ml-1 text-white"
                         >
@@ -1917,7 +1920,7 @@ export default function Index() {
                       <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
                         <Check className="w-3 h-3 text-red-600" />
                         {item}
-                        <button 
+                        <button
                           onClick={() => removeAppliedFilter('make', item)}
                           className="ml-1 text-white"
                         >
@@ -1925,6 +1928,106 @@ export default function Index() {
                         </button>
                       </span>
                     ))}
+                    {appliedFilters.model.map((item) => (
+                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter('model', item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.trim.map((item) => (
+                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter('trim', item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.vehicleType.map((item) => (
+                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter('vehicleType', item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.driveType.map((item) => (
+                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter('driveType', item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.exteriorColor.map((item) => (
+                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item} Color
+                        <button
+                          onClick={() => removeAppliedFilter('exteriorColor', item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.mileage && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {appliedFilters.mileage === '100001' ? '100k+ miles' : `Under ${parseInt(appliedFilters.mileage).toLocaleString()} mi`}
+                        <button
+                          onClick={() => setAppliedFilters(prev => ({ ...prev, mileage: '' }))}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    {(appliedFilters.priceMin || appliedFilters.priceMax) && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        ${appliedFilters.priceMin || '0'} - ${appliedFilters.priceMax || 'Any'}
+                        <button
+                          onClick={() => {
+                            setAppliedFilters(prev => ({ ...prev, priceMin: '', priceMax: '' }));
+                            setPriceMin('10000');
+                            setPriceMax('100000');
+                          }}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        ${appliedFilters.paymentMin || '0'}-${appliedFilters.paymentMax || 'Any'}/mo
+                        <button
+                          onClick={() => setAppliedFilters(prev => ({ ...prev, paymentMin: '', paymentMax: '' }))}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
