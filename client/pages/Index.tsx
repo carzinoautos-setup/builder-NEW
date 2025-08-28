@@ -1270,7 +1270,10 @@ export default function Index() {
                       type="checkbox"
                       className="mr-2"
                       checked={appliedFilters.make.includes(make.name)}
-                      onChange={(e) => handleMakeChange(make.name, e.target.checked)}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        handleMakeChange(make.name, e.target.checked);
+                      }}
                     />
                     <span className="carzino-filter-option">{make.name}</span>
                     <span className="carzino-filter-count ml-1">({make.count})</span>
@@ -1315,7 +1318,10 @@ export default function Index() {
                           type="checkbox"
                           className="mr-2"
                           checked={appliedFilters.model.includes(model.name)}
-                          onChange={(e) => handleModelChange(model.name, e.target.checked)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            handleModelChange(model.name, e.target.checked);
+                          }}
                         />
                         <span className="carzino-filter-option">{model.name}</span>
                         <span className="carzino-filter-count ml-1">({model.count})</span>
@@ -1361,7 +1367,10 @@ export default function Index() {
                         type="checkbox"
                         className="mr-2"
                         checked={appliedFilters.trim.includes(trim.name)}
-                        onChange={(e) => handleTrimChange(trim.name, e.target.checked)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handleTrimChange(trim.name, e.target.checked);
+                        }}
                       />
                       <span className="carzino-filter-option">{trim.name}</span>
                       <span className="carzino-filter-count ml-1">({trim.count})</span>
