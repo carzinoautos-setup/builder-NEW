@@ -511,6 +511,10 @@ export default function Index() {
         { name: "S-Class", count: 15 },
         { name: "A-Class", count: 11 }
       ],
+      bodyTypes: [
+        { name: "Sedan", count: 105 },
+        { name: "SUV / Crossover", count: 51 }
+      ],
       trims: [
         { name: "Base", count: 43 },
         { name: "Premium", count: 54 },
