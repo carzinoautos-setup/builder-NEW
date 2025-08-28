@@ -1847,7 +1847,7 @@ export default function Index() {
             </FilterSection>
 
             {/* Interior Color */}
-            <FilterSection 
+            <FilterSection
               title="Interior Color"
               isCollapsed={collapsedFilters.interiorColor}
               onToggle={() => toggleFilter('interiorColor')}
@@ -1861,6 +1861,56 @@ export default function Index() {
                     count={color.count}
                   />
                 ))}
+              </div>
+            </FilterSection>
+
+            {/* Seller Type */}
+            <FilterSection
+              title="Seller Type"
+              isCollapsed={collapsedFilters.sellerType}
+              onToggle={() => toggleFilter('sellerType')}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.sellerType.includes('Dealer')}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters(prev => ({
+                          ...prev,
+                          sellerType: [...prev.sellerType, 'Dealer']
+                        }));
+                      } else {
+                        removeAppliedFilter('sellerType', 'Dealer');
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">Dealer</span>
+                  <span className="carzino-filter-count ml-1">(6,543)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.sellerType.includes('Private Seller')}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters(prev => ({
+                          ...prev,
+                          sellerType: [...prev.sellerType, 'Private Seller']
+                        }));
+                      } else {
+                        removeAppliedFilter('sellerType', 'Private Seller');
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">Private Seller</span>
+                  <span className="carzino-filter-count ml-1">(1,984)</span>
+                </label>
               </div>
             </FilterSection>
 
