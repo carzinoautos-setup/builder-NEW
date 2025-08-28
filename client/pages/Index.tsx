@@ -1738,8 +1738,8 @@ export default function Index() {
               <div className="space-y-1">
                 {exteriorColors.map((color, index) => (
                   <label key={index} className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       className="mr-2"
                       checked={appliedFilters.exteriorColor.includes(color.name)}
                       onChange={(e) => {
@@ -1752,10 +1752,6 @@ export default function Index() {
                         } else {
                           removeAppliedFilter('exteriorColor', color.name);
                         }
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
                       }}
                     />
                     <div 
