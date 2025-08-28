@@ -1269,6 +1269,18 @@ export default function Index() {
                       </button>
                     </span>
                   ))}
+                  {appliedFilters.sellerType.map((item) => (
+                    <span key={item} className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter('sellerType', item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
                   {appliedFilters.mileage && (
                     <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
                       <Check className="w-3 h-3 text-red-600" />
