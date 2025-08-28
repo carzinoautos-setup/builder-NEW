@@ -1006,8 +1006,8 @@ export default function Index() {
               {/* Applied Filters in Mobile Filter Panel */}
               {(appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 || appliedFilters.model.length > 0 ||
                 appliedFilters.trim.length > 0 || appliedFilters.driveType.length > 0 || appliedFilters.vehicleType.length > 0 ||
-                appliedFilters.mileage || appliedFilters.exteriorColor.length > 0 || appliedFilters.priceMin || appliedFilters.priceMax ||
-                appliedFilters.paymentMin || appliedFilters.paymentMax) && (
+                appliedFilters.mileage || appliedFilters.exteriorColor.length > 0 || appliedFilters.sellerType.length > 0 ||
+                appliedFilters.priceMin || appliedFilters.priceMax || appliedFilters.paymentMin || appliedFilters.paymentMax) && (
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={clearAllFilters}
@@ -1160,8 +1160,8 @@ export default function Index() {
             {/* Desktop Applied Filters */}
             {(appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 || appliedFilters.model.length > 0 ||
               appliedFilters.trim.length > 0 || appliedFilters.driveType.length > 0 || appliedFilters.vehicleType.length > 0 ||
-              appliedFilters.mileage || appliedFilters.exteriorColor.length > 0 || appliedFilters.priceMin || appliedFilters.priceMax ||
-              appliedFilters.paymentMin || appliedFilters.paymentMax) && (
+              appliedFilters.mileage || appliedFilters.exteriorColor.length > 0 || appliedFilters.sellerType.length > 0 ||
+              appliedFilters.priceMin || appliedFilters.priceMax || appliedFilters.paymentMin || appliedFilters.paymentMax) && (
               <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="carzino-filter-title">Applied Filters</h3>
