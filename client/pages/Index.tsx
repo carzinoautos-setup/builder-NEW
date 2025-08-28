@@ -403,6 +403,10 @@ export default function Index() {
         { name: "X5", count: 28 },
         { name: "X7", count: 17 }
       ],
+      bodyTypes: [
+        { name: "Sedan", count: 110 },
+        { name: "SUV / Crossover", count: 79 }
+      ],
       trims: [
         { name: "Base", count: 52 },
         { name: "Sport", count: 48 },
