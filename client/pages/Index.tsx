@@ -1645,8 +1645,8 @@ export default function Index() {
             >
               <div className="space-y-1">
                 <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     className="mr-2"
                     checked={appliedFilters.driveType.includes('AWD/4WD')}
                     onChange={(e) => {
@@ -1660,17 +1660,13 @@ export default function Index() {
                         removeAppliedFilter('driveType', 'AWD/4WD');
                       }
                     }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }}
                   />
                   <span className="carzino-filter-option">AWD/4WD</span>
                   <span className="carzino-filter-count ml-1">(25,309)</span>
                 </label>
                 <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     className="mr-2"
                     checked={appliedFilters.driveType.includes('FWD')}
                     onChange={(e) => {
@@ -1684,17 +1680,13 @@ export default function Index() {
                         removeAppliedFilter('driveType', 'FWD');
                       }
                     }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }}
                   />
                   <span className="carzino-filter-option">FWD</span>
                   <span className="carzino-filter-count ml-1">(12,057)</span>
                 </label>
                 <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     className="mr-2"
                     checked={appliedFilters.driveType.includes('RWD')}
                     onChange={(e) => {
@@ -1707,10 +1699,6 @@ export default function Index() {
                       } else {
                         removeAppliedFilter('driveType', 'RWD');
                       }
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
                     }}
                   />
                   <span className="carzino-filter-option">RWD</span>
