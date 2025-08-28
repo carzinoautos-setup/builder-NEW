@@ -575,8 +575,8 @@ export default function Index() {
   ];
 
   const displayedMakes = showMoreMakes ? allMakes : allMakes.slice(0, 8);
-  const displayedModels = showMoreModels ? allModels : allModels.slice(0, 8);
-  const displayedTrims = showMoreTrims ? allTrims : allTrims.slice(0, 8);
+  const displayedModels = showMoreModels ? availableModels : availableModels.slice(0, 8);
+  const displayedTrims = showMoreTrims ? availableTrims : availableTrims.slice(0, 8);
 
   const ColorSwatch = ({ color, name, count }: { color: string; name: string; count: number }) => (
     <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
