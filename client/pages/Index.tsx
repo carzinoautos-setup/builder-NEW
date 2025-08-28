@@ -448,6 +448,11 @@ export default function Index() {
         { name: "Expedition", count: 42 },
         { name: "Ranger", count: 45 }
       ],
+      bodyTypes: [
+        { name: "Truck", count: 201 },
+        { name: "SUV / Crossover", count: 258 },
+        { name: "Coupe", count: 64 }
+      ],
       trims: [
         { name: "Base", count: 134 },
         { name: "XLT", count: 156 },
