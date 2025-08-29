@@ -723,6 +723,7 @@ export default function MySQLVehiclesOriginalStyle() {
       bodyStyle: [],
       vehicleType: [],
       driveType: [],
+      transmission: [],
       mileage: "",
       exteriorColor: [],
       sellerType: [],
