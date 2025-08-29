@@ -1627,8 +1627,9 @@ export default function MySQLVehiclesOriginalStyle() {
                 !isGeocodingLoading &&
                 zipCode &&
                 zipCode.length >= 5 && (
-                  <div className="mt-2 text-sm text-yellow-600">
-                    ⚠️ Location service unavailable. Radius filtering disabled.
+                  <div className="mt-2 text-sm text-yellow-600 flex items-center gap-1">
+                    <AlertTriangle className="w-4 h-4" />
+                    Location service unavailable. Radius filtering disabled.
                   </div>
                 )}
 
