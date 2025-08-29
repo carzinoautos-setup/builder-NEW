@@ -804,6 +804,21 @@ export default function MySQLVehiclesOriginalStyle() {
                       </button>
                     </span>
                   )}
+                  {appliedLocation && appliedRadius !== "nationwide" && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      📍 {appliedRadius} miles
+                      <button
+                        onClick={() => {
+                          setAppliedLocation(null);
+                          setAppliedRadius("200");
+                        }}
+                        className="ml-1 text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
                   {appliedFilters.condition.map((item) => (
                     <span
                       key={item}
