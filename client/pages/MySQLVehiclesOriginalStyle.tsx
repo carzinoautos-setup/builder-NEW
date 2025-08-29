@@ -2244,12 +2244,14 @@ export default function MySQLVehiclesOriginalStyle() {
                 {[
                   { name: "Sedan", count: 1698 },
                   { name: "Crossover/SUV", count: 3405 },
-                  { name: "Trucks", count: 2217 },
                   { name: "Coupe", count: 419 },
                   { name: "Convertible", count: 125 },
                   { name: "Hatchback", count: 342 },
                   { name: "Van / Minivan", count: 298 },
                   { name: "Wagon", count: 156 },
+                  { name: "Trucks", count: 2217 },
+                  { name: "Extended Cab", count: 543 },
+                  { name: "Crew Cab", count: 687 },
                 ].map((type, index) => (
                   <VehicleTypeCard
                     key={index}
