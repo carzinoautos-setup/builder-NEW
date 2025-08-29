@@ -69,8 +69,8 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
     if (req.query.trim) {
       filters.trim = (req.query.trim as string).split(",");
     }
-    if (req.query.vehicleType) {
-      filters.vehicleType = (req.query.vehicleType as string).split(",");
+    if (req.query.body_type) {
+      filters.vehicleType = (req.query.body_type as string).split(",");
     }
     if (req.query.driveType) {
       filters.driveType = (req.query.driveType as string).split(",");
