@@ -222,6 +222,13 @@ export class SimpleMockVehicleService {
     vehicle: SimpleVehicleRecord,
     filters: SimpleVehicleFilters,
   ): boolean {
+    // VALIDATION RULE: Exclude vehicles with invalid body_style
+    if (!vehicle.body_style ||
+        vehicle.body_style === "Uncategorized" ||
+        vehicle.body_style.trim() === "") {
+      return false;
+    }
+
     // Condition filter
     if (filters.condition && filters.condition.length > 0) {
       if (!filters.condition.includes(vehicle.condition)) return false;
@@ -231,6 +238,11 @@ export class SimpleMockVehicleService {
     if (filters.make && filters.make.length > 0) {
       const vehicleMake = vehicle.title.split(" ")[1]; // "2025 Ford F-150..." -> "Ford"
       if (!filters.make.includes(vehicleMake)) return false;
+    }
+
+    // Vehicle Type filter (maps to body_style field)
+    if (filters.vehicleType && filters.vehicleType.length > 0) {
+      if (!filters.vehicleType.includes(vehicle.body_style)) return false;
     }
 
     // Drive type filter
