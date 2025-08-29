@@ -122,7 +122,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-1 mr-4">
-            <Settings className="w-4 h-4 text-gray-600" />
+            {vehicle.transmissionIcon ? (
+              <img
+                src={vehicle.transmissionIcon}
+                alt="Transmission icon"
+                className="w-4 h-4 object-contain"
+              />
+            ) : (
+              <Settings className="w-4 h-4 text-gray-600" />
+            )}
             <span className="text-black font-medium">
               {vehicle.transmission}
             </span>
