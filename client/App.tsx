@@ -21,7 +21,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/mysql-vehicles" element={<VehiclesList />} />
+          <Route path="/mysql-vehicles" element={<MySQLVehiclesOriginalStyle />} />
+          <Route path="/mysql-vehicles-advanced" element={<VehiclesList />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
