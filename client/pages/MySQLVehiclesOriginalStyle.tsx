@@ -393,40 +393,52 @@ export default function MySQLVehiclesOriginalStyle() {
     try {
       setIsGeocodingLoading(true);
 
-      // Call our optimized geocoding API
+      // Call our geocoding API
       const response = await fetch(`/api/geocode/${zip}`);
+
       if (response.ok) {
         const result = await response.json();
         if (result.success && result.data) {
+          console.log(`✅ Geocoded ${zip} to ${result.data.city}, ${result.data.state}`);
           return {
             lat: result.data.lat,
             lng: result.data.lng,
             city: result.data.city,
             state: result.data.state
           };
+        } else {
+          console.warn(`❌ Geocoding failed for ${zip}: ${result.message}`);
         }
+      } else if (response.status === 404) {
+        const errorResult = await response.json();
+        console.warn(`❌ ZIP ${zip} not found: ${errorResult.message}`);
+      } else {
+        console.error(`❌ Geocoding API error: ${response.status} ${response.statusText}`);
       }
 
-      // Fallback for common ZIPs (in case backend service is down)
-      const zipCoordinates: { [key: string]: {lat: number; lng: number; city: string; state: string} } = {
-        "98498": { lat: 47.0379, lng: -122.9015, city: "Lakewood", state: "WA" },
-        "90210": { lat: 34.0901, lng: -118.4065, city: "Beverly Hills", state: "CA" },
-        "10001": { lat: 40.7505, lng: -73.9934, city: "New York", state: "NY" },
-        "60601": { lat: 41.8781, lng: -87.6298, city: "Chicago", state: "IL" },
-        "75001": { lat: 32.9483, lng: -96.7299, city: "Addison", state: "TX" }
-      };
-
-      const coords = zipCoordinates[zip];
-      if (coords) {
-        console.warn(`Using fallback coordinates for ZIP: ${zip}`);
-        return coords;
-      }
-
-      console.warn(`No coordinates found for ZIP: ${zip}`);
       return null;
 
     } catch (error) {
-      console.error('Geocoding error:', error);
+      console.error('❌ Geocoding network error:', error);
+
+      // Only use fallback if it's a network error, not a parsing error
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        console.log('🔄 Using fallback coordinates due to network error');
+        const zipCoordinates: { [key: string]: {lat: number; lng: number; city: string; state: string} } = {
+          "98498": { lat: 47.0379, lng: -122.9015, city: "Lakewood", state: "WA" },
+          "90210": { lat: 34.0901, lng: -118.4065, city: "Beverly Hills", state: "CA" },
+          "10001": { lat: 40.7505, lng: -73.9934, city: "New York", state: "NY" },
+          "60601": { lat: 41.8781, lng: -87.6298, city: "Chicago", state: "IL" },
+          "75001": { lat: 32.9483, lng: -96.7299, city: "Addison", state: "TX" }
+        };
+
+        const coords = zipCoordinates[zip];
+        if (coords) {
+          console.warn(`🆘 Using fallback coordinates for ZIP: ${zip}`);
+          return coords;
+        }
+      }
+
       return null;
     } finally {
       setIsGeocodingLoading(false);
@@ -1137,7 +1149,7 @@ export default function MySQLVehiclesOriginalStyle() {
               {/* Location Status */}
               {isGeocodingLoading && (
                 <div className="mt-2 text-sm text-gray-500 italic">
-                  Looking up location...
+                  🔍 Looking up location for ZIP {zipCode}...
                 </div>
               )}
 
@@ -1146,6 +1158,12 @@ export default function MySQLVehiclesOriginalStyle() {
                   📍 {userLocation.city && userLocation.state
                     ? `${userLocation.city}, ${userLocation.state}`
                     : `${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`}
+                </div>
+              )}
+
+              {!userLocation && !isGeocodingLoading && zipCode && zipCode.length >= 5 && (
+                <div className="mt-2 text-sm text-red-600">
+                  ❌ ZIP code "{zipCode}" not found. Try: 98498, 90210, 10001, 60601, 75001
                 </div>
               )}
 
