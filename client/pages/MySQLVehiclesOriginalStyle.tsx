@@ -717,7 +717,8 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Desktop Applied Filters */}
-            {(appliedFilters.condition.length > 0 ||
+            {(searchTerm.trim() ||
+              appliedFilters.condition.length > 0 ||
               appliedFilters.make.length > 0 ||
               appliedFilters.model.length > 0 ||
               appliedFilters.trim.length > 0 ||
