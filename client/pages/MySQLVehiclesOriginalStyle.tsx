@@ -1571,10 +1571,12 @@ export default function MySQLVehiclesOriginalStyle() {
                           onChange={(e) => {
                             e.stopPropagation();
                             if (e.target.checked) {
-                              setAppliedFilters((prev) => ({
-                                ...prev,
-                                trim: [...prev.trim, trim],
-                              }));
+                              const newFilters = {
+                                ...appliedFilters,
+                                trim: [...appliedFilters.trim, trim],
+                              };
+                              setAppliedFilters(newFilters);
+                              updateURLFromFilters(newFilters);
                             } else {
                               removeAppliedFilter("trim", trim);
                             }
