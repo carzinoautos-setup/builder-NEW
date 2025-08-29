@@ -289,3 +289,59 @@ export const geocodingHealthCheck: RequestHandler = async (req, res) => {
     });
   }
 };
+
+/**
+ * GET /api/geocode/cache/stats
+ * Get geocoding cache statistics
+ */
+export const getCacheStats: RequestHandler = async (req, res) => {
+  try {
+    const stats = {
+      totalCached: geocodeCache.size,
+      entries: Array.from(geocodeCache.entries()).map(([zip, data]) => ({
+        zip,
+        city: data.data.city,
+        state: data.data.state,
+        source: data.source,
+        cachedAt: new Date(data.timestamp).toISOString(),
+        age: Date.now() - data.timestamp,
+        expired: (Date.now() - data.timestamp) > CACHE_TTL
+      }))
+    };
+
+    res.status(200).json({
+      success: true,
+      data: stats,
+    });
+  } catch (error) {
+    console.error("Error getting cache stats:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error while getting cache stats",
+    });
+  }
+};
+
+/**
+ * DELETE /api/geocode/cache
+ * Clear geocoding cache
+ */
+export const clearGeocodingCache: RequestHandler = async (req, res) => {
+  try {
+    const previousSize = geocodeCache.size;
+    geocodeCache.clear();
+
+    res.status(200).json({
+      success: true,
+      message: `Geocoding cache cleared. Removed ${previousSize} entries.`,
+      previousSize,
+      currentSize: geocodeCache.size,
+    });
+  } catch (error) {
+    console.error("Error clearing geocoding cache:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error while clearing cache",
+    });
+  }
+};

@@ -18,6 +18,8 @@ import {
   geocodeZip,
   geocodeBatch,
   geocodingHealthCheck,
+  getCacheStats,
+  clearGeocodingCache,
 } from "./routes/geocoding.js";
 import {
   createDatabaseConnection,
@@ -75,6 +77,8 @@ export function createServer() {
 
   // Geocoding API routes
   app.get("/api/geocode/health", geocodingHealthCheck);
+  app.get("/api/geocode/cache/stats", getCacheStats);
+  app.delete("/api/geocode/cache", clearGeocodingCache);
   app.get("/api/geocode/:zip", geocodeZip);
   app.post("/api/geocode/batch", geocodeBatch);
 
