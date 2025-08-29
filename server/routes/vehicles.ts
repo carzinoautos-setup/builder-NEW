@@ -170,23 +170,27 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
  */
 export const healthCheck: RequestHandler = async (req, res) => {
   try {
-    // Simple query to test database connectivity
+    // Test service connectivity
     const testResult = await vehicleService.getVehicles({}, { page: 1, pageSize: 1 });
-    
+    const isMockService = vehicleService instanceof MockVehicleService;
+
     res.status(200).json({
       success: true,
-      message: 'Database connection healthy',
+      message: isMockService ? 'Mock service healthy (sample data)' : 'Database connection healthy',
       timestamp: new Date().toISOString(),
-      dbConnected: testResult.success
+      dbConnected: testResult.success,
+      usingMockData: isMockService,
+      totalRecords: testResult.meta?.totalRecords || 0
     });
 
   } catch (error) {
-    console.error('Database health check failed:', error);
+    console.error('Service health check failed:', error);
     res.status(500).json({
       success: false,
-      message: 'Database connection failed',
+      message: 'Service connection failed',
       timestamp: new Date().toISOString(),
-      dbConnected: false
+      dbConnected: false,
+      usingMockData: false
     });
   }
 };
