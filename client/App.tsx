@@ -29,6 +29,7 @@ const App = () => (
           />
           <Route path="/icon-demo" element={<IconDemo />} />
           <Route path="/payment-demo" element={<PaymentCalculatorDemo />} />
+          <Route path="/woocommerce-vehicles" element={<WooCommerceVehicles />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
