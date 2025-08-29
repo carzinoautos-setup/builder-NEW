@@ -516,6 +516,8 @@ export default function MySQLVehiclesOriginalStyle() {
       make: [],
       model: [],
       trim: [],
+      year: [],
+      bodyStyle: [],
       vehicleType: [],
       driveType: [],
       mileage: "",
@@ -531,6 +533,11 @@ export default function MySQLVehiclesOriginalStyle() {
     setPaymentMin("100");
     setPaymentMax("2000");
     setCurrentPage(1);
+
+    // Reset URL to base cars-for-sale path
+    if (location.pathname.startsWith('/cars-for-sale')) {
+      navigate('/cars-for-sale/', { replace: true });
+    }
   };
 
   const displayedVehicles = getDisplayedVehicles();
