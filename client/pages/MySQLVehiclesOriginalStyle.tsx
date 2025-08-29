@@ -191,7 +191,7 @@ export default function MySQLVehiclesOriginalStyle() {
   });
 
   const [collapsedFilters, setCollapsedFilters] = useState({
-    vehicleType: true,
+    vehicleType: false,
     condition: true,
     mileage: true,
     make: false,
@@ -836,7 +836,7 @@ export default function MySQLVehiclesOriginalStyle() {
       } else if (response.status === 404) {
         try {
           const errorResult = await response.json();
-          console.warn(`��� ZIP ${zip} not found: ${errorResult.message}`);
+          console.warn(`❌ ZIP ${zip} not found: ${errorResult.message}`);
         } catch {
           console.warn(`❌ ZIP ${zip} not found`);
         }
