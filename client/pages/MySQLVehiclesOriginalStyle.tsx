@@ -115,6 +115,10 @@ const normalizeFilterValue = (value: string) => {
 };
 
 export default function MySQLVehiclesOriginalStyle() {
+  // React Router hooks
+  const location = useLocation();
+  const navigate = useNavigate();
+
   // State management - exactly like original
   const [favorites, setFavorites] = useState<{ [key: number]: Vehicle }>({});
   const [keeperMessage, setKeeperMessage] = useState<number | null>(null);
