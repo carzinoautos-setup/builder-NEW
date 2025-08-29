@@ -43,19 +43,7 @@ export function NavigationHeader() {
               }`}
             >
               <Database className="w-4 h-4" />
-              MySQL Demo Style
-            </Link>
-
-            <Link
-              to="/mysql-vehicles-advanced"
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/mysql-vehicles-advanced')
-                  ? 'bg-red-100 text-red-700'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}
-            >
-              <Database className="w-4 h-4" />
-              MySQL Advanced
+              MySQL Vehicles (50k)
             </Link>
           </nav>
 
