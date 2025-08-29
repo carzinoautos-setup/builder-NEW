@@ -81,6 +81,9 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
     if (req.query.sellerType) {
       filters.sellerType = (req.query.sellerType as string).split(",");
     }
+    if (req.query.dealer) {
+      filters.dealer = (req.query.dealer as string).split(",");
+    }
 
     // Handle single value filters
     if (req.query.search) filters.search = req.query.search as string;
@@ -175,6 +178,28 @@ export const getSimpleFilterOptions: RequestHandler = async (req, res) => {
         driveTypes: [],
         sellerTypes: [],
       },
+    });
+  }
+};
+
+/**
+ * GET /api/dealers
+ * Get available dealers (only those with seller_type = "Dealer")
+ */
+export const getDealers: RequestHandler = async (req, res) => {
+  try {
+    const dealers = await vehicleService.getDealers();
+
+    res.status(200).json({
+      success: true,
+      data: dealers,
+    });
+  } catch (error) {
+    console.error("Error in getDealers route:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      data: [],
     });
   }
 };
