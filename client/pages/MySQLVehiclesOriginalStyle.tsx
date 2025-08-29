@@ -1935,7 +1935,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
             {/* Model (Conditional) */}
             <FilterSection
-              title="Model (Audi)"
+              title={`Model${appliedFilters.make.length > 0 ? ` (${appliedFilters.make[0]})` : ""}`}
               isCollapsed={collapsedFilters.model}
               onToggle={() => toggleFilter("model")}
             >
@@ -1945,7 +1945,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     Select a make first to see available models
                   </div>
                 ) : (
-                  ["A3", "A4", "A6", "Q5", "Q7", "Q8"].map((model) => (
+                  getModelsForMake(appliedFilters.make[0]).map((model) => (
                     <label
                       key={model}
                       className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
