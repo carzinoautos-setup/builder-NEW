@@ -2,6 +2,53 @@
 
 This document explains how to keep your WordPress seller data synchronized with the optimized location-based search system.
 
+## Prerequisites ⚠️
+
+Before running the sync system, you must complete these setup steps:
+
+### 1. Database Configuration
+The system needs access to both your **WordPress database** and **optimized MySQL database**:
+
+```bash
+# Set up database connection in environment variables
+# Add these to your .env file or server environment:
+
+# MySQL Database (for optimized structure)
+DB_HOST=your-mysql-host
+DB_USER=your-mysql-user
+DB_PASSWORD=your-mysql-password
+DB_NAME=your-database-name
+
+# WordPress Database (for sync source)
+WP_DB_HOST=your-wordpress-mysql-host
+WP_DB_USER=your-wordpress-mysql-user
+WP_DB_PASSWORD=your-wordpress-mysql-password
+WP_DB_NAME=your-wordpress-database-name
+```
+
+### 2. WordPress Database Access
+The sync system needs **READ access** to your WordPress database tables:
+- `wp_posts` (for SellersAccount and vehicle posts)
+- `wp_postmeta` (for custom field data)
+
+### 3. Required WordPress Meta Fields
+Your WordPress setup must have these custom fields configured:
+- `seller_account_numb` (on vehicle products)
+- `account_number_seller` (on SellersAccount posts)
+- `car_location_latitude` (on SellersAccount posts)
+- `car_location_longitude` (on SellersAccount posts)
+- `phone_seller`, `email_seller`, `city_seller`, `state_seller`, `zip_seller`
+
+### 4. Database Connection Test
+Verify your database connections work:
+```bash
+# Check sync status endpoint
+curl http://localhost:8080/api/wordpress/sync-status
+
+# Check database health
+curl http://localhost:8080/api/health
+```
+
 ## Workflow Overview
 
 1. **Continue using WordPress** as normal for adding new sellers and vehicles
