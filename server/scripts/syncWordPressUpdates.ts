@@ -185,5 +185,4 @@ if (isMainModule) {
     });
 }
 
-export { WordPressSync };
 export default WordPressSync;
