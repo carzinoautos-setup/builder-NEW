@@ -28,6 +28,10 @@ interface VehicleCardProps {
   favorites: { [key: number]: Vehicle };
   onToggleFavorite: (vehicle: Vehicle) => void;
   keeperMessage: number | null;
+  // Payment calculation parameters
+  termLength?: string;
+  interestRate?: string;
+  downPayment?: string;
 }
 
 export const VehicleCard: React.FC<VehicleCardProps> = ({
