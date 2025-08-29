@@ -146,20 +146,41 @@ pm2 logs wordpress-sync
 
 ## Troubleshooting
 
+### Database Connection Issues
+**Error: `connect ECONNREFUSED 127.0.0.1:3306`**
+1. **Check MySQL is running**: `sudo systemctl status mysql` (Linux) or check your database service
+2. **Verify connection details**: Ensure `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` are correct
+3. **Test connection manually**: Use a MySQL client to verify credentials work
+4. **Check firewall**: Ensure port 3306 (or your MySQL port) is open
+
+**WordPress Database Access**
+1. **Verify WordPress DB credentials**: Test connection to WordPress database separately
+2. **Check table permissions**: Ensure your user can read `wp_posts` and `wp_postmeta`
+3. **Test query manually**: Run a simple `SELECT * FROM wp_posts WHERE post_type='sellersaccount' LIMIT 1`
+
 ### Sync Not Running
-1. Check database connection
-2. Verify WordPress table access
-3. Check log files for errors
+1. **Check sync status**: Visit `/api/wordpress/sync-status` to see last attempt/success times
+2. **Verify WordPress table access**: Confirm SellersAccount posts exist with required meta fields
+3. **Check log files for errors**: Look at server console output during sync attempts
+4. **Manual test**: Run `npm run sync:wordpress` to see detailed error messages
 
 ### Missing New Vehicles
-1. Verify seller account numbers match in WordPress
-2. Run manual sync: `npm run sync:wordpress`
-3. Check that vehicle meta field `seller_account_numb` is populated
+1. **Verify seller account numbers match**: Check that `seller_account_numb` on vehicles matches `account_number_seller` on sellers
+2. **Run manual sync**: `npm run sync:wordpress` to force immediate update
+3. **Check meta field population**: Ensure all required custom fields have values
+4. **Verify post status**: Only `publish` status posts are synced
+
+### Radius Filter Still Not Working
+1. **Run initial migration first**: `npm run migrate:wordpress` (one-time setup)
+2. **Check vehicle coordinates**: Verify seller lat/lng data was copied to vehicle records
+3. **Test geocoding**: Visit `/api/geocode/90210` to ensure ZIP code lookup works
+4. **Verify spatial indexes**: Check that database performance indexes were created
 
 ### Performance Issues
-1. Monitor sync frequency (hourly is usually sufficient)
-2. Check database indexes are created
-3. Verify coordinate geocoding is working
+1. **Monitor sync frequency**: Hourly is usually sufficient, don't over-sync
+2. **Check database indexes**: Run migration script to ensure spatial indexes exist
+3. **Verify coordinate geocoding**: Ensure Google Maps API key is set and working
+4. **Monitor server resources**: Heavy sync operations may need more memory/CPU
 
 ## Benefits
 
