@@ -223,7 +223,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                       Payments
                     </div>
                     <div className="carzino-price-value text-red-600">
-                      {vehicle.payment}
+                      {getDisplayPayment()}
                       <span className="text-xs text-black font-normal">
                         /mo*
                       </span>
