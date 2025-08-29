@@ -180,12 +180,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         <div className="flex justify-between items-start">
           <div className="flex-1 min-w-0">
             <div
-              className="text-gray-900 truncate"
-              style={{ fontSize: "12px", fontWeight: 500 }}
-            >
-              {vehicle.dealer}
-            </div>
-            <div
               className="text-black font-medium truncate"
               style={{ fontSize: "12px" }}
             >
