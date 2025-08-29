@@ -742,6 +742,18 @@ export default function MySQLVehiclesOriginalStyle() {
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  {searchTerm.trim() && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      "{searchTerm}"
+                      <button
+                        onClick={() => setSearchTerm("")}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
                   {appliedFilters.condition.map((item) => (
                     <span
                       key={item}
