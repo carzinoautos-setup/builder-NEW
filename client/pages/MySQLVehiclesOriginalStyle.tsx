@@ -3036,7 +3036,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   onChange={(e) => setSortBy(e.target.value)}
                   className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none bg-white"
                 >
-                  <option value="relevance">Sort by Relevance</option>
+                  <option value="relevance">Sort</option>
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>
                   <option value="miles-low">Miles: Low to High</option>
