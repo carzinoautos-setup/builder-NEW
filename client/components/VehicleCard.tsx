@@ -16,6 +16,7 @@ interface Vehicle {
   dealer: string;
   location: string;
   phone: string;
+  seller_type: string;
 }
 
 interface VehicleCardProps {
