@@ -1933,11 +1933,11 @@ export default function MySQLVehiclesOriginalStyle() {
               <div className="space-y-1">
                 {[
                   "Sedan",
-                  "SUV",
+                  "Crossover/SUV",
                   "Coupe",
                   "Convertible",
                   "Hatchback",
-                  "Truck",
+                  "Trucks",
                   "Wagon",
                   "Van",
                 ].map((bodyStyle) => (
