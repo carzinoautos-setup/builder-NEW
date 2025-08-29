@@ -184,6 +184,7 @@ export default function MySQLVehiclesOriginalStyle() {
     mileage: "",
     exteriorColor: [] as string[],
     sellerType: [] as string[],
+    dealer: [] as string[],
     priceMin: "",
     priceMax: "",
     paymentMin: "",
@@ -288,6 +289,9 @@ export default function MySQLVehiclesOriginalStyle() {
       }
       if (appliedFilters.sellerType.length > 0) {
         params.append("sellerType", appliedFilters.sellerType.join(","));
+      }
+      if (appliedFilters.dealer.length > 0) {
+        params.append("dealer", appliedFilters.dealer.join(","));
       }
       if (appliedFilters.priceMin) {
         params.append("priceMin", appliedFilters.priceMin);
@@ -928,7 +932,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
         const coords = zipCoordinates[zip];
         if (coords) {
-          console.warn(`🆘 Using fallback coordinates for ZIP: ${zip}`);
+          console.warn(`��� Using fallback coordinates for ZIP: ${zip}`);
           return coords;
         }
 
