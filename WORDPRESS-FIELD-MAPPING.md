@@ -107,6 +107,31 @@ const featured = vehicle.is_featured === 'yes' ? 1 : 0;
 )}
 ```
 
+## Seller Account Privacy & Sync
+
+### Privacy Protection 🔒
+- **Seller account numbers are COMPLETELY HIDDEN from users**
+- Numbers like "ACCT1234" do not appear anywhere in the frontend
+- Users only see seller type ("Dealer" or "Private Seller")
+- Account numbers exist only in the database for internal operations
+
+### Sync Functionality 🔄
+- **WordPress vehicles** use `_vehicle_seller_account` field (e.g., "ACCT1234")
+- **WordPress sellers** use `account_number_seller` field (e.g., "ACCT1234")
+- **System matches** these fields to link vehicles to sellers
+- **Location data** syncs from seller to vehicle automatically
+- **Database queries** use these relationships for fast location searches
+
+### Data Flow
+```
+WordPress Vehicle → _vehicle_seller_account: "ACCT1234"
+WordPress Seller  → account_number_seller: "ACCT1234"
+                           ↓
+System links vehicle location to seller location
+                           ↓
+User sees: "Dealer" (no account number visible)
+```
+
 ## Sync Behavior
 
 **Ongoing Sync**: Every hour, the system checks for:
