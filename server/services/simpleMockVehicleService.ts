@@ -59,6 +59,21 @@ const DRIVETRAINS = ["4WD", "AWD", "FWD", "RWD"];
 const DOORS = ["2 doors", "4 doors"];
 const SELLER_TYPES = ["Dealer", "Private Seller"];
 
+// Valid body styles - excludes "Uncategorized" per validation rules
+const VALID_BODY_STYLES = [
+  "Sedan",
+  "Crossover/SUV",
+  "Coupe",
+  "Convertible",
+  "Hatchback",
+  "Van / Minivan",
+  "Wagon",
+  "Trucks",
+  "Regular Cab",
+  "Extended Cab",
+  "Crew Cab",
+];
+
 const DEALERS = [
   "Bayside Ford",
   "Premium Auto Group",
@@ -129,6 +144,7 @@ function generateSimpleVehicleRecord(id: number): SimpleVehicleRecord {
   const trim = randomChoice(TRIMS);
   const condition = randomChoice(CONDITIONS);
   const drivetrain = randomChoice(DRIVETRAINS);
+  const bodyStyle = randomChoice(VALID_BODY_STYLES);
 
   // Generate mileage based on condition
   let mileage: number;
@@ -171,6 +187,7 @@ function generateSimpleVehicleRecord(id: number): SimpleVehicleRecord {
     doors: randomChoice(DOORS),
     drivetrain,
     condition,
+    body_style: bodyStyle,
     salePrice: hasPrice ? formatPrice(price) : null,
     payment: hasPrice ? `$${monthlyPayment}` : null,
     dealer: randomChoice(DEALERS),
