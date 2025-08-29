@@ -24,6 +24,10 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route
+            path="/cars-for-sale/*"
+            element={<MySQLVehiclesOriginalStyle />}
+          />
+          <Route
             path="/mysql-vehicles"
             element={<MySQLVehiclesOriginalStyle />}
           />
