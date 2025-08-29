@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 
-// Basic ZIP code to coordinate mapping (expandable)
-const ZIP_COORDINATES: { [key: string]: {lat: number; lng: number; city: string; state: string} } = {
+// Fallback ZIP code coordinates (used when Google Maps API fails)
+const FALLBACK_ZIP_COORDINATES: { [key: string]: {lat: number; lng: number; city: string; state: string} } = {
   "98498": { lat: 47.0379, lng: -122.9015, city: "Lakewood", state: "WA" },
   "90210": { lat: 34.0901, lng: -118.4065, city: "Beverly Hills", state: "CA" },
   "10001": { lat: 40.7505, lng: -73.9934, city: "New York", state: "NY" },
@@ -19,9 +19,116 @@ const ZIP_COORDINATES: { [key: string]: {lat: number; lng: number; city: string;
   "55401": { lat: 44.9778, lng: -93.2650, city: "Minneapolis", state: "MN" },
 };
 
+// In-memory cache for geocoded results (with TTL)
+interface CachedResult {
+  data: {lat: number; lng: number; city: string; state: string};
+  timestamp: number;
+  source: 'google' | 'fallback';
+}
+
+const geocodeCache = new Map<string, CachedResult>();
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+/**
+ * Geocode ZIP using Google Maps API
+ */
+async function geocodeWithGoogle(zip: string): Promise<{lat: number; lng: number; city: string; state: string} | null> {
+  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+
+  if (!apiKey) {
+    console.warn('🚨 GOOGLE_MAPS_API_KEY not found, using fallback coordinates');
+    return null;
+  }
+
+  try {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=${apiKey}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error(`❌ Google Maps API error: ${response.status} ${response.statusText}`);
+      return null;
+    }
+
+    const data = await response.json();
+
+    if (data.status !== 'OK' || !data.results || data.results.length === 0) {
+      console.warn(`❌ Google Maps API: ${data.status} - ${data.error_message || 'No results found'}`);
+      return null;
+    }
+
+    const result = data.results[0];
+    const location = result.geometry.location;
+
+    // Extract city and state from address components
+    let city = '';
+    let state = '';
+
+    for (const component of result.address_components) {
+      if (component.types.includes('locality')) {
+        city = component.long_name;
+      } else if (component.types.includes('administrative_area_level_1')) {
+        state = component.short_name;
+      }
+    }
+
+    const geocodedResult = {
+      lat: location.lat,
+      lng: location.lng,
+      city: city || 'Unknown',
+      state: state || 'Unknown'
+    };
+
+    console.log(`✅ Google Maps geocoded ${zip} to ${city}, ${state}`);
+    return geocodedResult;
+
+  } catch (error) {
+    console.error('❌ Google Maps API network error:', error);
+    return null;
+  }
+}
+
+/**
+ * Get cached or fresh geocoded result
+ */
+async function getCachedOrFreshGeocode(zip: string): Promise<{lat: number; lng: number; city: string; state: string; source: string} | null> {
+  // Check cache first
+  const cached = geocodeCache.get(zip);
+  if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+    console.log(`📋 Using cached result for ${zip} (${cached.source})`);
+    return { ...cached.data, source: cached.source };
+  }
+
+  // Try Google Maps API first
+  const googleResult = await geocodeWithGoogle(zip);
+  if (googleResult) {
+    // Cache the Google result
+    geocodeCache.set(zip, {
+      data: googleResult,
+      timestamp: Date.now(),
+      source: 'google'
+    });
+    return { ...googleResult, source: 'google' };
+  }
+
+  // Fall back to hardcoded coordinates
+  const fallbackResult = FALLBACK_ZIP_COORDINATES[zip];
+  if (fallbackResult) {
+    console.warn(`🆘 Using fallback coordinates for ${zip}`);
+    // Cache the fallback result (shorter TTL)
+    geocodeCache.set(zip, {
+      data: fallbackResult,
+      timestamp: Date.now() - (CACHE_TTL * 0.8), // Shorter cache time for fallbacks
+      source: 'fallback'
+    });
+    return { ...fallbackResult, source: 'fallback' };
+  }
+
+  return null;
+}
+
 /**
  * GET /api/geocode/:zip
- * Convert ZIP code to coordinates
+ * Convert ZIP code to coordinates using Google Maps API
  */
 export const geocodeZip: RequestHandler = async (req, res) => {
   try {
@@ -37,18 +144,27 @@ export const geocodeZip: RequestHandler = async (req, res) => {
 
     // Use only 5-digit ZIP
     const zipCode = zip.substring(0, 5);
-    const result = ZIP_COORDINATES[zipCode];
+    const result = await getCachedOrFreshGeocode(zipCode);
 
     if (!result) {
       return res.status(404).json({
         success: false,
-        message: `ZIP code ${zipCode} not found. Supported ZIPs: ${Object.keys(ZIP_COORDINATES).join(', ')}`,
+        message: `ZIP code ${zipCode} not found. Please verify the ZIP code is valid.`,
       });
     }
 
     res.status(200).json({
       success: true,
-      data: result,
+      data: {
+        lat: result.lat,
+        lng: result.lng,
+        city: result.city,
+        state: result.state
+      },
+      meta: {
+        source: result.source,
+        cached: geocodeCache.has(zipCode)
+      }
     });
   } catch (error) {
     console.error("Error in geocodeZip route:", error);
@@ -61,7 +177,7 @@ export const geocodeZip: RequestHandler = async (req, res) => {
 
 /**
  * POST /api/geocode/batch
- * Geocode multiple ZIP codes at once
+ * Geocode multiple ZIP codes at once using Google Maps API
  */
 export const geocodeBatch: RequestHandler = async (req, res) => {
   try {
@@ -77,12 +193,13 @@ export const geocodeBatch: RequestHandler = async (req, res) => {
     if (zips.length > 50) {
       return res.status(400).json({
         success: false,
-        message: "Maximum 50 ZIP codes allowed per batch request",
+        message: "Maximum 50 ZIP codes allowed per batch request (Google Maps API limit)",
       });
     }
 
     const results = [];
 
+    // Process sequentially to avoid hitting Google Maps API rate limits
     for (const zip of zips) {
       if (!/^\d{5}(-\d{4})?$/.test(zip)) {
         results.push({
@@ -94,19 +211,35 @@ export const geocodeBatch: RequestHandler = async (req, res) => {
       }
 
       const zipCode = zip.substring(0, 5);
-      const result = ZIP_COORDINATES[zipCode];
+      const result = await getCachedOrFreshGeocode(zipCode);
 
       results.push({
         zip,
         success: !!result,
-        data: result,
+        data: result ? {
+          lat: result.lat,
+          lng: result.lng,
+          city: result.city,
+          state: result.state
+        } : undefined,
+        source: result?.source,
         error: result ? undefined : "ZIP code not found",
       });
+
+      // Small delay to avoid hitting rate limits
+      if (result?.source === 'google') {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
     }
 
     res.status(200).json({
       success: true,
       data: results,
+      meta: {
+        totalProcessed: results.length,
+        successful: results.filter(r => r.success).length,
+        failed: results.filter(r => !r.success).length
+      }
     });
   } catch (error) {
     console.error("Error in geocodeBatch route:", error);
@@ -123,17 +256,29 @@ export const geocodeBatch: RequestHandler = async (req, res) => {
  */
 export const geocodingHealthCheck: RequestHandler = async (req, res) => {
   try {
+    const hasApiKey = !!process.env.GOOGLE_MAPS_API_KEY;
+
     // Test with a known ZIP code
-    const testResult = ZIP_COORDINATES["98498"];
+    const testResult = await getCachedOrFreshGeocode("98498");
 
     res.status(200).json({
       success: true,
       message: "Geocoding service healthy",
       timestamp: new Date().toISOString(),
+      googleMapsApiEnabled: hasApiKey,
       testZip: "98498",
-      testResult: testResult,
-      availableZips: Object.keys(ZIP_COORDINATES).length,
-      supportedZips: Object.keys(ZIP_COORDINATES).slice(0, 5), // Show first 5
+      testResult: testResult ? {
+        lat: testResult.lat,
+        lng: testResult.lng,
+        city: testResult.city,
+        state: testResult.state,
+        source: testResult.source
+      } : null,
+      fallbackZips: Object.keys(FALLBACK_ZIP_COORDINATES).length,
+      cacheSize: geocodeCache.size,
+      capabilities: hasApiKey
+        ? "Google Maps API + Fallback coordinates + Caching"
+        : "Fallback coordinates only + Caching"
     });
   } catch (error) {
     console.error("Geocoding service health check failed:", error);
