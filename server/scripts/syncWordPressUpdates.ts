@@ -98,36 +98,40 @@ export class WordPressSync {
   }
 
   /**
-   * Sync new vehicles and update their seller coordinates
+   * Sync new vehicles and update their seller coordinates using your exact WooCommerce meta keys
    */
   async syncNewVehicles(): Promise<number> {
     console.log("🔄 Syncing new vehicles from WordPress...");
 
-    // This would sync new vehicle posts with their seller relationships
-    // You'll need to adapt this based on how vehicles reference seller account numbers
+    // Query using your exact WooCommerce meta keys
     const wpVehicleQuery = `
-      SELECT 
+      SELECT
         p.ID,
         p.post_title as title,
         p.post_modified,
-        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'seller_account_numb') as seller_account_number,
+        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_vehicle_seller_account') as seller_account_number,
+        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'is_featured') as is_featured,
         (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'year') as year,
         (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'make') as make,
         (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'model') as model,
-        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'price') as price
+        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'trim') as trim,
+        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'mileage') as mileage,
+        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'condition') as condition,
+        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'drivetrain') as drivetrain,
+        (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_price') as price
       FROM wp_posts p
       WHERE p.post_type = 'product'
         AND p.post_status = 'publish'
         AND p.post_modified > (
-          SELECT COALESCE(MAX(updated_at), '1970-01-01') 
-          FROM vehicles 
+          SELECT COALESCE(MAX(updated_at), '1970-01-01')
+          FROM vehicles
           WHERE updated_at IS NOT NULL
         )
         AND EXISTS (
-          SELECT 1 FROM wp_postmeta 
-          WHERE post_id = p.ID 
-            AND meta_key = 'seller_account_numb'
-            AND meta_value IS NOT NULL 
+          SELECT 1 FROM wp_postmeta
+          WHERE post_id = p.ID
+            AND meta_key = '_vehicle_seller_account'
+            AND meta_value IS NOT NULL
             AND meta_value != ''
         )
       ORDER BY p.post_modified ASC
@@ -138,10 +142,47 @@ export class WordPressSync {
 
     console.log(`📊 Found ${vehicles.length} new vehicles to sync`);
 
-    // Insert new vehicles (you'll need to adapt the INSERT based on your vehicle schema)
     let syncedCount = 0;
     for (const vehicle of vehicles) {
-      // Insert vehicle logic here...
+      if (!vehicle.seller_account_number) continue;
+
+      // Apply your badge logic: is_featured = "yes" shows "Featured!" badge
+      const featured = vehicle.is_featured === 'yes' ? 1 : 0;
+
+      const insertSQL = `
+        INSERT INTO vehicles (
+          wp_id, title, year, make, model, trim, mileage, condition,
+          drivetrain, price, featured, seller_account_number, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        ON DUPLICATE KEY UPDATE
+          title = VALUES(title),
+          year = VALUES(year),
+          make = VALUES(make),
+          model = VALUES(model),
+          trim = VALUES(trim),
+          mileage = VALUES(mileage),
+          condition = VALUES(condition),
+          drivetrain = VALUES(drivetrain),
+          price = VALUES(price),
+          featured = VALUES(featured),
+          updated_at = NOW()
+      `;
+
+      await this.db.execute(insertSQL, [
+        vehicle.ID,
+        vehicle.title,
+        parseInt(vehicle.year) || null,
+        vehicle.make,
+        vehicle.model,
+        vehicle.trim,
+        parseInt(vehicle.mileage) || 0,
+        vehicle.condition,
+        vehicle.drivetrain,
+        parseFloat(vehicle.price) || 0,
+        featured,
+        vehicle.seller_account_number
+      ]);
+
       syncedCount++;
     }
 
