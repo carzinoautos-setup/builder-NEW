@@ -253,7 +253,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 No Sale Price Listed
               </div>
               <div className="carzino-price-value text-gray-900">
-                Call For Pricing
+                Call for Price
               </div>
             </div>
           )}
