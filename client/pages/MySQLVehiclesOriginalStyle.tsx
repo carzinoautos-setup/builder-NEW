@@ -1773,10 +1773,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     onChange={(e) => {
                       e.stopPropagation();
                       if (e.target.checked) {
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          condition: [...prev.condition, "New"],
-                        }));
+                        const newFilters = {
+                          ...appliedFilters,
+                          condition: [...appliedFilters.condition, "New"],
+                        };
+                        setAppliedFilters(newFilters);
+                        updateURLFromFilters(newFilters);
                       } else {
                         removeAppliedFilter("condition", "New");
                       }
