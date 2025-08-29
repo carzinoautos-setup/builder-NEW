@@ -174,6 +174,7 @@ function generateSimpleVehicleRecord(id: number): SimpleVehicleRecord {
     location: randomChoice(LOCATIONS),
     phone: `(${randomInt(200, 999)}) ${randomInt(100, 999)}-${randomInt(1000, 9999)}`,
     seller_type: randomChoice(SELLER_TYPES),
+    seller_account_number: `ACCT${randomInt(1000, 9999)}`,
   };
 }
 
