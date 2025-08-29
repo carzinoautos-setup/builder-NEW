@@ -2476,6 +2476,76 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </FilterSection>
 
+            {/* Transmission */}
+            <FilterSection
+              title="Transmission"
+              isCollapsed={collapsedFilters.transmission}
+              onToggle={() => toggleFilter("transmission")}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.transmission.includes("Auto")}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          transmission: [...prev.transmission, "Auto"],
+                        }));
+                      } else {
+                        removeAppliedFilter("transmission", "Auto");
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">Automatic</span>
+                  <span className="carzino-filter-count ml-1">(35,247)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.transmission.includes("Manual")}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          transmission: [...prev.transmission, "Manual"],
+                        }));
+                      } else {
+                        removeAppliedFilter("transmission", "Manual");
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">Manual</span>
+                  <span className="carzino-filter-count ml-1">(4,823)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.transmission.includes("CVT")}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          transmission: [...prev.transmission, "CVT"],
+                        }));
+                      } else {
+                        removeAppliedFilter("transmission", "CVT");
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">CVT</span>
+                  <span className="carzino-filter-count ml-1">(9,930)</span>
+                </label>
+              </div>
+            </FilterSection>
+
             {/* Transmission Speed */}
             <FilterSection
               title="Transmission Speed"
