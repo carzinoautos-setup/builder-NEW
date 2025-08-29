@@ -9,6 +9,7 @@ import {
   Heart,
   Sliders,
   Check,
+  MapPin,
 } from "lucide-react";
 import { VehicleCard } from "@/components/VehicleCard";
 import { FilterSection } from "@/components/FilterSection";
