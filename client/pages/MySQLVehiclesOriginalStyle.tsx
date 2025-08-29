@@ -386,29 +386,28 @@ export default function MySQLVehiclesOriginalStyle() {
     setCurrentPage(1); // Reset to first page when applying filters
   };
 
-  // Geocoding function to convert ZIP to lat/lng
+  // Geocoding function to convert ZIP to lat/lng using optimized backend
   const geocodeZip = async (zip: string): Promise<{lat: number; lng: number; city?: string; state?: string} | null> => {
     if (!zip || zip.length < 5) return null;
 
     try {
       setIsGeocodingLoading(true);
 
-      // First try to call our API geocoding endpoint if available
+      // Call our optimized geocoding API
       const response = await fetch(`/api/geocode/${zip}`);
       if (response.ok) {
-        const data = await response.json();
-        if (data.lat && data.lng) {
+        const result = await response.json();
+        if (result.success && result.data) {
           return {
-            lat: parseFloat(data.lat),
-            lng: parseFloat(data.lng),
-            city: data.city,
-            state: data.state
+            lat: result.data.lat,
+            lng: result.data.lng,
+            city: result.data.city,
+            state: result.data.state
           };
         }
       }
 
-      // Fallback to browser geolocation API or external service
-      // For now, we'll use a simple ZIP to coordinate mapping for common ZIPs
+      // Fallback for common ZIPs (in case backend service is down)
       const zipCoordinates: { [key: string]: {lat: number; lng: number; city: string; state: string} } = {
         "98498": { lat: 47.0379, lng: -122.9015, city: "Lakewood", state: "WA" },
         "90210": { lat: 34.0901, lng: -118.4065, city: "Beverly Hills", state: "CA" },
@@ -419,6 +418,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
       const coords = zipCoordinates[zip];
       if (coords) {
+        console.warn(`Using fallback coordinates for ZIP: ${zip}`);
         return coords;
       }
 
