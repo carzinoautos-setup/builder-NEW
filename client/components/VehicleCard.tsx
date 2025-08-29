@@ -148,16 +148,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                   className="w-4 h-4 object-contain"
                 />
               ) : (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-4 h-4"
-                >
-                  <rect x="3" y="4" width="18" height="16" rx="2" />
-                  <path d="M7 4v16" />
-                </svg>
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff5793a859e2548bc9bc984fcae57131c?format=webp&width=800"
+                  alt="Car door"
+                  className="w-4 h-4 object-contain"
+                />
               )}
             </div>
             <span className="text-black font-medium">{vehicle.doors}</span>
