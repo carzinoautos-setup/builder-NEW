@@ -551,8 +551,230 @@ export default function MySQLVehiclesOriginalStyle() {
               )}
             </div>
 
+            {/* Desktop Search Section */}
+            <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search Vehicles"
+                  className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
+                />
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
+                  <Search className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop Applied Filters */}
+            {(appliedFilters.condition.length > 0 ||
+              appliedFilters.make.length > 0 ||
+              appliedFilters.model.length > 0 ||
+              appliedFilters.trim.length > 0 ||
+              appliedFilters.driveType.length > 0 ||
+              appliedFilters.vehicleType.length > 0 ||
+              appliedFilters.mileage ||
+              appliedFilters.exteriorColor.length > 0 ||
+              appliedFilters.sellerType.length > 0 ||
+              appliedFilters.priceMin ||
+              appliedFilters.priceMax ||
+              appliedFilters.paymentMin ||
+              appliedFilters.paymentMax) && (
+              <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="carzino-filter-title">Applied Filters</h3>
+                  <button
+                    onClick={clearAllFilters}
+                    className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium hover:bg-red-700"
+                  >
+                    Clear All
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {appliedFilters.condition.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("condition", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.make.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("make", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.model.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("model", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.trim.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("trim", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.vehicleType.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("vehicleType", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.driveType.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("driveType", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.exteriorColor.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item} Color
+                      <button
+                        onClick={() => removeAppliedFilter("exteriorColor", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.sellerType.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("sellerType", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.mileage && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {appliedFilters.mileage === "100001"
+                        ? "100k+ miles"
+                        : `Under ${parseInt(appliedFilters.mileage).toLocaleString()} mi`}
+                      <button
+                        onClick={() =>
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            mileage: "",
+                          }))
+                        }
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
+                  {(appliedFilters.priceMin || appliedFilters.priceMax) && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />$
+                      {appliedFilters.priceMin || "0"} - $
+                      {appliedFilters.priceMax || "Any"}
+                      <button
+                        onClick={() => {
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            priceMin: "",
+                            priceMax: "",
+                          }));
+                          setPriceMin("10000");
+                          setPriceMax("100000");
+                        }}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
+                  {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />$
+                      {appliedFilters.paymentMin || "0"}-$
+                      {appliedFilters.paymentMax || "Any"}/mo
+                      <button
+                        onClick={() =>
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            paymentMin: "",
+                            paymentMax: "",
+                          }))
+                        }
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Distance */}
-            <div className="mb-4 pb-4 border border-gray-200 rounded-lg p-3">
+            <div className="mb-4 pb-4 border-b border-gray-200">
               <label className="carzino-location-label block mb-2">Distance</label>
               <input
                 type="text"
