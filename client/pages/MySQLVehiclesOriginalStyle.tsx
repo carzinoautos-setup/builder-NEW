@@ -512,6 +512,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
   const clearAllFilters = () => {
     setSearchTerm("");
+    setUnifiedSearch("");
     setZipCode("98498"); // Reset to default ZIP
     setRadius("200"); // Reset to default radius
     setAppliedLocation(null);
