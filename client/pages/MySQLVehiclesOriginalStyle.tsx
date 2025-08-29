@@ -195,8 +195,8 @@ export default function MySQLVehiclesOriginalStyle() {
     condition: true,
     mileage: true,
     make: false,
-    model: false,
-    trim: false,
+    model: true,
+    trim: true,
     year: true,
     bodyStyle: false,
     price: false,
@@ -836,7 +836,7 @@ export default function MySQLVehiclesOriginalStyle() {
       } else if (response.status === 404) {
         try {
           const errorResult = await response.json();
-          console.warn(`❌ ZIP ${zip} not found: ${errorResult.message}`);
+          console.warn(`��� ZIP ${zip} not found: ${errorResult.message}`);
         } catch {
           console.warn(`❌ ZIP ${zip} not found`);
         }
