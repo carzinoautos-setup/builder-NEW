@@ -623,6 +623,8 @@ export default function MySQLVehiclesOriginalStyle() {
                 <input
                   type="text"
                   placeholder="Search Vehicles"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="carzino-search-input w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:border-red-600"
                 />
                 <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
@@ -691,6 +693,8 @@ export default function MySQLVehiclesOriginalStyle() {
                 <input
                   type="text"
                   placeholder="Search Vehicles"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
                 />
                 <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
