@@ -229,8 +229,9 @@ export class WordPressMigration {
   }
 }
 
-// CLI runner
-if (require.main === module) {
+// CLI runner (ES module compatible)
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
   const migration = new WordPressMigration();
   migration.runFullMigration()
     .then(() => process.exit(0))
@@ -240,4 +241,5 @@ if (require.main === module) {
     });
 }
 
+export { WordPressMigration };
 export default WordPressMigration;
