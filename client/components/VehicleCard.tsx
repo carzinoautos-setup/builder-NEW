@@ -11,6 +11,7 @@ interface Vehicle {
   mileage: string;
   transmission: string;
   doors: string;
+  doorIcon?: string; // Optional custom door icon URL
   salePrice: string | null;
   payment: string | null;
   dealer: string;
