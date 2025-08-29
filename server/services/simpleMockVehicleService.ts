@@ -208,10 +208,11 @@ export class SimpleMockVehicleService {
     );
     this.generateMockData();
     // Apply validation rule to ensure no invalid body_style vehicles
-    this.vehicles = this.vehicles.filter(vehicle =>
-      vehicle.body_style &&
-      vehicle.body_style !== "Uncategorized" &&
-      vehicle.body_style.trim() !== ""
+    this.vehicles = this.vehicles.filter(
+      (vehicle) =>
+        vehicle.body_style &&
+        vehicle.body_style !== "Uncategorized" &&
+        vehicle.body_style.trim() !== "",
     );
     console.log(
       `✅ SimpleMockVehicleService: ${this.vehicles.length} vehicles generated (invalid body_style excluded)`,
@@ -229,9 +230,11 @@ export class SimpleMockVehicleService {
     filters: SimpleVehicleFilters,
   ): boolean {
     // VALIDATION RULE: Exclude vehicles with invalid body_style
-    if (!vehicle.body_style ||
-        vehicle.body_style === "Uncategorized" ||
-        vehicle.body_style.trim() === "") {
+    if (
+      !vehicle.body_style ||
+      vehicle.body_style === "Uncategorized" ||
+      vehicle.body_style.trim() === ""
+    ) {
       return false;
     }
 
@@ -405,11 +408,12 @@ export class SimpleMockVehicleService {
 
   async getDealers(): Promise<{ name: string; count: number }[]> {
     // Get dealers only from vehicles where seller_type = "Dealer" AND valid body_style
-    const dealerVehicles = this.vehicles.filter((v) =>
-      v.seller_type === "Dealer" &&
-      v.body_style &&
-      v.body_style !== "Uncategorized" &&
-      v.body_style.trim() !== ""
+    const dealerVehicles = this.vehicles.filter(
+      (v) =>
+        v.seller_type === "Dealer" &&
+        v.body_style &&
+        v.body_style !== "Uncategorized" &&
+        v.body_style.trim() !== "",
     );
 
     // Count vehicles per dealer
@@ -429,10 +433,11 @@ export class SimpleMockVehicleService {
 
   async getVehicleTypeCounts(): Promise<{ name: string; count: number }[]> {
     // Only count vehicles with valid body_style
-    const validVehicles = this.vehicles.filter(v =>
-      v.body_style &&
-      v.body_style !== "Uncategorized" &&
-      v.body_style.trim() !== ""
+    const validVehicles = this.vehicles.filter(
+      (v) =>
+        v.body_style &&
+        v.body_style !== "Uncategorized" &&
+        v.body_style.trim() !== "",
     );
 
     // Count vehicles per body style
@@ -457,10 +462,11 @@ export class SimpleMockVehicleService {
     sellerTypes: string[];
   }> {
     // Only include options from vehicles with valid body_style
-    const validVehicles = this.vehicles.filter(v =>
-      v.body_style &&
-      v.body_style !== "Uncategorized" &&
-      v.body_style.trim() !== ""
+    const validVehicles = this.vehicles.filter(
+      (v) =>
+        v.body_style &&
+        v.body_style !== "Uncategorized" &&
+        v.body_style.trim() !== "",
     );
 
     // Extract makes from vehicle titles

@@ -157,10 +157,14 @@ export default function MySQLVehiclesOriginalStyle() {
   const [radius, setRadius] = useState("200"); // Default radius in miles
 
   // Dealers state
-  const [availableDealers, setAvailableDealers] = useState<{name: string, count: number}[]>([]);
+  const [availableDealers, setAvailableDealers] = useState<
+    { name: string; count: number }[]
+  >([]);
 
   // Vehicle types state
-  const [vehicleTypes, setVehicleTypes] = useState<{name: string, count: number}[]>([]);
+  const [vehicleTypes, setVehicleTypes] = useState<
+    { name: string; count: number }[]
+  >([]);
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
@@ -244,14 +248,21 @@ export default function MySQLVehiclesOriginalStyle() {
   // Get models for a specific make
   const getModelsForMake = (make: string): string[] => {
     const modelsByMake: { [key: string]: string[] } = {
-      "Audi": ["A3", "A4", "A6", "Q5", "Q7", "Q8"],
-      "BMW": ["3 Series", "5 Series", "X3", "X5", "X7"],
-      "Chevrolet": ["Silverado", "Equinox", "Malibu", "Traverse", "Camaro", "Tahoe"],
-      "Ford": ["F-150", "Escape", "Explorer", "Mustang", "Edge", "Expedition"],
-      "Honda": ["Civic", "Accord", "CR-V", "Pilot", "HR-V"],
-      "Hyundai": ["Elantra", "Sonata", "Tucson", "Santa Fe", "Palisade"],
+      Audi: ["A3", "A4", "A6", "Q5", "Q7", "Q8"],
+      BMW: ["3 Series", "5 Series", "X3", "X5", "X7"],
+      Chevrolet: [
+        "Silverado",
+        "Equinox",
+        "Malibu",
+        "Traverse",
+        "Camaro",
+        "Tahoe",
+      ],
+      Ford: ["F-150", "Escape", "Explorer", "Mustang", "Edge", "Expedition"],
+      Honda: ["Civic", "Accord", "CR-V", "Pilot", "HR-V"],
+      Hyundai: ["Elantra", "Sonata", "Tucson", "Santa Fe", "Palisade"],
       "Mercedes-Benz": ["C-Class", "E-Class", "GLC", "GLE", "S-Class"],
-      "Nissan": ["Altima", "Sentra", "Rogue", "Pathfinder", "Murano"],
+      Nissan: ["Altima", "Sentra", "Rogue", "Pathfinder", "Murano"],
     };
 
     return modelsByMake[make] || [];
@@ -374,17 +385,23 @@ export default function MySQLVehiclesOriginalStyle() {
         setError(
           "Request timed out. Please check your internet connection and try again.",
         );
-      } else if (err instanceof Error && err.message.includes("API error: 404")) {
+      } else if (
+        err instanceof Error &&
+        err.message.includes("API error: 404")
+      ) {
         setError(
           "Vehicle database service is temporarily unavailable. Please try again later.",
         );
-      } else if (err instanceof Error && err.message.includes("API error: 500")) {
-        setError(
-          "Server error occurred. Please try again in a few moments.",
-        );
+      } else if (
+        err instanceof Error &&
+        err.message.includes("API error: 500")
+      ) {
+        setError("Server error occurred. Please try again in a few moments.");
       } else {
         setError(
-          err instanceof Error ? err.message : "An unexpected error occurred while loading vehicles.",
+          err instanceof Error
+            ? err.message
+            : "An unexpected error occurred while loading vehicles.",
         );
       }
 
@@ -599,7 +616,11 @@ export default function MySQLVehiclesOriginalStyle() {
           const data = await response.json();
           if (data.success && data.data) {
             setVehicleTypes(data.data);
-            console.log("✅ Successfully loaded", data.data.length, "vehicle types");
+            console.log(
+              "✅ Successfully loaded",
+              data.data.length,
+              "vehicle types",
+            );
           }
         } else {
           console.warn("⚠️ Failed to fetch vehicle types:", response.status);
@@ -699,9 +720,15 @@ export default function MySQLVehiclesOriginalStyle() {
 
     // Update URL if main filter categories changed
     if (
-      ["make", "model", "trim", "condition", "year", "bodyStyle", "transmission"].includes(
-        category,
-      )
+      [
+        "make",
+        "model",
+        "trim",
+        "condition",
+        "year",
+        "bodyStyle",
+        "transmission",
+      ].includes(category)
     ) {
       updateURLFromFilters(newFilters);
     }
@@ -2139,7 +2166,6 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </FilterSection>
 
-
             {/* Price Filter */}
             <FilterSection
               title="Price"
@@ -2720,7 +2746,10 @@ export default function MySQLVehiclesOriginalStyle() {
             >
               <div className="space-y-1">
                 {availableDealers.map((dealer, index) => (
-                  <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <label
+                    key={index}
+                    className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                  >
                     <input
                       type="checkbox"
                       className="mr-2"
@@ -2742,10 +2771,10 @@ export default function MySQLVehiclesOriginalStyle() {
                         }
                       }}
                     />
-                    <span className="carzino-filter-option">
-                      {dealer.name}
+                    <span className="carzino-filter-option">{dealer.name}</span>
+                    <span className="carzino-filter-count ml-1">
+                      ({dealer.count})
                     </span>
-                    <span className="carzino-filter-count ml-1">({dealer.count})</span>
                   </label>
                 ))}
                 {availableDealers.length === 0 && (
@@ -3255,7 +3284,9 @@ export default function MySQLVehiclesOriginalStyle() {
                     >
                       <div
                         className={`absolute top-0.5 w-5 h-5 rounded-full transition-transform ${
-                          viewMode === "favorites" ? "translate-x-6" : "translate-x-0.5"
+                          viewMode === "favorites"
+                            ? "translate-x-6"
+                            : "translate-x-0.5"
                         } ${
                           viewMode === "favorites"
                             ? "bg-white"
