@@ -187,6 +187,14 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               {vehicle.location}
             </div>
           </div>
+          <div className="text-right flex-shrink-0">
+            <div
+              className="text-black hover:text-gray-600 cursor-pointer"
+              style={{ fontSize: "12px", fontWeight: 500 }}
+            >
+              {vehicle.seller_type}
+            </div>
+          </div>
         </div>
       </div>
     </div>
