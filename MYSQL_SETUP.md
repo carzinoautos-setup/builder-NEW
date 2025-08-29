@@ -24,6 +24,7 @@ NODE_ENV=development
 ```
 
 **Important Security Notes:**
+
 - Never commit the `.env` file to version control
 - Use strong, unique passwords for production
 - Consider using environment-specific configurations
@@ -60,7 +61,7 @@ CREATE TABLE vehicles (
   down_payment DECIMAL(10,2),
   loan_term INT,
   payments DECIMAL(10,2),
-  
+
   -- Optimized indexes for fast queries
   INDEX idx_make (make),
   INDEX idx_model (model),
@@ -75,16 +76,19 @@ CREATE TABLE vehicles (
 ### 3. Installation & Setup
 
 1. **Install Dependencies** (already done):
+
    ```bash
    pnpm install
    ```
 
 2. **Generate Sample Data** (50,000 records):
+
    ```bash
    pnpm tsx server/scripts/generateSampleData.ts
    ```
 
 3. **Start Development Server**:
+
    ```bash
    pnpm dev
    ```
@@ -96,15 +100,18 @@ CREATE TABLE vehicles (
 ## 📊 API Endpoints
 
 ### GET /api/vehicles
+
 Fetch paginated vehicles with optional filters.
 
 **Query Parameters:**
+
 - `page` (number): Page number (default: 1)
 - `pageSize` (number): Items per page (default: 20, max: 100)
 - `sortBy` (string): Sort field (default: 'id')
 - `sortOrder` (string): 'ASC' or 'DESC' (default: 'DESC')
 
 **Filter Parameters:**
+
 - `make` (string): Vehicle make
 - `model` (string): Vehicle model
 - `year` (number): Vehicle year
@@ -120,11 +127,13 @@ Fetch paginated vehicles with optional filters.
 - `sellerType` (string): 'Dealer' or 'Private Seller'
 
 **Example:**
+
 ```
 GET /api/vehicles?page=1&pageSize=20&make=Toyota&condition=New&maxPrice=50000
 ```
 
 **Response:**
+
 ```json
 {
   "data": [...],
@@ -141,22 +150,27 @@ GET /api/vehicles?page=1&pageSize=20&make=Toyota&condition=New&maxPrice=50000
 ```
 
 ### GET /api/vehicles/:id
+
 Fetch a single vehicle by ID.
 
 ### GET /api/vehicles/filters
+
 Get available filter options (makes, models, conditions, etc.).
 
 ### GET /api/health
+
 Database health check endpoint.
 
 ## 🔧 Configuration Options
 
 ### Page Size Limits
+
 - Default: 20 items per page
 - Maximum: 100 items per page
 - Available options: 10, 20, 50, 100
 
 ### Performance Optimizations
+
 - **Database Connection Pooling**: 10 concurrent connections
 - **Query Optimization**: Indexed columns for fast filtering
 - **Frontend Caching**: 5-minute API response cache
@@ -164,6 +178,7 @@ Database health check endpoint.
 - **Error Retry**: 3 automatic retries with exponential backoff
 
 ### Security Features
+
 - **SQL Injection Protection**: Parameterized queries
 - **Input Validation**: Type checking and sanitization
 - **Error Handling**: Safe error messages (no DB details exposed)
@@ -172,6 +187,7 @@ Database health check endpoint.
 ## 🚀 Production Deployment
 
 ### Environment Setup
+
 ```bash
 # Production environment variables
 NODE_ENV=production
@@ -183,13 +199,16 @@ DB_NAME=your_production_db
 ```
 
 ### Performance Monitoring
+
 The system includes built-in performance monitoring:
+
 - Query execution times
 - Memory usage tracking
 - API response times
 - Error reporting
 
 ### Scaling Considerations
+
 - **Database**: MySQL with proper indexing scales to millions of records
 - **API**: Stateless design for horizontal scaling
 - **Frontend**: CDN-ready static assets
@@ -215,6 +234,7 @@ The system includes built-in performance monitoring:
 ### Development Tools
 
 1. **API Testing**: Use the health check endpoint
+
    ```
    GET /api/health
    ```
@@ -226,11 +246,13 @@ The system includes built-in performance monitoring:
 ## 📈 Scalability
 
 ### Current Capacity
+
 - **50,000+ vehicles**: Excellent performance
 - **500+ concurrent users**: Handled comfortably
 - **Sub-second response times**: For typical queries
 
 ### Future Enhancements
+
 - **Search functionality**: Full-text search integration
 - **Real-time updates**: WebSocket support for live inventory
 - **Advanced filtering**: Geographic radius, custom queries
@@ -240,12 +262,15 @@ The system includes built-in performance monitoring:
 ## 🔗 Integration with WooCommerce
 
 ### Data Sync Strategy
+
 1. **One-way sync**: WooCommerce → MySQL (recommended)
 2. **Periodic updates**: Scheduled data synchronization
 3. **Webhook integration**: Real-time inventory updates
 
 ### Custom Field Mapping
+
 The vehicle schema supports all your custom fields:
+
 - Seller account relationships
 - Location data (for future radius search)
 - Financial details (payments, interest rates)

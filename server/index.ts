@@ -2,9 +2,22 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo.js";
-import { getVehicles, getVehicleById, getFilterOptions, healthCheck } from "./routes/vehicles.js";
-import { getSimpleVehicles, getSimpleVehicleById, getSimpleFilterOptions, simpleHealthCheck } from "./routes/simpleVehicles.js";
-import { createDatabaseConnection, testDatabaseConnection } from "./db/connection.js";
+import {
+  getVehicles,
+  getVehicleById,
+  getFilterOptions,
+  healthCheck,
+} from "./routes/vehicles.js";
+import {
+  getSimpleVehicles,
+  getSimpleVehicleById,
+  getSimpleFilterOptions,
+  simpleHealthCheck,
+} from "./routes/simpleVehicles.js";
+import {
+  createDatabaseConnection,
+  testDatabaseConnection,
+} from "./db/connection.js";
 
 export function createServer() {
   const app = express();
@@ -12,9 +25,9 @@ export function createServer() {
   // Initialize database connection
   try {
     createDatabaseConnection();
-    console.log('🔌 Database connection pool initialized');
+    console.log("🔌 Database connection pool initialized");
   } catch (error) {
-    console.error('❌ Failed to initialize database:', error);
+    console.error("❌ Failed to initialize database:", error);
   }
 
   // Middleware
@@ -45,8 +58,8 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
 
   // Test database connection on startup
-  testDatabaseConnection().catch(error => {
-    console.error('⚠️  Database connection test failed during startup:', error);
+  testDatabaseConnection().catch((error) => {
+    console.error("⚠️  Database connection test failed during startup:", error);
   });
 
   return app;

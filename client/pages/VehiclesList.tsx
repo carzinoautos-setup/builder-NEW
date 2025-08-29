@@ -1,29 +1,45 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Search, Filter, AlertCircle, Loader2 } from 'lucide-react';
-import { MySQLVehicleCard, VehicleCardSkeleton } from '../components/MySQLVehicleCard';
-import { PaginationControls, SimplePagination } from '../components/PaginationControls';
-import { NavigationHeader } from '../components/NavigationHeader';
-import { vehicleApi, VehicleRecord, VehiclesApiResponse, VehicleFilters, FilterOptions } from '../lib/vehicleApi';
+import React, { useState, useEffect, useCallback } from "react";
+import { Search, Filter, AlertCircle, Loader2 } from "lucide-react";
+import {
+  MySQLVehicleCard,
+  VehicleCardSkeleton,
+} from "../components/MySQLVehicleCard";
+import {
+  PaginationControls,
+  SimplePagination,
+} from "../components/PaginationControls";
+import { NavigationHeader } from "../components/NavigationHeader";
+import {
+  vehicleApi,
+  VehicleRecord,
+  VehiclesApiResponse,
+  VehicleFilters,
+  FilterOptions,
+} from "../lib/vehicleApi";
 
 export function VehiclesList() {
   // State management
   const [vehicles, setVehicles] = useState<VehicleRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [apiResponse, setApiResponse] = useState<VehiclesApiResponse | null>(null);
-  
+  const [apiResponse, setApiResponse] = useState<VehiclesApiResponse | null>(
+    null,
+  );
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
-  
+
   // Filter state
   const [filters, setFilters] = useState<VehicleFilters>({});
-  const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
+  const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(
+    null,
+  );
   const [showFilters, setShowFilters] = useState(false);
-  
+
   // Search state
-  const [searchTerm, setSearchTerm] = useState('');
-  
+  const [searchTerm, setSearchTerm] = useState("");
+
   // Favorites state (you can integrate with localStorage or backend)
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
 
@@ -32,18 +48,22 @@ export function VehiclesList() {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await vehicleApi.getVehicles(currentPage, pageSize, filters);
-      
+
+      const response = await vehicleApi.getVehicles(
+        currentPage,
+        pageSize,
+        filters,
+      );
+
       if (response.success) {
         setVehicles(response.data);
         setApiResponse(response);
       } else {
-        setError(response.message || 'Failed to fetch vehicles');
+        setError(response.message || "Failed to fetch vehicles");
         setVehicles([]);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
       setVehicles([]);
     } finally {
       setLoading(false);
@@ -58,7 +78,7 @@ export function VehiclesList() {
         setFilterOptions(response.data);
       }
     } catch (err) {
-      console.error('Failed to fetch filter options:', err);
+      console.error("Failed to fetch filter options:", err);
     }
   }, []);
 
@@ -74,7 +94,7 @@ export function VehiclesList() {
   // Event handlers
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
@@ -83,7 +103,7 @@ export function VehiclesList() {
   };
 
   const handleFilterChange = (newFilters: Partial<VehicleFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters((prev) => ({ ...prev, ...newFilters }));
     setCurrentPage(1);
   };
 
@@ -93,7 +113,7 @@ export function VehiclesList() {
   };
 
   const handleFavoriteToggle = (vehicleId: number) => {
-    setFavorites(prev => {
+    setFavorites((prev) => {
       const newFavorites = new Set(prev);
       if (newFavorites.has(vehicleId)) {
         newFavorites.delete(vehicleId);
@@ -120,7 +140,7 @@ export function VehiclesList() {
             <div className="h-8 bg-gray-200 rounded w-64 mb-4 animate-pulse"></div>
             <div className="h-4 bg-gray-200 rounded w-96 animate-pulse"></div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, index) => (
               <VehicleCardSkeleton key={index} />
@@ -141,7 +161,8 @@ export function VehiclesList() {
             Vehicle Inventory
           </h1>
           <p className="text-gray-600">
-            Browse our extensive collection of vehicles with advanced filtering and pagination
+            Browse our extensive collection of vehicles with advanced filtering
+            and pagination
           </p>
         </div>
 
@@ -157,7 +178,7 @@ export function VehiclesList() {
                   placeholder="Search by make, model, or keyword..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
               </div>
@@ -195,13 +216,17 @@ export function VehiclesList() {
                     Make
                   </label>
                   <select
-                    value={filters.make || ''}
-                    onChange={(e) => handleFilterChange({ make: e.target.value || undefined })}
+                    value={filters.make || ""}
+                    onChange={(e) =>
+                      handleFilterChange({ make: e.target.value || undefined })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   >
                     <option value="">All Makes</option>
-                    {filterOptions.makes.map(make => (
-                      <option key={make} value={make}>{make}</option>
+                    {filterOptions.makes.map((make) => (
+                      <option key={make} value={make}>
+                        {make}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -212,13 +237,19 @@ export function VehiclesList() {
                     Condition
                   </label>
                   <select
-                    value={filters.condition || ''}
-                    onChange={(e) => handleFilterChange({ condition: e.target.value || undefined })}
+                    value={filters.condition || ""}
+                    onChange={(e) =>
+                      handleFilterChange({
+                        condition: e.target.value || undefined,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   >
                     <option value="">All Conditions</option>
-                    {filterOptions.conditions.map(condition => (
-                      <option key={condition} value={condition}>{condition}</option>
+                    {filterOptions.conditions.map((condition) => (
+                      <option key={condition} value={condition}>
+                        {condition}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -229,8 +260,14 @@ export function VehiclesList() {
                     Max Price
                   </label>
                   <select
-                    value={filters.maxPrice || ''}
-                    onChange={(e) => handleFilterChange({ maxPrice: e.target.value ? Number(e.target.value) : undefined })}
+                    value={filters.maxPrice || ""}
+                    onChange={(e) =>
+                      handleFilterChange({
+                        maxPrice: e.target.value
+                          ? Number(e.target.value)
+                          : undefined,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   >
                     <option value="">No Limit</option>
@@ -316,16 +353,21 @@ export function VehiclesList() {
               </>
             )}
           </>
-        ) : !loading && !error && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No vehicles found matching your criteria.</p>
-            <button
-              onClick={handleClearFilters}
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-            >
-              Clear Filters
-            </button>
-          </div>
+        ) : (
+          !loading &&
+          !error && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">
+                No vehicles found matching your criteria.
+              </p>
+              <button
+                onClick={handleClearFilters}
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )
         )}
       </div>
     </div>

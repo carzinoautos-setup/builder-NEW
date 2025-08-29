@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise';
+import mysql from "mysql2/promise";
 
 // Database configuration interface
 interface DatabaseConfig {
@@ -21,11 +21,11 @@ export function createDatabaseConnection(): mysql.Pool {
   }
 
   const config: DatabaseConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '3306'),
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'wordpress',
+    host: process.env.DB_HOST || "localhost",
+    port: parseInt(process.env.DB_PORT || "3306"),
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME || "wordpress",
     connectionLimit: 10,
     acquireTimeout: 60000,
     timeout: 60000,
@@ -33,10 +33,10 @@ export function createDatabaseConnection(): mysql.Pool {
 
   try {
     pool = mysql.createPool(config);
-    console.log('✅ Database connection pool created successfully');
+    console.log("✅ Database connection pool created successfully");
     return pool;
   } catch (error) {
-    console.error('❌ Failed to create database connection pool:', error);
+    console.error("❌ Failed to create database connection pool:", error);
     throw error;
   }
 }
@@ -53,11 +53,11 @@ export function getDatabase(): mysql.Pool {
 export async function testDatabaseConnection(): Promise<boolean> {
   try {
     const db = getDatabase();
-    const [rows] = await db.execute('SELECT 1 as test');
-    console.log('✅ Database connection test successful');
+    const [rows] = await db.execute("SELECT 1 as test");
+    console.log("✅ Database connection test successful");
     return true;
   } catch (error) {
-    console.error('❌ Database connection test failed:', error);
+    console.error("❌ Database connection test failed:", error);
     return false;
   }
 }
@@ -67,6 +67,6 @@ export async function closeDatabaseConnection(): Promise<void> {
   if (pool) {
     await pool.end();
     pool = null;
-    console.log('✅ Database connection pool closed');
+    console.log("✅ Database connection pool closed");
   }
 }

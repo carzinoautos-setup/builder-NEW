@@ -77,21 +77,21 @@ class VehicleApiClient {
 
   constructor() {
     // Use environment variable or default to current host
-    this.baseUrl = import.meta.env.VITE_API_URL || '';
+    this.baseUrl = import.meta.env.VITE_API_URL || "";
   }
 
   private async request<T>(url: string): Promise<T> {
     try {
       const response = await fetch(`${this.baseUrl}${url}`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('API request failed:', error);
+      console.error("API request failed:", error);
       throw error;
     }
   }
@@ -103,19 +103,19 @@ class VehicleApiClient {
     page: number = 1,
     pageSize: number = 20,
     filters: VehicleFilters = {},
-    sortBy: string = 'id',
-    sortOrder: 'ASC' | 'DESC' = 'DESC'
+    sortBy: string = "id",
+    sortOrder: "ASC" | "DESC" = "DESC",
   ): Promise<VehiclesApiResponse> {
     const params = new URLSearchParams({
       page: page.toString(),
       pageSize: pageSize.toString(),
       sortBy,
-      sortOrder
+      sortOrder,
     });
 
     // Add filters to params
     Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
+      if (value !== undefined && value !== null && value !== "") {
         params.append(key, value.toString());
       }
     });
@@ -126,7 +126,9 @@ class VehicleApiClient {
   /**
    * Fetch a single vehicle by ID
    */
-  async getVehicleById(id: number): Promise<{ success: boolean; data?: VehicleRecord; message?: string }> {
+  async getVehicleById(
+    id: number,
+  ): Promise<{ success: boolean; data?: VehicleRecord; message?: string }> {
     return this.request(`/api/vehicles/${id}`);
   }
 
@@ -134,14 +136,18 @@ class VehicleApiClient {
    * Fetch available filter options
    */
   async getFilterOptions(): Promise<{ success: boolean; data: FilterOptions }> {
-    return this.request('/api/vehicles/filters');
+    return this.request("/api/vehicles/filters");
   }
 
   /**
    * Check API health
    */
-  async healthCheck(): Promise<{ success: boolean; message: string; dbConnected: boolean }> {
-    return this.request('/api/health');
+  async healthCheck(): Promise<{
+    success: boolean;
+    message: string;
+    dbConnected: boolean;
+  }> {
+    return this.request("/api/health");
   }
 }
 
@@ -150,16 +156,16 @@ export const vehicleApi = new VehicleApiClient();
 
 // Utility functions
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(price);
 }
 
 export function formatMileage(mileage: number): string {
-  return new Intl.NumberFormat('en-US').format(mileage);
+  return new Intl.NumberFormat("en-US").format(mileage);
 }
 
 export function getVehicleTitle(vehicle: VehicleRecord): string {

@@ -1,13 +1,13 @@
-import { RowDataPacket } from 'mysql2';
-import { getDatabase } from '../db/connection.js';
-import { 
-  VehicleRecord, 
-  PaginationParams, 
-  VehiclesApiResponse, 
+import { RowDataPacket } from "mysql2";
+import { getDatabase } from "../db/connection.js";
+import {
+  VehicleRecord,
+  PaginationParams,
+  VehiclesApiResponse,
   PaginationMeta,
   VehicleFilters,
-  SqlQuery 
-} from '../types/vehicle.js';
+  SqlQuery,
+} from "../types/vehicle.js";
 
 export class VehicleService {
   private db = getDatabase();
@@ -15,80 +15,86 @@ export class VehicleService {
   /**
    * Build SQL query with filters and pagination
    */
-  private buildQuery(filters: VehicleFilters, pagination: PaginationParams): SqlQuery {
+  private buildQuery(
+    filters: VehicleFilters,
+    pagination: PaginationParams,
+  ): SqlQuery {
     let whereConditions: string[] = [];
     let params: any[] = [];
 
     // Build WHERE conditions based on filters
     if (filters.make) {
-      whereConditions.push('make = ?');
+      whereConditions.push("make = ?");
       params.push(filters.make);
     }
 
     if (filters.model) {
-      whereConditions.push('model = ?');
+      whereConditions.push("model = ?");
       params.push(filters.model);
     }
 
     if (filters.year) {
-      whereConditions.push('year = ?');
+      whereConditions.push("year = ?");
       params.push(filters.year);
     }
 
     if (filters.minPrice) {
-      whereConditions.push('price >= ?');
+      whereConditions.push("price >= ?");
       params.push(filters.minPrice);
     }
 
     if (filters.maxPrice) {
-      whereConditions.push('price <= ?');
+      whereConditions.push("price <= ?");
       params.push(filters.maxPrice);
     }
 
     if (filters.condition) {
-      whereConditions.push('condition = ?');
+      whereConditions.push("condition = ?");
       params.push(filters.condition);
     }
 
     if (filters.maxMileage) {
-      whereConditions.push('mileage <= ?');
+      whereConditions.push("mileage <= ?");
       params.push(filters.maxMileage);
     }
 
     if (filters.fuelType) {
-      whereConditions.push('fuel_type = ?');
+      whereConditions.push("fuel_type = ?");
       params.push(filters.fuelType);
     }
 
     if (filters.transmission) {
-      whereConditions.push('transmission = ?');
+      whereConditions.push("transmission = ?");
       params.push(filters.transmission);
     }
 
     if (filters.drivetrain) {
-      whereConditions.push('drivetrain = ?');
+      whereConditions.push("drivetrain = ?");
       params.push(filters.drivetrain);
     }
 
     if (filters.bodyStyle) {
-      whereConditions.push('body_style = ?');
+      whereConditions.push("body_style = ?");
       params.push(filters.bodyStyle);
     }
 
     if (filters.certified !== undefined) {
-      whereConditions.push('certified = ?');
+      whereConditions.push("certified = ?");
       params.push(filters.certified);
     }
 
     if (filters.sellerType) {
-      whereConditions.push('seller_type = ?');
+      whereConditions.push("seller_type = ?");
       params.push(filters.sellerType);
     }
 
     // Base query parts
-    const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
-    const sortBy = pagination.sortBy || 'id';
-    const sortOrder = pagination.sortOrder || 'DESC';
+    const whereClause =
+      whereConditions.length > 0
+        ? `WHERE ${whereConditions.join(" AND ")}`
+        : "";
+    const sortBy = pagination.sortBy || "id";
+    const sortOrder = pagination.sortOrder || "DESC";
     const offset = (pagination.page - 1) * pagination.pageSize;
 
     // Main query
@@ -111,7 +117,7 @@ export class VehicleService {
       sql: sql.trim(),
       params: [...params, pagination.pageSize, offset],
       countSql: countSql.trim(),
-      countParams: params
+      countParams: params,
     };
   }
 
@@ -119,8 +125,8 @@ export class VehicleService {
    * Get vehicles with pagination and filters
    */
   async getVehicles(
-    filters: VehicleFilters = {}, 
-    pagination: PaginationParams
+    filters: VehicleFilters = {},
+    pagination: PaginationParams,
   ): Promise<VehiclesApiResponse> {
     try {
       const query = this.buildQuery(filters, pagination);
@@ -128,7 +134,7 @@ export class VehicleService {
       // Execute count query for pagination metadata
       const [countResult] = await this.db.execute<RowDataPacket[]>(
         query.countSql,
-        query.countParams
+        query.countParams,
       );
 
       const totalRecords = countResult[0]?.total || 0;
@@ -137,7 +143,7 @@ export class VehicleService {
       // Execute main query for data
       const [rows] = await this.db.execute<RowDataPacket[]>(
         query.sql,
-        query.params
+        query.params,
       );
 
       const vehicles = rows as VehicleRecord[];
@@ -149,18 +155,17 @@ export class VehicleService {
         currentPage: pagination.page,
         pageSize: pagination.pageSize,
         hasNextPage: pagination.page < totalPages,
-        hasPreviousPage: pagination.page > 1
+        hasPreviousPage: pagination.page > 1,
       };
 
       return {
         data: vehicles,
         meta,
-        success: true
+        success: true,
       };
-
     } catch (error) {
-      console.error('Error fetching vehicles:', error);
-      
+      console.error("Error fetching vehicles:", error);
+
       return {
         data: [],
         meta: {
@@ -169,10 +174,10 @@ export class VehicleService {
           currentPage: pagination.page,
           pageSize: pagination.pageSize,
           hasNextPage: false,
-          hasPreviousPage: false
+          hasPreviousPage: false,
         },
         success: false,
-        message: 'Failed to fetch vehicles'
+        message: "Failed to fetch vehicles",
       };
     }
   }
@@ -183,13 +188,13 @@ export class VehicleService {
   async getVehicleById(id: number): Promise<VehicleRecord | null> {
     try {
       const [rows] = await this.db.execute<RowDataPacket[]>(
-        'SELECT * FROM vehicles WHERE id = ?',
-        [id]
+        "SELECT * FROM vehicles WHERE id = ?",
+        [id],
       );
 
       return rows.length > 0 ? (rows[0] as VehicleRecord) : null;
     } catch (error) {
-      console.error('Error fetching vehicle by ID:', error);
+      console.error("Error fetching vehicle by ID:", error);
       return null;
     }
   }
@@ -208,27 +213,53 @@ export class VehicleService {
     sellerTypes: string[];
   }> {
     try {
-      const [makesResult] = await this.db.execute<RowDataPacket[]>('SELECT DISTINCT make FROM vehicles ORDER BY make');
-      const [modelsResult] = await this.db.execute<RowDataPacket[]>('SELECT DISTINCT model FROM vehicles ORDER BY model');
-      const [conditionsResult] = await this.db.execute<RowDataPacket[]>('SELECT DISTINCT condition FROM vehicles ORDER BY condition');
-      const [fuelTypesResult] = await this.db.execute<RowDataPacket[]>('SELECT DISTINCT fuel_type FROM vehicles ORDER BY fuel_type');
-      const [transmissionsResult] = await this.db.execute<RowDataPacket[]>('SELECT DISTINCT transmission FROM vehicles ORDER BY transmission');
-      const [drivetrainsResult] = await this.db.execute<RowDataPacket[]>('SELECT DISTINCT drivetrain FROM vehicles ORDER BY drivetrain');
-      const [bodyStylesResult] = await this.db.execute<RowDataPacket[]>('SELECT DISTINCT body_style FROM vehicles ORDER BY body_style');
-      const [sellerTypesResult] = await this.db.execute<RowDataPacket[]>('SELECT DISTINCT seller_type FROM vehicles ORDER BY seller_type');
+      const [makesResult] = await this.db.execute<RowDataPacket[]>(
+        "SELECT DISTINCT make FROM vehicles ORDER BY make",
+      );
+      const [modelsResult] = await this.db.execute<RowDataPacket[]>(
+        "SELECT DISTINCT model FROM vehicles ORDER BY model",
+      );
+      const [conditionsResult] = await this.db.execute<RowDataPacket[]>(
+        "SELECT DISTINCT condition FROM vehicles ORDER BY condition",
+      );
+      const [fuelTypesResult] = await this.db.execute<RowDataPacket[]>(
+        "SELECT DISTINCT fuel_type FROM vehicles ORDER BY fuel_type",
+      );
+      const [transmissionsResult] = await this.db.execute<RowDataPacket[]>(
+        "SELECT DISTINCT transmission FROM vehicles ORDER BY transmission",
+      );
+      const [drivetrainsResult] = await this.db.execute<RowDataPacket[]>(
+        "SELECT DISTINCT drivetrain FROM vehicles ORDER BY drivetrain",
+      );
+      const [bodyStylesResult] = await this.db.execute<RowDataPacket[]>(
+        "SELECT DISTINCT body_style FROM vehicles ORDER BY body_style",
+      );
+      const [sellerTypesResult] = await this.db.execute<RowDataPacket[]>(
+        "SELECT DISTINCT seller_type FROM vehicles ORDER BY seller_type",
+      );
 
       return {
-        makes: makesResult.map(row => row.make).filter(Boolean),
-        models: modelsResult.map(row => row.model).filter(Boolean),
-        conditions: conditionsResult.map(row => row.condition).filter(Boolean),
-        fuelTypes: fuelTypesResult.map(row => row.fuel_type).filter(Boolean),
-        transmissions: transmissionsResult.map(row => row.transmission).filter(Boolean),
-        drivetrains: drivetrainsResult.map(row => row.drivetrain).filter(Boolean),
-        bodyStyles: bodyStylesResult.map(row => row.body_style).filter(Boolean),
-        sellerTypes: sellerTypesResult.map(row => row.seller_type).filter(Boolean)
+        makes: makesResult.map((row) => row.make).filter(Boolean),
+        models: modelsResult.map((row) => row.model).filter(Boolean),
+        conditions: conditionsResult
+          .map((row) => row.condition)
+          .filter(Boolean),
+        fuelTypes: fuelTypesResult.map((row) => row.fuel_type).filter(Boolean),
+        transmissions: transmissionsResult
+          .map((row) => row.transmission)
+          .filter(Boolean),
+        drivetrains: drivetrainsResult
+          .map((row) => row.drivetrain)
+          .filter(Boolean),
+        bodyStyles: bodyStylesResult
+          .map((row) => row.body_style)
+          .filter(Boolean),
+        sellerTypes: sellerTypesResult
+          .map((row) => row.seller_type)
+          .filter(Boolean),
       };
     } catch (error) {
-      console.error('Error fetching filter options:', error);
+      console.error("Error fetching filter options:", error);
       return {
         makes: [],
         models: [],
@@ -237,7 +268,7 @@ export class VehicleService {
         transmissions: [],
         drivetrains: [],
         bodyStyles: [],
-        sellerTypes: []
+        sellerTypes: [],
       };
     }
   }

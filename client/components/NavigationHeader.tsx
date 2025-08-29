@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Database, Home } from 'lucide-react';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Database, Home } from "lucide-react";
 
 export function NavigationHeader() {
   const location = useLocation();
@@ -15,9 +15,7 @@ export function NavigationHeader() {
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold text-gray-900">
-              Carzino Autos
-            </h1>
+            <h1 className="text-xl font-bold text-gray-900">Carzino Autos</h1>
           </div>
 
           {/* Navigation Links */}
@@ -25,9 +23,9 @@ export function NavigationHeader() {
             <Link
               to="/"
               className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/')
-                  ? 'bg-red-100 text-red-700'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                isActive("/")
+                  ? "bg-red-100 text-red-700"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               }`}
             >
               <Home className="w-4 h-4" />
@@ -37,9 +35,9 @@ export function NavigationHeader() {
             <Link
               to="/mysql-vehicles"
               className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/mysql-vehicles')
-                  ? 'bg-red-100 text-red-700'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                isActive("/mysql-vehicles")
+                  ? "bg-red-100 text-red-700"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               }`}
             >
               <Database className="w-4 h-4" />
@@ -49,8 +47,8 @@ export function NavigationHeader() {
 
           {/* Stats/Info */}
           <div className="text-sm text-gray-500">
-            {isActive('/mysql-vehicles') && 'MySQL Vehicles (50k)'}
-            {isActive('/') && 'Original Demo'}
+            {isActive("/mysql-vehicles") && "MySQL Vehicles (50k)"}
+            {isActive("/") && "Original Demo"}
           </div>
         </div>
       </div>

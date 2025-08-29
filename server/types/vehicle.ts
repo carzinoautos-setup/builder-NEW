@@ -33,7 +33,7 @@ export interface PaginationParams {
   page: number;
   pageSize: number;
   sortBy?: string;
-  sortOrder?: 'ASC' | 'DESC';
+  sortOrder?: "ASC" | "DESC";
 }
 
 // Pagination response metadata

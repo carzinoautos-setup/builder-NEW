@@ -1,6 +1,11 @@
-import React from 'react';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { PaginationMeta } from '../lib/vehicleApi';
+import React from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
+import { PaginationMeta } from "../lib/vehicleApi";
 
 interface PaginationControlsProps {
   meta: PaginationMeta;
@@ -8,8 +13,19 @@ interface PaginationControlsProps {
   className?: string;
 }
 
-export function PaginationControls({ meta, onPageChange, className = '' }: PaginationControlsProps) {
-  const { currentPage, totalPages, hasNextPage, hasPreviousPage, totalRecords, pageSize } = meta;
+export function PaginationControls({
+  meta,
+  onPageChange,
+  className = "",
+}: PaginationControlsProps) {
+  const {
+    currentPage,
+    totalPages,
+    hasNextPage,
+    hasPreviousPage,
+    totalRecords,
+    pageSize,
+  } = meta;
 
   // Calculate page numbers to show
   const getPageNumbers = (): number[] => {
@@ -43,11 +59,13 @@ export function PaginationControls({ meta, onPageChange, className = '' }: Pagin
   const endRecord = Math.min(currentPage * pageSize, totalRecords);
 
   return (
-    <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${className}`}>
+    <div
+      className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${className}`}
+    >
       {/* Results info */}
       <div className="text-sm text-gray-600">
-        Showing {startRecord.toLocaleString()} to {endRecord.toLocaleString()} of{' '}
-        {totalRecords.toLocaleString()} results
+        Showing {startRecord.toLocaleString()} to {endRecord.toLocaleString()}{" "}
+        of {totalRecords.toLocaleString()} results
       </div>
 
       {/* Pagination controls */}
@@ -96,8 +114,8 @@ export function PaginationControls({ meta, onPageChange, className = '' }: Pagin
               onClick={() => onPageChange(pageNum)}
               className={`px-3 py-2 rounded-md border transition-colors ${
                 pageNum === currentPage
-                  ? 'border-red-600 bg-red-600 text-white'
-                  : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
               {pageNum}
@@ -145,7 +163,11 @@ export function PaginationControls({ meta, onPageChange, className = '' }: Pagin
 }
 
 // Simple pagination component for mobile
-export function SimplePagination({ meta, onPageChange, className = '' }: PaginationControlsProps) {
+export function SimplePagination({
+  meta,
+  onPageChange,
+  className = "",
+}: PaginationControlsProps) {
   const { currentPage, totalPages, hasNextPage, hasPreviousPage } = meta;
 
   return (

@@ -1,5 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -12,7 +12,10 @@ interface ErrorBoundaryState {
   errorInfo?: ErrorInfo;
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -23,16 +26,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
+    console.error("Error caught by boundary:", error, errorInfo);
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
 
     // Report to error tracking service if available
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
+    if (typeof window !== "undefined" && (window as any).Sentry) {
       (window as any).Sentry.captureException(error, {
-        extra: errorInfo
+        extra: errorInfo,
       });
     }
   }
@@ -53,13 +56,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="flex justify-center mb-4">
               <AlertTriangle className="w-16 h-16 text-red-500" />
             </div>
-            
+
             <h1 className="text-xl font-semibold text-gray-900 mb-2">
               Something went wrong
             </h1>
-            
+
             <p className="text-gray-600 mb-6">
-              We're sorry, but something unexpected happened. Please try refreshing the page.
+              We're sorry, but something unexpected happened. Please try
+              refreshing the page.
             </p>
 
             <div className="space-y-3">
@@ -70,7 +74,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 <RefreshCw className="w-4 h-4" />
                 Try Again
               </button>
-              
+
               <button
                 onClick={() => window.location.reload()}
                 className="w-full py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
@@ -79,7 +83,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="mt-6 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
                   Error Details (Development)
@@ -106,12 +110,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 // Hook for functional components to handle async errors
 export function useErrorHandler() {
   return (error: Error, errorInfo?: string) => {
-    console.error('Async error:', error, errorInfo);
-    
+    console.error("Async error:", error, errorInfo);
+
     // Report to error tracking service
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
+    if (typeof window !== "undefined" && (window as any).Sentry) {
       (window as any).Sentry.captureException(error, {
-        extra: { errorInfo }
+        extra: { errorInfo },
       });
     }
 

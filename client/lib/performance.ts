@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect, useMemo, useState } from 'react';
+import { useCallback, useRef, useEffect, useMemo, useState } from "react";
 
 /**
  * Debounce hook for API calls and search
@@ -24,7 +24,7 @@ export function useDebounce<T>(value: T, delay: number): T {
  */
 export function useThrottle<T extends (...args: any[]) => any>(
   callback: T,
-  delay: number
+  delay: number,
 ): T {
   const lastRun = useRef(Date.now());
 
@@ -35,7 +35,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
         lastRun.current = Date.now();
       }
     }) as T,
-    [callback, delay]
+    [callback, delay],
   );
 }
 
@@ -45,14 +45,14 @@ export function useThrottle<T extends (...args: any[]) => any>(
 export function useVirtualScrolling(
   itemCount: number,
   itemHeight: number,
-  containerHeight: number
+  containerHeight: number,
 ) {
   const [scrollTop, setScrollTop] = useState(0);
 
   const visibleStart = Math.floor(scrollTop / itemHeight);
   const visibleEnd = Math.min(
     itemCount - 1,
-    Math.floor((scrollTop + containerHeight) / itemHeight)
+    Math.floor((scrollTop + containerHeight) / itemHeight),
   );
 
   const visibleItems = useMemo(() => {
@@ -70,7 +70,7 @@ export function useVirtualScrolling(
     visibleItems,
     totalHeight,
     offsetY,
-    setScrollTop
+    setScrollTop,
   };
 }
 
@@ -79,7 +79,7 @@ export function useVirtualScrolling(
  */
 export function useIntersectionObserver(
   ref: React.RefObject<Element>,
-  options: IntersectionObserverInit = {}
+  options: IntersectionObserverInit = {},
 ) {
   const [isIntersecting, setIsIntersecting] = useState(false);
 
@@ -105,27 +105,30 @@ export function useIntersectionObserver(
  * Cache management for API responses
  */
 class ApiCache {
-  private cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+  private cache = new Map<
+    string,
+    { data: any; timestamp: number; ttl: number }
+  >();
   private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes
 
   set(key: string, data: any, ttl: number = this.DEFAULT_TTL) {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
-      ttl
+      ttl,
     });
   }
 
   get(key: string): any | null {
     const item = this.cache.get(key);
-    
+
     if (!item) return null;
-    
+
     if (Date.now() - item.timestamp > item.ttl) {
       this.cache.delete(key);
       return null;
     }
-    
+
     return item.data;
   }
 
@@ -136,12 +139,12 @@ class ApiCache {
   has(key: string): boolean {
     const item = this.cache.get(key);
     if (!item) return false;
-    
+
     if (Date.now() - item.timestamp > item.ttl) {
       this.cache.delete(key);
       return false;
     }
-    
+
     return true;
   }
 }
@@ -159,23 +162,23 @@ export class OptimizedApiClient {
     url: string,
     options: RequestInit = {},
     useCache: boolean = true,
-    cacheTtl?: number
+    cacheTtl?: number,
   ): Promise<T> {
     const cacheKey = `${url}_${JSON.stringify(options)}`;
-    
+
     // Check cache first
     if (useCache && apiCache.has(cacheKey)) {
       return apiCache.get(cacheKey);
     }
 
     let lastError: Error;
-    
+
     for (let attempt = 1; attempt <= this.retryAttempts; attempt++) {
       try {
         const response = await fetch(url, {
           ...options,
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             ...options.headers,
           },
         });
@@ -185,19 +188,19 @@ export class OptimizedApiClient {
         }
 
         const data = await response.json();
-        
+
         // Cache successful responses
         if (useCache) {
           apiCache.set(cacheKey, data, cacheTtl);
         }
-        
+
         return data;
       } catch (error) {
         lastError = error as Error;
-        
+
         if (attempt < this.retryAttempts) {
-          await new Promise(resolve => 
-            setTimeout(resolve, this.retryDelay * attempt)
+          await new Promise((resolve) =>
+            setTimeout(resolve, this.retryDelay * attempt),
           );
         }
       }
@@ -226,11 +229,11 @@ export class PerformanceMonitor {
 
     const duration = performance.now() - start;
     this.measurements.delete(name);
-    
-    if (process.env.NODE_ENV === 'development') {
+
+    if (process.env.NODE_ENV === "development") {
       console.log(`⏱️ ${name}: ${duration.toFixed(2)}ms`);
     }
-    
+
     return duration;
   }
 }
@@ -262,5 +265,5 @@ export const performanceUtils = {
   // Network connection info
   getConnectionInfo: (): any => {
     return (navigator as any).connection || null;
-  }
+  },
 };
