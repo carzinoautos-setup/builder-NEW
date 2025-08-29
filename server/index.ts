@@ -15,6 +15,11 @@ import {
   simpleHealthCheck,
 } from "./routes/simpleVehicles.js";
 import {
+  geocodeZip,
+  geocodeBatch,
+  geocodingHealthCheck,
+} from "./routes/geocoding.js";
+import {
   createDatabaseConnection,
   testDatabaseConnection,
 } from "./db/connection.js";
@@ -67,6 +72,11 @@ export function createServer() {
   app.post("/api/payments/affordable-price", calculateAffordablePrice);
   app.get("/api/payments/cache-stats", getCacheStats);
   app.delete("/api/payments/cache", clearCache);
+
+  // Geocoding API routes
+  app.get("/api/geocode/health", geocodingHealthCheck);
+  app.get("/api/geocode/:zip", geocodeZip);
+  app.post("/api/geocode/batch", geocodeBatch);
 
   // Example API routes (keep for backward compatibility)
   app.get("/api/demo", handleDemo);
