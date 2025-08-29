@@ -250,6 +250,11 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("search", searchTerm.trim());
       }
 
+      // Add sorting parameter
+      if (sortBy !== "relevance") {
+        params.append("sortBy", sortBy);
+      }
+
       // Add location/distance parameters
       if (appliedLocation && appliedRadius !== "nationwide") {
         params.append("lat", appliedLocation.lat.toString());
@@ -351,7 +356,7 @@ export default function MySQLVehiclesOriginalStyle() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, appliedFilters, searchTerm, appliedLocation, appliedRadius]);
+  }, [currentPage, appliedFilters, searchTerm, appliedLocation, appliedRadius, sortBy]);
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -2805,13 +2810,13 @@ export default function MySQLVehiclesOriginalStyle() {
                     Sort
                   </button>
                   {sortDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-48">
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-56">
                       <button
                         onClick={() => {
                           setSortBy("relevance");
                           setSortDropdownOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "relevance" ? "bg-red-50 text-red-600" : ""}`}
                       >
                         Relevance
                       </button>
@@ -2820,7 +2825,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           setSortBy("price-low");
                           setSortDropdownOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "price-low" ? "bg-red-50 text-red-600" : ""}`}
                       >
                         Price: Low to High
                       </button>
@@ -2829,27 +2834,54 @@ export default function MySQLVehiclesOriginalStyle() {
                           setSortBy("price-high");
                           setSortDropdownOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "price-high" ? "bg-red-50 text-red-600" : ""}`}
                       >
                         Price: High to Low
                       </button>
                       <button
                         onClick={() => {
-                          setSortBy("year-new");
+                          setSortBy("miles-low");
                           setSortDropdownOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "miles-low" ? "bg-red-50 text-red-600" : ""}`}
                       >
-                        Year: Newest
+                        Miles: Low to High
                       </button>
                       <button
                         onClick={() => {
-                          setSortBy("mileage-low");
+                          setSortBy("miles-high");
                           setSortDropdownOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "miles-high" ? "bg-red-50 text-red-600" : ""}`}
                       >
-                        Mileage: Lowest
+                        Miles: High to Low
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("year-newest");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "year-newest" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Year: Newest to Oldest
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("year-oldest");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "year-oldest" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Year: Oldest to Newest
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("distance-closest");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "distance-closest" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Distance: Closest to Me
                       </button>
                     </div>
                   )}
@@ -2966,6 +2998,102 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
 
               <div className="flex items-center gap-3">
+                {/* Desktop Sorting Dropdown */}
+                <div className="relative">
+                  <button
+                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50"
+                    onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M2 4h12M2 8h8M2 12h4" />
+                    </svg>
+                    Sort
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  {sortDropdownOpen && (
+                    <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-56">
+                      <button
+                        onClick={() => {
+                          setSortBy("relevance");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "relevance" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Relevance
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("price-low");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "price-low" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Price: Low to High
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("price-high");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "price-high" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Price: High to Low
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("miles-low");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "miles-low" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Miles: Low to High
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("miles-high");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "miles-high" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Miles: High to Low
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("year-newest");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "year-newest" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Year: Newest to Oldest
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("year-oldest");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "year-oldest" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Year: Oldest to Newest
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("distance-closest");
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "distance-closest" ? "bg-red-50 text-red-600" : ""}`}
+                      >
+                        Distance: Closest to Me
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 {/* Desktop View Switcher - Only show when in favorites mode */}
                 {viewMode === "favorites" ? (
                   <div className="view-switcher">
