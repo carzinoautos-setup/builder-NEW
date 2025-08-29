@@ -422,6 +422,29 @@ export class SimpleMockVehicleService {
     return dealers;
   }
 
+  async getVehicleTypeCounts(): Promise<{ name: string; count: number }[]> {
+    // Only count vehicles with valid body_style
+    const validVehicles = this.vehicles.filter(v =>
+      v.body_style &&
+      v.body_style !== "Uncategorized" &&
+      v.body_style.trim() !== ""
+    );
+
+    // Count vehicles per body style
+    const typeCounts = new Map<string, number>();
+    validVehicles.forEach((vehicle) => {
+      const current = typeCounts.get(vehicle.body_style) || 0;
+      typeCounts.set(vehicle.body_style, current + 1);
+    });
+
+    // Convert to array and sort by count descending
+    const types = Array.from(typeCounts.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+
+    return types;
+  }
+
   async getFilterOptions(): Promise<{
     makes: string[];
     conditions: string[];
