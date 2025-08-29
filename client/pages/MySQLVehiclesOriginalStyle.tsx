@@ -1715,7 +1715,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.bodyStyle.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("bodyStyle", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
@@ -1730,7 +1731,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.vehicleType.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("vehicleType", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
@@ -1745,7 +1747,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.driveType.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("driveType", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
@@ -1760,7 +1763,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.exteriorColor.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("exteriorColor", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item} Color
@@ -1777,7 +1781,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.sellerType.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("sellerType", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
