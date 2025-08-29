@@ -1199,87 +1199,23 @@ export default function MySQLVehiclesOriginalStyle() {
 
             {/* Desktop Search Section */}
             <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
-              <h3 className="carzino-filter-title mb-3">Search Vehicles</h3>
-              <form onSubmit={handleSearchFormSubmit} className="space-y-2">
-                <div className="grid grid-cols-1 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Make (e.g., Toyota)"
-                    value={searchForm.make}
-                    onChange={(e) => setSearchForm(prev => ({ ...prev, make: e.target.value }))}
-                    className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Model (e.g., Camry)"
-                    value={searchForm.model}
-                    onChange={(e) => setSearchForm(prev => ({ ...prev, model: e.target.value }))}
-                    className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Trim (e.g., SE)"
-                    value={searchForm.trim}
-                    onChange={(e) => setSearchForm(prev => ({ ...prev, trim: e.target.value }))}
-                    className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
-                  />
-                  <select
-                    value={searchForm.condition}
-                    onChange={(e) => setSearchForm(prev => ({ ...prev, condition: e.target.value }))}
-                    className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
-                  >
-                    <option value="">Any Condition</option>
-                    <option value="New">New</option>
-                    <option value="Used">Used</option>
-                    <option value="Certified">Certified</option>
-                  </select>
-                  <input
-                    type="text"
-                    placeholder="Year (e.g., 2021)"
-                    value={searchForm.year}
-                    onChange={(e) => setSearchForm(prev => ({ ...prev, year: e.target.value }))}
-                    className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
-                  />
-                  <select
-                    value={searchForm.bodyStyle}
-                    onChange={(e) => setSearchForm(prev => ({ ...prev, bodyStyle: e.target.value }))}
-                    className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
-                  >
-                    <option value="">Any Body Style</option>
-                    <option value="Sedan">Sedan</option>
-                    <option value="SUV">SUV</option>
-                    <option value="Coupe">Coupe</option>
-                    <option value="Convertible">Convertible</option>
-                    <option value="Hatchback">Hatchback</option>
-                    <option value="Truck">Truck</option>
-                    <option value="Wagon">Wagon</option>
-                    <option value="Van">Van</option>
-                  </select>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 flex items-center justify-center gap-2"
-                >
-                  <Search className="w-4 h-4" />
-                  Search Vehicles
-                </button>
-              </form>
-
-              {/* Original search for compatibility */}
-              <div className="mt-3 pt-3 border-t border-gray-200">
+              <form onSubmit={handleUnifiedSearchSubmit}>
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Or search all vehicles..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
+                    placeholder="Search: Toyota Camry SE Used 2021 Sedan"
+                    value={unifiedSearch}
+                    onChange={(e) => setUnifiedSearch(e.target.value)}
+                    className="carzino-search-input w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
                   />
-                  <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
+                  <button
+                    type="submit"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1"
+                  >
                     <Search className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
+              </form>
             </div>
 
             {/* Desktop Applied Filters */}
