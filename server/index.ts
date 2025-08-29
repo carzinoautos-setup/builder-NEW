@@ -34,6 +34,13 @@ import {
 } from "./routes/payments.js";
 import { WordPressSync } from "./scripts/syncWordPressUpdates.js";
 
+// Track WordPress sync status
+const syncStatus = {
+  lastAttempt: null as string | null,
+  lastSuccess: null as string | null,
+  lastError: null as string | null
+};
+
 export function createServer() {
   const app = express();
 
