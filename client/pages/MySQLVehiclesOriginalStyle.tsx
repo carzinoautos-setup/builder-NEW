@@ -2254,6 +2254,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   { name: "Van / Minivan", count: 298 },
                   { name: "Wagon", count: 156 },
                   { name: "Trucks", count: 2217 },
+                  { name: "Regular Cab", count: 421 },
                   { name: "Extended Cab", count: 543 },
                   { name: "Crew Cab", count: 687 },
                 ].map((type, index) => (
