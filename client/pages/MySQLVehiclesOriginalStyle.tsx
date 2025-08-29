@@ -699,7 +699,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
     // Update URL if main filter categories changed
     if (
-      ["make", "model", "trim", "condition", "year", "bodyStyle"].includes(
+      ["make", "model", "trim", "condition", "year", "bodyStyle", "transmission"].includes(
         category,
       )
     ) {
@@ -2846,7 +2846,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="ml-1 text-white"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   ))}
