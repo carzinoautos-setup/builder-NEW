@@ -2326,8 +2326,13 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </div>
 
-            {/* Results Count - NOT in sticky */}
+            {/* Connection Status & Results Count - NOT in sticky */}
             <div className="px-3 py-2 bg-gray-50 text-sm">
+              {error && error.includes('Unable to connect') && (
+                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded mb-2 text-xs">
+                  ⚠️ Connection issues detected. Some features may be limited.
+                </div>
+              )}
               <span className="font-medium">
                 {viewMode === "favorites"
                   ? `${favoritesCount} Saved Vehicles`
