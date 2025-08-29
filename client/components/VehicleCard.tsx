@@ -224,6 +224,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               style={{ fontSize: "12px", fontWeight: 500 }}
             >
               {vehicle.seller_type}
+              {vehicle.seller_account_number && (
+                <span className="text-gray-500 ml-1">• ID: {vehicle.seller_account_number}</span>
+              )}
             </div>
           </div>
         </div>
