@@ -1389,7 +1389,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white"
                       >
-                        ���
+                        ��
                       </button>
                     </span>
                   ))}
@@ -1996,12 +1996,16 @@ export default function MySQLVehiclesOriginalStyle() {
                     <input
                       type="text"
                       placeholder="100,000"
-                      value={priceMax}
-                      onChange={(e) => setPriceMax(e.target.value)}
+                      value={formatPrice(priceMax)}
+                      onChange={(e) => {
+                        const unformattedValue = unformatPrice(e.target.value);
+                        setPriceMax(unformattedValue);
+                      }}
                       onBlur={(e) => {
+                        const unformattedValue = unformatPrice(e.target.value);
                         setAppliedFilters((prev) => ({
                           ...prev,
-                          priceMax: e.target.value,
+                          priceMax: unformattedValue,
                         }));
                       }}
                       onClick={(e) => e.stopPropagation()}
