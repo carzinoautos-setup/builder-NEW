@@ -412,7 +412,7 @@ export default function MySQLVehiclesOriginalStyle() {
         trim: newFilters.trim,
         condition: newFilters.condition,
         year: newFilters.year.length > 0 ? newFilters.year[0] : undefined,
-        bodyStyle: newFilters.bodyStyle,
+        bodyStyle: newFilters.bodyStyle.length > 0 ? newFilters.bodyStyle[0] : undefined,
       };
 
       const newURL = generateURLFromFilters(urlFilters);
