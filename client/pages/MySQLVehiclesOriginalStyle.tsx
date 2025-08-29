@@ -132,7 +132,6 @@ export default function MySQLVehiclesOriginalStyle() {
     {},
   );
   const [sortBy, setSortBy] = useState("relevance");
-  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
   // API state
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
