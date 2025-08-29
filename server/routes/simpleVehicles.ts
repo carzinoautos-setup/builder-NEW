@@ -205,6 +205,28 @@ export const getDealers: RequestHandler = async (req, res) => {
 };
 
 /**
+ * GET /api/vehicle-types
+ * Get available vehicle types with counts (only vehicles with valid body_style)
+ */
+export const getVehicleTypes: RequestHandler = async (req, res) => {
+  try {
+    const vehicleTypes = await vehicleService.getVehicleTypeCounts();
+
+    res.status(200).json({
+      success: true,
+      data: vehicleTypes,
+    });
+  } catch (error) {
+    console.error("Error in getVehicleTypes route:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      data: [],
+    });
+  }
+};
+
+/**
  * GET /api/simple-vehicles/health
  * Service health check endpoint
  */
