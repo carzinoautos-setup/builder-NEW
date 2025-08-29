@@ -1707,7 +1707,11 @@ export default function MySQLVehiclesOriginalStyle() {
                 placeholder="Enter your zip code"
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
-                className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+                className={`carzino-search-input w-full px-3 py-2 border rounded-md focus:outline-none ${
+                  zipCode.trim() === ""
+                    ? "border-red-500 focus:border-red-600"
+                    : "border-gray-300 focus:border-red-600"
+                }`}
               />
               <select
                 value={radius}
