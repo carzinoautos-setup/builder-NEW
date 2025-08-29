@@ -1253,6 +1253,9 @@ export default function MySQLVehiclesOriginalStyle() {
                   {userLocation.city && userLocation.state
                     ? `${userLocation.city}, ${userLocation.state}`
                     : `${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`}
+                  {userLocation.city === "Geographic Center" && (
+                    <span className="text-yellow-600 ml-1">(Offline mode)</span>
+                  )}
                 </div>
               )}
 
@@ -1260,9 +1263,8 @@ export default function MySQLVehiclesOriginalStyle() {
                 !isGeocodingLoading &&
                 zipCode &&
                 zipCode.length >= 5 && (
-                  <div className="mt-2 text-sm text-red-600">
-                    ❌ ZIP code "{zipCode}" not found. Please verify it's a
-                    valid US ZIP code.
+                  <div className="mt-2 text-sm text-yellow-600">
+                    ⚠️ Location service unavailable. Radius filtering disabled.
                   </div>
                 )}
 
