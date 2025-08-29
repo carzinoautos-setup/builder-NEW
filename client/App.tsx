@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import MySQLVehiclesOriginalStyle from "./pages/MySQLVehiclesOriginalStyle";
 import { IconDemo } from "./pages/IconDemo";
+import { PaymentCalculatorDemo } from "./pages/PaymentCalculatorDemo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
