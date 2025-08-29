@@ -2266,6 +2266,10 @@ export default function MySQLVehiclesOriginalStyle() {
                   { name: "Crossover/SUV", count: 3405 },
                   { name: "Trucks", count: 2217 },
                   { name: "Coupe", count: 419 },
+                  { name: "Convertible", count: 125 },
+                  { name: "Hatchback", count: 342 },
+                  { name: "Van / Minivan", count: 298 },
+                  { name: "Wagon", count: 156 },
                 ].map((type, index) => (
                   <VehicleTypeCard
                     key={index}
