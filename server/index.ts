@@ -32,7 +32,7 @@ import {
   getCacheStats,
   clearCache,
 } from "./routes/payments.js";
-import WordPressSync from "./scripts/syncWordPressUpdates.js";
+import { WordPressSync } from "./scripts/syncWordPressUpdates.js";
 
 export function createServer() {
   const app = express();
