@@ -75,6 +75,9 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
     if (req.query.driveType) {
       filters.driveType = (req.query.driveType as string).split(",");
     }
+    if (req.query.transmission) {
+      filters.transmission = (req.query.transmission as string).split(",");
+    }
     if (req.query.exteriorColor) {
       filters.exteriorColor = (req.query.exteriorColor as string).split(",");
     }
