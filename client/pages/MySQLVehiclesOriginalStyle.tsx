@@ -352,6 +352,49 @@ export default function MySQLVehiclesOriginalStyle() {
     setFavorites(savedFavorites);
   }, []);
 
+  // Initialize filters from URL
+  useEffect(() => {
+    const urlFilters = parseFiltersFromURL(location.pathname);
+
+    // Only update if we're on the cars-for-sale route and have filters
+    if (location.pathname.startsWith('/cars-for-sale') &&
+        (urlFilters.make || urlFilters.model || urlFilters.trim ||
+         urlFilters.condition || urlFilters.year || urlFilters.bodyStyle)) {
+
+      setAppliedFilters(prev => ({
+        ...prev,
+        make: urlFilters.make ? [normalizeFilterValue(urlFilters.make)] : [],
+        model: urlFilters.model ? [normalizeFilterValue(urlFilters.model)] : [],
+        trim: urlFilters.trim ? [normalizeFilterValue(urlFilters.trim)] : [],
+        condition: urlFilters.condition ? [normalizeFilterValue(urlFilters.condition)] : [],
+        year: urlFilters.year ? [urlFilters.year] : [],
+        bodyStyle: urlFilters.bodyStyle ? [normalizeFilterValue(urlFilters.bodyStyle)] : [],
+      }));
+    }
+  }, [location.pathname]);
+
+  // Function to update URL when filters change
+  const updateURLFromFilters = useCallback((newFilters: typeof appliedFilters) => {
+    // Only generate URL for main filter categories (not price, payment, etc.)
+    const urlFilters = {
+      make: newFilters.make,
+      model: newFilters.model,
+      trim: newFilters.trim,
+      condition: newFilters.condition,
+      year: newFilters.year.length > 0 ? newFilters.year[0] : undefined,
+      bodyStyle: newFilters.bodyStyle,
+    };
+
+    const newURL = generateURLFromFilters(urlFilters);
+
+    // Only navigate if we're changing the URL structure
+    if (location.pathname !== newURL &&
+        (urlFilters.make?.length || urlFilters.model?.length || urlFilters.trim?.length ||
+         urlFilters.condition?.length || urlFilters.year || urlFilters.bodyStyle?.length)) {
+      navigate(newURL, { replace: true });
+    }
+  }, [navigate, location.pathname]);
+
   // Fetch vehicles when dependencies change
   useEffect(() => {
     fetchVehicles();
@@ -1264,7 +1307,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("sellerType", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ��
+                        ×
                       </button>
                     </span>
                   ))}
