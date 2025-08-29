@@ -17,6 +17,7 @@ export interface SimpleVehicleRecord {
   location: string; // Distance from zip code will be calculated
   phone: string;
   seller_type: string; // "Dealer" or "Private Seller"
+  seller_account_number: string; // Links to SellersAccount - hidden from public display
 }
 
 // Simplified pagination and filter types
