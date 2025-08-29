@@ -61,6 +61,13 @@ export function createServer() {
   app.get("/api/simple-vehicles/:id", getSimpleVehicleById);
   app.get("/api/simple-health", simpleHealthCheck);
 
+  // Payment calculation routes
+  app.post("/api/payments/calculate", calculatePayment);
+  app.post("/api/payments/bulk", calculateBulkPayments);
+  app.post("/api/payments/affordable-price", calculateAffordablePrice);
+  app.get("/api/payments/cache-stats", getCacheStats);
+  app.delete("/api/payments/cache", clearCache);
+
   // Example API routes (keep for backward compatibility)
   app.get("/api/demo", handleDemo);
 
