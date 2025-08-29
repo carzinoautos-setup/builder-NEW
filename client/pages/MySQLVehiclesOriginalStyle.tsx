@@ -469,17 +469,7 @@ export default function MySQLVehiclesOriginalStyle() {
     return () => clearTimeout(debounceTimer);
   }, [zipCode]);
 
-  // Geocode default ZIP on component mount
-  useEffect(() => {
-    const initializeLocation = async () => {
-      const location = await geocodeZip("98498");
-      setUserLocation(location);
-      // Also set as applied location by default
-      setAppliedLocation(location);
-    };
-
-    initializeLocation();
-  }, []);
+  // No automatic location initialization - users must enter their own ZIP code
 
   // Load vehicle type images
   useEffect(() => {
