@@ -1439,7 +1439,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 appliedFilters.priceMax ||
                 appliedFilters.paymentMin ||
                 appliedFilters.paymentMax) && (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-4">
                   <button
                     onClick={clearAllFilters}
                     className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs"
