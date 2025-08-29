@@ -992,6 +992,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   <Pagination
                     currentPage={apiResponse.meta.currentPage}
                     totalPages={apiResponse.meta.totalPages}
+                    totalResults={apiResponse.meta.totalRecords}
+                    resultsPerPage={apiResponse.meta.pageSize}
                     onPageChange={handlePageChange}
                   />
                 )}
