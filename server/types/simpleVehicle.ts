@@ -43,6 +43,7 @@ export interface SimpleVehicleFilters {
   trim?: string[];
   vehicleType?: string[];
   driveType?: string[];
+  transmission?: string[];
   mileage?: string;
   exteriorColor?: string[];
   sellerType?: string[];
