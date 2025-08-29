@@ -371,7 +371,7 @@ export default function MySQLVehiclesOriginalStyle() {
             --carzino-featured-badge: 14px;
             --carzino-badge-label: 14px;
             --carzino-vehicle-title: 18px;
-            --carzino-vehicle-details: 14px;
+            --carzino-vehicle-details: 13px;
             --carzino-price-label: 14px;
             --carzino-price-value: 18px;
             --carzino-dealer-info: 12px;
@@ -388,23 +388,101 @@ export default function MySQLVehiclesOriginalStyle() {
           }
         }
 
-        .mobile-filter-overlay {
-          display: none;
+        .carzino-featured-badge { font-size: var(--carzino-featured-badge) !important; font-weight: 500 !important; }
+        .carzino-badge-label { font-size: var(--carzino-badge-label) !important; font-weight: 500 !important; }
+        .carzino-vehicle-title { font-size: var(--carzino-vehicle-title) !important; font-weight: 600 !important; }
+        .carzino-vehicle-details { font-size: var(--carzino-vehicle-details) !important; font-weight: 400 !important; }
+        .carzino-price-label { font-size: var(--carzino-price-label) !important; font-weight: 400 !important; }
+        .carzino-price-value { font-size: var(--carzino-price-value) !important; font-weight: 700 !important; }
+        .carzino-dealer-info { font-size: 12px !important; font-weight: 500 !important; }
+        .carzino-image-counter { font-size: var(--carzino-image-counter) !important; font-weight: 400 !important; }
+        .carzino-filter-title { font-size: var(--carzino-filter-title) !important; font-weight: 600 !important; }
+        .carzino-filter-option { font-size: var(--carzino-filter-option) !important; font-weight: 400 !important; }
+        .carzino-filter-count { font-size: var(--carzino-filter-count) !important; font-weight: 400 !important; color: #6B7280 !important; }
+        .carzino-search-input { font-size: var(--carzino-search-input) !important; font-weight: 400 !important; }
+        .carzino-location-label { font-size: var(--carzino-location-label) !important; font-weight: 500 !important; }
+        .carzino-dropdown-option { font-size: var(--carzino-dropdown-option) !important; font-weight: 400 !important; }
+        .carzino-vehicle-type-name { font-size: var(--carzino-vehicle-type-name) !important; font-weight: 500 !important; }
+        .carzino-vehicle-type-count { font-size: var(--carzino-vehicle-type-count) !important; font-weight: 400 !important; color: #6B7280 !important; }
+        .carzino-show-more { font-size: var(--carzino-show-more) !important; font-weight: 500 !important; }
+
+        input[type="checkbox"] {
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #d1d5db;
+          border-radius: 3px;
+          background-color: white;
+          position: relative;
+          cursor: pointer;
         }
 
-        @media (max-width: 1024px) {
+        input[type="checkbox"]:hover {
+          border-color: #6b7280;
+          background-color: #f9fafb;
+        }
+
+        input[type="checkbox"]:checked {
+          background-color: #dc2626;
+          border-color: #dc2626;
+        }
+
+        input[type="checkbox"]:checked::after {
+          content: '✓';
+          position: absolute;
+          color: white;
+          font-size: 12px;
+          top: -2px;
+          left: 2px;
+        }
+
+        @media (max-width: 639px) {
+          .vehicle-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+
+          .main-container {
+            padding: 0 !important;
+          }
+
+          .vehicle-card {
+            border-radius: 8px !important;
+            margin: 0 12px !important;
+          }
+        }
+
+        @media (min-width: 640px) and (max-width: 1023px) {
+          .vehicle-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 20px !important;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .vehicle-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 24px !important;
+          }
+
+          .main-container {
+            max-width: 1325px !important;
+            margin: 0 auto !important;
+          }
+        }
+
+        @media (max-width: 1023px) {
           .mobile-filter-overlay {
-            display: block;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 40;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 35;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: all 0.3s ease;
           }
 
           .mobile-filter-overlay.open {
@@ -413,24 +491,53 @@ export default function MySQLVehiclesOriginalStyle() {
           }
 
           .mobile-filter-sidebar {
-            position: fixed;
+            position: fixed !important;
             top: 0;
-            left: -100%;
-            height: 100%;
-            width: 280px;
+            left: 0;
+            bottom: 0;
             background: white;
-            z-index: 50;
-            transition: left 0.3s ease;
-            overflow-y: auto;
+            z-index: 40;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            display: block !important;
+            -webkit-overflow-scrolling: touch;
           }
 
           .mobile-filter-sidebar.open {
-            left: 0;
+            transform: translateX(0);
+          }
+
+          .mobile-chevron {
+            width: 22px !important;
+            height: 22px !important;
           }
         }
 
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+          outline: none;
+          border-color: #dc2626;
+        }
+
+        .filter-tag {
+          background-color: white;
+          border: 1px solid #e5e7eb;
+          color: #374151;
+        }
+
+        .filter-tag:hover .remove-x {
+          color: #dc2626;
+        }
+
         .view-switcher {
-          background: #f3f4f6;
+          display: inline-flex;
+          background: white;
+          border: 1px solid #e5e7eb;
           border-radius: 6px;
           padding: 2px;
         }
@@ -774,14 +881,14 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Distance */}
-            <div className="mb-4 pb-4 border-b border-gray-200">
+            <div className="mb-4 pb-4 border border-gray-200 rounded-lg p-3">
               <label className="carzino-location-label block mb-2">Distance</label>
               <input
                 type="text"
                 placeholder="ZIP Code"
-                className="carzino-search-input w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none"
+                className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
               />
-              <select className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none mt-2">
+              <select className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none mt-2">
                 <option value="10">10 Miles</option>
                 <option value="25">25 Miles</option>
                 <option value="50">50 Miles</option>
