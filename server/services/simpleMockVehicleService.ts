@@ -156,12 +156,19 @@ function generateSimpleVehicleRecord(id: number): SimpleVehicleRecord {
 
   const title = `${year} ${make} ${model} ${trim}`;
 
+  // Simulate your WordPress "is_featured" field logic
+  const isFeatured = Math.random() > 0.85; // 15% featured (simulating "yes" values)
+
+  // Generate badges based on condition and features (not featured - that's separate)
+  const badges = [condition];
+  if (drivetrain !== "FWD") badges.push(drivetrain);
+
   return {
     id,
-    featured: Math.random() > 0.8, // 20% featured
+    featured: isFeatured, // This controls the red "Featured!" badge
     viewed: Math.random() > 0.7, // 30% viewed
     images: [randomChoice(SAMPLE_IMAGES)],
-    badges,
+    badges, // These are the grey condition/drivetrain badges
     title,
     mileage: formatMileage(mileage),
     transmission: randomChoice(TRANSMISSIONS),
