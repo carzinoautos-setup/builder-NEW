@@ -1605,8 +1605,9 @@ export default function MySQLVehiclesOriginalStyle() {
 
               {/* Location Status */}
               {isGeocodingLoading && (
-                <div className="mt-2 text-sm text-gray-500 italic">
-                  🔍 Looking up location for ZIP {zipCode}...
+                <div className="mt-2 text-sm text-gray-500 italic flex items-center gap-1">
+                  <Loader className="w-4 h-4 animate-spin" />
+                  Looking up location for ZIP {zipCode}...
                 </div>
               )}
 
