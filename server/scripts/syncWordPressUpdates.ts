@@ -173,8 +173,9 @@ export class WordPressSync {
   }
 }
 
-// CLI runner for manual sync
-if (require.main === module) {
+// CLI runner for manual sync (ES module compatible)
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
   const sync = new WordPressSync();
   sync.runSync()
     .then(() => process.exit(0))
@@ -184,4 +185,5 @@ if (require.main === module) {
     });
 }
 
+export { WordPressSync };
 export default WordPressSync;
