@@ -306,12 +306,18 @@ export default function MySQLVehiclesOriginalStyle() {
       const apiUrl = `${getApiBaseUrl()}/api/simple-vehicles?${params}`;
       console.log("🔍 Fetching vehicles from:", apiUrl);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       const response = await fetch(apiUrl, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -779,14 +785,18 @@ export default function MySQLVehiclesOriginalStyle() {
       const apiUrl = `${getApiBaseUrl()}/api/geocode/${zip}`;
       console.log("🔍 Geocoding ZIP:", zip, "using:", apiUrl);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       const response = await fetch(apiUrl, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        // Add timeout to prevent hanging
-        signal: AbortSignal.timeout(10000), // 10 second timeout
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const result = await response.json();
