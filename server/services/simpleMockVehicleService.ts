@@ -399,8 +399,13 @@ export class SimpleMockVehicleService {
   }
 
   async getDealers(): Promise<{ name: string; count: number }[]> {
-    // Get dealers only from vehicles where seller_type = "Dealer"
-    const dealerVehicles = this.vehicles.filter((v) => v.seller_type === "Dealer");
+    // Get dealers only from vehicles where seller_type = "Dealer" AND valid body_style
+    const dealerVehicles = this.vehicles.filter((v) =>
+      v.seller_type === "Dealer" &&
+      v.body_style &&
+      v.body_style !== "Uncategorized" &&
+      v.body_style.trim() !== ""
+    );
 
     // Count vehicles per dealer
     const dealerCounts = new Map<string, number>();
