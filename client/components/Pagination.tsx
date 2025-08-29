@@ -129,6 +129,25 @@ export const Pagination: React.FC<PaginationProps> = ({
             <span className="hidden sm:inline sm:ml-1">Next</span>
           </button>
         </div>
+
+        {/* Mobile-only "Go to" section */}
+        <div className="sm:hidden mt-4 pt-4 border-t border-gray-200">
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-sm text-gray-600">Go to page:</span>
+            <select
+              value={currentPage}
+              onChange={(e) => onPageChange(parseInt(e.target.value))}
+              className="px-3 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:border-red-600"
+            >
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <option key={page} value={page}>
+                  {page}
+                </option>
+              ))}
+            </select>
+            <span className="text-sm text-gray-500">of {totalPages}</span>
+          </div>
+        </div>
       </div>
     </div>
   );
