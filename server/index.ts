@@ -129,10 +129,13 @@ async function setupWordPressSync() {
     // Run initial sync check (only if needed)
     setTimeout(async () => {
       try {
+        syncStatus.lastAttempt = new Date().toISOString();
         console.log("🔍 Running initial WordPress sync check...");
         await sync.runSync();
+        syncStatus.lastSuccess = new Date().toISOString();
         console.log("✅ Initial WordPress sync completed");
       } catch (error) {
+        syncStatus.lastError = error.message;
         console.error("⚠️  Initial WordPress sync failed (this is normal if WordPress isn't connected):", error.message);
       }
     }, 5000); // Wait 5 seconds after server start
@@ -140,12 +143,15 @@ async function setupWordPressSync() {
     // Set up automatic sync every hour
     setInterval(async () => {
       try {
+        syncStatus.lastAttempt = new Date().toISOString();
         console.log("🔄 Running scheduled WordPress sync...");
         const startTime = Date.now();
         await sync.runSync();
         const duration = Date.now() - startTime;
+        syncStatus.lastSuccess = new Date().toISOString();
         console.log(`✅ Scheduled WordPress sync completed in ${duration}ms`);
       } catch (error) {
+        syncStatus.lastError = error.message;
         console.error("❌ Scheduled WordPress sync failed:", error.message);
       }
     }, 60 * 60 * 1000); // Every 60 minutes
