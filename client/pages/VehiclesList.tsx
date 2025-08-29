@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Search, Filter, AlertCircle, Loader2 } from 'lucide-react';
 import { MySQLVehicleCard, VehicleCardSkeleton } from '../components/MySQLVehicleCard';
 import { PaginationControls, SimplePagination } from '../components/PaginationControls';
+import { NavigationHeader } from '../components/NavigationHeader';
 import { vehicleApi, VehicleRecord, VehiclesApiResponse, VehicleFilters, FilterOptions } from '../lib/vehicleApi';
 
 export function VehiclesList() {
