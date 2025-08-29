@@ -2376,6 +2376,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     }}
                   />
                 ))}
+                {vehicleTypes.length === 0 && (
+                  <div className="text-gray-500 text-sm p-2 col-span-2 text-center">
+                    Loading vehicle types...
+                  </div>
+                )}
               </div>
             </FilterSection>
 
