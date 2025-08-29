@@ -1163,7 +1163,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
               {!userLocation && !isGeocodingLoading && zipCode && zipCode.length >= 5 && (
                 <div className="mt-2 text-sm text-red-600">
-                  ❌ ZIP code "{zipCode}" not found. Try: 98498, 90210, 10001, 60601, 75001
+                  ❌ ZIP code "{zipCode}" not found. Please verify it's a valid US ZIP code.
                 </div>
               )}
 
