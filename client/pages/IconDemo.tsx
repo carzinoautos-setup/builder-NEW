@@ -133,6 +133,7 @@ export const IconDemo: React.FC = () => {
             <p className="text-sm text-gray-600 mt-4 text-center">
               Look for your custom icons in the vehicle details section:<br/>
               • Mileage icon next to "25,000 miles"<br/>
+              • Transmission icon next to "Automatic"<br/>
               • Door icon next to "4 Doors"
             </p>
           </div>
