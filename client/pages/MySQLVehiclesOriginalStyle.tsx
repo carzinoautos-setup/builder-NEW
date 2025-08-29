@@ -727,6 +727,7 @@ export default function MySQLVehiclesOriginalStyle() {
       mileage: "",
       exteriorColor: [],
       sellerType: [],
+      dealer: [],
       priceMin: "",
       priceMax: "",
       paymentMin: "",
