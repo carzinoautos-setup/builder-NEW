@@ -1518,7 +1518,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white"
                       >
-                        ���
+                        ��
                       </button>
                     </span>
                   ))}
@@ -3211,7 +3211,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           viewMode === "favorites"
                             ? "bg-white"
                             : favoritesCount > 0
-                              ? "bg-white md:bg-red-600"
+                              ? "bg-red-600 md:bg-white"
                               : "bg-white"
                         }`}
                       />
