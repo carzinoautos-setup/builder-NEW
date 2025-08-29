@@ -513,6 +513,20 @@ export default function MySQLVehiclesOriginalStyle() {
     loadImages();
   }, []);
 
+  // Helper functions for price formatting
+  const formatPrice = (value: string): string => {
+    // Remove non-numeric characters except decimal points
+    const numericValue = value.replace(/[^\d]/g, "");
+    if (!numericValue) return "";
+    // Add commas for thousands
+    return parseInt(numericValue).toLocaleString();
+  };
+
+  const unformatPrice = (value: string): string => {
+    // Remove commas and return clean number string
+    return value.replace(/,/g, "");
+  };
+
   // Helper functions - exactly like original
   const saveFavorites = (newFavorites: { [key: number]: Vehicle }) => {
     setFavorites(newFavorites);
