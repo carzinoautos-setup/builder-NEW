@@ -1511,17 +1511,419 @@ export default function MySQLVehiclesOriginalStyle() {
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
-          {/* Mobile Search Bar */}
-          <div className="md:hidden bg-white border-b px-4 py-3">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search vehicles..."
-                className="w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-red-600"
-              />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
-                <Search className="w-5 h-5" />
-              </button>
+          {/* Complete Mobile Layout - matching original demo exactly */}
+          <div className="lg:hidden">
+            {/* Non-sticky title and search */}
+            <div className="p-3 bg-white">
+              <h1 className="text-lg font-semibold text-gray-900 mb-3">
+                {viewMode === "favorites"
+                  ? "My Favorites"
+                  : "Vehicles for Sale"}
+              </h1>
+
+              {/* Search Bar */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search vehicles..."
+                  className="w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-red-600"
+                />
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
+                  <Search className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Sticky wrapper - will stick throughout the entire scrollable area */}
+            <div className={mobileFiltersOpen ? "" : "sticky top-0 z-50"}>
+              {/* Applied Filters Pills */}
+              {(appliedFilters.condition.length > 0 ||
+                appliedFilters.make.length > 0 ||
+                appliedFilters.model.length > 0 ||
+                appliedFilters.trim.length > 0 ||
+                appliedFilters.vehicleType.length > 0 ||
+                appliedFilters.driveType.length > 0 ||
+                appliedFilters.exteriorColor.length > 0 ||
+                appliedFilters.mileage ||
+                appliedFilters.priceMin ||
+                appliedFilters.priceMax ||
+                appliedFilters.paymentMin ||
+                appliedFilters.paymentMax) && (
+                <div className="px-3 pt-3 bg-white">
+                  <div className="flex gap-2 overflow-x-auto pb-3">
+                    <button
+                      onClick={clearAllFilters}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                    >
+                      Clear All
+                    </button>
+                    {appliedFilters.condition.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("condition", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.make.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("make", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.model.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("model", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.trim.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("trim", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.vehicleType.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() =>
+                            removeAppliedFilter("vehicleType", item)
+                          }
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.driveType.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("driveType", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.exteriorColor.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item} Color
+                        <button
+                          onClick={() =>
+                            removeAppliedFilter("exteriorColor", item)
+                          }
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.mileage && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {appliedFilters.mileage === "100001"
+                          ? "100k+ miles"
+                          : `Under ${parseInt(appliedFilters.mileage).toLocaleString()} mi`}
+                        <button
+                          onClick={() =>
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              mileage: "",
+                            }))
+                          }
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    {(appliedFilters.priceMin || appliedFilters.priceMax) && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />$
+                        {appliedFilters.priceMin || "0"} - $
+                        {appliedFilters.priceMax || "Any"}
+                        <button
+                          onClick={() => {
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              priceMin: "",
+                              priceMax: "",
+                            }));
+                            setPriceMin("10000");
+                            setPriceMax("100000");
+                          }}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    {(appliedFilters.paymentMin ||
+                      appliedFilters.paymentMax) && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />$
+                        {appliedFilters.paymentMin || "0"}-$
+                        {appliedFilters.paymentMax || "Any"}/mo
+                        <button
+                          onClick={() =>
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              paymentMin: "",
+                              paymentMax: "",
+                            }))
+                          }
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Filter, Sort, Favorites Bar */}
+              <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md">
+                <button
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
+                  onClick={() => setMobileFiltersOpen(true)}
+                >
+                  <Sliders className="w-4 h-4" />
+                  Filter
+                  {appliedFilters.condition.length +
+                    appliedFilters.make.length +
+                    appliedFilters.model.length +
+                    appliedFilters.trim.length +
+                    appliedFilters.vehicleType.length +
+                    appliedFilters.driveType.length +
+                    appliedFilters.exteriorColor.length +
+                    (appliedFilters.mileage ? 1 : 0) +
+                    (appliedFilters.priceMin || appliedFilters.priceMax
+                      ? 1
+                      : 0) +
+                    (appliedFilters.paymentMin || appliedFilters.paymentMax
+                      ? 1
+                      : 0) >
+                    0 && (
+                    <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                      {appliedFilters.condition.length +
+                        appliedFilters.make.length +
+                        appliedFilters.model.length +
+                        appliedFilters.trim.length +
+                        appliedFilters.vehicleType.length +
+                        appliedFilters.driveType.length +
+                        appliedFilters.exteriorColor.length +
+                        (appliedFilters.mileage ? 1 : 0) +
+                        (appliedFilters.priceMin || appliedFilters.priceMax
+                          ? 1
+                          : 0) +
+                        (appliedFilters.paymentMin || appliedFilters.paymentMax
+                          ? 1
+                          : 0)}
+                    </span>
+                  )}
+                </button>
+
+                <div className="border-l border-gray-400 h-8"></div>
+
+                <div className="relative">
+                  <button
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
+                    onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M2 4h12M2 8h8M2 12h4" />
+                    </svg>
+                    Sort
+                  </button>
+                  {sortDropdownOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-48">
+                      <button
+                        onClick={() => {
+                          setSortBy("relevance");
+                          setSortDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                      >
+                        Relevance
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("price-low");
+                          setSortDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                      >
+                        Price: Low to High
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("price-high");
+                          setSortDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                      >
+                        Price: High to Low
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("year-new");
+                          setSortDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                      >
+                        Year: Newest
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy("mileage-low");
+                          setSortDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                      >
+                        Mileage: Lowest
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-l border-gray-400 h-8"></div>
+
+                <button
+                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium ${viewMode === "favorites" ? "text-red-600" : ""}`}
+                  onClick={() =>
+                    setViewMode(viewMode === "favorites" ? "all" : "favorites")
+                  }
+                >
+                  Favorites
+                  <div className="relative">
+                    <div
+                      className={`w-12 h-6 rounded-full ${viewMode === "favorites" ? "bg-red-600" : "bg-gray-300"} transition-colors`}
+                    >
+                      <div
+                        className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${viewMode === "favorites" ? "translate-x-6" : "translate-x-0.5"}`}
+                      />
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Results Count - NOT in sticky */}
+            <div className="px-3 py-2 bg-gray-50 text-sm">
+              <span className="font-medium">
+                {viewMode === "favorites"
+                  ? `${favoritesCount} Saved Vehicles`
+                  : `${appliedFilters.condition.join(", ")}${appliedFilters.condition.length > 0 && appliedFilters.make.length > 0 ? ", " : ""}${appliedFilters.make.join(", ")}${appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 ? " for sale" : "All Vehicles"} - ${totalResults.toLocaleString()} Results`}
+              </span>
+            </div>
+
+            {/* Mobile Product Grid */}
+            <div className="p-4 bg-white min-h-screen">
+              {loading ? (
+                <div className="text-center py-12">
+                  <div className="text-lg">Loading vehicles...</div>
+                </div>
+              ) : error ? (
+                <div className="text-center py-12">
+                  <div className="text-red-600">Error: {error}</div>
+                </div>
+              ) : viewMode === "favorites" && favoritesCount === 0 ? (
+                <div className="text-center py-12 bg-white rounded-lg">
+                  <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No favorites yet
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Start browsing vehicles and save your favorites by clicking
+                    the heart icon.
+                  </p>
+                  <button
+                    onClick={() => setViewMode("all")}
+                    className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Browse Vehicles
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <div className="vehicle-grid grid grid-cols-1 gap-4 mb-8">
+                    {displayedVehicles.map((vehicle) => (
+                      <VehicleCard
+                        key={vehicle.id}
+                        vehicle={vehicle}
+                        favorites={favorites}
+                        onToggleFavorite={toggleFavorite}
+                        keeperMessage={keeperMessage}
+                      />
+                    ))}
+                  </div>
+
+                  {viewMode === "all" && (
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      totalResults={totalResults}
+                      resultsPerPage={resultsPerPage}
+                      onPageChange={handlePageChange}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
