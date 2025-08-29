@@ -16,6 +16,7 @@ Complete deployment instructions for the Carzino Autos Vehicle Management System
 ## 🔧 **Prerequisites**
 
 ### **System Requirements**
+
 - **Node.js**: 18.0 or higher
 - **PNPM**: 8.0 or higher
 - **MySQL**: 8.0 or higher
@@ -24,6 +25,7 @@ Complete deployment instructions for the Carzino Autos Vehicle Management System
 - **Storage**: 10GB minimum
 
 ### **Services & Accounts**
+
 - Database hosting (MySQL/PostgreSQL)
 - Domain name and SSL certificate
 - WordPress hosting (if using WooCommerce integration)
@@ -85,8 +87,8 @@ if (missing.length) {
 
 ```sql
 -- Create database
-CREATE DATABASE carzino_vehicles 
-CHARACTER SET utf8mb4 
+CREATE DATABASE carzino_vehicles
+CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
 -- Create user with limited privileges
@@ -126,12 +128,14 @@ ANALYZE TABLE vehicles;
 ### **WordPress Setup**
 
 1. **Install API Bridge**
+
    ```php
    // Add to your theme's functions.php or create a plugin
    // Copy contents from wordpress-react-bridge-api.php
    ```
 
 2. **Configure ACF Fields**
+
    ```bash
    # Ensure these ACF option fields exist:
    - interest_rate (number)
@@ -141,6 +145,7 @@ ANALYZE TABLE vehicles;
    ```
 
 3. **Enable REST API**
+
    ```php
    // Ensure WordPress REST API is enabled
    add_filter('rest_enabled', '__return_true');
@@ -163,6 +168,7 @@ ANALYZE TABLE vehicles;
 ### **Option 1: Netlify Deployment**
 
 #### **Setup**
+
 ```bash
 # Install Netlify CLI
 npm install -g netlify-cli
@@ -176,6 +182,7 @@ netlify deploy --prod --dir=dist
 ```
 
 #### **Netlify Configuration** (`netlify.toml`)
+
 ```toml
 [build]
   command = "pnpm build"
@@ -200,6 +207,7 @@ netlify deploy --prod --dir=dist
 ### **Option 2: Vercel Deployment**
 
 #### **Setup**
+
 ```bash
 # Install Vercel CLI
 npm install -g vercel
@@ -209,6 +217,7 @@ vercel --prod
 ```
 
 #### **Vercel Configuration** (`vercel.json`)
+
 ```json
 {
   "version": 2,
@@ -241,6 +250,7 @@ vercel --prod
 ### **Option 3: Traditional VPS/Cloud Hosting**
 
 #### **Ubuntu/Debian Setup**
+
 ```bash
 # Update system
 sudo apt update && sudo apt upgrade -y
@@ -262,30 +272,34 @@ pnpm install
 ```
 
 #### **PM2 Configuration** (`ecosystem.config.js`)
+
 ```javascript
 module.exports = {
-  apps: [{
-    name: 'carzino-autos',
-    script: 'dist/server/node-build.mjs',
-    instances: 'max',
-    exec_mode: 'cluster',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 8080
+  apps: [
+    {
+      name: "carzino-autos",
+      script: "dist/server/node-build.mjs",
+      instances: "max",
+      exec_mode: "cluster",
+      env: {
+        NODE_ENV: "production",
+        PORT: 8080,
+      },
+      env_production: {
+        NODE_ENV: "production",
+        PORT: 8080,
+      },
+      error_file: "./logs/err.log",
+      out_file: "./logs/out.log",
+      log_file: "./logs/combined.log",
+      time: true,
     },
-    env_production: {
-      NODE_ENV: 'production',
-      PORT: 8080
-    },
-    error_file: './logs/err.log',
-    out_file: './logs/out.log',
-    log_file: './logs/combined.log',
-    time: true
-  }]
+  ],
 };
 ```
 
 #### **Nginx Configuration**
+
 ```nginx
 server {
     listen 80;
@@ -320,6 +334,7 @@ server {
 ### **Option 4: Docker Deployment**
 
 #### **Dockerfile**
+
 ```dockerfile
 # Multi-stage build
 FROM node:18-alpine AS builder
@@ -346,8 +361,9 @@ CMD ["node", "dist/server/node-build.mjs"]
 ```
 
 #### **Docker Compose** (`docker-compose.yml`)
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -394,6 +410,7 @@ volumes:
 ## ✅ **Production Checklist**
 
 ### **Pre-Deployment**
+
 - [ ] Environment variables configured
 - [ ] Database connection tested
 - [ ] WordPress integration verified
@@ -403,6 +420,7 @@ volumes:
 - [ ] Performance benchmarks established
 
 ### **Security**
+
 - [ ] Database credentials secured
 - [ ] API endpoints protected
 - [ ] CORS properly configured
@@ -412,6 +430,7 @@ volumes:
 - [ ] Dependency vulnerabilities checked
 
 ### **Performance**
+
 - [ ] Database indexes optimized
 - [ ] Caching strategy implemented
 - [ ] Static asset optimization
@@ -420,6 +439,7 @@ volumes:
 - [ ] Memory usage monitored
 
 ### **Monitoring**
+
 - [ ] Error logging configured
 - [ ] Performance monitoring setup
 - [ ] Uptime monitoring enabled
@@ -429,11 +449,12 @@ volumes:
 ## 📊 **Monitoring & Maintenance**
 
 ### **Health Checks**
+
 ```bash
 # Application health
 curl -f http://your-domain.com/api/ping || exit 1
 
-# Database health  
+# Database health
 curl -f http://your-domain.com/api/health || exit 1
 
 # WordPress integration
@@ -441,6 +462,7 @@ curl -f https://your-wordpress-site.com/wp-json/carzino/v1/settings || exit 1
 ```
 
 ### **Performance Monitoring**
+
 ```bash
 # Check cache statistics
 curl http://your-domain.com/api/payments/cache-stats
@@ -453,6 +475,7 @@ mysql -e "SHOW PROCESSLIST;"
 ```
 
 ### **Log Management**
+
 ```bash
 # PM2 logs
 pm2 logs carzino-autos
@@ -466,6 +489,7 @@ tail -f /var/log/nginx/error.log
 ```
 
 ### **Backup Strategy**
+
 ```bash
 # Database backup
 mysqldump -u carzino_user -p carzino_vehicles > backup_$(date +%Y%m%d).sql
@@ -485,6 +509,7 @@ find /backups -name "*.sql" -mtime +7 -delete
 ### **Common Issues**
 
 #### **Application Won't Start**
+
 ```bash
 # Check logs
 pm2 logs carzino-autos --lines 50
@@ -497,6 +522,7 @@ mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME -e "SELECT 1;"
 ```
 
 #### **WordPress Integration Failing**
+
 ```bash
 # Test WordPress API
 curl -v https://your-wordpress-site.com/wp-json/carzino/v1/settings
@@ -510,6 +536,7 @@ curl -H "Origin: https://your-react-domain.com" \
 ```
 
 #### **Performance Issues**
+
 ```bash
 # Check memory usage
 ps aux | grep node
@@ -522,6 +549,7 @@ curl http://your-domain.com/api/payments/cache-stats
 ```
 
 #### **Database Connection Issues**
+
 ```bash
 # Test connection
 mysql -h $DB_HOST -P $DB_PORT -u $DB_USER -p
@@ -536,6 +564,7 @@ mysql -e "SHOW STATUS LIKE 'Threads_connected';"
 ### **Emergency Recovery**
 
 #### **Application Rollback**
+
 ```bash
 # Rollback with PM2
 pm2 stop carzino-autos
@@ -546,6 +575,7 @@ pm2 restart carzino-autos
 ```
 
 #### **Database Recovery**
+
 ```bash
 # Restore from backup
 mysql -u carzino_user -p carzino_vehicles < backup_20240120.sql
@@ -561,12 +591,14 @@ mysql -u carzino_user -p carzino_vehicles < backup_20240120.sql
 ## 📈 **Scaling Considerations**
 
 ### **Horizontal Scaling**
+
 - Load balancer configuration
 - Database read replicas
 - CDN for static assets
 - Microservices architecture
 
 ### **Performance Optimization**
+
 - Database query optimization
 - Redis caching layer
 - API response compression

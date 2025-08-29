@@ -25,12 +25,14 @@ This project adheres to a code of conduct that we expect all contributors to fol
 ## 🚀 **Getting Started**
 
 ### **Prerequisites**
+
 - Node.js 18 or higher
 - PNPM 8 or higher
 - MySQL 8.0 or higher
 - Git
 
 ### **Fork and Clone**
+
 ```bash
 # Fork the repository on GitHub, then clone your fork
 git clone https://github.com/YOUR_USERNAME/builder-NEW.git
@@ -43,6 +45,7 @@ git remote add upstream https://github.com/carzinoautos-setup/builder-NEW.git
 ## 🛠 **Development Setup**
 
 ### **Install Dependencies**
+
 ```bash
 # Install all dependencies
 pnpm install
@@ -52,6 +55,7 @@ pnpm typecheck
 ```
 
 ### **Environment Configuration**
+
 ```bash
 # Copy environment template
 cp .env.example .env.local
@@ -62,12 +66,14 @@ cp .env.example .env.local
 ```
 
 ### **Database Setup**
+
 ```bash
 # Optional: Generate sample data for development
 pnpm tsx server/scripts/generateSampleData.ts
 ```
 
 ### **Start Development Server**
+
 ```bash
 # Start both client and server in development mode
 pnpm dev
@@ -78,6 +84,7 @@ pnpm dev
 ## 🔄 **Making Changes**
 
 ### **Create a Branch**
+
 ```bash
 # Always create a new branch for your changes
 git checkout -b feature/your-feature-name
@@ -89,6 +96,7 @@ git checkout -b feature/your-feature-name
 ```
 
 ### **Branch Naming Convention**
+
 - `feature/` - New features
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
@@ -99,6 +107,7 @@ git checkout -b feature/your-feature-name
 ## 🧪 **Testing**
 
 ### **Run Tests**
+
 ```bash
 # Run all tests
 pnpm test
@@ -111,12 +120,14 @@ pnpm typecheck
 ```
 
 ### **Test Requirements**
+
 - All new features must include tests
 - Bug fixes should include regression tests
 - Maintain or improve test coverage
 - All tests must pass before submitting PR
 
 ### **Manual Testing**
+
 Test your changes across different scenarios:
 
 - **Payment Calculator**: Test with various APR rates, loan terms
@@ -128,6 +139,7 @@ Test your changes across different scenarios:
 ## 📝 **Submitting Changes**
 
 ### **Commit Guidelines**
+
 Use conventional commit messages:
 
 ```bash
@@ -138,6 +150,7 @@ git commit -m "docs(readme): update installation instructions"
 ```
 
 **Commit Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -149,12 +162,14 @@ git commit -m "docs(readme): update installation instructions"
 ### **Pull Request Process**
 
 1. **Update your branch**
+
    ```bash
    git fetch upstream
    git rebase upstream/main
    ```
 
 2. **Push your changes**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -175,6 +190,7 @@ git commit -m "docs(readme): update installation instructions"
 ## 🎨 **Style Guidelines**
 
 ### **TypeScript/JavaScript**
+
 ```typescript
 // Use TypeScript for all new code
 interface VehicleData {
@@ -197,12 +213,17 @@ const calculateMonthlyPayment = (params: PaymentParams): number => {
  * @param term - Loan term in months
  * @returns Monthly payment amount
  */
-function calculatePayment(principal: number, rate: number, term: number): number {
+function calculatePayment(
+  principal: number,
+  rate: number,
+  term: number,
+): number {
   // Implementation
 }
 ```
 
 ### **React Components**
+
 ```typescript
 // Use functional components with TypeScript
 interface VehicleCardProps {
@@ -210,7 +231,10 @@ interface VehicleCardProps {
   onFavorite: (id: number) => void;
 }
 
-export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onFavorite }) => {
+export const VehicleCard: React.FC<VehicleCardProps> = ({
+  vehicle,
+  onFavorite,
+}) => {
   // Component implementation
 };
 
@@ -220,6 +244,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onFavorite })
 ```
 
 ### **CSS/Styling**
+
 ```css
 /* Use TailwindCSS classes primarily */
 <div className="bg-white rounded-lg shadow-md p-6">
@@ -234,6 +259,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onFavorite })
 ```
 
 ### **Code Formatting**
+
 ```bash
 # Format code before committing
 pnpm format.fix
@@ -247,6 +273,7 @@ pnpm format.fix
 ### **Adding New Features**
 
 #### **Client-side Components**
+
 ```
 client/
 ├── components/
@@ -261,6 +288,7 @@ client/
 ```
 
 #### **Server-side APIs**
+
 ```
 server/
 ├── routes/
@@ -272,6 +300,7 @@ server/
 ```
 
 ### **File Naming Conventions**
+
 - **React Components**: PascalCase (`VehicleCard.tsx`)
 - **Hooks**: camelCase with `use` prefix (`usePaymentFilters.ts`)
 - **Utilities**: camelCase (`paymentCalculator.ts`)
@@ -281,6 +310,7 @@ server/
 ## 🔧 **Development Tools**
 
 ### **Useful Commands**
+
 ```bash
 # Development
 pnpm dev              # Start development server
@@ -298,6 +328,7 @@ pnpm tsx server/scripts/testApi.ts             # Test API endpoints
 ```
 
 ### **Debugging**
+
 - Use browser dev tools for frontend debugging
 - Use `console.log` sparingly (prefer debugger statements)
 - Check network tab for API issues
@@ -306,12 +337,14 @@ pnpm tsx server/scripts/testApi.ts             # Test API endpoints
 ## 📚 **Resources**
 
 ### **Documentation**
+
 - [README.md](./README.md) - Project overview
 - [CHANGELOG.md](./CHANGELOG.md) - Version history
 - [API Documentation](./docs/api.md) - API reference
 - [WordPress Integration](./WORDPRESS-INTEGRATION-SETUP.md) - WooCommerce setup
 
 ### **Tech Stack Documentation**
+
 - [React 18](https://react.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [TailwindCSS](https://tailwindcss.com/)
@@ -321,12 +354,14 @@ pnpm tsx server/scripts/testApi.ts             # Test API endpoints
 ## ❓ **Questions and Support**
 
 ### **Getting Help**
+
 1. **Check Documentation**: Start with README and docs folder
 2. **Search Issues**: Look for existing GitHub issues
 3. **Create Issue**: If you can't find an answer, create a new issue
 4. **Ask Maintainers**: Tag maintainers in discussions
 
 ### **Common Issues**
+
 - **Environment Variables**: Check Vite prefix requirements (`VITE_*`)
 - **Database Connection**: Verify MySQL credentials and connection
 - **WordPress Integration**: Ensure REST API is enabled
@@ -337,18 +372,21 @@ pnpm tsx server/scripts/testApi.ts             # Test API endpoints
 We welcome contributions in these areas:
 
 ### **High Priority**
+
 - 🐛 Bug fixes and error handling improvements
 - 📱 Mobile responsiveness enhancements
 - 🔧 Performance optimizations
 - 📝 Documentation improvements
 
 ### **Medium Priority**
+
 - ✨ New filter options and search features
 - 🎨 UI/UX improvements
 - 🧪 Test coverage expansion
 - 🔌 Integration enhancements
 
 ### **Future Features**
+
 - 📊 Analytics and reporting
 - 👥 User management system
 - 🔄 Real-time data synchronization

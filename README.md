@@ -30,6 +30,7 @@ A modern, full-stack React application for automotive dealerships with integrate
 ## ✨ **Features**
 
 ### 🚗 **Vehicle Management**
+
 - **50k+ Vehicle Database** with MySQL backend
 - **Advanced Filtering** by make, model, year, price, condition
 - **Real-time Search** with debounced queries
@@ -38,6 +39,7 @@ A modern, full-stack React application for automotive dealerships with integrate
 - **Pagination** with configurable page sizes
 
 ### 💰 **Payment Calculator**
+
 - **Real-time Payment Calculations** with loan amortization
 - **Dynamic Filtering** by payment affordability
 - **Customizable Parameters** (APR, term, down payment, trade-in)
@@ -46,12 +48,14 @@ A modern, full-stack React application for automotive dealerships with integrate
 - **Mobile-optimized Interface**
 
 ### 🔧 **Customization**
+
 - **Custom Icon Upload** for vehicle specifications
 - **Drag-and-drop Interface** for icon management
 - **Theme Customization** via TailwindCSS
 - **Component Library** with 50+ pre-built UI components
 
 ### 🛒 **WooCommerce Integration**
+
 - **WordPress REST API** connectivity
 - **ACF Field Mapping** for vehicle data
 - **Global Settings** management
@@ -61,6 +65,7 @@ A modern, full-stack React application for automotive dealerships with integrate
 ## 🛠 **Tech Stack**
 
 ### **Frontend**
+
 - **React 18** with TypeScript
 - **Vite** for fast development and building
 - **TailwindCSS 3** for styling
@@ -70,6 +75,7 @@ A modern, full-stack React application for automotive dealerships with integrate
 - **Lucide React** for icons
 
 ### **Backend**
+
 - **Express.js** with TypeScript
 - **MySQL 2** for database connectivity
 - **Zod** for data validation
@@ -77,6 +83,7 @@ A modern, full-stack React application for automotive dealerships with integrate
 - **Hot Reload** for development
 
 ### **Development Tools**
+
 - **PNPM** package manager
 - **Vitest** for testing
 - **Prettier** for code formatting
@@ -131,7 +138,8 @@ A modern, full-stack React application for automotive dealerships with integrate
 ## 🚀 **Quick Start**
 
 ### **Prerequisites**
-- Node.js 18+ 
+
+- Node.js 18+
 - PNPM 8+
 - MySQL 8.0+
 
@@ -180,6 +188,7 @@ pnpm tsx server/scripts/generateSampleData.ts
 ## 💰 **Payment Calculator System**
 
 ### **Features**
+
 - **Real-time Calculations** using standard loan amortization formulas
 - **Parameter Customization**: APR, loan term, down payment, trade-in value
 - **Payment Range Filtering** to find vehicles within budget
@@ -189,46 +198,49 @@ pnpm tsx server/scripts/generateSampleData.ts
 ### **API Endpoints**
 
 ```typescript
-POST /api/payments/calculate           // Single payment calculation
-POST /api/payments/bulk               // Bulk vehicle calculations
-POST /api/payments/affordable-price   // Find affordable price range
-GET  /api/payments/cache-stats        // Performance monitoring
-DELETE /api/payments/cache            // Cache management
+POST / api / payments / calculate; // Single payment calculation
+POST / api / payments / bulk; // Bulk vehicle calculations
+POST / api / payments / affordable - price; // Find affordable price range
+GET / api / payments / cache - stats; // Performance monitoring
+DELETE / api / payments / cache; // Cache management
 ```
 
 ### **Usage Example**
 
 ```typescript
-import { usePaymentFilters } from './hooks/usePaymentFilters';
+import { usePaymentFilters } from "./hooks/usePaymentFilters";
 
 const {
   paymentState,
   updatePaymentState,
   calculateVehiclePayment,
-  affordablePriceRange
+  affordablePriceRange,
 } = usePaymentFilters({
   initialState: {
-    paymentMin: '300',
-    paymentMax: '600',
-    interestRate: '4.9',
-    loanTermMonths: '60',
-    downPayment: '3000'
-  }
+    paymentMin: "300",
+    paymentMax: "600",
+    interestRate: "4.9",
+    loanTermMonths: "60",
+    downPayment: "3000",
+  },
 });
 ```
 
 ## 🛒 **WooCommerce Integration**
 
 ### **Overview**
+
 Complete integration with WordPress/WooCommerce for vehicle data management.
 
 ### **Setup**
+
 1. Add the WordPress API bridge to your site
 2. Configure ACF fields for vehicle data
 3. Set up REST API endpoints
 4. Connect React app to WordPress
 
 ### **Supported Features**
+
 - **Product Synchronization** with custom meta fields
 - **Real-time Data Fetching** via WordPress REST API
 - **Global Settings** management through ACF options
@@ -251,11 +263,11 @@ GET    /api/health                      // Database health check
 ### **Payment Endpoints**
 
 ```typescript
-POST   /api/payments/calculate          // Calculate monthly payment
-POST   /api/payments/bulk              // Bulk payment calculations
-POST   /api/payments/affordable-price  // Find affordable price range
-GET    /api/payments/cache-stats       // Cache performance stats
-DELETE /api/payments/cache             // Clear payment cache
+POST / api / payments / calculate; // Calculate monthly payment
+POST / api / payments / bulk; // Bulk payment calculations
+POST / api / payments / affordable - price; // Find affordable price range
+GET / api / payments / cache - stats; // Cache performance stats
+DELETE / api / payments / cache; // Clear payment cache
 ```
 
 ### **WordPress Endpoints**
@@ -270,6 +282,7 @@ POST   /wp-json/carzino/v1/vehicles/affordable // Payment-based vehicle search
 ## 🚀 **Deployment**
 
 ### **Development**
+
 ```bash
 pnpm dev        # Start development server
 pnpm test       # Run tests
@@ -277,12 +290,14 @@ pnpm typecheck  # TypeScript validation
 ```
 
 ### **Production Build**
+
 ```bash
 pnpm build      # Build client and server
 pnpm start      # Start production server
 ```
 
 ### **Deployment Options**
+
 - **Netlify**: Automated deployment with `netlify.toml`
 - **Vercel**: Full-stack deployment support
 - **Docker**: Containerized deployment
@@ -291,11 +306,13 @@ pnpm start      # Start production server
 ## 🔄 **Migration Guides**
 
 ### **From PHP to React**
+
 - [WordPress Integration Setup](./WORDPRESS-INTEGRATION-SETUP.md)
 - [Environment Variables Setup](./ENVIRONMENT-SETUP.md)
 - [Payment Calculator Migration](./docs/payment-migration.md)
 
 ### **Data Migration**
+
 - [WooCommerce Field Mapping](./woocommerce-mapping-template.csv)
 - [Database Schema Migration](./docs/database-migration.md)
 
@@ -308,6 +325,7 @@ pnpm start      # Start production server
 5. Open a Pull Request
 
 ### **Development Guidelines**
+
 - Use TypeScript for all new code
 - Follow the existing code style (Prettier enforced)
 - Add tests for new features

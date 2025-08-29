@@ -21,17 +21,17 @@ VITE_WP_URL=https://your-wordpress-site.com
 
 # Example URLs:
 # VITE_WP_URL=https://carzinoautos.com
-# VITE_WP_URL=http://localhost/your-wp-site  
+# VITE_WP_URL=http://localhost/your-wp-site
 # VITE_WP_URL=https://staging.carzinoautos.com
 ```
 
 ## 🔄 **Key Differences: Vite vs Create React App**
 
-| Feature | Create React App | Vite |
-|---------|------------------|------|
-| Environment access | `process.env.REACT_APP_*` | `import.meta.env.VITE_*` |
-| Development check | `process.env.NODE_ENV === 'development'` | `import.meta.env.DEV` |
-| Variable prefix | `REACT_APP_` | `VITE_` |
+| Feature            | Create React App                         | Vite                     |
+| ------------------ | ---------------------------------------- | ------------------------ |
+| Environment access | `process.env.REACT_APP_*`                | `import.meta.env.VITE_*` |
+| Development check  | `process.env.NODE_ENV === 'development'` | `import.meta.env.DEV`    |
+| Variable prefix    | `REACT_APP_`                             | `VITE_`                  |
 
 ## 🚨 **Important Notes:**
 

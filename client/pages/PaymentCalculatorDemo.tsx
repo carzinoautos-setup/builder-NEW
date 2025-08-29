@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { VehicleCard } from '../components/VehicleCard';
-import { usePaymentFilters } from '../hooks/usePaymentFilters';
-import { Calculator, DollarSign, TrendingUp, Info } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { VehicleCard } from "../components/VehicleCard";
+import { usePaymentFilters } from "../hooks/usePaymentFilters";
+import { Calculator, DollarSign, TrendingUp, Info } from "lucide-react";
 
 // Sample vehicle data with different price points
 const sampleVehicles = [
@@ -9,56 +9,56 @@ const sampleVehicles = [
     id: 1,
     featured: true,
     viewed: false,
-    images: ['/placeholder.svg'],
-    badges: ['Low APR Available'],
-    title: '2023 Honda Civic EX',
-    mileage: '15,000',
-    transmission: 'CVT',
-    doors: '4 Doors',
-    salePrice: '$28,500',
+    images: ["/placeholder.svg"],
+    badges: ["Low APR Available"],
+    title: "2023 Honda Civic EX",
+    mileage: "15,000",
+    transmission: "CVT",
+    doors: "4 Doors",
+    salePrice: "$28,500",
     payment: null,
-    dealer: 'Honda Center',
-    location: 'Downtown',
-    phone: '(555) 123-4567',
-    seller_type: 'Dealer',
-    rawPrice: 28500
+    dealer: "Honda Center",
+    location: "Downtown",
+    phone: "(555) 123-4567",
+    seller_type: "Dealer",
+    rawPrice: 28500,
   },
   {
     id: 2,
     featured: false,
     viewed: true,
-    images: ['/placeholder.svg'],
-    badges: ['Certified Pre-Owned'],
-    title: '2022 Toyota Camry LE',
-    mileage: '25,000',
-    transmission: 'Automatic',
-    doors: '4 Doors',
-    salePrice: '$24,995',
+    images: ["/placeholder.svg"],
+    badges: ["Certified Pre-Owned"],
+    title: "2022 Toyota Camry LE",
+    mileage: "25,000",
+    transmission: "Automatic",
+    doors: "4 Doors",
+    salePrice: "$24,995",
     payment: null,
-    dealer: 'Toyota Center',
-    location: 'Northside',
-    phone: '(555) 987-6543',
-    seller_type: 'Dealer',
-    rawPrice: 24995
+    dealer: "Toyota Center",
+    location: "Northside",
+    phone: "(555) 987-6543",
+    seller_type: "Dealer",
+    rawPrice: 24995,
   },
   {
     id: 3,
     featured: false,
     viewed: false,
-    images: ['/placeholder.svg'],
-    badges: ['Special Financing'],
-    title: '2021 Nissan Altima SR',
-    mileage: '35,000',
-    transmission: 'CVT',
-    doors: '4 Doors',
-    salePrice: '$22,800',
+    images: ["/placeholder.svg"],
+    badges: ["Special Financing"],
+    title: "2021 Nissan Altima SR",
+    mileage: "35,000",
+    transmission: "CVT",
+    doors: "4 Doors",
+    salePrice: "$22,800",
     payment: null,
-    dealer: 'Nissan Plus',
-    location: 'Eastside',
-    phone: '(555) 456-7890',
-    seller_type: 'Dealer',
-    rawPrice: 22800
-  }
+    dealer: "Nissan Plus",
+    location: "Eastside",
+    phone: "(555) 456-7890",
+    seller_type: "Dealer",
+    rawPrice: 22800,
+  },
 ];
 
 export const PaymentCalculatorDemo: React.FC = () => {
@@ -74,38 +74,44 @@ export const PaymentCalculatorDemo: React.FC = () => {
     updatePaymentState,
     resetPaymentFilters,
     calculateBulkPayments,
-    formattedAffordableRange
+    formattedAffordableRange,
   } = usePaymentFilters({
     initialState: {
-      paymentMin: '300',
-      paymentMax: '600',
-      interestRate: '4.9',
-      loanTermMonths: '60',
-      downPayment: '3000'
-    }
+      paymentMin: "300",
+      paymentMax: "600",
+      interestRate: "4.9",
+      loanTermMonths: "60",
+      downPayment: "3000",
+    },
   });
 
   // Calculate payments when payment parameters change
   useEffect(() => {
     const updateVehiclePayments = async () => {
       const vehiclesWithPayments = await calculateBulkPayments(
-        vehicles.map(v => ({ id: v.id, salePrice: v.rawPrice }))
+        vehicles.map((v) => ({ id: v.id, salePrice: v.rawPrice })),
       );
 
-      setVehicles(prev => prev.map(vehicle => {
-        const calculated = vehiclesWithPayments.find(v => v.id === vehicle.id);
-        return {
-          ...vehicle,
-          payment: calculated?.calculatedPayment ? `$${calculated.calculatedPayment}` : null
-        };
-      }));
+      setVehicles((prev) =>
+        prev.map((vehicle) => {
+          const calculated = vehiclesWithPayments.find(
+            (v) => v.id === vehicle.id,
+          );
+          return {
+            ...vehicle,
+            payment: calculated?.calculatedPayment
+              ? `$${calculated.calculatedPayment}`
+              : null,
+          };
+        }),
+      );
     };
 
     updateVehiclePayments();
   }, [paymentState, calculateBulkPayments]);
 
   const handleToggleFavorite = (vehicle: any) => {
-    setFavorites(prev => {
+    setFavorites((prev) => {
       const newFavorites = { ...prev };
       if (newFavorites[vehicle.id]) {
         delete newFavorites[vehicle.id];
@@ -119,9 +125,12 @@ export const PaymentCalculatorDemo: React.FC = () => {
   };
 
   // Filter vehicles based on affordable price range
-  const filteredVehicles = vehicles.filter(vehicle => {
+  const filteredVehicles = vehicles.filter((vehicle) => {
     if (!affordablePriceRange) return true;
-    return vehicle.rawPrice >= affordablePriceRange.min && vehicle.rawPrice <= affordablePriceRange.max;
+    return (
+      vehicle.rawPrice >= affordablePriceRange.min &&
+      vehicle.rawPrice <= affordablePriceRange.max
+    );
   });
 
   return (
@@ -131,7 +140,9 @@ export const PaymentCalculatorDemo: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center gap-3 mb-2">
             <Calculator className="w-8 h-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Payment Calculator Demo</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Payment Calculator Demo
+            </h1>
           </div>
           <p className="text-gray-600">
             Real-time payment calculations with dynamic vehicle filtering
@@ -141,7 +152,6 @@ export const PaymentCalculatorDemo: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
           {/* Payment Calculator Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
@@ -157,21 +167,29 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 </label>
                 <div className="flex gap-2">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Min</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      Min
+                    </label>
                     <input
                       type="number"
                       value={paymentState.paymentMin}
-                      onChange={(e) => updatePaymentState({ paymentMin: e.target.value })}
+                      onChange={(e) =>
+                        updatePaymentState({ paymentMin: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                       placeholder="300"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Max</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      Max
+                    </label>
                     <input
                       type="number"
                       value={paymentState.paymentMax}
-                      onChange={(e) => updatePaymentState({ paymentMax: e.target.value })}
+                      onChange={(e) =>
+                        updatePaymentState({ paymentMax: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                       placeholder="600"
                     />
@@ -187,7 +205,9 @@ export const PaymentCalculatorDemo: React.FC = () => {
                   </label>
                   <select
                     value={paymentState.interestRate}
-                    onChange={(e) => updatePaymentState({ interestRate: e.target.value })}
+                    onChange={(e) =>
+                      updatePaymentState({ interestRate: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                   >
                     <option value="0">0% APR</option>
@@ -206,7 +226,9 @@ export const PaymentCalculatorDemo: React.FC = () => {
                   </label>
                   <select
                     value={paymentState.loanTermMonths}
-                    onChange={(e) => updatePaymentState({ loanTermMonths: e.target.value })}
+                    onChange={(e) =>
+                      updatePaymentState({ loanTermMonths: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                   >
                     <option value="36">36 months</option>
@@ -224,7 +246,9 @@ export const PaymentCalculatorDemo: React.FC = () => {
                   <input
                     type="number"
                     value={paymentState.downPayment}
-                    onChange={(e) => updatePaymentState({ downPayment: e.target.value })}
+                    onChange={(e) =>
+                      updatePaymentState({ downPayment: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                     placeholder="3000"
                   />
@@ -249,13 +273,16 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Info className="w-4 h-4 text-green-600" />
-                    <span className="font-medium text-green-800">Affordable Price Range</span>
+                    <span className="font-medium text-green-800">
+                      Affordable Price Range
+                    </span>
                   </div>
                   <p className="text-green-700 text-lg font-semibold">
                     {formattedAffordableRange}
                   </p>
                   <p className="text-green-600 text-xs mt-1">
-                    Based on ${paymentState.paymentMin} - ${paymentState.paymentMax}/mo
+                    Based on ${paymentState.paymentMin} - $
+                    {paymentState.paymentMax}/mo
                   </p>
                 </div>
               )}
@@ -276,7 +303,7 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 Available Vehicles
               </h2>
               <p className="text-gray-600">
-                Showing {filteredVehicles.length} of {vehicles.length} vehicles 
+                Showing {filteredVehicles.length} of {vehicles.length} vehicles
                 {affordablePriceRange && ` within your budget`}
               </p>
             </div>

@@ -10,14 +10,14 @@ interface IconUploaderProps {
 export const IconUploader: React.FC<IconUploaderProps> = ({
   onIconUpload,
   currentIcon,
-  label = "Upload Icon"
+  label = "Upload Icon",
 }) => {
   const [preview, setPreview] = useState<string | null>(currentIcon || null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
@@ -56,9 +56,9 @@ export const IconUploader: React.FC<IconUploaderProps> = ({
 
   const clearIcon = () => {
     setPreview(null);
-    onIconUpload('');
+    onIconUpload("");
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -67,12 +67,12 @@ export const IconUploader: React.FC<IconUploaderProps> = ({
       <label className="block text-sm font-medium text-gray-700 mb-2">
         {label}
       </label>
-      
+
       <div
         className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
           isDragging
-            ? 'border-blue-400 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400'
+            ? "border-blue-400 bg-blue-50"
+            : "border-gray-300 hover:border-gray-400"
         }`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -113,12 +113,10 @@ export const IconUploader: React.FC<IconUploaderProps> = ({
             <p className="text-sm text-gray-600 mb-1">
               Click to upload or drag and drop
             </p>
-            <p className="text-xs text-gray-500">
-              PNG, JPG, SVG up to 2MB
-            </p>
+            <p className="text-xs text-gray-500">PNG, JPG, SVG up to 2MB</p>
           </div>
         )}
-        
+
         <input
           ref={fileInputRef}
           type="file"
@@ -127,7 +125,7 @@ export const IconUploader: React.FC<IconUploaderProps> = ({
           className="hidden"
         />
       </div>
-      
+
       {preview && (
         <div className="mt-2 flex items-center text-xs text-green-600">
           <Check className="w-3 h-3 mr-1" />

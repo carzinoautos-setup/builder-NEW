@@ -16,11 +16,13 @@ Complete API documentation for the Carzino Autos Vehicle Management System.
 ## 🌐 **Base URLs**
 
 ### **Development**
+
 ```
 Local: http://localhost:8080/api
 ```
 
 ### **Production**
+
 ```
 API: https://your-domain.com/api
 WordPress: https://your-wordpress-site.com/wp-json/carzino/v1
@@ -29,6 +31,7 @@ WordPress: https://your-wordpress-site.com/wp-json/carzino/v1
 ## 🔐 **Authentication**
 
 Currently, the API uses basic CORS protection. Future versions will include:
+
 - JWT token authentication
 - Rate limiting per user
 - API key management
@@ -40,34 +43,37 @@ Currently, the API uses basic CORS protection. Future versions will include:
 Get vehicles with filtering and pagination.
 
 **Query Parameters:**
+
 ```typescript
 interface VehicleFilters {
-  page?: number;           // Default: 1
-  pageSize?: number;       // Default: 20, Max: 100
-  make?: string;           // Filter by manufacturer
-  model?: string;          // Filter by model
-  year?: number;           // Filter by year
-  minPrice?: number;       // Minimum price filter
-  maxPrice?: number;       // Maximum price filter
-  condition?: string;      // "New" | "Used" | "Certified"
-  maxMileage?: number;     // Maximum mileage filter
-  fuelType?: string;       // Fuel type filter
-  transmission?: string;   // Transmission type
-  drivetrain?: string;     // Drivetrain type
-  bodyStyle?: string;      // Body style filter
-  certified?: boolean;     // Certified pre-owned filter
-  sellerType?: string;     // "Dealer" | "Private Seller"
-  sortBy?: string;         // "price" | "year" | "mileage" | "make"
-  sortOrder?: string;      // "ASC" | "DESC"
+  page?: number; // Default: 1
+  pageSize?: number; // Default: 20, Max: 100
+  make?: string; // Filter by manufacturer
+  model?: string; // Filter by model
+  year?: number; // Filter by year
+  minPrice?: number; // Minimum price filter
+  maxPrice?: number; // Maximum price filter
+  condition?: string; // "New" | "Used" | "Certified"
+  maxMileage?: number; // Maximum mileage filter
+  fuelType?: string; // Fuel type filter
+  transmission?: string; // Transmission type
+  drivetrain?: string; // Drivetrain type
+  bodyStyle?: string; // Body style filter
+  certified?: boolean; // Certified pre-owned filter
+  sellerType?: string; // "Dealer" | "Private Seller"
+  sortBy?: string; // "price" | "year" | "mileage" | "make"
+  sortOrder?: string; // "ASC" | "DESC"
 }
 ```
 
 **Example Request:**
+
 ```bash
 GET /api/vehicles?make=Honda&maxPrice=30000&page=1&pageSize=20
 ```
 
 **Response:**
+
 ```typescript
 interface VehiclesResponse {
   data: Vehicle[];
@@ -85,6 +91,7 @@ interface VehiclesResponse {
 ```
 
 **Example Response:**
+
 ```json
 {
   "data": [
@@ -120,9 +127,11 @@ interface VehiclesResponse {
 Get a single vehicle by ID.
 
 **Parameters:**
+
 - `id` (number): Vehicle ID
 
 **Response:**
+
 ```typescript
 interface SingleVehicleResponse {
   data: Vehicle;
@@ -132,6 +141,7 @@ interface SingleVehicleResponse {
 ```
 
 **Example:**
+
 ```bash
 GET /api/vehicles/123
 ```
@@ -141,6 +151,7 @@ GET /api/vehicles/123
 Get available filter options for the frontend.
 
 **Response:**
+
 ```typescript
 interface FilterOptionsResponse {
   data: {
@@ -166,16 +177,18 @@ interface FilterOptionsResponse {
 Calculate monthly payment for a single vehicle.
 
 **Request Body:**
+
 ```typescript
 interface PaymentCalculationRequest {
-  salePrice: number;        // Vehicle sale price
-  downPayment: number;      // Down payment amount
-  interestRate: number;     // Annual percentage rate (0-50)
-  loanTermMonths: number;   // Loan term in months (12-120)
+  salePrice: number; // Vehicle sale price
+  downPayment: number; // Down payment amount
+  interestRate: number; // Annual percentage rate (0-50)
+  loanTermMonths: number; // Loan term in months (12-120)
 }
 ```
 
 **Example Request:**
+
 ```json
 {
   "salePrice": 28500,
@@ -186,6 +199,7 @@ interface PaymentCalculationRequest {
 ```
 
 **Response:**
+
 ```typescript
 interface PaymentCalculationResponse {
   success: boolean;
@@ -201,14 +215,15 @@ interface PaymentCalculationResponse {
 ```
 
 **Example Response:**
+
 ```json
 {
   "success": true,
   "data": {
     "monthlyPayment": 478.32,
     "totalLoanAmount": 25500,
-    "totalInterest": 3199.20,
-    "totalPayments": 28699.20,
+    "totalInterest": 3199.2,
+    "totalPayments": 28699.2,
     "principal": 25500
   },
   "cached": false
@@ -220,6 +235,7 @@ interface PaymentCalculationResponse {
 Calculate payments for multiple vehicles at once.
 
 **Request Body:**
+
 ```typescript
 interface BulkPaymentRequest {
   vehicles: Array<{
@@ -233,6 +249,7 @@ interface BulkPaymentRequest {
 ```
 
 **Response:**
+
 ```typescript
 interface BulkPaymentResponse {
   success: boolean;
@@ -256,16 +273,18 @@ interface BulkPaymentResponse {
 Calculate the maximum affordable vehicle price based on desired monthly payment.
 
 **Request Body:**
+
 ```typescript
 interface AffordablePriceRequest {
-  desiredPayment: number;   // Target monthly payment
-  downPayment: number;      // Available down payment
-  interestRate: number;     // Annual percentage rate
-  loanTermMonths: number;   // Desired loan term
+  desiredPayment: number; // Target monthly payment
+  downPayment: number; // Available down payment
+  interestRate: number; // Annual percentage rate
+  loanTermMonths: number; // Desired loan term
 }
 ```
 
 **Response:**
+
 ```typescript
 interface AffordablePriceResponse {
   success: boolean;
@@ -284,6 +303,7 @@ interface AffordablePriceResponse {
 Get payment calculation cache statistics for performance monitoring.
 
 **Response:**
+
 ```typescript
 interface CacheStatsResponse {
   success: boolean;
@@ -307,6 +327,7 @@ interface CacheStatsResponse {
 Clear the payment calculation cache.
 
 **Response:**
+
 ```typescript
 interface ClearCacheResponse {
   success: boolean;
@@ -321,6 +342,7 @@ interface ClearCacheResponse {
 Get vehicles from WooCommerce products.
 
 **Query Parameters:**
+
 ```typescript
 interface WordPressFilters {
   page?: number;
@@ -334,6 +356,7 @@ interface WordPressFilters {
 ```
 
 **Response:**
+
 ```typescript
 interface WordPressVehiclesResponse {
   success: boolean;
@@ -364,6 +387,7 @@ Get single vehicle from WooCommerce.
 Get global settings from ACF options.
 
 **Response:**
+
 ```typescript
 interface WordPressSettingsResponse {
   success: boolean;
@@ -383,6 +407,7 @@ Get vehicles within payment affordability range.
 ## ❌ **Error Handling**
 
 ### **Standard Error Response**
+
 ```typescript
 interface ErrorResponse {
   success: false;
@@ -394,18 +419,19 @@ interface ErrorResponse {
 
 ### **Common HTTP Status Codes**
 
-| Code | Description | Example |
-|------|-------------|---------|
-| 200 | Success | Request completed successfully |
-| 400 | Bad Request | Invalid parameters or malformed request |
-| 404 | Not Found | Vehicle or endpoint not found |
-| 422 | Validation Error | Input validation failed |
-| 429 | Rate Limited | Too many requests |
-| 500 | Server Error | Internal server error |
+| Code | Description      | Example                                 |
+| ---- | ---------------- | --------------------------------------- |
+| 200  | Success          | Request completed successfully          |
+| 400  | Bad Request      | Invalid parameters or malformed request |
+| 404  | Not Found        | Vehicle or endpoint not found           |
+| 422  | Validation Error | Input validation failed                 |
+| 429  | Rate Limited     | Too many requests                       |
+| 500  | Server Error     | Internal server error                   |
 
 ### **Error Examples**
 
 **400 Bad Request:**
+
 ```json
 {
   "success": false,
@@ -415,6 +441,7 @@ interface ErrorResponse {
 ```
 
 **404 Not Found:**
+
 ```json
 {
   "success": false,
@@ -424,6 +451,7 @@ interface ErrorResponse {
 ```
 
 **422 Validation Error:**
+
 ```json
 {
   "success": false,
@@ -449,57 +477,60 @@ Currently not implemented, but planned for future releases:
 ### **JavaScript/TypeScript Examples**
 
 **Fetch Vehicles:**
+
 ```typescript
 async function getVehicles(filters: VehicleFilters = {}) {
   const params = new URLSearchParams(
-    Object.entries(filters).filter(([_, value]) => value != null)
+    Object.entries(filters).filter(([_, value]) => value != null),
   );
-  
+
   const response = await fetch(`/api/vehicles?${params}`);
   const data: VehiclesResponse = await response.json();
-  
+
   if (!data.success) {
     throw new Error(data.error as string);
   }
-  
+
   return data;
 }
 ```
 
 **Calculate Payment:**
+
 ```typescript
 async function calculatePayment(params: PaymentCalculationRequest) {
-  const response = await fetch('/api/payments/calculate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(params)
+  const response = await fetch("/api/payments/calculate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
   });
-  
+
   const data: PaymentCalculationResponse = await response.json();
-  
+
   if (!data.success) {
     throw new Error(data.error as string);
   }
-  
+
   return data.data;
 }
 ```
 
 **Bulk Payment Calculation:**
+
 ```typescript
 async function calculateBulkPayments(
   vehicles: Array<{ id: number; salePrice: number }>,
-  paymentParams: Omit<PaymentCalculationRequest, 'salePrice'>
+  paymentParams: Omit<PaymentCalculationRequest, "salePrice">,
 ) {
-  const response = await fetch('/api/payments/bulk', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/payments/bulk", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       vehicles,
-      ...paymentParams
-    })
+      ...paymentParams,
+    }),
   });
-  
+
   return response.json();
 }
 ```
@@ -507,12 +538,14 @@ async function calculateBulkPayments(
 ### **cURL Examples**
 
 **Get Vehicles:**
+
 ```bash
 curl -X GET "http://localhost:8080/api/vehicles?make=Honda&maxPrice=30000" \
   -H "Accept: application/json"
 ```
 
 **Calculate Payment:**
+
 ```bash
 curl -X POST "http://localhost:8080/api/payments/calculate" \
   -H "Content-Type: application/json" \
@@ -525,6 +558,7 @@ curl -X POST "http://localhost:8080/api/payments/calculate" \
 ```
 
 **WordPress Integration:**
+
 ```bash
 curl -X GET "https://your-wordpress-site.com/wp-json/carzino/v1/vehicles" \
   -H "Accept: application/json"
@@ -533,12 +567,14 @@ curl -X GET "https://your-wordpress-site.com/wp-json/carzino/v1/vehicles" \
 ## 🔧 **Development Tools**
 
 ### **API Testing Script**
+
 ```bash
 # Test all endpoints
 pnpm tsx server/scripts/testApi.ts
 ```
 
 ### **Cache Management**
+
 ```bash
 # Clear payment cache
 curl -X DELETE "http://localhost:8080/api/payments/cache"
@@ -550,12 +586,14 @@ curl -X GET "http://localhost:8080/api/payments/cache-stats"
 ## 📊 **Performance Considerations**
 
 ### **Caching Strategy**
+
 - **Payment calculations**: 5-minute TTL
 - **Vehicle data**: No caching (real-time updates)
 - **Filter options**: 1-hour TTL
 - **WordPress data**: 5-minute TTL
 
 ### **Optimization Tips**
+
 - Use bulk endpoints for multiple calculations
 - Implement client-side caching for repeated requests
 - Use pagination for large datasets

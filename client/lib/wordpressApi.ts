@@ -5,7 +5,7 @@
 
 // Configure your WordPress site URL
 // Vite uses import.meta.env instead of process.env
-const WP_BASE_URL = import.meta.env.VITE_WP_URL || 'https://your-site.com';
+const WP_BASE_URL = import.meta.env.VITE_WP_URL || "https://your-site.com";
 const API_BASE = `${WP_BASE_URL}/wp-json/carzino/v1`;
 
 // Vehicle data structure matching your WooCommerce fields
@@ -96,27 +96,30 @@ export class WordPressVehicleAPI {
   /**
    * Generic fetch with caching
    */
-  private async fetchWithCache<T>(endpoint: string, cacheKey?: string): Promise<T> {
+  private async fetchWithCache<T>(
+    endpoint: string,
+    cacheKey?: string,
+  ): Promise<T> {
     const key = cacheKey || endpoint;
     const cached = this.cache.get(key);
-    
+
     if (cached && Date.now() - cached.timestamp < this.cacheTTL) {
       return cached.data;
     }
 
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
       const data = await response.json();
-      
+
       // Cache successful responses
       this.cache.set(key, {
         data,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
 
       return data;
@@ -131,10 +134,13 @@ export class WordPressVehicleAPI {
    * Replaces your ACF get_field() calls
    */
   async getGlobalSettings(): Promise<WPGlobalSettings> {
-    const response = await this.fetchWithCache<WPSettingsResponse>('/settings', 'global_settings');
-    
+    const response = await this.fetchWithCache<WPSettingsResponse>(
+      "/settings",
+      "global_settings",
+    );
+
     if (!response.success) {
-      throw new Error('Failed to fetch global settings');
+      throw new Error("Failed to fetch global settings");
     }
 
     return response.data;
@@ -146,27 +152,33 @@ export class WordPressVehicleAPI {
    */
   async getVehicles(filters: VehicleFilters = {}): Promise<WPVehiclesResponse> {
     const params = new URLSearchParams();
-    
+
     Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
+      if (value !== undefined && value !== null && value !== "") {
         params.append(key, String(value));
       }
     });
 
     const queryString = params.toString();
-    const endpoint = `/vehicles${queryString ? `?${queryString}` : ''}`;
-    
-    return this.fetchWithCache<WPVehiclesResponse>(endpoint, `vehicles_${queryString}`);
+    const endpoint = `/vehicles${queryString ? `?${queryString}` : ""}`;
+
+    return this.fetchWithCache<WPVehiclesResponse>(
+      endpoint,
+      `vehicles_${queryString}`,
+    );
   }
 
   /**
    * Get single vehicle by ID
    */
   async getVehicle(id: number): Promise<WPVehicle> {
-    const response = await this.fetchWithCache<{ success: boolean; data: WPVehicle }>(`/vehicles/${id}`, `vehicle_${id}`);
-    
+    const response = await this.fetchWithCache<{
+      success: boolean;
+      data: WPVehicle;
+    }>(`/vehicles/${id}`, `vehicle_${id}`);
+
     if (!response.success) {
-      throw new Error('Vehicle not found');
+      throw new Error("Vehicle not found");
     }
 
     return response.data;
@@ -176,12 +188,14 @@ export class WordPressVehicleAPI {
    * Get vehicles within payment affordability range
    * Replaces your "search by payment" PHP logic
    */
-  async getAffordableVehicles(params: AffordabilityParams): Promise<WPVehiclesResponse> {
+  async getAffordableVehicles(
+    params: AffordabilityParams,
+  ): Promise<WPVehiclesResponse> {
     try {
       const response = await fetch(`${this.baseUrl}/vehicles/affordable`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(params),
       });
@@ -192,7 +206,7 @@ export class WordPressVehicleAPI {
 
       return await response.json();
     } catch (error) {
-      console.error('Affordable vehicles API error:', error);
+      console.error("Affordable vehicles API error:", error);
       throw error;
     }
   }
@@ -205,19 +219,21 @@ export class WordPressVehicleAPI {
       id: wpVehicle.id,
       featured: false, // Add logic if you have featured field
       viewed: false, // Add logic if you track viewed status
-      images: wpVehicle.images || ['/placeholder.svg'],
+      images: wpVehicle.images || ["/placeholder.svg"],
       badges: [], // Add logic for badges based on condition, etc.
       title: `${wpVehicle.year} ${wpVehicle.make} ${wpVehicle.model}`,
       mileage: wpVehicle.mileage,
       transmission: wpVehicle.transmission,
       doors: wpVehicle.doors,
-      salePrice: wpVehicle.price ? `$${wpVehicle.price.toLocaleString()}` : null,
+      salePrice: wpVehicle.price
+        ? `$${wpVehicle.price.toLocaleString()}`
+        : null,
       payment: null, // Will be calculated by React
       dealer: wpVehicle.dealer,
       location: wpVehicle.location,
-      phone: '', // Add if you have phone field
-      seller_type: 'Dealer', // Add logic based on your data
-      rawPrice: wpVehicle.price
+      phone: "", // Add if you have phone field
+      seller_type: "Dealer", // Add logic based on your data
+      rawPrice: wpVehicle.price,
     };
   }
 
@@ -233,11 +249,12 @@ export class WordPressVehicleAPI {
    */
   getCacheStats(): { entries: number; size: string } {
     const entries = this.cache.size;
-    const size = new Blob([JSON.stringify(Array.from(this.cache.entries()))]).size;
-    
+    const size = new Blob([JSON.stringify(Array.from(this.cache.entries()))])
+      .size;
+
     return {
       entries,
-      size: `${(size / 1024).toFixed(2)} KB`
+      size: `${(size / 1024).toFixed(2)} KB`,
     };
   }
 }
@@ -259,14 +276,16 @@ export function useWordPressVehicles(filters: VehicleFilters = {}) {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await wpAPI.getVehicles(filters);
-      const convertedVehicles = response.data.map(WordPressVehicleAPI.convertToReactVehicle);
-      
+      const convertedVehicles = response.data.map(
+        WordPressVehicleAPI.convertToReactVehicle,
+      );
+
       setVehicles(convertedVehicles);
       setMeta(response.meta);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch vehicles');
+      setError(err instanceof Error ? err.message : "Failed to fetch vehicles");
     } finally {
       setLoading(false);
     }
@@ -281,7 +300,7 @@ export function useWordPressVehicles(filters: VehicleFilters = {}) {
     loading,
     error,
     meta,
-    refetch: fetchVehicles
+    refetch: fetchVehicles,
   };
 }
 
@@ -299,11 +318,13 @@ export function useWordPressSettings() {
       try {
         setLoading(true);
         setError(null);
-        
+
         const data = await wpAPI.getGlobalSettings();
         setSettings(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch settings');
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch settings",
+        );
       } finally {
         setLoading(false);
       }
@@ -316,4 +337,4 @@ export function useWordPressSettings() {
 }
 
 // Import React for hooks
-import React from 'react';
+import React from "react";

@@ -5,7 +5,8 @@ import { IconUploader } from "../components/IconUploader";
 export const IconDemo: React.FC = () => {
   const [customDoorIcon, setCustomDoorIcon] = useState<string>("");
   const [customMileageIcon, setCustomMileageIcon] = useState<string>("");
-  const [customTransmissionIcon, setCustomTransmissionIcon] = useState<string>("");
+  const [customTransmissionIcon, setCustomTransmissionIcon] =
+    useState<string>("");
 
   // Sample vehicle data for demonstration
   const sampleVehicle = {
@@ -26,14 +27,14 @@ export const IconDemo: React.FC = () => {
     dealer: "AutoMax Dealership",
     location: "Downtown Location",
     phone: "(555) 123-4567",
-    seller_type: "Dealer"
+    seller_type: "Dealer",
   };
 
   const [favorites, setFavorites] = useState<{ [key: number]: any }>({});
   const [keeperMessage, setKeeperMessage] = useState<number | null>(null);
 
   const handleToggleFavorite = (vehicle: any) => {
-    setFavorites(prev => {
+    setFavorites((prev) => {
       const newFavorites = { ...prev };
       if (newFavorites[vehicle.id]) {
         delete newFavorites[vehicle.id];
@@ -54,8 +55,9 @@ export const IconDemo: React.FC = () => {
             Custom Icon Demo
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Upload a custom door icon and see how it appears in the vehicle card below.
-            The icon will replace the default door icon in the vehicle details section.
+            Upload a custom door icon and see how it appears in the vehicle card
+            below. The icon will replace the default door icon in the vehicle
+            details section.
           </p>
         </div>
 
@@ -131,10 +133,12 @@ export const IconDemo: React.FC = () => {
               />
             </div>
             <p className="text-sm text-gray-600 mt-4 text-center">
-              Look for your custom icons in the vehicle details section:<br/>
-              • Mileage icon next to "25,000 miles"<br/>
-              • Transmission icon next to "Automatic"<br/>
-              • Door icon next to "4 Doors"
+              Look for your custom icons in the vehicle details section:
+              <br />
+              • Mileage icon next to "25,000 miles"
+              <br />
+              • Transmission icon next to "Automatic"
+              <br />• Door icon next to "4 Doors"
             </p>
           </div>
         </div>
@@ -146,16 +150,35 @@ export const IconDemo: React.FC = () => {
           </h2>
           <div className="prose prose-gray max-w-none">
             <ol className="list-decimal list-inside space-y-2 text-gray-700">
-              <li>Upload your custom icons using the uploaders above (PNG, JPG, or SVG recommended)</li>
-              <li>The icons will immediately appear in the vehicle card preview</li>
-              <li>In your application, you can set the <code className="bg-gray-100 px-1 rounded">mileageIcon</code>, <code className="bg-gray-100 px-1 rounded">transmissionIcon</code>, and <code className="bg-gray-100 px-1 rounded">doorIcon</code> properties on vehicle objects</li>
-              <li>If no custom icons are provided, the default Lucide React icons will be used</li>
+              <li>
+                Upload your custom icons using the uploaders above (PNG, JPG, or
+                SVG recommended)
+              </li>
+              <li>
+                The icons will immediately appear in the vehicle card preview
+              </li>
+              <li>
+                In your application, you can set the{" "}
+                <code className="bg-gray-100 px-1 rounded">mileageIcon</code>,{" "}
+                <code className="bg-gray-100 px-1 rounded">
+                  transmissionIcon
+                </code>
+                , and <code className="bg-gray-100 px-1 rounded">doorIcon</code>{" "}
+                properties on vehicle objects
+              </li>
+              <li>
+                If no custom icons are provided, the default Lucide React icons
+                will be used
+              </li>
             </ol>
-            
+
             <h3 className="text-lg font-semibold mt-6 mb-2">Best Practices:</h3>
             <ul className="list-disc list-inside space-y-1 text-gray-700">
               <li>Use square icons (1:1 aspect ratio) for best results</li>
-              <li>Icons should be at least 16x16 pixels and ideally 24x24 or larger</li>
+              <li>
+                Icons should be at least 16x16 pixels and ideally 24x24 or
+                larger
+              </li>
               <li>SVG format is recommended for crisp display at any size</li>
               <li>Keep file sizes small (under 2MB) for better performance</li>
             </ul>
