@@ -155,6 +155,9 @@ export default function MySQLVehiclesOriginalStyle() {
   // Location/Distance states
   const [zipCode, setZipCode] = useState(""); // No default ZIP
   const [radius, setRadius] = useState("200"); // Default radius in miles
+
+  // Dealers state
+  const [availableDealers, setAvailableDealers] = useState<{name: string, count: number}[]>([]);
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
@@ -932,7 +935,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
         const coords = zipCoordinates[zip];
         if (coords) {
-          console.warn(`��� Using fallback coordinates for ZIP: ${zip}`);
+          console.warn(`🆘 Using fallback coordinates for ZIP: ${zip}`);
           return coords;
         }
 
@@ -2478,18 +2481,40 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("dealer")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">
-                    Bayside Auto Sales
-                  </span>
-                  <span className="carzino-filter-count ml-1">(234)</span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">ABC Car Sales</span>
-                  <span className="carzino-filter-count ml-1">(156)</span>
-                </label>
+                {availableDealers.map((dealer, index) => (
+                  <label key={index} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="mr-2"
+                      checked={appliedFilters.dealer.includes(dealer.name)}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        if (e.target.checked) {
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            dealer: [...prev.dealer, dealer.name],
+                          }));
+                        } else {
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            dealer: prev.dealer.filter(
+                              (item) => item !== dealer.name,
+                            ),
+                          }));
+                        }
+                      }}
+                    />
+                    <span className="carzino-filter-option">
+                      {dealer.name}
+                    </span>
+                    <span className="carzino-filter-count ml-1">({dealer.count})</span>
+                  </label>
+                ))}
+                {availableDealers.length === 0 && (
+                  <div className="text-gray-500 text-sm p-2">
+                    Loading dealers...
+                  </div>
+                )}
               </div>
             </FilterSection>
 
