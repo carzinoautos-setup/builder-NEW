@@ -323,6 +323,16 @@ export default function MySQLVehiclesOriginalStyle() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Apply payment filters handler
+  const applyPaymentFilters = () => {
+    setAppliedFilters((prev) => ({
+      ...prev,
+      paymentMin: paymentMin,
+      paymentMax: paymentMax,
+    }));
+    setCurrentPage(1); // Reset to first page when applying filters
+  };
+
   // Color data for filters
   const exteriorColors = [
     { name: "Black", color: "#000000", count: 8234 },
@@ -1190,12 +1200,6 @@ export default function MySQLVehiclesOriginalStyle() {
                       onChange={(e) => {
                         setPaymentMin(e.target.value);
                       }}
-                      onBlur={(e) => {
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          paymentMin: e.target.value,
-                        }));
-                      }}
                       onClick={(e) => e.stopPropagation()}
                       className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
                     />
@@ -1213,12 +1217,6 @@ export default function MySQLVehiclesOriginalStyle() {
                       value={paymentMax}
                       onChange={(e) => {
                         setPaymentMax(e.target.value);
-                      }}
-                      onBlur={(e) => {
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          paymentMax: e.target.value,
-                        }));
                       }}
                       onClick={(e) => e.stopPropagation()}
                       className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
@@ -1281,6 +1279,19 @@ export default function MySQLVehiclesOriginalStyle() {
                     onClick={(e) => e.stopPropagation()}
                     className="carzino-search-input w-full px-2 py-1.5 border border-gray-300 rounded focus:outline-none text-gray-500"
                   />
+                </div>
+
+                {/* Apply Button */}
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      applyPaymentFilters();
+                    }}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  >
+                    Apply Payment Filters
+                  </button>
                 </div>
               </div>
             </FilterSection>
