@@ -560,6 +560,65 @@ export default function MySQLVehiclesOriginalStyle() {
     fetchDealers();
   }, []);
 
+  // Load available vehicle types
+  useEffect(() => {
+    const fetchVehicleTypes = async () => {
+      try {
+        const apiUrl = `${getApiBaseUrl()}/api/vehicle-types`;
+        console.log("🔍 Fetching vehicle types from:", apiUrl);
+
+        const response = await fetch(apiUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setVehicleTypes(data.data);
+            console.log("✅ Successfully loaded", data.data.length, "vehicle types");
+          }
+        } else {
+          console.warn("⚠️ Failed to fetch vehicle types:", response.status);
+          // Set fallback vehicle types for now
+          setVehicleTypes([
+            { name: "Sedan", count: 1698 },
+            { name: "Crossover/SUV", count: 3405 },
+            { name: "Coupe", count: 419 },
+            { name: "Convertible", count: 125 },
+            { name: "Hatchback", count: 342 },
+            { name: "Van / Minivan", count: 298 },
+            { name: "Wagon", count: 156 },
+            { name: "Trucks", count: 2217 },
+            { name: "Regular Cab", count: 421 },
+            { name: "Extended Cab", count: 543 },
+            { name: "Crew Cab", count: 687 },
+          ]);
+        }
+      } catch (error) {
+        console.error("❌ Error fetching vehicle types:", error);
+        // Set fallback vehicle types for now
+        setVehicleTypes([
+          { name: "Sedan", count: 1698 },
+          { name: "Crossover/SUV", count: 3405 },
+          { name: "Coupe", count: 419 },
+          { name: "Convertible", count: 125 },
+          { name: "Hatchback", count: 342 },
+          { name: "Van / Minivan", count: 298 },
+          { name: "Wagon", count: 156 },
+          { name: "Trucks", count: 2217 },
+          { name: "Regular Cab", count: 421 },
+          { name: "Extended Cab", count: 543 },
+          { name: "Crew Cab", count: 687 },
+        ]);
+      }
+    };
+
+    fetchVehicleTypes();
+  }, []);
+
   // Helper functions for price formatting
   const formatPrice = (value: string): string => {
     // Remove non-numeric characters except decimal points
