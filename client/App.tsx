@@ -25,6 +25,7 @@ const App = () => (
             path="/mysql-vehicles"
             element={<MySQLVehiclesOriginalStyle />}
           />
+          <Route path="/icon-demo" element={<IconDemo />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
