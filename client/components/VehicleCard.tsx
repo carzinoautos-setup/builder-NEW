@@ -39,8 +39,44 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   favorites,
   onToggleFavorite,
   keeperMessage,
+  termLength = "60",
+  interestRate = "5",
+  downPayment = "2000",
 }) => {
   const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
+
+  // Calculate monthly payment based on sale price and loan terms
+  const calculateMonthlyPayment = (salePrice: string, termMonths: string, apr: string, down: string): string => {
+    // Parse sale price - remove $ and commas
+    const price = parseFloat(salePrice.replace(/[$,]/g, ''));
+    const downAmt = parseFloat(down) || 0;
+    const principal = price - downAmt;
+    const months = parseInt(termMonths) || 60;
+    const rate = parseFloat(apr) / 100 / 12; // Convert APR to monthly rate
+
+    if (isNaN(price) || price <= 0 || principal <= 0) {
+      return vehicle.payment || "Call for pricing";
+    }
+
+    if (rate === 0) {
+      // 0% APR - simple division
+      const payment = principal / months;
+      return `$${Math.round(payment).toLocaleString()}`;
+    }
+
+    // Standard loan payment formula
+    const payment = (principal * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+    return `$${Math.round(payment).toLocaleString()}`;
+  };
+
+  // Get the payment to display - either calculated or original
+  const getDisplayPayment = (): string => {
+    if (vehicle.salePrice && (termLength !== "60" || interestRate !== "5" || downPayment !== "2000")) {
+      // Recalculate if any payment parameters have changed from defaults
+      return calculateMonthlyPayment(vehicle.salePrice, termLength, interestRate, downPayment);
+    }
+    return vehicle.payment || "Call for pricing";
+  };
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
