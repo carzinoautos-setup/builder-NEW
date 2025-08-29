@@ -148,7 +148,7 @@ export const IconDemo: React.FC = () => {
             <ol className="list-decimal list-inside space-y-2 text-gray-700">
               <li>Upload your custom icons using the uploaders above (PNG, JPG, or SVG recommended)</li>
               <li>The icons will immediately appear in the vehicle card preview</li>
-              <li>In your application, you can set the <code className="bg-gray-100 px-1 rounded">mileageIcon</code> and <code className="bg-gray-100 px-1 rounded">doorIcon</code> properties on vehicle objects</li>
+              <li>In your application, you can set the <code className="bg-gray-100 px-1 rounded">mileageIcon</code>, <code className="bg-gray-100 px-1 rounded">transmissionIcon</code>, and <code className="bg-gray-100 px-1 rounded">doorIcon</code> properties on vehicle objects</li>
               <li>If no custom icons are provided, the default Lucide React icons will be used</li>
             </ol>
             
