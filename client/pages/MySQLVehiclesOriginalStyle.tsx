@@ -76,6 +76,7 @@ export default function MySQLVehiclesOriginalStyle() {
   const resultsPerPage = 20;
 
   // Filter states - exactly like original
+  const [searchTerm, setSearchTerm] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({
     condition: ["New"] as string[],
     make: ["Audi"] as string[],
@@ -132,6 +133,11 @@ export default function MySQLVehiclesOriginalStyle() {
         pageSize: resultsPerPage.toString(),
       });
 
+      // Add search term
+      if (searchTerm.trim()) {
+        params.append("search", searchTerm.trim());
+      }
+
       // Add filters
       if (appliedFilters.condition.length > 0) {
         params.append("condition", appliedFilters.condition.join(","));
@@ -182,7 +188,7 @@ export default function MySQLVehiclesOriginalStyle() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, appliedFilters]);
+  }, [currentPage, appliedFilters, searchTerm]);
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -273,6 +279,7 @@ export default function MySQLVehiclesOriginalStyle() {
   };
 
   const clearAllFilters = () => {
+    setSearchTerm("");
     setAppliedFilters({
       condition: [],
       make: [],
@@ -290,6 +297,8 @@ export default function MySQLVehiclesOriginalStyle() {
     });
     setPriceMin("10000");
     setPriceMax("100000");
+    setPaymentMin("100");
+    setPaymentMax("2000");
     setCurrentPage(1);
   };
 
