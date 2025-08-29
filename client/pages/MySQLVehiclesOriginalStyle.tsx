@@ -1544,7 +1544,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.bodyStyle.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("bodyStyle", item)}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
