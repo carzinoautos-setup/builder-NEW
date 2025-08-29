@@ -1795,7 +1795,15 @@ export default function MySQLVehiclesOriginalStyle() {
                     </span>
                   ))}
                   {appliedFilters.mileage && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                    <span
+                      onClick={() =>
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          mileage: "",
+                        }))
+                      }
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                    >
                       <Check className="w-3 h-3 text-red-600" />
                       {appliedFilters.mileage === "100001"
                         ? "100k+ miles"
@@ -1814,7 +1822,18 @@ export default function MySQLVehiclesOriginalStyle() {
                     </span>
                   )}
                   {(appliedFilters.priceMin || appliedFilters.priceMax) && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                    <span
+                      onClick={() => {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          priceMin: "",
+                          priceMax: "",
+                        }));
+                        setPriceMin("10000");
+                        setPriceMax("100000");
+                      }}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                    >
                       <Check className="w-3 h-3 text-red-600" />$
                       {appliedFilters.priceMin || "0"} - $
                       {appliedFilters.priceMax || "Any"}
@@ -1835,7 +1854,16 @@ export default function MySQLVehiclesOriginalStyle() {
                     </span>
                   )}
                   {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                    <span
+                      onClick={() =>
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          paymentMin: "",
+                          paymentMax: "",
+                        }))
+                      }
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                    >
                       <Check className="w-3 h-3 text-red-600" />$
                       {appliedFilters.paymentMin || "0"}-$
                       {appliedFilters.paymentMax || "Any"}/mo
