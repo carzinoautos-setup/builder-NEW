@@ -255,6 +255,17 @@ export class SimpleMockVehicleService {
       if (!filters.sellerType.includes(vehicle.seller_type)) return false;
     }
 
+    // Dealer filter (only applies to vehicles where seller_type = "Dealer")
+    if (filters.dealer && filters.dealer.length > 0) {
+      // Only apply dealer filter to dealer vehicles
+      if (vehicle.seller_type === "Dealer") {
+        if (!filters.dealer.includes(vehicle.dealer)) return false;
+      } else {
+        // If filtering by dealer but this is a private seller, exclude it
+        return false;
+      }
+    }
+
     // Price filters
     if (filters.priceMin || filters.priceMax) {
       if (!vehicle.salePrice) return false; // No price listed
@@ -350,6 +361,25 @@ export class SimpleMockVehicleService {
 
   async getVehicleById(id: number): Promise<SimpleVehicleRecord | null> {
     return this.vehicles.find((vehicle) => vehicle.id === id) || null;
+  }
+
+  async getDealers(): Promise<{ name: string; count: number }[]> {
+    // Get dealers only from vehicles where seller_type = "Dealer"
+    const dealerVehicles = this.vehicles.filter((v) => v.seller_type === "Dealer");
+
+    // Count vehicles per dealer
+    const dealerCounts = new Map<string, number>();
+    dealerVehicles.forEach((vehicle) => {
+      const current = dealerCounts.get(vehicle.dealer) || 0;
+      dealerCounts.set(vehicle.dealer, current + 1);
+    });
+
+    // Convert to array and sort by name
+    const dealers = Array.from(dealerCounts.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    return dealers;
   }
 
   async getFilterOptions(): Promise<{
