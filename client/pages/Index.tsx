@@ -13,6 +13,7 @@ import { VehicleCard } from "@/components/VehicleCard";
 import { FilterSection } from "@/components/FilterSection";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
+import { NavigationHeader } from "@/components/NavigationHeader";
 
 interface Vehicle {
   id: number;
