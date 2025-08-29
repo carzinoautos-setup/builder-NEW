@@ -491,12 +491,18 @@ export default function MySQLVehiclesOriginalStyle() {
   };
 
   const removeAppliedFilter = (category: string, value: string) => {
-    setAppliedFilters((prev) => ({
-      ...prev,
-      [category]: (prev[category as keyof typeof prev] as string[]).filter(
+    const newFilters = {
+      ...appliedFilters,
+      [category]: (appliedFilters[category as keyof typeof appliedFilters] as string[]).filter(
         (item: string) => item !== value,
       ),
-    }));
+    };
+    setAppliedFilters(newFilters);
+
+    // Update URL if main filter categories changed
+    if (['make', 'model', 'trim', 'condition', 'year', 'bodyStyle'].includes(category)) {
+      updateURLFromFilters(newFilters);
+    }
   };
 
   const clearAllFilters = () => {
