@@ -275,7 +275,7 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("trim", appliedFilters.trim.join(","));
       }
       if (appliedFilters.vehicleType.length > 0) {
-        params.append("vehicleType", appliedFilters.vehicleType.join(","));
+        params.append("body_type", appliedFilters.vehicleType.join(","));
       }
       if (appliedFilters.driveType.length > 0) {
         params.append("driveType", appliedFilters.driveType.join(","));
