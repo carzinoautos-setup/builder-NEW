@@ -158,31 +158,31 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
 
 /**
  * GET /api/vehicles/health
- * Database health check endpoint
+ * Service health check endpoint
  */
 export const healthCheck: RequestHandler = async (req, res) => {
   try {
     // Test service connectivity
     const testResult = await vehicleService.getVehicles({}, { page: 1, pageSize: 1 });
-    const isMockService = vehicleService instanceof MockVehicleService;
 
     res.status(200).json({
       success: true,
-      message: isMockService ? 'Mock service healthy (sample data)' : 'Database connection healthy',
+      message: 'Mock service healthy - 50,000 sample vehicles ready for testing',
       timestamp: new Date().toISOString(),
-      dbConnected: testResult.success,
-      usingMockData: isMockService,
-      totalRecords: testResult.meta?.totalRecords || 0
+      serviceConnected: testResult.success,
+      usingMockData: true,
+      totalRecords: testResult.meta?.totalRecords || 0,
+      note: 'Switch to VehicleService in routes/vehicles.ts when ready for real MySQL'
     });
 
   } catch (error) {
     console.error('Service health check failed:', error);
     res.status(500).json({
       success: false,
-      message: 'Service connection failed',
+      message: 'Mock service connection failed',
       timestamp: new Date().toISOString(),
-      dbConnected: false,
-      usingMockData: false
+      serviceConnected: false,
+      usingMockData: true
     });
   }
 };
