@@ -1095,7 +1095,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         }}
                         className="ml-1 text-white"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   )}
@@ -1817,10 +1817,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     onChange={(e) => {
                       e.stopPropagation();
                       if (e.target.checked) {
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          condition: [...prev.condition, "Certified"],
-                        }));
+                        const newFilters = {
+                          ...appliedFilters,
+                          condition: [...appliedFilters.condition, "Certified"],
+                        };
+                        setAppliedFilters(newFilters);
+                        updateURLFromFilters(newFilters);
                       } else {
                         removeAppliedFilter("condition", "Certified");
                       }
