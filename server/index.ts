@@ -18,6 +18,13 @@ import {
   createDatabaseConnection,
   testDatabaseConnection,
 } from "./db/connection.js";
+import {
+  calculatePayment,
+  calculateBulkPayments,
+  calculateAffordablePrice,
+  getCacheStats,
+  clearCache,
+} from "./routes/payments.js";
 
 export function createServer() {
   const app = express();
