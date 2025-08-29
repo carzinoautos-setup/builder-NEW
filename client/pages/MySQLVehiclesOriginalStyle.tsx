@@ -1229,6 +1229,66 @@ export default function MySQLVehiclesOriginalStyle() {
                       </button>
                     </span>
                   ))}
+                  {appliedFilters.model.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("model", item)}
+                        className="ml-1 text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.trim.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("trim", item)}
+                        className="ml-1 text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.year.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("year", item)}
+                        className="ml-1 text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.bodyStyle.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {item}
+                      <button
+                        onClick={() => removeAppliedFilter("bodyStyle", item)}
+                        className="ml-1 text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
@@ -1547,7 +1607,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
               {userLocation && !isGeocodingLoading && (
                 <div className="mt-2 text-sm text-gray-600">
-                  📍{" "}
+                  ���{" "}
                   {userLocation.city && userLocation.state
                     ? `${userLocation.city}, ${userLocation.state}`
                     : `${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`}
