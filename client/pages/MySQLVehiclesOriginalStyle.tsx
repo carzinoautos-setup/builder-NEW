@@ -1607,8 +1607,8 @@ export default function MySQLVehiclesOriginalStyle() {
               )}
 
               {userLocation && !isGeocodingLoading && (
-                <div className="mt-2 text-sm text-gray-600">
-                  ���{" "}
+                <div className="mt-2 text-sm text-gray-600 flex items-center gap-1">
+                  <MapPin className="w-4 h-4 text-red-600" />
                   {userLocation.city && userLocation.state
                     ? `${userLocation.city}, ${userLocation.state}`
                     : `${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`}
