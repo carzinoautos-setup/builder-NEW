@@ -24,11 +24,11 @@ Add the code from `wordpress-react-bridge-api.php` to your WordPress site:
 Create a `.env` file in your React project root:
 
 ```bash
-# Your WordPress site URL
-REACT_APP_WP_URL=https://your-wordpress-site.com
+# Your WordPress site URL (Vite requires VITE_ prefix)
+VITE_WP_URL=https://your-wordpress-site.com
 
 # For development
-# REACT_APP_WP_URL=http://localhost/your-wp-site
+# VITE_WP_URL=http://localhost/your-wp-site
 ```
 
 ### 3. **Update Your Meta Keys**
