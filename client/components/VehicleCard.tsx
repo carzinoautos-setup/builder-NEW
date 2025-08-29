@@ -134,8 +134,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               />
             ) : (
               <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F797e47ef443d4f80bd63e122be98d1e6?format=webp&width=800"
-                alt="Drivetrain"
+                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F209b197e983f494e94b04a7d87b79174?format=webp&width=800"
+                alt="Car parts"
                 className="w-4 h-4 object-contain"
               />
             )}
