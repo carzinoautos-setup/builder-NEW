@@ -1518,7 +1518,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white"
                       >
-                        ��
+                        ���
                       </button>
                     </span>
                   ))}
@@ -3205,7 +3205,15 @@ export default function MySQLVehiclesOriginalStyle() {
                       className={`w-12 h-6 rounded-full ${viewMode === "favorites" ? "bg-red-600" : "bg-gray-300"} transition-colors`}
                     >
                       <div
-                        className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${viewMode === "favorites" ? "translate-x-6" : "translate-x-0.5"}`}
+                        className={`absolute top-0.5 w-5 h-5 rounded-full transition-transform ${
+                          viewMode === "favorites" ? "translate-x-6" : "translate-x-0.5"
+                        } ${
+                          viewMode === "favorites"
+                            ? "bg-white"
+                            : favoritesCount > 0
+                              ? "bg-white md:bg-red-600"
+                              : "bg-white"
+                        }`}
                       />
                     </div>
                   </div>
