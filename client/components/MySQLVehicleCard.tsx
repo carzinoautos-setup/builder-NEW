@@ -137,12 +137,6 @@ export function MySQLVehicleCard({
         <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
           <MapPin className="w-4 h-4" />
           <span>{vehicle.seller_type}</span>
-          {vehicle.seller_account_number && (
-            <>
-              <span>•</span>
-              <span>ID: {vehicle.seller_account_number}</span>
-            </>
-          )}
         </div>
 
         {/* Spacer */}
