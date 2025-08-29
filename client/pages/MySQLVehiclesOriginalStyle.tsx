@@ -166,10 +166,12 @@ export default function MySQLVehiclesOriginalStyle() {
   const [appliedRadius, setAppliedRadius] = useState("200");
 
   const [appliedFilters, setAppliedFilters] = useState({
-    condition: ["New"] as string[],
-    make: ["Audi"] as string[],
+    condition: [] as string[],
+    make: [] as string[],
     model: [] as string[],
     trim: [] as string[],
+    year: [] as string[],
+    bodyStyle: [] as string[],
     vehicleType: [] as string[],
     driveType: [] as string[],
     mileage: "",
@@ -1262,7 +1264,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("sellerType", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   ))}
