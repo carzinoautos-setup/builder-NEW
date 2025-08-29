@@ -33,9 +33,9 @@ const DEALERS = [
 ];
 
 const LOCATIONS = [
-  'Lakewood, WA', 'Tacoma, WA', 'Federal Way, WA', 'Seattle, WA', 
-  'Bellevue, WA', 'Everett, WA', 'Renton, WA', 'Kent, WA',
-  'Redmond, WA', 'Bothell, WA', 'Tukwila, WA'
+  'Lakewood, WA 98499', 'Tacoma, WA 98402', 'Federal Way, WA 98003', 'Seattle, WA 98101',
+  'Bellevue, WA 98004', 'Everett, WA 98201', 'Renton, WA 98057', 'Kent, WA 98032',
+  'Redmond, WA 98052', 'Bothell, WA 98011', 'Tukwila, WA 98168'
 ];
 
 const SAMPLE_IMAGES = [
