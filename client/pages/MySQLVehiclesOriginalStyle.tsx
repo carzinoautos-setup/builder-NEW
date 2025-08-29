@@ -995,7 +995,11 @@ export default function MySQLVehiclesOriginalStyle() {
                 onChange={(e) => setZipCode(e.target.value)}
                 className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
               />
-              <select className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none mt-2">
+              <select
+                value={radius}
+                onChange={(e) => setRadius(e.target.value)}
+                className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none mt-2"
+              >
                 <option value="10">10 Miles</option>
                 <option value="25">25 Miles</option>
                 <option value="50">50 Miles</option>
