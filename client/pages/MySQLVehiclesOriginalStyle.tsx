@@ -58,20 +58,20 @@ interface VehiclesApiResponse {
 // URL utility functions
 const parseFiltersFromURL = (pathname: string) => {
   // Expected format: /cars-for-sale/{make}/{model}/{trim}/{condition}/{year}/{body_style}/
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
 
   // Remove 'cars-for-sale' from segments
-  if (segments[0] === 'cars-for-sale') {
+  if (segments[0] === "cars-for-sale") {
     segments.shift();
   }
 
   const filters = {
-    make: segments[0] || '',
-    model: segments[1] || '',
-    trim: segments[2] || '',
-    condition: segments[3] || '',
-    year: segments[4] || '',
-    bodyStyle: segments[5] || ''
+    make: segments[0] || "",
+    model: segments[1] || "",
+    trim: segments[2] || "",
+    condition: segments[3] || "",
+    year: segments[4] || "",
+    bodyStyle: segments[5] || "",
   };
 
   return filters;
@@ -89,13 +89,13 @@ const generateURLFromFilters = (filters: {
 
   // Only include the first selected value for each filter in URL
   if (filters.make && filters.make.length > 0) {
-    segments.push(filters.make[0].toLowerCase().replace(/\s+/g, '-'));
+    segments.push(filters.make[0].toLowerCase().replace(/\s+/g, "-"));
   }
   if (filters.model && filters.model.length > 0) {
-    segments.push(filters.model[0].toLowerCase().replace(/\s+/g, '-'));
+    segments.push(filters.model[0].toLowerCase().replace(/\s+/g, "-"));
   }
   if (filters.trim && filters.trim.length > 0) {
-    segments.push(filters.trim[0].toLowerCase().replace(/\s+/g, '-'));
+    segments.push(filters.trim[0].toLowerCase().replace(/\s+/g, "-"));
   }
   if (filters.condition && filters.condition.length > 0) {
     segments.push(filters.condition[0].toLowerCase());
@@ -104,17 +104,18 @@ const generateURLFromFilters = (filters: {
     segments.push(filters.year);
   }
   if (filters.bodyStyle) {
-    segments.push(filters.bodyStyle.toLowerCase().replace(/\s+/g, '-'));
+    segments.push(filters.bodyStyle.toLowerCase().replace(/\s+/g, "-"));
   }
 
-  return `/cars-for-sale/${segments.join('/')}/`;
+  return `/cars-for-sale/${segments.join("/")}/`;
 };
 
 const normalizeFilterValue = (value: string) => {
   // Convert URL-safe values back to display values
-  return value.split('-').map(word =>
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(' ');
+  return value
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
 
 export default function MySQLVehiclesOriginalStyle() {
@@ -365,43 +366,61 @@ export default function MySQLVehiclesOriginalStyle() {
     const urlFilters = parseFiltersFromURL(location.pathname);
 
     // Only update if we're on the cars-for-sale route and have filters
-    if (location.pathname.startsWith('/cars-for-sale') &&
-        (urlFilters.make || urlFilters.model || urlFilters.trim ||
-         urlFilters.condition || urlFilters.year || urlFilters.bodyStyle)) {
-
-      setAppliedFilters(prev => ({
+    if (
+      location.pathname.startsWith("/cars-for-sale") &&
+      (urlFilters.make ||
+        urlFilters.model ||
+        urlFilters.trim ||
+        urlFilters.condition ||
+        urlFilters.year ||
+        urlFilters.bodyStyle)
+    ) {
+      setAppliedFilters((prev) => ({
         ...prev,
         make: urlFilters.make ? [normalizeFilterValue(urlFilters.make)] : [],
         model: urlFilters.model ? [normalizeFilterValue(urlFilters.model)] : [],
         trim: urlFilters.trim ? [normalizeFilterValue(urlFilters.trim)] : [],
-        condition: urlFilters.condition ? [normalizeFilterValue(urlFilters.condition)] : [],
+        condition: urlFilters.condition
+          ? [normalizeFilterValue(urlFilters.condition)]
+          : [],
         year: urlFilters.year ? [urlFilters.year] : [],
-        bodyStyle: urlFilters.bodyStyle ? [normalizeFilterValue(urlFilters.bodyStyle)] : [],
+        bodyStyle: urlFilters.bodyStyle
+          ? [normalizeFilterValue(urlFilters.bodyStyle)]
+          : [],
       }));
     }
   }, [location.pathname]);
 
   // Function to update URL when filters change
-  const updateURLFromFilters = useCallback((newFilters: typeof appliedFilters) => {
-    // Only generate URL for main filter categories (not price, payment, etc.)
-    const urlFilters = {
-      make: newFilters.make,
-      model: newFilters.model,
-      trim: newFilters.trim,
-      condition: newFilters.condition,
-      year: newFilters.year.length > 0 ? newFilters.year[0] : undefined,
-      bodyStyle: newFilters.bodyStyle,
-    };
+  const updateURLFromFilters = useCallback(
+    (newFilters: typeof appliedFilters) => {
+      // Only generate URL for main filter categories (not price, payment, etc.)
+      const urlFilters = {
+        make: newFilters.make,
+        model: newFilters.model,
+        trim: newFilters.trim,
+        condition: newFilters.condition,
+        year: newFilters.year.length > 0 ? newFilters.year[0] : undefined,
+        bodyStyle: newFilters.bodyStyle,
+      };
 
-    const newURL = generateURLFromFilters(urlFilters);
+      const newURL = generateURLFromFilters(urlFilters);
 
-    // Only navigate if we're changing the URL structure
-    if (location.pathname !== newURL &&
-        (urlFilters.make?.length || urlFilters.model?.length || urlFilters.trim?.length ||
-         urlFilters.condition?.length || urlFilters.year || urlFilters.bodyStyle?.length)) {
-      navigate(newURL, { replace: true });
-    }
-  }, [navigate, location.pathname]);
+      // Only navigate if we're changing the URL structure
+      if (
+        location.pathname !== newURL &&
+        (urlFilters.make?.length ||
+          urlFilters.model?.length ||
+          urlFilters.trim?.length ||
+          urlFilters.condition?.length ||
+          urlFilters.year ||
+          urlFilters.bodyStyle?.length)
+      ) {
+        navigate(newURL, { replace: true });
+      }
+    },
+    [navigate, location.pathname],
+  );
 
   // Fetch vehicles when dependencies change
   useEffect(() => {
@@ -501,14 +520,18 @@ export default function MySQLVehiclesOriginalStyle() {
   const removeAppliedFilter = (category: string, value: string) => {
     const newFilters = {
       ...appliedFilters,
-      [category]: (appliedFilters[category as keyof typeof appliedFilters] as string[]).filter(
-        (item: string) => item !== value,
-      ),
+      [category]: (
+        appliedFilters[category as keyof typeof appliedFilters] as string[]
+      ).filter((item: string) => item !== value),
     };
     setAppliedFilters(newFilters);
 
     // Update URL if main filter categories changed
-    if (['make', 'model', 'trim', 'condition', 'year', 'bodyStyle'].includes(category)) {
+    if (
+      ["make", "model", "trim", "condition", "year", "bodyStyle"].includes(
+        category,
+      )
+    ) {
       updateURLFromFilters(newFilters);
     }
   };
@@ -544,8 +567,8 @@ export default function MySQLVehiclesOriginalStyle() {
     setCurrentPage(1);
 
     // Reset URL to base cars-for-sale path
-    if (location.pathname.startsWith('/cars-for-sale')) {
-      navigate('/cars-for-sale/', { replace: true });
+    if (location.pathname.startsWith("/cars-for-sale")) {
+      navigate("/cars-for-sale/", { replace: true });
     }
   };
 
@@ -581,13 +604,58 @@ export default function MySQLVehiclesOriginalStyle() {
     const filters: any = {};
 
     // Known makes (you can expand this list)
-    const makes = ['toyota', 'honda', 'ford', 'chevrolet', 'nissan', 'bmw', 'audi', 'mercedes', 'lexus', 'infiniti', 'acura', 'cadillac', 'buick', 'gmc', 'jeep', 'ram', 'dodge', 'chrysler', 'hyundai', 'kia', 'subaru', 'mazda', 'mitsubishi', 'volvo', 'land rover', 'jaguar', 'porsche', 'ferrari', 'lamborghini', 'maserati', 'bentley', 'rolls-royce', 'tesla', 'lucid', 'rivian'];
+    const makes = [
+      "toyota",
+      "honda",
+      "ford",
+      "chevrolet",
+      "nissan",
+      "bmw",
+      "audi",
+      "mercedes",
+      "lexus",
+      "infiniti",
+      "acura",
+      "cadillac",
+      "buick",
+      "gmc",
+      "jeep",
+      "ram",
+      "dodge",
+      "chrysler",
+      "hyundai",
+      "kia",
+      "subaru",
+      "mazda",
+      "mitsubishi",
+      "volvo",
+      "land rover",
+      "jaguar",
+      "porsche",
+      "ferrari",
+      "lamborghini",
+      "maserati",
+      "bentley",
+      "rolls-royce",
+      "tesla",
+      "lucid",
+      "rivian",
+    ];
 
     // Known conditions
-    const conditions = ['new', 'used', 'certified'];
+    const conditions = ["new", "used", "certified"];
 
     // Known body styles
-    const bodyStyles = ['sedan', 'suv', 'coupe', 'convertible', 'hatchback', 'truck', 'wagon', 'van'];
+    const bodyStyles = [
+      "sedan",
+      "suv",
+      "coupe",
+      "convertible",
+      "hatchback",
+      "truck",
+      "wagon",
+      "van",
+    ];
 
     // Extract year (4-digit number)
     const yearMatch = query.match(/\b(19|20)\d{2}\b/);
@@ -596,21 +664,25 @@ export default function MySQLVehiclesOriginalStyle() {
     }
 
     // Extract make
-    const foundMake = words.find(word => makes.includes(word));
+    const foundMake = words.find((word) => makes.includes(word));
     if (foundMake) {
       filters.make = [foundMake.charAt(0).toUpperCase() + foundMake.slice(1)];
     }
 
     // Extract condition
-    const foundCondition = words.find(word => conditions.includes(word));
+    const foundCondition = words.find((word) => conditions.includes(word));
     if (foundCondition) {
-      filters.condition = [foundCondition.charAt(0).toUpperCase() + foundCondition.slice(1)];
+      filters.condition = [
+        foundCondition.charAt(0).toUpperCase() + foundCondition.slice(1),
+      ];
     }
 
     // Extract body style
-    const foundBodyStyle = words.find(word => bodyStyles.includes(word));
+    const foundBodyStyle = words.find((word) => bodyStyles.includes(word));
     if (foundBodyStyle) {
-      filters.bodyStyle = [foundBodyStyle.charAt(0).toUpperCase() + foundBodyStyle.slice(1)];
+      filters.bodyStyle = [
+        foundBodyStyle.charAt(0).toUpperCase() + foundBodyStyle.slice(1),
+      ];
     }
 
     // For model and trim, try to identify them by position or common patterns
@@ -620,13 +692,23 @@ export default function MySQLVehiclesOriginalStyle() {
       if (makeIndex >= 0 && makeIndex + 1 < words.length) {
         const nextWord = words[makeIndex + 1];
         // If next word is not a condition, year, or body style, it's likely a model
-        if (!conditions.includes(nextWord) && !bodyStyles.includes(nextWord) && !/^\d{4}$/.test(nextWord)) {
-          filters.model = [nextWord.charAt(0).toUpperCase() + nextWord.slice(1)];
+        if (
+          !conditions.includes(nextWord) &&
+          !bodyStyles.includes(nextWord) &&
+          !/^\d{4}$/.test(nextWord)
+        ) {
+          filters.model = [
+            nextWord.charAt(0).toUpperCase() + nextWord.slice(1),
+          ];
 
           // Check for trim after model
           if (makeIndex + 2 < words.length) {
             const trimWord = words[makeIndex + 2];
-            if (!conditions.includes(trimWord) && !bodyStyles.includes(trimWord) && !/^\d{4}$/.test(trimWord)) {
+            if (
+              !conditions.includes(trimWord) &&
+              !bodyStyles.includes(trimWord) &&
+              !/^\d{4}$/.test(trimWord)
+            ) {
               filters.trim = [trimWord.toUpperCase()]; // Trims are often uppercase (SE, EX, etc.)
             }
           }
@@ -657,7 +739,7 @@ export default function MySQLVehiclesOriginalStyle() {
     });
 
     // Update applied filters to match the search
-    setAppliedFilters(prev => ({
+    setAppliedFilters((prev) => ({
       ...prev,
       make: parsedFilters.make || [],
       model: parsedFilters.model || [],
@@ -1792,7 +1874,10 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("year")}
             >
               <div className="space-y-1">
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                {Array.from(
+                  { length: 10 },
+                  (_, i) => new Date().getFullYear() - i,
+                ).map((year) => (
                   <label
                     key={year}
                     className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
@@ -1831,7 +1916,16 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("bodyStyle")}
             >
               <div className="space-y-1">
-                {["Sedan", "SUV", "Coupe", "Convertible", "Hatchback", "Truck", "Wagon", "Van"].map((bodyStyle) => (
+                {[
+                  "Sedan",
+                  "SUV",
+                  "Coupe",
+                  "Convertible",
+                  "Hatchback",
+                  "Truck",
+                  "Wagon",
+                  "Van",
+                ].map((bodyStyle) => (
                   <label
                     key={bodyStyle}
                     className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
