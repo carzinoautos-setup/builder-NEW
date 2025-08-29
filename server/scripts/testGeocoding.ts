@@ -67,9 +67,7 @@ async function testGeocoding() {
   console.log('\n🎉 Geocoding API tests completed!');
 }
 
-// Run tests if this file is executed directly
-if (require.main === module) {
-  testGeocoding().catch(console.error);
-}
-
 export default testGeocoding;
+
+// Run tests if this file is executed directly
+testGeocoding().catch(console.error);
