@@ -153,7 +153,7 @@ export default function MySQLVehiclesOriginalStyle() {
   const [unifiedSearch, setUnifiedSearch] = useState("");
 
   // Location/Distance states
-  const [zipCode, setZipCode] = useState("98498"); // Default ZIP
+  const [zipCode, setZipCode] = useState(""); // No default ZIP
   const [radius, setRadius] = useState("200"); // Default radius in miles
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -583,7 +583,7 @@ export default function MySQLVehiclesOriginalStyle() {
   const clearAllFilters = () => {
     setSearchTerm("");
     setUnifiedSearch("");
-    setZipCode("98498"); // Reset to default ZIP
+    setZipCode(""); // Reset ZIP code
     setRadius("200"); // Reset to default radius
     setAppliedLocation(null);
     setAppliedRadius("200");
@@ -1714,7 +1714,7 @@ export default function MySQLVehiclesOriginalStyle() {
               </label>
               <input
                 type="text"
-                placeholder="ZIP Code"
+                placeholder="Enter your zip code"
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
