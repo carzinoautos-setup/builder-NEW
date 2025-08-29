@@ -1071,7 +1071,18 @@ export default function MySQLVehiclesOriginalStyle() {
                         <input
                           type="checkbox"
                           className="mr-2"
-                          onChange={(e) => e.stopPropagation()}
+                          checked={appliedFilters.trim.includes(trim)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if (e.target.checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                trim: [...prev.trim, trim],
+                              }));
+                            } else {
+                              removeAppliedFilter("trim", trim);
+                            }
+                          }}
                         />
                         <span className="carzino-filter-option">{trim}</span>
                         <span className="carzino-filter-count ml-1">
