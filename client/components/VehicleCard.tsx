@@ -20,6 +20,7 @@ interface Vehicle {
   location: string;
   phone: string;
   seller_type: string;
+  seller_account_number: string;
 }
 
 interface VehicleCardProps {
