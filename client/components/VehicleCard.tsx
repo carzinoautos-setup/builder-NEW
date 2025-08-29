@@ -119,16 +119,24 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           </div>
           <div className="flex items-center gap-1">
             <div className="w-4 h-4 text-gray-600 flex items-center justify-center">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="w-4 h-4"
-              >
-                <rect x="3" y="4" width="18" height="16" rx="2" />
-                <path d="M7 4v16" />
-              </svg>
+              {vehicle.doorIcon ? (
+                <img
+                  src={vehicle.doorIcon}
+                  alt="Door icon"
+                  className="w-4 h-4 object-contain"
+                />
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="w-4 h-4"
+                >
+                  <rect x="3" y="4" width="18" height="16" rx="2" />
+                  <path d="M7 4v16" />
+                </svg>
+              )}
             </div>
             <span className="text-black font-medium">{vehicle.doors}</span>
           </div>
