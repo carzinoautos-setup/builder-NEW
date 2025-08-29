@@ -786,6 +786,7 @@ export default function Index() {
       className="min-h-screen bg-white main-container"
       style={{ fontFamily: "Albert Sans, sans-serif" }}
     >
+      <NavigationHeader />
       <style>{`
         :root {
           --carzino-featured-badge: 12px;
