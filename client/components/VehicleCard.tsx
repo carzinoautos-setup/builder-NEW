@@ -107,7 +107,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
         <div className="flex items-center justify-start mb-3 pb-2 border-b border-gray-200 carzino-vehicle-details">
           <div className="flex items-center gap-1 mr-4">
-            <Gauge className="w-4 h-4 text-gray-600" />
+            {vehicle.mileageIcon ? (
+              <img
+                src={vehicle.mileageIcon}
+                alt="Mileage icon"
+                className="w-4 h-4 object-contain"
+              />
+            ) : (
+              <Gauge className="w-4 h-4 text-gray-600" />
+            )}
             <span className="text-black font-medium">
               {vehicle.mileage} miles
             </span>
