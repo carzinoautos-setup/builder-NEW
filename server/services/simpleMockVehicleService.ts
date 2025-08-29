@@ -428,17 +428,24 @@ export class SimpleMockVehicleService {
     driveTypes: string[];
     sellerTypes: string[];
   }> {
+    // Only include options from vehicles with valid body_style
+    const validVehicles = this.vehicles.filter(v =>
+      v.body_style &&
+      v.body_style !== "Uncategorized" &&
+      v.body_style.trim() !== ""
+    );
+
     // Extract makes from vehicle titles
     const makes = Array.from(
-      new Set(this.vehicles.map((v) => v.title.split(" ")[1])),
+      new Set(validVehicles.map((v) => v.title.split(" ")[1])),
     ).sort();
 
     const conditions = Array.from(
-      new Set(this.vehicles.map((v) => v.condition)),
+      new Set(validVehicles.map((v) => v.condition)),
     ).sort();
     const driveTypes = ["AWD/4WD", "FWD", "RWD"]; // Simplified like original
     const sellerTypes = Array.from(
-      new Set(this.vehicles.map((v) => v.seller_type)),
+      new Set(validVehicles.map((v) => v.seller_type)),
     ).sort();
 
     return {
