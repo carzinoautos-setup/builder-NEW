@@ -10,6 +10,8 @@ import {
   Sliders,
   Check,
   MapPin,
+  Loader,
+  AlertTriangle,
 } from "lucide-react";
 import { VehicleCard } from "@/components/VehicleCard";
 import { FilterSection } from "@/components/FilterSection";
