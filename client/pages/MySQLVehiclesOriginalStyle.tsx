@@ -190,6 +190,8 @@ export default function MySQLVehiclesOriginalStyle() {
     make: false,
     model: false,
     trim: false,
+    year: false,
+    bodyStyle: false,
     price: false,
     payment: false,
     driveType: false,
