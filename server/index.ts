@@ -91,5 +91,48 @@ export function createServer() {
     console.error("⚠️  Database connection test failed during startup:", error);
   });
 
+  // Initialize WordPress sync system
+  setupWordPressSync();
+
   return app;
+}
+
+/**
+ * Set up automated WordPress synchronization
+ * Runs initial sync check and sets up periodic sync
+ */
+async function setupWordPressSync() {
+  try {
+    console.log("🔄 Initializing WordPress sync system...");
+
+    const sync = new WordPressSync();
+
+    // Run initial sync check (only if needed)
+    setTimeout(async () => {
+      try {
+        console.log("🔍 Running initial WordPress sync check...");
+        await sync.runSync();
+        console.log("✅ Initial WordPress sync completed");
+      } catch (error) {
+        console.error("⚠️  Initial WordPress sync failed (this is normal if WordPress isn't connected):", error.message);
+      }
+    }, 5000); // Wait 5 seconds after server start
+
+    // Set up automatic sync every hour
+    setInterval(async () => {
+      try {
+        console.log("🔄 Running scheduled WordPress sync...");
+        const startTime = Date.now();
+        await sync.runSync();
+        const duration = Date.now() - startTime;
+        console.log(`✅ Scheduled WordPress sync completed in ${duration}ms`);
+      } catch (error) {
+        console.error("❌ Scheduled WordPress sync failed:", error.message);
+      }
+    }, 60 * 60 * 1000); // Every 60 minutes
+
+    console.log("✅ WordPress sync system initialized - will sync every hour");
+  } catch (error) {
+    console.error("❌ Failed to initialize WordPress sync system:", error);
+  }
 }
