@@ -58,6 +58,8 @@ export default function MySQLVehiclesOriginalStyle() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"all" | "favorites">("all");
   const [vehicleImages, setVehicleImages] = useState<{ [key: string]: string }>({});
+  const [sortBy, setSortBy] = useState("relevance");
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
   // API state
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
