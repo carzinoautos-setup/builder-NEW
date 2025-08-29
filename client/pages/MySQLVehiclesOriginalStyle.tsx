@@ -2535,6 +2535,27 @@ export default function MySQLVehiclesOriginalStyle() {
                 </label>
               </div>
             </FilterSection>
+
+            {/* Mobile Filter Action Buttons */}
+            <div className="lg:hidden sticky bottom-0 bg-white border-t border-gray-200 p-4 mt-6">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileFiltersOpen(false);
+                    // Filters are already applied in real-time, so just close the panel
+                  }}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
