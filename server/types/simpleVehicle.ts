@@ -45,6 +45,7 @@ export interface SimpleVehicleFilters {
   mileage?: string;
   exteriorColor?: string[];
   sellerType?: string[];
+  dealer?: string[];
   priceMin?: string;
   priceMax?: string;
   paymentMin?: string;
