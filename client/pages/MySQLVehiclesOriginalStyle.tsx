@@ -250,6 +250,8 @@ export default function MySQLVehiclesOriginalStyle() {
     const initializeLocation = async () => {
       const location = await geocodeZip("98498");
       setUserLocation(location);
+      // Also set as applied location by default
+      setAppliedLocation(location);
     };
 
     initializeLocation();
@@ -332,6 +334,10 @@ export default function MySQLVehiclesOriginalStyle() {
 
   const clearAllFilters = () => {
     setSearchTerm("");
+    setZipCode("98498"); // Reset to default ZIP
+    setRadius("200"); // Reset to default radius
+    setAppliedLocation(null);
+    setAppliedRadius("200");
     setAppliedFilters({
       condition: [],
       make: [],
