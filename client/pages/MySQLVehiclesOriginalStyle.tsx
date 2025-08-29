@@ -771,6 +771,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
               {/* Applied Filters in Mobile Filter Panel */}
               {(searchTerm.trim() ||
+                (appliedLocation && appliedRadius !== "nationwide") ||
                 appliedFilters.condition.length > 0 ||
                 appliedFilters.make.length > 0 ||
                 appliedFilters.model.length > 0 ||
