@@ -145,6 +145,16 @@ export default function MySQLVehiclesOriginalStyle() {
   // Filter states - exactly like original
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Structured search form states for URL generation
+  const [searchForm, setSearchForm] = useState({
+    make: "",
+    model: "",
+    trim: "",
+    condition: "",
+    year: "",
+    bodyStyle: "",
+  });
+
   // Location/Distance states
   const [zipCode, setZipCode] = useState("98498"); // Default ZIP
   const [radius, setRadius] = useState("200"); // Default radius in miles
