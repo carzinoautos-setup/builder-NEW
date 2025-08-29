@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect, useMemo } from 'react';
+import { useCallback, useRef, useEffect, useMemo, useState } from 'react';
 
 /**
  * Debounce hook for API calls and search
@@ -99,67 +99,6 @@ export function useIntersectionObserver(
   }, [ref, options]);
 
   return isIntersecting;
-}
-
-/**
- * Image lazy loading component
- */
-export function LazyImage({
-  src,
-  alt,
-  className = '',
-  placeholder = 'bg-gray-200',
-  ...props
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-  placeholder?: string;
-  [key: string]: any;
-}) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={imgRef} className={`relative overflow-hidden ${className}`}>
-      {isInView && (
-        <img
-          src={src}
-          alt={alt}
-          onLoad={() => setIsLoaded(true)}
-          className={`transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          {...props}
-        />
-      )}
-      {(!isInView || !isLoaded) && (
-        <div 
-          className={`absolute inset-0 ${placeholder} animate-pulse`}
-          style={{ aspectRatio: props.aspectRatio || 'auto' }}
-        />
-      )}
-    </div>
-  );
 }
 
 /**
@@ -296,5 +235,32 @@ export class PerformanceMonitor {
   }
 }
 
-// React import fix
-import { useState } from 'react';
+/**
+ * Utility functions for performance optimization
+ */
+export const performanceUtils = {
+  // Batch DOM updates
+  batchUpdates: (callback: () => void) => {
+    requestAnimationFrame(callback);
+  },
+
+  // Optimize image loading
+  preloadImage: (src: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve();
+      img.onerror = reject;
+      img.src = src;
+    });
+  },
+
+  // Memory usage monitoring
+  getMemoryUsage: (): MemoryInfo | null => {
+    return (performance as any).memory || null;
+  },
+
+  // Network connection info
+  getConnectionInfo: (): any => {
+    return (navigator as any).connection || null;
+  }
+};
