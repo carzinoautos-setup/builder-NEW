@@ -362,7 +362,14 @@ export default function MySQLVehiclesOriginalStyle() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, appliedFilters, searchTerm, appliedLocation, appliedRadius, sortBy]);
+  }, [
+    currentPage,
+    appliedFilters,
+    searchTerm,
+    appliedLocation,
+    appliedRadius,
+    sortBy,
+  ]);
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -412,7 +419,8 @@ export default function MySQLVehiclesOriginalStyle() {
         trim: newFilters.trim,
         condition: newFilters.condition,
         year: newFilters.year.length > 0 ? newFilters.year[0] : undefined,
-        bodyStyle: newFilters.bodyStyle.length > 0 ? newFilters.bodyStyle[0] : undefined,
+        bodyStyle:
+          newFilters.bodyStyle.length > 0 ? newFilters.bodyStyle[0] : undefined,
       };
 
       const newURL = generateURLFromFilters(urlFilters);
@@ -2264,9 +2272,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     type={type.name}
                     count={type.count}
                     vehicleImages={vehicleImages}
-                    isSelected={appliedFilters.vehicleType.includes(
-                      type.name,
-                    )}
+                    isSelected={appliedFilters.vehicleType.includes(type.name)}
                     onToggle={() => {
                       setAppliedFilters((prev) => ({
                         ...prev,
@@ -2747,7 +2753,9 @@ export default function MySQLVehiclesOriginalStyle() {
                       <Check className="w-3 h-3 text-red-600" />
                       {item} Color
                       <button
-                        onClick={() => removeAppliedFilter("exteriorColor", item)}
+                        onClick={() =>
+                          removeAppliedFilter("exteriorColor", item)
+                        }
                         className="ml-1 text-white"
                       >
                         ×
@@ -2834,7 +2842,6 @@ export default function MySQLVehiclesOriginalStyle() {
 
             {/* Sticky wrapper - will stick throughout the entire scrollable area */}
             <div className={mobileFiltersOpen ? "" : "sticky top-0 z-50"}>
-
               {/* Filter, Sort, Favorites Bar */}
               <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md">
                 <button
@@ -3129,7 +3136,9 @@ export default function MySQLVehiclesOriginalStyle() {
                   <option value="miles-high">Miles: High to Low</option>
                   <option value="year-newest">Year: Newest to Oldest</option>
                   <option value="year-oldest">Year: Oldest to Newest</option>
-                  <option value="distance-closest">Distance: Closest to Me</option>
+                  <option value="distance-closest">
+                    Distance: Closest to Me
+                  </option>
                 </select>
 
                 <select className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none bg-white">
