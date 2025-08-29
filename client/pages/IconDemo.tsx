@@ -20,6 +20,7 @@ export const IconDemo: React.FC = () => {
     doors: "4 Doors",
     doorIcon: customDoorIcon || undefined,
     mileageIcon: customMileageIcon || undefined,
+    transmissionIcon: customTransmissionIcon || undefined,
     salePrice: "$18,500",
     payment: "$299",
     dealer: "AutoMax Dealership",
