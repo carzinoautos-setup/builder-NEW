@@ -142,6 +142,16 @@ export default function MySQLVehiclesOriginalStyle() {
   const [interestRate, setInterestRate] = useState("5");
   const [downPayment, setDownPayment] = useState("2000");
 
+  // Get the API base URL - handle different environments
+  const getApiBaseUrl = () => {
+    // In development, use relative URLs
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return '';
+    }
+    // In production, try to use the same origin first
+    return '';
+  };
+
   // Fetch vehicles from API
   const fetchVehicles = useCallback(async () => {
     try {
@@ -207,10 +217,18 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("paymentMax", appliedFilters.paymentMax);
       }
 
-      const response = await fetch(`/api/simple-vehicles?${params}`);
+      const apiUrl = `${getApiBaseUrl()}/api/simple-vehicles?${params}`;
+      console.log('🔍 Fetching vehicles from:', apiUrl);
+
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
       const data: VehiclesApiResponse = await response.json();
@@ -218,13 +236,33 @@ export default function MySQLVehiclesOriginalStyle() {
       if (data.success) {
         setVehicles(data.data);
         setApiResponse(data);
+        console.log('✅ Successfully loaded', data.data.length, 'vehicles');
       } else {
-        setError(data.message || "Failed to fetch vehicles");
-        setVehicles([]);
+        throw new Error(data.message || "API returned error");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      console.error('❌ Vehicle fetch error:', err);
+
+      // If API is completely unavailable, show a helpful message
+      if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
+        setError('Unable to connect to vehicle database. Please check your internet connection or try again later.');
+      } else {
+        setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      }
+
+      // Set empty vehicles array
       setVehicles([]);
+      setApiResponse({
+        success: false,
+        data: [],
+        message: 'No vehicles available',
+        pagination: {
+          page: 1,
+          pageSize: resultsPerPage,
+          total: 0,
+          totalPages: 0
+        }
+      });
     } finally {
       setLoading(false);
     }
@@ -410,8 +448,18 @@ export default function MySQLVehiclesOriginalStyle() {
     try {
       setIsGeocodingLoading(true);
 
-      // Call our geocoding API
-      const response = await fetch(`/api/geocode/${zip}`);
+      // Call our geocoding API with proper error handling
+      const apiUrl = `${getApiBaseUrl()}/api/geocode/${zip}`;
+      console.log('🔍 Geocoding ZIP:', zip, 'using:', apiUrl);
+
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Add timeout to prevent hanging
+        signal: AbortSignal.timeout(10000) // 10 second timeout
+      });
 
       if (response.ok) {
         const result = await response.json();
@@ -429,8 +477,12 @@ export default function MySQLVehiclesOriginalStyle() {
           console.warn(`❌ Geocoding failed for ${zip}: ${result.message}`);
         }
       } else if (response.status === 404) {
-        const errorResult = await response.json();
-        console.warn(`❌ ZIP ${zip} not found: ${errorResult.message}`);
+        try {
+          const errorResult = await response.json();
+          console.warn(`❌ ZIP ${zip} not found: ${errorResult.message}`);
+        } catch {
+          console.warn(`❌ ZIP ${zip} not found`);
+        }
       } else {
         console.error(
           `❌ Geocoding API error: ${response.status} ${response.statusText}`,
@@ -441,10 +493,10 @@ export default function MySQLVehiclesOriginalStyle() {
     } catch (error) {
       console.error("❌ Geocoding network error:", error);
 
-      // Only use fallback if it's a network error, not a parsing error
+      // Always use fallback for any network error
       if (
         error instanceof TypeError &&
-        error.message.includes("Failed to fetch")
+        (error.message.includes("Failed to fetch") || error.message.includes("NetworkError"))
       ) {
         console.log("🔄 Using fallback coordinates due to network error");
         const zipCoordinates: {
