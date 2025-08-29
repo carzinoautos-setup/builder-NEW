@@ -207,8 +207,14 @@ export class SimpleMockVehicleService {
       "🔧 SimpleMockVehicleService: Generating sample data (original demo format)...",
     );
     this.generateMockData();
+    // Apply validation rule to ensure no invalid body_style vehicles
+    this.vehicles = this.vehicles.filter(vehicle =>
+      vehicle.body_style &&
+      vehicle.body_style !== "Uncategorized" &&
+      vehicle.body_style.trim() !== ""
+    );
     console.log(
-      `✅ SimpleMockVehicleService: ${this.vehicles.length} vehicles generated`,
+      `✅ SimpleMockVehicleService: ${this.vehicles.length} vehicles generated (invalid body_style excluded)`,
     );
   }
 
