@@ -83,6 +83,18 @@ export function createServer() {
   app.get("/api/geocode/:zip", geocodeZip);
   app.post("/api/geocode/batch", geocodeBatch);
 
+  // WordPress sync status endpoint
+  app.get("/api/wordpress/sync-status", (_req, res) => {
+    res.json({
+      status: "active",
+      message: "WordPress sync is running automatically every hour",
+      nextSync: "Every hour on the hour",
+      lastSyncAttempt: syncStatus.lastAttempt,
+      lastSyncSuccess: syncStatus.lastSuccess,
+      lastSyncError: syncStatus.lastError
+    });
+  });
+
   // Example API routes (keep for backward compatibility)
   app.get("/api/demo", handleDemo);
 
