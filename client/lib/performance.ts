@@ -230,7 +230,7 @@ export class PerformanceMonitor {
     const duration = performance.now() - start;
     this.measurements.delete(name);
 
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
       console.log(`⏱️ ${name}: ${duration.toFixed(2)}ms`);
     }
 
