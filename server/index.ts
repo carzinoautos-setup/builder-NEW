@@ -12,6 +12,7 @@ import {
   getSimpleVehicles,
   getSimpleVehicleById,
   getSimpleFilterOptions,
+  getDealers,
   simpleHealthCheck,
 } from "./routes/simpleVehicles.js";
 import {
@@ -74,6 +75,7 @@ export function createServer() {
   app.get("/api/simple-vehicles", getSimpleVehicles);
   app.get("/api/simple-vehicles/filters", getSimpleFilterOptions);
   app.get("/api/simple-vehicles/:id", getSimpleVehicleById);
+  app.get("/api/dealers", getDealers);
   app.get("/api/simple-health", simpleHealthCheck);
 
   // Payment calculation routes
