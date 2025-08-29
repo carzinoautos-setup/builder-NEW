@@ -991,6 +991,8 @@ export default function MySQLVehiclesOriginalStyle() {
               <input
                 type="text"
                 placeholder="ZIP Code"
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value)}
                 className="carzino-search-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
               />
               <select className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none mt-2">
