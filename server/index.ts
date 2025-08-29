@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo.js";
 import { getVehicles, getVehicleById, getFilterOptions, healthCheck } from "./routes/vehicles.js";
+import { getSimpleVehicles, getSimpleVehicleById, getSimpleFilterOptions, simpleHealthCheck } from "./routes/simpleVehicles.js";
 import { createDatabaseConnection, testDatabaseConnection } from "./db/connection.js";
 
 export function createServer() {
