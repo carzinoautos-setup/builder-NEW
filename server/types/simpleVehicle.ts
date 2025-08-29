@@ -11,6 +11,7 @@ export interface SimpleVehicleRecord {
   doors: string; // e.g. "4 doors"
   drivetrain: string; // e.g. "4WD", "AWD", "FWD", "RWD"
   condition: string; // "New", "Used", "Certified"
+  body_style: string; // e.g. "Sedan", "SUV", "Coupe" - custom field for vehicle type
   salePrice: string | null; // e.g. "$67,899" or null
   payment: string | null; // e.g. "$789" or null
   dealer: string;
