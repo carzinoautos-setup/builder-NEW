@@ -571,51 +571,103 @@ export default function MySQLVehiclesOriginalStyle() {
     setCurrentPage(1); // Reset to first page when applying filters
   };
 
-  // Handle structured search form submission
-  const handleSearchFormSubmit = (e: React.FormEvent) => {
+  // Parse unified search query and extract vehicle attributes
+  const parseUnifiedSearch = (query: string) => {
+    const words = query.toLowerCase().trim().split(/\s+/);
+    const filters: any = {};
+
+    // Known makes (you can expand this list)
+    const makes = ['toyota', 'honda', 'ford', 'chevrolet', 'nissan', 'bmw', 'audi', 'mercedes', 'lexus', 'infiniti', 'acura', 'cadillac', 'buick', 'gmc', 'jeep', 'ram', 'dodge', 'chrysler', 'hyundai', 'kia', 'subaru', 'mazda', 'mitsubishi', 'volvo', 'land rover', 'jaguar', 'porsche', 'ferrari', 'lamborghini', 'maserati', 'bentley', 'rolls-royce', 'tesla', 'lucid', 'rivian'];
+
+    // Known conditions
+    const conditions = ['new', 'used', 'certified'];
+
+    // Known body styles
+    const bodyStyles = ['sedan', 'suv', 'coupe', 'convertible', 'hatchback', 'truck', 'wagon', 'van'];
+
+    // Extract year (4-digit number)
+    const yearMatch = query.match(/\b(19|20)\d{2}\b/);
+    if (yearMatch) {
+      filters.year = [yearMatch[0]];
+    }
+
+    // Extract make
+    const foundMake = words.find(word => makes.includes(word));
+    if (foundMake) {
+      filters.make = [foundMake.charAt(0).toUpperCase() + foundMake.slice(1)];
+    }
+
+    // Extract condition
+    const foundCondition = words.find(word => conditions.includes(word));
+    if (foundCondition) {
+      filters.condition = [foundCondition.charAt(0).toUpperCase() + foundCondition.slice(1)];
+    }
+
+    // Extract body style
+    const foundBodyStyle = words.find(word => bodyStyles.includes(word));
+    if (foundBodyStyle) {
+      filters.bodyStyle = [foundBodyStyle.charAt(0).toUpperCase() + foundBodyStyle.slice(1)];
+    }
+
+    // For model and trim, try to identify them by position or common patterns
+    // This is a simplified approach - you might want to add more sophisticated logic
+    if (foundMake) {
+      const makeIndex = words.indexOf(foundMake.toLowerCase());
+      if (makeIndex >= 0 && makeIndex + 1 < words.length) {
+        const nextWord = words[makeIndex + 1];
+        // If next word is not a condition, year, or body style, it's likely a model
+        if (!conditions.includes(nextWord) && !bodyStyles.includes(nextWord) && !/^\d{4}$/.test(nextWord)) {
+          filters.model = [nextWord.charAt(0).toUpperCase() + nextWord.slice(1)];
+
+          // Check for trim after model
+          if (makeIndex + 2 < words.length) {
+            const trimWord = words[makeIndex + 2];
+            if (!conditions.includes(trimWord) && !bodyStyles.includes(trimWord) && !/^\d{4}$/.test(trimWord)) {
+              filters.trim = [trimWord.toUpperCase()]; // Trims are often uppercase (SE, EX, etc.)
+            }
+          }
+        }
+      }
+    }
+
+    return filters;
+  };
+
+  // Handle unified search submission
+  const handleUnifiedSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Filter out empty values
-    const filters = Object.entries(searchForm).reduce((acc, [key, value]) => {
-      if (value.trim()) {
-        acc[key as keyof typeof searchForm] = [value.trim()];
-      }
-      return acc;
-    }, {} as any);
+    if (!unifiedSearch.trim()) return;
+
+    // Parse the unified search query
+    const parsedFilters = parseUnifiedSearch(unifiedSearch);
 
     // Generate URL and navigate
     const searchURL = generateURLFromFilters({
-      make: filters.make,
-      model: filters.model,
-      trim: filters.trim,
-      condition: filters.condition,
-      year: filters.year?.[0],
-      bodyStyle: filters.bodyStyle,
+      make: parsedFilters.make,
+      model: parsedFilters.model,
+      trim: parsedFilters.trim,
+      condition: parsedFilters.condition,
+      year: parsedFilters.year?.[0],
+      bodyStyle: parsedFilters.bodyStyle,
     });
 
     // Update applied filters to match the search
     setAppliedFilters(prev => ({
       ...prev,
-      make: filters.make || [],
-      model: filters.model || [],
-      trim: filters.trim || [],
-      condition: filters.condition || [],
-      year: filters.year || [],
-      bodyStyle: filters.bodyStyle || [],
+      make: parsedFilters.make || [],
+      model: parsedFilters.model || [],
+      trim: parsedFilters.trim || [],
+      condition: parsedFilters.condition || [],
+      year: parsedFilters.year || [],
+      bodyStyle: parsedFilters.bodyStyle || [],
     }));
 
     // Navigate to the generated URL
     navigate(searchURL);
 
-    // Reset search form
-    setSearchForm({
-      make: "",
-      model: "",
-      trim: "",
-      condition: "",
-      year: "",
-      bodyStyle: "",
-    });
+    // Clear the search input
+    setUnifiedSearch("");
   };
 
   // Geocoding function to convert ZIP to lat/lng using optimized backend
