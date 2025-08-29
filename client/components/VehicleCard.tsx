@@ -60,7 +60,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     const rate = parseFloat(apr) / 100 / 12; // Convert APR to monthly rate
 
     if (isNaN(price) || price <= 0 || principal <= 0) {
-      return vehicle.payment || "Call for pricing";
+      return vehicle.payment || "Call for Price";
     }
 
     if (rate === 0) {
