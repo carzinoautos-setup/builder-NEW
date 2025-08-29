@@ -1,11 +1,9 @@
 import { RequestHandler } from "express";
 import { SimpleMockVehicleService } from "../services/simpleMockVehicleService.js";
-import { locationService } from "../services/locationService.js";
 import {
   SimplePaginationParams,
   SimpleVehicleFilters,
 } from "../types/simpleVehicle.js";
-import { LocationFilters } from "../types/seller.js";
 
 // Use simplified mock service for testing
 console.log("🚀 Using SimpleMockVehicleService with original demo format");
@@ -44,16 +42,12 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
       pageSize,
     };
 
-    // Parse location/distance parameters (new optimized filtering)
-    let locationFilter: LocationFilters | null = null;
-    if (req.query.lat && req.query.lng && req.query.radius) {
-      const lat = parseFloat(req.query.lat as string);
-      const lng = parseFloat(req.query.lng as string);
-      const radius = parseFloat(req.query.radius as string);
-
-      if (!isNaN(lat) && !isNaN(lng) && !isNaN(radius) && radius > 0) {
-        locationFilter = { lat, lng, radius };
-      }
+    // Parse location/distance parameters (for future implementation)
+    const hasLocationFilter = req.query.lat && req.query.lng && req.query.radius;
+    if (hasLocationFilter) {
+      console.log(`🌍 Location filter requested: ${req.query.radius} miles from (${req.query.lat}, ${req.query.lng})`);
+      // For now, we'll log this and continue with regular filtering
+      // TODO: Implement actual location filtering when migration is complete
     }
 
     // Parse filter parameters
@@ -95,68 +89,8 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
     if (req.query.paymentMax)
       filters.paymentMax = req.query.paymentMax as string;
 
-    // Fetch vehicles from service
-    let result;
-
-    if (locationFilter) {
-      // Use optimized location-based service for distance filtering
-      console.log(`🌍 Location-based search: ${locationFilter.radius} miles from (${locationFilter.lat}, ${locationFilter.lng})`);
-
-      try {
-        const locationResult = await locationService.getVehiclesWithinRadius(
-          locationFilter,
-          {
-            make: filters.make?.join(','),
-            condition: filters.condition?.join(','),
-            minPrice: filters.priceMin ? parseFloat(filters.priceMin) : undefined,
-            maxPrice: filters.priceMax ? parseFloat(filters.priceMax) : undefined,
-            sellerType: filters.sellerType?.join(','),
-          },
-          page,
-          pageSize
-        );
-
-        // Convert to simple vehicle format for frontend compatibility
-        const simpleVehicles = locationResult.vehicles.map(vehicle => ({
-          id: vehicle.id,
-          featured: Math.random() > 0.9,
-          viewed: Math.random() > 0.8,
-          images: ["/placeholder.svg"],
-          badges: vehicle.condition === "New" ? ["New"] : vehicle.certified ? ["Certified"] : [],
-          title: `${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim}`.trim(),
-          mileage: vehicle.mileage.toLocaleString(),
-          transmission: vehicle.transmission,
-          doors: `${vehicle.doors} doors`,
-          salePrice: `$${vehicle.price.toLocaleString()}`,
-          payment: vehicle.payments > 0 ? `$${Math.round(vehicle.payments)}` : null,
-          dealer: vehicle.seller_name || `Seller ${vehicle.seller_account_number}`,
-          location: vehicle.distance_miles
-            ? `${Math.round(vehicle.distance_miles * 10) / 10} miles away`
-            : `${vehicle.seller_city}, ${vehicle.seller_state}`,
-          phone: vehicle.seller_phone || "(555) 123-4567",
-          seller_type: vehicle.seller_type
-        }));
-
-        result = {
-          success: true,
-          data: simpleVehicles,
-          meta: {
-            totalRecords: locationResult.total,
-            totalPages: Math.ceil(locationResult.total / pageSize),
-            currentPage: page,
-            pageSize: pageSize,
-            hasNextPage: page < Math.ceil(locationResult.total / pageSize),
-            hasPreviousPage: page > 1,
-          },
-        };
-      } catch (locationError) {
-        console.error('Location service error, falling back to mock service:', locationError);
-        result = await vehicleService.getVehicles(filters, pagination);
-      }
-    } else {
-      // Use standard mock service for non-location searches
-      result = await vehicleService.getVehicles(filters, pagination);
-    }
+    // Fetch vehicles from service (using mock service for now)
+    const result = await vehicleService.getVehicles(filters, pagination);
 
     // Return response
     res.status(200).json(result);
