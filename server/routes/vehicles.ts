@@ -3,35 +3,11 @@ import { VehicleService } from '../services/vehicleService.js';
 import { MockVehicleService } from '../services/mockVehicleService.js';
 import { PaginationParams, VehicleFilters } from '../types/vehicle.js';
 
-// Initialize services with graceful fallback
-let vehicleService: VehicleService | MockVehicleService;
-let isUsingMockService = false;
+// Use mock service for immediate testing with sample data
+console.log('🚀 Using MockVehicleService with 50,000 sample vehicles for testing');
+console.log('   To use real MySQL later, update the routes to use VehicleService');
 
-async function initializeService() {
-  try {
-    const realService = new VehicleService();
-    // Test the connection
-    await realService.getVehicles({}, { page: 1, pageSize: 1 });
-    vehicleService = realService;
-    console.log('✅ Using real MySQL VehicleService');
-    return true;
-  } catch (error) {
-    console.log('⚠️  MySQL connection failed, using MockVehicleService for testing');
-    console.log('   This is normal for development - sample data will be used');
-    vehicleService = new MockVehicleService();
-    isUsingMockService = true;
-    return false;
-  }
-}
-
-// Initialize with fallback (async initialization)
-initializeService().catch(() => {
-  // Ensure we always have a service available
-  if (!vehicleService) {
-    vehicleService = new MockVehicleService();
-    isUsingMockService = true;
-  }
-});
+const vehicleService = new MockVehicleService();
 
 /**
  * GET /api/vehicles
