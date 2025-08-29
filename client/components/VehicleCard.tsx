@@ -215,7 +215,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 />
               )}
             </div>
-            <span className="text-black font-medium">{vehicle.doors}</span>
+            <span className="text-black font-medium">{vehicle.doors.replace(/doors/g, 'Doors')}</span>
           </div>
         </div>
 
