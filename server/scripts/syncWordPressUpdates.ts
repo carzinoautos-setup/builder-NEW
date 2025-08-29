@@ -20,9 +20,9 @@ export class WordPressSync {
       FROM sellers 
       WHERE updated_at IS NOT NULL
     `;
-    
+
     const [lastSyncResult] = await this.db.execute(lastSyncQuery);
-    const lastSync = (lastSyncResult as any)[0]?.last_sync || '1970-01-01';
+    const lastSync = (lastSyncResult as any)[0]?.last_sync || "1970-01-01";
 
     const wpQuery = `
       SELECT 
@@ -54,7 +54,9 @@ export class WordPressSync {
     const [newSellers] = await this.db.execute(wpQuery, [lastSync]);
     const sellers = newSellers as any[];
 
-    console.log(`📊 Found ${sellers.length} new/updated sellers since ${lastSync}`);
+    console.log(
+      `📊 Found ${sellers.length} new/updated sellers since ${lastSync}`,
+    );
 
     let syncedCount = 0;
     for (const seller of sellers) {
@@ -86,7 +88,7 @@ export class WordPressSync {
         seller.state,
         seller.zip,
         parseFloat(seller.latitude) || null,
-        parseFloat(seller.longitude) || null
+        parseFloat(seller.longitude) || null,
       ]);
       syncedCount++;
     }
@@ -155,17 +157,19 @@ export class WordPressSync {
    */
   async runSync(): Promise<void> {
     console.log("🚀 Starting incremental WordPress sync...");
-    
+
     try {
       const sellersCount = await this.syncNewSellers();
       const vehiclesCount = await this.syncNewVehicles();
-      
+
       if (sellersCount > 0 || vehiclesCount > 0) {
         console.log("🔄 Re-syncing coordinates after new data...");
         await locationService.syncSellerCoordsToVehicles();
       }
-      
-      console.log(`✅ Sync completed: ${sellersCount} sellers, ${vehiclesCount} vehicles`);
+
+      console.log(
+        `✅ Sync completed: ${sellersCount} sellers, ${vehiclesCount} vehicles`,
+      );
     } catch (error) {
       console.error("❌ Sync failed:", error);
       throw error;
@@ -177,7 +181,8 @@ export class WordPressSync {
 const isMainModule = import.meta.url === `file://${process.argv[1]}`;
 if (isMainModule) {
   const sync = new WordPressSync();
-  sync.runSync()
+  sync
+    .runSync()
     .then(() => process.exit(0))
     .catch((error) => {
       console.error(error);

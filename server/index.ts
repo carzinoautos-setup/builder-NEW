@@ -38,7 +38,7 @@ import WordPressSync from "./scripts/syncWordPressUpdates.js";
 const syncStatus = {
   lastAttempt: null as string | null,
   lastSuccess: null as string | null,
-  lastError: null as string | null
+  lastError: null as string | null,
 };
 
 export function createServer() {
@@ -98,7 +98,7 @@ export function createServer() {
       nextSync: "Every hour on the hour",
       lastSyncAttempt: syncStatus.lastAttempt,
       lastSyncSuccess: syncStatus.lastSuccess,
-      lastSyncError: syncStatus.lastError
+      lastSyncError: syncStatus.lastError,
     });
   });
 
@@ -136,25 +136,31 @@ async function setupWordPressSync() {
         console.log("✅ Initial WordPress sync completed");
       } catch (error) {
         syncStatus.lastError = error.message;
-        console.error("⚠️  Initial WordPress sync failed (this is normal if WordPress isn't connected):", error.message);
+        console.error(
+          "⚠️  Initial WordPress sync failed (this is normal if WordPress isn't connected):",
+          error.message,
+        );
       }
     }, 5000); // Wait 5 seconds after server start
 
     // Set up automatic sync every hour
-    setInterval(async () => {
-      try {
-        syncStatus.lastAttempt = new Date().toISOString();
-        console.log("🔄 Running scheduled WordPress sync...");
-        const startTime = Date.now();
-        await sync.runSync();
-        const duration = Date.now() - startTime;
-        syncStatus.lastSuccess = new Date().toISOString();
-        console.log(`✅ Scheduled WordPress sync completed in ${duration}ms`);
-      } catch (error) {
-        syncStatus.lastError = error.message;
-        console.error("❌ Scheduled WordPress sync failed:", error.message);
-      }
-    }, 60 * 60 * 1000); // Every 60 minutes
+    setInterval(
+      async () => {
+        try {
+          syncStatus.lastAttempt = new Date().toISOString();
+          console.log("🔄 Running scheduled WordPress sync...");
+          const startTime = Date.now();
+          await sync.runSync();
+          const duration = Date.now() - startTime;
+          syncStatus.lastSuccess = new Date().toISOString();
+          console.log(`✅ Scheduled WordPress sync completed in ${duration}ms`);
+        } catch (error) {
+          syncStatus.lastError = error.message;
+          console.error("❌ Scheduled WordPress sync failed:", error.message);
+        }
+      },
+      60 * 60 * 1000,
+    ); // Every 60 minutes
 
     console.log("✅ WordPress sync system initialized - will sync every hour");
   } catch (error) {

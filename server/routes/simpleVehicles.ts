@@ -43,9 +43,12 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
     };
 
     // Parse location/distance parameters (for future implementation)
-    const hasLocationFilter = req.query.lat && req.query.lng && req.query.radius;
+    const hasLocationFilter =
+      req.query.lat && req.query.lng && req.query.radius;
     if (hasLocationFilter) {
-      console.log(`🌍 Location filter requested: ${req.query.radius} miles from (${req.query.lat}, ${req.query.lng})`);
+      console.log(
+        `🌍 Location filter requested: ${req.query.radius} miles from (${req.query.lat}, ${req.query.lng})`,
+      );
       // For now, we'll log this and continue with regular filtering
       // TODO: Implement actual location filtering when migration is complete
     }

@@ -81,11 +81,21 @@ export default function MySQLVehiclesOriginalStyle() {
   // Location/Distance states
   const [zipCode, setZipCode] = useState("98498"); // Default ZIP
   const [radius, setRadius] = useState("200"); // Default radius in miles
-  const [userLocation, setUserLocation] = useState<{lat: number; lng: number; city?: string; state?: string} | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+    city?: string;
+    state?: string;
+  } | null>(null);
   const [isGeocodingLoading, setIsGeocodingLoading] = useState(false);
 
   // Applied location filters (separate from current input values)
-  const [appliedLocation, setAppliedLocation] = useState<{lat: number; lng: number; city?: string; state?: string} | null>(null);
+  const [appliedLocation, setAppliedLocation] = useState<{
+    lat: number;
+    lng: number;
+    city?: string;
+    state?: string;
+  } | null>(null);
   const [appliedRadius, setAppliedRadius] = useState("200");
 
   const [appliedFilters, setAppliedFilters] = useState({
@@ -387,7 +397,14 @@ export default function MySQLVehiclesOriginalStyle() {
   };
 
   // Geocoding function to convert ZIP to lat/lng using optimized backend
-  const geocodeZip = async (zip: string): Promise<{lat: number; lng: number; city?: string; state?: string} | null> => {
+  const geocodeZip = async (
+    zip: string,
+  ): Promise<{
+    lat: number;
+    lng: number;
+    city?: string;
+    state?: string;
+  } | null> => {
     if (!zip || zip.length < 5) return null;
 
     try {
@@ -399,12 +416,14 @@ export default function MySQLVehiclesOriginalStyle() {
       if (response.ok) {
         const result = await response.json();
         if (result.success && result.data) {
-          console.log(`✅ Geocoded ${zip} to ${result.data.city}, ${result.data.state}`);
+          console.log(
+            `✅ Geocoded ${zip} to ${result.data.city}, ${result.data.state}`,
+          );
           return {
             lat: result.data.lat,
             lng: result.data.lng,
             city: result.data.city,
-            state: result.data.state
+            state: result.data.state,
           };
         } else {
           console.warn(`❌ Geocoding failed for ${zip}: ${result.message}`);
@@ -413,23 +432,59 @@ export default function MySQLVehiclesOriginalStyle() {
         const errorResult = await response.json();
         console.warn(`❌ ZIP ${zip} not found: ${errorResult.message}`);
       } else {
-        console.error(`❌ Geocoding API error: ${response.status} ${response.statusText}`);
+        console.error(
+          `❌ Geocoding API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       return null;
-
     } catch (error) {
-      console.error('❌ Geocoding network error:', error);
+      console.error("❌ Geocoding network error:", error);
 
       // Only use fallback if it's a network error, not a parsing error
-      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-        console.log('🔄 Using fallback coordinates due to network error');
-        const zipCoordinates: { [key: string]: {lat: number; lng: number; city: string; state: string} } = {
-          "98498": { lat: 47.0379, lng: -122.9015, city: "Lakewood", state: "WA" },
-          "90210": { lat: 34.0901, lng: -118.4065, city: "Beverly Hills", state: "CA" },
-          "10001": { lat: 40.7505, lng: -73.9934, city: "New York", state: "NY" },
-          "60601": { lat: 41.8781, lng: -87.6298, city: "Chicago", state: "IL" },
-          "75001": { lat: 32.9483, lng: -96.7299, city: "Addison", state: "TX" }
+      if (
+        error instanceof TypeError &&
+        error.message.includes("Failed to fetch")
+      ) {
+        console.log("🔄 Using fallback coordinates due to network error");
+        const zipCoordinates: {
+          [key: string]: {
+            lat: number;
+            lng: number;
+            city: string;
+            state: string;
+          };
+        } = {
+          "98498": {
+            lat: 47.0379,
+            lng: -122.9015,
+            city: "Lakewood",
+            state: "WA",
+          },
+          "90210": {
+            lat: 34.0901,
+            lng: -118.4065,
+            city: "Beverly Hills",
+            state: "CA",
+          },
+          "10001": {
+            lat: 40.7505,
+            lng: -73.9934,
+            city: "New York",
+            state: "NY",
+          },
+          "60601": {
+            lat: 41.8781,
+            lng: -87.6298,
+            city: "Chicago",
+            state: "IL",
+          },
+          "75001": {
+            lat: 32.9483,
+            lng: -96.7299,
+            city: "Addison",
+            state: "TX",
+          },
         };
 
         const coords = zipCoordinates[zip];
@@ -806,8 +861,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   </button>
                   {searchTerm.trim() && (
                     <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs">
-                      <Check className="w-3 h-3 text-red-600" />
-                      "{searchTerm}"
+                      <Check className="w-3 h-3 text-red-600" />"{searchTerm}"
                       <button
                         onClick={() => setSearchTerm("")}
                         className="ml-1 text-white"
@@ -910,8 +964,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="flex flex-wrap gap-2">
                   {searchTerm.trim() && (
                     <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
-                      <Check className="w-3 h-3 text-red-600" />
-                      "{searchTerm}"
+                      <Check className="w-3 h-3 text-red-600" />"{searchTerm}"
                       <button
                         onClick={() => setSearchTerm("")}
                         className="ml-1 text-white hover:text-gray-300"
@@ -1155,17 +1208,22 @@ export default function MySQLVehiclesOriginalStyle() {
 
               {userLocation && !isGeocodingLoading && (
                 <div className="mt-2 text-sm text-gray-600">
-                  📍 {userLocation.city && userLocation.state
+                  📍{" "}
+                  {userLocation.city && userLocation.state
                     ? `${userLocation.city}, ${userLocation.state}`
                     : `${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`}
                 </div>
               )}
 
-              {!userLocation && !isGeocodingLoading && zipCode && zipCode.length >= 5 && (
-                <div className="mt-2 text-sm text-red-600">
-                  ❌ ZIP code "{zipCode}" not found. Please verify it's a valid US ZIP code.
-                </div>
-              )}
+              {!userLocation &&
+                !isGeocodingLoading &&
+                zipCode &&
+                zipCode.length >= 5 && (
+                  <div className="mt-2 text-sm text-red-600">
+                    ❌ ZIP code "{zipCode}" not found. Please verify it's a
+                    valid US ZIP code.
+                  </div>
+                )}
 
               {/* Apply Location Filters Button */}
               <div className="mt-3 pt-3 border-t border-gray-200">

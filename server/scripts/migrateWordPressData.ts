@@ -43,7 +43,7 @@ export class WordPressMigration {
       `ALTER TABLE vehicles ADD COLUMN seller_name VARCHAR(255) AFTER seller_longitude`,
       `ALTER TABLE vehicles ADD COLUMN seller_city VARCHAR(100) AFTER seller_name`,
       `ALTER TABLE vehicles ADD COLUMN seller_state VARCHAR(10) AFTER seller_city`,
-      `ALTER TABLE vehicles ADD COLUMN seller_phone VARCHAR(20) AFTER seller_state`
+      `ALTER TABLE vehicles ADD COLUMN seller_phone VARCHAR(20) AFTER seller_state`,
     ];
 
     try {
@@ -99,7 +99,9 @@ export class WordPressMigration {
 
     try {
       const [wpSellers] = await this.db.execute(wpQuery);
-      console.log(`📊 Found ${(wpSellers as any[]).length} sellers in WordPress`);
+      console.log(
+        `📊 Found ${(wpSellers as any[]).length} sellers in WordPress`,
+      );
 
       for (const seller of wpSellers as any[]) {
         if (!seller.account_number) continue;
@@ -129,7 +131,7 @@ export class WordPressMigration {
           seller.state,
           seller.zip,
           parseFloat(seller.latitude) || null,
-          parseFloat(seller.longitude) || null
+          parseFloat(seller.longitude) || null,
         ]);
       }
 
@@ -145,7 +147,7 @@ export class WordPressMigration {
    */
   async syncAllSellerCoords(): Promise<void> {
     console.log("🔄 Syncing seller coordinates to vehicles...");
-    
+
     try {
       await locationService.syncSellerCoordsToVehicles();
       console.log("✅ Seller coordinates synced to vehicles");
@@ -160,7 +162,7 @@ export class WordPressMigration {
    */
   async createIndexes(): Promise<void> {
     console.log("🔄 Creating performance indexes...");
-    
+
     try {
       await locationService.createOptimalIndexes();
       console.log("✅ Performance indexes created");
@@ -178,7 +180,9 @@ export class WordPressMigration {
 
     try {
       // Check sellers count
-      const [sellerCount] = await this.db.execute(`SELECT COUNT(*) as count FROM sellers`);
+      const [sellerCount] = await this.db.execute(
+        `SELECT COUNT(*) as count FROM sellers`,
+      );
       console.log(`📊 Sellers migrated: ${(sellerCount as any)[0].count}`);
 
       // Check vehicles with coordinates
@@ -187,7 +191,9 @@ export class WordPressMigration {
         FROM vehicles 
         WHERE seller_latitude IS NOT NULL AND seller_longitude IS NOT NULL
       `);
-      console.log(`📊 Vehicles with coordinates: ${(vehicleCoordCount as any)[0].count}`);
+      console.log(
+        `📊 Vehicles with coordinates: ${(vehicleCoordCount as any)[0].count}`,
+      );
 
       // Test distance query performance
       console.time("Distance Query Performance");
@@ -195,10 +201,12 @@ export class WordPressMigration {
         { lat: 47.0379, lng: -122.9015, radius: 50 }, // Lakewood, WA - 50 miles
         {},
         1,
-        10
+        10,
       );
       console.timeEnd("Distance Query Performance");
-      console.log(`📊 Test query returned ${testResult.vehicles.length} vehicles`);
+      console.log(
+        `📊 Test query returned ${testResult.vehicles.length} vehicles`,
+      );
 
       console.log("✅ Migration verification completed");
     } catch (error) {
@@ -212,16 +220,18 @@ export class WordPressMigration {
    */
   async runFullMigration(): Promise<void> {
     console.log("🚀 Starting WordPress to optimized structure migration...");
-    
+
     try {
       await this.createOptimizedTables();
       await this.migrateSellersFromWordPress();
       await this.syncAllSellerCoords();
       await this.createIndexes();
       await this.verifyMigration();
-      
+
       console.log("🎉 Migration completed successfully!");
-      console.log("💡 Your location-based vehicle search is now 10-100x faster than WordPress!");
+      console.log(
+        "💡 Your location-based vehicle search is now 10-100x faster than WordPress!",
+      );
     } catch (error) {
       console.error("❌ Migration failed:", error);
       throw error;
@@ -233,7 +243,8 @@ export class WordPressMigration {
 const isMainModule = import.meta.url === `file://${process.argv[1]}`;
 if (isMainModule) {
   const migration = new WordPressMigration();
-  migration.runFullMigration()
+  migration
+    .runFullMigration()
     .then(() => process.exit(0))
     .catch((error) => {
       console.error(error);
