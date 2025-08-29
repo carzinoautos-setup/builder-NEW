@@ -1,9 +1,11 @@
 import { RequestHandler } from "express";
 import { SimpleMockVehicleService } from "../services/simpleMockVehicleService.js";
+import { locationService } from "../services/locationService.js";
 import {
   SimplePaginationParams,
   SimpleVehicleFilters,
 } from "../types/simpleVehicle.js";
+import { LocationFilters } from "../types/seller.js";
 
 // Use simplified mock service for testing
 console.log("🚀 Using SimpleMockVehicleService with original demo format");
@@ -42,6 +44,18 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
       pageSize,
     };
 
+    // Parse location/distance parameters (new optimized filtering)
+    let locationFilter: LocationFilters | null = null;
+    if (req.query.lat && req.query.lng && req.query.radius) {
+      const lat = parseFloat(req.query.lat as string);
+      const lng = parseFloat(req.query.lng as string);
+      const radius = parseFloat(req.query.radius as string);
+
+      if (!isNaN(lat) && !isNaN(lng) && !isNaN(radius) && radius > 0) {
+        locationFilter = { lat, lng, radius };
+      }
+    }
+
     // Parse filter parameters
     const filters: SimpleVehicleFilters = {};
 
@@ -52,14 +66,27 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
     if (req.query.make) {
       filters.make = (req.query.make as string).split(",");
     }
+    if (req.query.model) {
+      filters.model = (req.query.model as string).split(",");
+    }
+    if (req.query.trim) {
+      filters.trim = (req.query.trim as string).split(",");
+    }
+    if (req.query.vehicleType) {
+      filters.vehicleType = (req.query.vehicleType as string).split(",");
+    }
     if (req.query.driveType) {
       filters.driveType = (req.query.driveType as string).split(",");
+    }
+    if (req.query.exteriorColor) {
+      filters.exteriorColor = (req.query.exteriorColor as string).split(",");
     }
     if (req.query.sellerType) {
       filters.sellerType = (req.query.sellerType as string).split(",");
     }
 
     // Handle single value filters
+    if (req.query.search) filters.search = req.query.search as string;
     if (req.query.mileage) filters.mileage = req.query.mileage as string;
     if (req.query.priceMin) filters.priceMin = req.query.priceMin as string;
     if (req.query.priceMax) filters.priceMax = req.query.priceMax as string;
@@ -69,7 +96,67 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
       filters.paymentMax = req.query.paymentMax as string;
 
     // Fetch vehicles from service
-    const result = await vehicleService.getVehicles(filters, pagination);
+    let result;
+
+    if (locationFilter) {
+      // Use optimized location-based service for distance filtering
+      console.log(`🌍 Location-based search: ${locationFilter.radius} miles from (${locationFilter.lat}, ${locationFilter.lng})`);
+
+      try {
+        const locationResult = await locationService.getVehiclesWithinRadius(
+          locationFilter,
+          {
+            make: filters.make?.join(','),
+            condition: filters.condition?.join(','),
+            minPrice: filters.priceMin ? parseFloat(filters.priceMin) : undefined,
+            maxPrice: filters.priceMax ? parseFloat(filters.priceMax) : undefined,
+            sellerType: filters.sellerType?.join(','),
+          },
+          page,
+          pageSize
+        );
+
+        // Convert to simple vehicle format for frontend compatibility
+        const simpleVehicles = locationResult.vehicles.map(vehicle => ({
+          id: vehicle.id,
+          featured: Math.random() > 0.9,
+          viewed: Math.random() > 0.8,
+          images: ["/placeholder.svg"],
+          badges: vehicle.condition === "New" ? ["New"] : vehicle.certified ? ["Certified"] : [],
+          title: `${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim}`.trim(),
+          mileage: vehicle.mileage.toLocaleString(),
+          transmission: vehicle.transmission,
+          doors: `${vehicle.doors} doors`,
+          salePrice: `$${vehicle.price.toLocaleString()}`,
+          payment: vehicle.payments > 0 ? `$${Math.round(vehicle.payments)}` : null,
+          dealer: vehicle.seller_name || `Seller ${vehicle.seller_account_number}`,
+          location: vehicle.distance_miles
+            ? `${Math.round(vehicle.distance_miles * 10) / 10} miles away`
+            : `${vehicle.seller_city}, ${vehicle.seller_state}`,
+          phone: vehicle.seller_phone || "(555) 123-4567",
+          seller_type: vehicle.seller_type
+        }));
+
+        result = {
+          success: true,
+          data: simpleVehicles,
+          meta: {
+            totalRecords: locationResult.total,
+            totalPages: Math.ceil(locationResult.total / pageSize),
+            currentPage: page,
+            pageSize: pageSize,
+            hasNextPage: page < Math.ceil(locationResult.total / pageSize),
+            hasPreviousPage: page > 1,
+          },
+        };
+      } catch (locationError) {
+        console.error('Location service error, falling back to mock service:', locationError);
+        result = await vehicleService.getVehicles(filters, pagination);
+      }
+    } else {
+      // Use standard mock service for non-location searches
+      result = await vehicleService.getVehicles(filters, pagination);
+    }
 
     // Return response
     res.status(200).json(result);
