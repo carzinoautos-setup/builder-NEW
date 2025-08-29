@@ -578,6 +578,53 @@ export default function MySQLVehiclesOriginalStyle() {
     setCurrentPage(1); // Reset to first page when applying filters
   };
 
+  // Handle structured search form submission
+  const handleSearchFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Filter out empty values
+    const filters = Object.entries(searchForm).reduce((acc, [key, value]) => {
+      if (value.trim()) {
+        acc[key as keyof typeof searchForm] = [value.trim()];
+      }
+      return acc;
+    }, {} as any);
+
+    // Generate URL and navigate
+    const searchURL = generateURLFromFilters({
+      make: filters.make,
+      model: filters.model,
+      trim: filters.trim,
+      condition: filters.condition,
+      year: filters.year?.[0],
+      bodyStyle: filters.bodyStyle,
+    });
+
+    // Update applied filters to match the search
+    setAppliedFilters(prev => ({
+      ...prev,
+      make: filters.make || [],
+      model: filters.model || [],
+      trim: filters.trim || [],
+      condition: filters.condition || [],
+      year: filters.year || [],
+      bodyStyle: filters.bodyStyle || [],
+    }));
+
+    // Navigate to the generated URL
+    navigate(searchURL);
+
+    // Reset search form
+    setSearchForm({
+      make: "",
+      model: "",
+      trim: "",
+      condition: "",
+      year: "",
+      bodyStyle: "",
+    });
+  };
+
   // Geocoding function to convert ZIP to lat/lng using optimized backend
   const geocodeZip = async (
     zip: string,
