@@ -150,10 +150,6 @@ function generateSimpleVehicleRecord(id: number): SimpleVehicleRecord {
   // Determine if vehicle should have pricing
   const hasPrice = Math.random() > 0.15; // 85% have prices
 
-  // Generate badges based on condition and features
-  const badges = [condition];
-  if (drivetrain !== "FWD") badges.push(drivetrain);
-
   const title = `${year} ${make} ${model} ${trim}`;
 
   // Simulate your WordPress "is_featured" field logic
