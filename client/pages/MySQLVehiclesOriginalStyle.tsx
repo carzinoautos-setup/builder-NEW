@@ -145,11 +145,23 @@ export default function MySQLVehiclesOriginalStyle() {
       if (appliedFilters.make.length > 0) {
         params.append("make", appliedFilters.make.join(","));
       }
+      if (appliedFilters.model.length > 0) {
+        params.append("model", appliedFilters.model.join(","));
+      }
+      if (appliedFilters.trim.length > 0) {
+        params.append("trim", appliedFilters.trim.join(","));
+      }
+      if (appliedFilters.vehicleType.length > 0) {
+        params.append("vehicleType", appliedFilters.vehicleType.join(","));
+      }
       if (appliedFilters.driveType.length > 0) {
         params.append("driveType", appliedFilters.driveType.join(","));
       }
       if (appliedFilters.mileage) {
         params.append("mileage", appliedFilters.mileage);
+      }
+      if (appliedFilters.exteriorColor.length > 0) {
+        params.append("exteriorColor", appliedFilters.exteriorColor.join(","));
       }
       if (appliedFilters.sellerType.length > 0) {
         params.append("sellerType", appliedFilters.sellerType.join(","));
