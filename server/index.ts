@@ -30,10 +30,16 @@ export function createServer() {
 
   app.get("/api/health", healthCheck);
 
-  // Vehicle API routes
+  // Vehicle API routes (complex schema)
   app.get("/api/vehicles", getVehicles);
   app.get("/api/vehicles/filters", getFilterOptions);
   app.get("/api/vehicles/:id", getVehicleById);
+
+  // Simple Vehicle API routes (original demo format)
+  app.get("/api/simple-vehicles", getSimpleVehicles);
+  app.get("/api/simple-vehicles/filters", getSimpleFilterOptions);
+  app.get("/api/simple-vehicles/:id", getSimpleVehicleById);
+  app.get("/api/simple-health", simpleHealthCheck);
 
   // Example API routes (keep for backward compatibility)
   app.get("/api/demo", handleDemo);
