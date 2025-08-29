@@ -57,8 +57,27 @@ export const IconDemo: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {/* Icon Upload Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          {/* Mileage Icon Upload Section */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Upload Custom Mileage Icon
+            </h2>
+            <IconUploader
+              onIconUpload={setCustomMileageIcon}
+              currentIcon={customMileageIcon}
+              label="Mileage/Speedometer Icon"
+            />
+            {customMileageIcon && (
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <p className="text-sm text-blue-800">
+                  ✓ Custom mileage icon applied! Check the vehicle card.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Door Icon Upload Section */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               Upload Custom Door Icon
@@ -71,7 +90,7 @@ export const IconDemo: React.FC = () => {
             {customDoorIcon && (
               <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
                 <p className="text-sm text-blue-800">
-                  ✓ Custom door icon applied! Check the vehicle card to see your icon.
+                  ✓ Custom door icon applied! Check the vehicle card.
                 </p>
               </div>
             )}
