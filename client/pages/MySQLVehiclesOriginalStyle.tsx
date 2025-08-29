@@ -1408,7 +1408,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Search: Toyota Camry SE Used 2021 Sedan"
+                    placeholder="Search Cars For Sale"
                     value={unifiedSearch}
                     onChange={(e) => setUnifiedSearch(e.target.value)}
                     className="carzino-search-input w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:border-red-600"
@@ -1562,7 +1562,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Search: Toyota Camry SE Used 2021 Sedan"
+                    placeholder="Search Cars For Sale"
                     value={unifiedSearch}
                     onChange={(e) => setUnifiedSearch(e.target.value)}
                     className="carzino-search-input w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
