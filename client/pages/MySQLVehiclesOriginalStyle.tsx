@@ -1525,10 +1525,12 @@ export default function MySQLVehiclesOriginalStyle() {
                         onChange={(e) => {
                           e.stopPropagation();
                           if (e.target.checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              model: [...prev.model, model],
-                            }));
+                            const newFilters = {
+                              ...appliedFilters,
+                              model: [...appliedFilters.model, model],
+                            };
+                            setAppliedFilters(newFilters);
+                            updateURLFromFilters(newFilters);
                           } else {
                             removeAppliedFilter("model", model);
                           }
@@ -2253,7 +2255,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
                         >
-                          ��
+                          ×
                         </button>
                       </span>
                     ))}
