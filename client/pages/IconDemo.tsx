@@ -79,6 +79,25 @@ export const IconDemo: React.FC = () => {
             )}
           </div>
 
+          {/* Transmission Icon Upload Section */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Upload Custom Transmission Icon
+            </h2>
+            <IconUploader
+              onIconUpload={setCustomTransmissionIcon}
+              currentIcon={customTransmissionIcon}
+              label="Transmission/Gear Icon"
+            />
+            {customTransmissionIcon && (
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <p className="text-sm text-blue-800">
+                  ✓ Custom transmission icon applied! Check the vehicle card.
+                </p>
+              </div>
+            )}
+          </div>
+
           {/* Door Icon Upload Section */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
