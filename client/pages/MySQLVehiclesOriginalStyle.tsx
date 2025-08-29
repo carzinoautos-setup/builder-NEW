@@ -305,6 +305,9 @@ export default function MySQLVehiclesOriginalStyle() {
       if (appliedFilters.driveType.length > 0) {
         params.append("driveType", appliedFilters.driveType.join(","));
       }
+      if (appliedFilters.transmission.length > 0) {
+        params.append("transmission", appliedFilters.transmission.join(","));
+      }
       if (appliedFilters.mileage) {
         params.append("mileage", appliedFilters.mileage);
       }
