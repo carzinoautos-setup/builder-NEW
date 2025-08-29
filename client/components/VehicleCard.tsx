@@ -115,7 +115,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 className="w-4 h-4 object-contain"
               />
             ) : (
-              <Gauge className="w-4 h-4 text-gray-600" />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2b268dcc254a4017a2ef9d9e1c9b3acb?format=webp&width=800"
+                alt="Speedometer"
+                className="w-4 h-4 object-contain"
+              />
             )}
             <span className="text-black font-medium">
               {vehicle.mileage} miles
