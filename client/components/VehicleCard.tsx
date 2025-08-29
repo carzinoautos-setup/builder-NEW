@@ -178,7 +178,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               />
             )}
             <span className="text-black font-medium">
-              {vehicle.mileage} miles
+              {vehicle.mileage} Mi.
             </span>
           </div>
           <div className="flex items-center gap-1 mr-4">
