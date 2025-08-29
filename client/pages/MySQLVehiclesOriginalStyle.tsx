@@ -1376,7 +1376,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   ))}
@@ -1944,53 +1944,6 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </FilterSection>
 
-            {/* Body Style Filter */}
-            <FilterSection
-              title="Body Style"
-              isCollapsed={collapsedFilters.bodyStyle || false}
-              onToggle={() => toggleFilter("bodyStyle")}
-            >
-              <div className="space-y-1">
-                {[
-                  "Sedan",
-                  "Crossover/SUV",
-                  "Coupe",
-                  "Convertible",
-                  "Hatchback",
-                  "Trucks",
-                  "Wagon",
-                  "Van",
-                ].map((bodyStyle) => (
-                  <label
-                    key={bodyStyle}
-                    className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      checked={appliedFilters.bodyStyle.includes(bodyStyle)}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        if (e.target.checked) {
-                          const newFilters = {
-                            ...appliedFilters,
-                            bodyStyle: [...appliedFilters.bodyStyle, bodyStyle],
-                          };
-                          setAppliedFilters(newFilters);
-                          updateURLFromFilters(newFilters);
-                        } else {
-                          removeAppliedFilter("bodyStyle", bodyStyle);
-                        }
-                      }}
-                    />
-                    <span className="carzino-filter-option">{bodyStyle}</span>
-                    <span className="carzino-filter-count ml-1">
-                      ({Math.floor(Math.random() * 1000) + 100})
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </FilterSection>
 
             {/* Price Filter */}
             <FilterSection
