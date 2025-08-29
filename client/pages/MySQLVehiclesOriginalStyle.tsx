@@ -340,6 +340,53 @@ export default function MySQLVehiclesOriginalStyle() {
     setCurrentPage(1); // Reset to first page when applying filters
   };
 
+  // Geocoding function to convert ZIP to lat/lng
+  const geocodeZip = async (zip: string): Promise<{lat: number; lng: number; city?: string; state?: string} | null> => {
+    if (!zip || zip.length < 5) return null;
+
+    try {
+      setIsGeocodingLoading(true);
+
+      // First try to call our API geocoding endpoint if available
+      const response = await fetch(`/api/geocode/${zip}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.lat && data.lng) {
+          return {
+            lat: parseFloat(data.lat),
+            lng: parseFloat(data.lng),
+            city: data.city,
+            state: data.state
+          };
+        }
+      }
+
+      // Fallback to browser geolocation API or external service
+      // For now, we'll use a simple ZIP to coordinate mapping for common ZIPs
+      const zipCoordinates: { [key: string]: {lat: number; lng: number; city: string; state: string} } = {
+        "98498": { lat: 47.0379, lng: -122.9015, city: "Lakewood", state: "WA" },
+        "90210": { lat: 34.0901, lng: -118.4065, city: "Beverly Hills", state: "CA" },
+        "10001": { lat: 40.7505, lng: -73.9934, city: "New York", state: "NY" },
+        "60601": { lat: 41.8781, lng: -87.6298, city: "Chicago", state: "IL" },
+        "75001": { lat: 32.9483, lng: -96.7299, city: "Addison", state: "TX" }
+      };
+
+      const coords = zipCoordinates[zip];
+      if (coords) {
+        return coords;
+      }
+
+      console.warn(`No coordinates found for ZIP: ${zip}`);
+      return null;
+
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      return null;
+    } finally {
+      setIsGeocodingLoading(false);
+    }
+  };
+
   // Color data for filters
   const exteriorColors = [
     { name: "Black", color: "#000000", count: 8234 },
