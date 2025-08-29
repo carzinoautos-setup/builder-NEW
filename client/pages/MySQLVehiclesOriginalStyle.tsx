@@ -77,6 +77,13 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Filter states - exactly like original
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Location/Distance states
+  const [zipCode, setZipCode] = useState("98498"); // Default ZIP
+  const [radius, setRadius] = useState("200"); // Default radius in miles
+  const [userLocation, setUserLocation] = useState<{lat: number; lng: number; city?: string; state?: string} | null>(null);
+  const [isGeocodingLoading, setIsGeocodingLoading] = useState(false);
+
   const [appliedFilters, setAppliedFilters] = useState({
     condition: ["New"] as string[],
     make: ["Audi"] as string[],
