@@ -4,6 +4,7 @@ import { IconUploader } from "../components/IconUploader";
 
 export const IconDemo: React.FC = () => {
   const [customDoorIcon, setCustomDoorIcon] = useState<string>("");
+  const [customMileageIcon, setCustomMileageIcon] = useState<string>("");
 
   // Sample vehicle data for demonstration
   const sampleVehicle = {
@@ -17,6 +18,7 @@ export const IconDemo: React.FC = () => {
     transmission: "Automatic",
     doors: "4 Doors",
     doorIcon: customDoorIcon || undefined,
+    mileageIcon: customMileageIcon || undefined,
     salePrice: "$18,500",
     payment: "$299",
     dealer: "AutoMax Dealership",
