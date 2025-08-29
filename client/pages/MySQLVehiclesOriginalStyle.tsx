@@ -52,6 +52,68 @@ interface VehiclesApiResponse {
   message?: string;
 }
 
+// URL utility functions
+const parseFiltersFromURL = (pathname: string) => {
+  // Expected format: /cars-for-sale/{make}/{model}/{trim}/{condition}/{year}/{body_style}/
+  const segments = pathname.split('/').filter(Boolean);
+
+  // Remove 'cars-for-sale' from segments
+  if (segments[0] === 'cars-for-sale') {
+    segments.shift();
+  }
+
+  const filters = {
+    make: segments[0] || '',
+    model: segments[1] || '',
+    trim: segments[2] || '',
+    condition: segments[3] || '',
+    year: segments[4] || '',
+    bodyStyle: segments[5] || ''
+  };
+
+  return filters;
+};
+
+const generateURLFromFilters = (filters: {
+  make?: string[];
+  model?: string[];
+  trim?: string[];
+  condition?: string[];
+  year?: string;
+  bodyStyle?: string;
+}) => {
+  const segments = [];
+
+  // Only include the first selected value for each filter in URL
+  if (filters.make && filters.make.length > 0) {
+    segments.push(filters.make[0].toLowerCase().replace(/\s+/g, '-'));
+  }
+  if (filters.model && filters.model.length > 0) {
+    segments.push(filters.model[0].toLowerCase().replace(/\s+/g, '-'));
+  }
+  if (filters.trim && filters.trim.length > 0) {
+    segments.push(filters.trim[0].toLowerCase().replace(/\s+/g, '-'));
+  }
+  if (filters.condition && filters.condition.length > 0) {
+    segments.push(filters.condition[0].toLowerCase());
+  }
+  if (filters.year) {
+    segments.push(filters.year);
+  }
+  if (filters.bodyStyle) {
+    segments.push(filters.bodyStyle.toLowerCase().replace(/\s+/g, '-'));
+  }
+
+  return `/cars-for-sale/${segments.join('/')}/`;
+};
+
+const normalizeFilterValue = (value: string) => {
+  // Convert URL-safe values back to display values
+  return value.split('-').map(word =>
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+};
+
 export default function MySQLVehiclesOriginalStyle() {
   // State management - exactly like original
   const [favorites, setFavorites] = useState<{ [key: number]: Vehicle }>({});
