@@ -32,7 +32,7 @@ import {
   getCacheStats,
   clearCache,
 } from "./routes/payments.js";
-import { WordPressSync } from "./scripts/syncWordPressUpdates.js";
+import WordPressSync from "./scripts/syncWordPressUpdates.js";
 
 // Track WordPress sync status
 const syncStatus = {
