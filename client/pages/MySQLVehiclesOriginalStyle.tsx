@@ -800,7 +800,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
         const coords = zipCoordinates[zip];
         if (coords) {
-          console.warn(`��� Using fallback coordinates for ZIP: ${zip}`);
+          console.warn(`🆘 Using fallback coordinates for ZIP: ${zip}`);
           return coords;
         }
 
@@ -1347,7 +1347,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedLocation && appliedRadius !== "nationwide" && (
                     <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
                       <Check className="w-3 h-3 text-red-600" />
-                      📍 {appliedRadius} miles
+                      <MapPin className="w-3 h-3" />
+                      {appliedRadius} miles
                       <button
                         onClick={() => {
                           setAppliedLocation(null);
