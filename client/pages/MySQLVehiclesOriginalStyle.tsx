@@ -1095,6 +1095,32 @@ export default function MySQLVehiclesOriginalStyle() {
                 <option value="500">500 Miles</option>
                 <option value="nationwide">Nationwide</option>
               </select>
+
+              {/* Location Status */}
+              {isGeocodingLoading && (
+                <div className="mt-2 text-sm text-gray-500 italic">
+                  Looking up location...
+                </div>
+              )}
+
+              {userLocation && !isGeocodingLoading && (
+                <div className="mt-2 text-sm text-gray-600">
+                  📍 {userLocation.city && userLocation.state
+                    ? `${userLocation.city}, ${userLocation.state}`
+                    : `${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`}
+                </div>
+              )}
+
+              {/* Apply Location Filters Button */}
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <button
+                  onClick={applyLocationFilters}
+                  disabled={!userLocation || isGeocodingLoading}
+                  className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white py-2 px-4 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                >
+                  Apply Location Filter
+                </button>
+              </div>
             </div>
 
             {/* Make Filter */}
