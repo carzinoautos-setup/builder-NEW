@@ -89,11 +89,13 @@ async function testGeocoding() {
     if (result5.success) {
       console.log('✅ PASS - Cache stats retrieved');
       console.log(`📋 Total cached entries: ${result5.data.totalCached}`);
-      if (result5.data.entries.length > 0) {
+      if (result5.data.entries && result5.data.entries.length > 0) {
         console.log('📊 Recent entries:');
         result5.data.entries.slice(0, 3).forEach((entry: any) => {
           console.log(`   - ${entry.zip}: ${entry.city}, ${entry.state} (${entry.source})`);
         });
+      } else {
+        console.log('📊 No cache entries to display');
       }
     } else {
       console.log('❌ FAIL - Cache stats failed');
