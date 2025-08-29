@@ -11,14 +11,14 @@ export interface SimpleVehicleRecord {
   doors: string; // e.g. "4 doors"
   drivetrain: string; // e.g. "4WD", "AWD", "FWD", "RWD"
   condition: string; // "New", "Used", "Certified"
-  body_style: string; // e.g. "Sedan", "SUV", "Coupe" - custom field for vehicle type
+  body_type: string; // e.g. "Sedan", "SUV", "Coupe" - custom field for vehicle type
   salePrice: string | null; // e.g. "$67,899" or null
   payment: string | null; // e.g. "$789" or null
   dealer: string;
   location: string; // Distance from zip code will be calculated
   phone: string;
   seller_type: string; // "Dealer" or "Private Seller"
-  seller_account_number: string; // Links to SellersAccount - hidden from public display
+  account_number_seller: string; // Links to SellersAccount - hidden from public display
 }
 
 // Simplified pagination and filter types
