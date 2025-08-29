@@ -84,6 +84,10 @@ export default function MySQLVehiclesOriginalStyle() {
   const [userLocation, setUserLocation] = useState<{lat: number; lng: number; city?: string; state?: string} | null>(null);
   const [isGeocodingLoading, setIsGeocodingLoading] = useState(false);
 
+  // Applied location filters (separate from current input values)
+  const [appliedLocation, setAppliedLocation] = useState<{lat: number; lng: number; city?: string; state?: string} | null>(null);
+  const [appliedRadius, setAppliedRadius] = useState("200");
+
   const [appliedFilters, setAppliedFilters] = useState({
     condition: ["New"] as string[],
     make: ["Audi"] as string[],
@@ -366,6 +370,13 @@ export default function MySQLVehiclesOriginalStyle() {
       paymentMin: paymentMin,
       paymentMax: paymentMax,
     }));
+    setCurrentPage(1); // Reset to first page when applying filters
+  };
+
+  // Apply location filters handler
+  const applyLocationFilters = () => {
+    setAppliedLocation(userLocation);
+    setAppliedRadius(radius);
     setCurrentPage(1); // Reset to first page when applying filters
   };
 
