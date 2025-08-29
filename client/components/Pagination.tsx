@@ -78,7 +78,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <span className="font-medium">{totalResults}</span> results
         </div>
 
-        <div className="flex items-center justify-center space-x-2 w-full">
+        <div className="flex items-center justify-center space-x-4 sm:space-x-2 w-full">
           {/* Previous Button */}
           <button
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
@@ -90,7 +90,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           </button>
 
           {/* Page Numbers */}
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-3 sm:space-x-1">
             {paginationPages.map((page, index) => {
               if (page === "...") {
                 return (
