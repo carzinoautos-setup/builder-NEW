@@ -1,4 +1,5 @@
 import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
   currentPage: number;
@@ -20,35 +21,47 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const getPaginationPages = () => {
     const pages = [];
-    const maxPagesToShow = 7;
+    const maxPagesToShow = window.innerWidth < 640 ? 3 : 7; // Show fewer pages on mobile
 
     if (totalPages <= maxPagesToShow) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      if (currentPage <= 4) {
-        pages.push(1, 2, 3, 4, 5, "...", totalPages);
-      } else if (currentPage >= totalPages - 3) {
-        pages.push(
-          1,
-          "...",
-          totalPages - 4,
-          totalPages - 3,
-          totalPages - 2,
-          totalPages - 1,
-          totalPages,
-        );
+      if (window.innerWidth < 640) {
+        // Mobile: Show only current page and adjacent pages
+        if (currentPage === 1) {
+          pages.push(1, 2, "...", totalPages);
+        } else if (currentPage === totalPages) {
+          pages.push(1, "...", totalPages - 1, totalPages);
+        } else {
+          pages.push(currentPage - 1, currentPage, currentPage + 1);
+        }
       } else {
-        pages.push(
-          1,
-          "...",
-          currentPage - 1,
-          currentPage,
-          currentPage + 1,
-          "...",
-          totalPages,
-        );
+        // Desktop: Keep original logic
+        if (currentPage <= 4) {
+          pages.push(1, 2, 3, 4, 5, "...", totalPages);
+        } else if (currentPage >= totalPages - 3) {
+          pages.push(
+            1,
+            "...",
+            totalPages - 4,
+            totalPages - 3,
+            totalPages - 2,
+            totalPages - 1,
+            totalPages,
+          );
+        } else {
+          pages.push(
+            1,
+            "...",
+            currentPage - 1,
+            currentPage,
+            currentPage + 1,
+            "...",
+            totalPages,
+          );
+        }
       }
     }
     return pages;
@@ -65,22 +78,25 @@ export const Pagination: React.FC<PaginationProps> = ({
           <span className="font-medium">{totalResults}</span> results
         </div>
 
-        <div className="flex items-center space-x-1 overflow-x-auto max-w-full">
+        <div className="flex items-center justify-center space-x-2 w-full">
+          {/* Previous Button */}
           <button
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
-            className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            className="flex items-center justify-center w-10 h-10 text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed sm:px-4 sm:w-auto"
           >
-            Previous
+            <ChevronLeft className="w-5 h-5" />
+            <span className="hidden sm:inline sm:ml-1">Previous</span>
           </button>
 
-          <div className="flex space-x-1 overflow-x-auto">
+          {/* Page Numbers */}
+          <div className="flex items-center space-x-1">
             {paginationPages.map((page, index) => {
               if (page === "...") {
                 return (
                   <span
                     key={`ellipsis-${index}`}
-                    className="px-2 py-2 text-gray-500 flex-shrink-0"
+                    className="px-2 py-2 text-gray-500"
                   >
                     ...
                   </span>
@@ -91,7 +107,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 <button
                   key={page}
                   onClick={() => onPageChange(page as number)}
-                  className={`px-3 py-2 text-sm font-medium rounded-md min-w-[40px] flex-shrink-0 ${
+                  className={`w-10 h-10 text-sm font-medium rounded-md flex items-center justify-center ${
                     page === currentPage
                       ? "bg-red-600 text-white border border-red-600"
                       : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
@@ -103,12 +119,14 @@ export const Pagination: React.FC<PaginationProps> = ({
             })}
           </div>
 
+          {/* Next Button */}
           <button
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
-            className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            className="flex items-center justify-center w-10 h-10 text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed sm:px-4 sm:w-auto"
           >
-            Next
+            <ChevronRight className="w-5 h-5" />
+            <span className="hidden sm:inline sm:ml-1">Next</span>
           </button>
         </div>
       </div>
