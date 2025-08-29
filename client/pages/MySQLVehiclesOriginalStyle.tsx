@@ -150,10 +150,10 @@ export default function MySQLVehiclesOriginalStyle() {
       }
 
       // Add location/distance parameters
-      if (userLocation && radius !== "nationwide") {
-        params.append("lat", userLocation.lat.toString());
-        params.append("lng", userLocation.lng.toString());
-        params.append("radius", radius);
+      if (appliedLocation && appliedRadius !== "nationwide") {
+        params.append("lat", appliedLocation.lat.toString());
+        params.append("lng", appliedLocation.lng.toString());
+        params.append("radius", appliedRadius);
       }
 
       // Add filters
@@ -218,7 +218,7 @@ export default function MySQLVehiclesOriginalStyle() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, appliedFilters, searchTerm, userLocation, radius]);
+  }, [currentPage, appliedFilters, searchTerm, appliedLocation, appliedRadius]);
 
   // Load favorites from localStorage
   useEffect(() => {
