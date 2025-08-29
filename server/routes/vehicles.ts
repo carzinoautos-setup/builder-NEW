@@ -1,8 +1,21 @@
 import { RequestHandler } from 'express';
 import { VehicleService } from '../services/vehicleService.js';
+import { MockVehicleService } from '../services/mockVehicleService.js';
 import { PaginationParams, VehicleFilters } from '../types/vehicle.js';
 
-const vehicleService = new VehicleService();
+// Initialize services
+let vehicleService: VehicleService | MockVehicleService;
+let mockService: MockVehicleService;
+
+try {
+  vehicleService = new VehicleService();
+  console.log('✅ Using real MySQL VehicleService');
+} catch (error) {
+  console.log('⚠️  MySQL connection failed, using MockVehicleService for testing');
+  console.log('   Error:', error.message);
+  mockService = new MockVehicleService();
+  vehicleService = mockService;
+}
 
 /**
  * GET /api/vehicles
