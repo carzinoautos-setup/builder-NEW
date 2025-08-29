@@ -20,7 +20,7 @@ This document explains how your WordPress/WooCommerce custom fields map to the o
 | `featured` | `is_featured` | none | "yes"/"no" | Red "Featured!" badge display |
 | `badges` | `_vehicle_badges` | none | Array | Grey badges (condition, drivetrain) |
 | **Vehicle Identity** |
-| `seller_account_number` | `_vehicle_seller_account` | none | "ACCT1234" | Links vehicle to seller (hidden) |
+| `seller_account_number` | `_vehicle_seller_account` | none | "ACCT1234" | Links vehicle to seller (**HIDDEN FROM USERS**) |
 | `id` | `[sku]` | none | "VEH001" | Product SKU |
 | `title` | `[post_title]` | none | "2023 BMW X5" | Vehicle title |
 | **Core Vehicle Data** |
