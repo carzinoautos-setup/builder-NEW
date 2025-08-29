@@ -222,6 +222,28 @@ export default function MySQLVehiclesOriginalStyle() {
     fetchVehicles();
   }, [fetchVehicles]);
 
+  // Geocode ZIP code when it changes (with debouncing)
+  useEffect(() => {
+    const debounceTimer = setTimeout(async () => {
+      if (zipCode && zipCode.length >= 5) {
+        const location = await geocodeZip(zipCode);
+        setUserLocation(location);
+      }
+    }, 1000); // 1 second debounce
+
+    return () => clearTimeout(debounceTimer);
+  }, [zipCode]);
+
+  // Geocode default ZIP on component mount
+  useEffect(() => {
+    const initializeLocation = async () => {
+      const location = await geocodeZip("98498");
+      setUserLocation(location);
+    };
+
+    initializeLocation();
+  }, []);
+
   // Load vehicle type images
   useEffect(() => {
     const loadImages = async () => {
