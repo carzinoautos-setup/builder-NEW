@@ -335,14 +335,26 @@ export default function MySQLVehiclesOriginalStyle() {
     } catch (err) {
       console.error("❌ Vehicle fetch error:", err);
 
-      // If API is completely unavailable, show a helpful message
+      // Provide specific error messages based on error type
       if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
         setError(
-          "Unable to connect to vehicle database. Please check your internet connection or try again later.",
+          "Unable to connect to vehicle database. Please refresh the page or try again later.",
+        );
+      } else if (err.name === "AbortError") {
+        setError(
+          "Request timed out. Please check your internet connection and try again.",
+        );
+      } else if (err instanceof Error && err.message.includes("API error: 404")) {
+        setError(
+          "Vehicle database service is temporarily unavailable. Please try again later.",
+        );
+      } else if (err instanceof Error && err.message.includes("API error: 500")) {
+        setError(
+          "Server error occurred. Please try again in a few moments.",
         );
       } else {
         setError(
-          err instanceof Error ? err.message : "An unexpected error occurred",
+          err instanceof Error ? err.message : "An unexpected error occurred while loading vehicles.",
         );
       }
 
