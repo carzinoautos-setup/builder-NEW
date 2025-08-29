@@ -746,7 +746,7 @@ export default function MySQLVehiclesOriginalStyle() {
       trim: parsedFilters.trim,
       condition: parsedFilters.condition,
       year: parsedFilters.year?.[0],
-      bodyStyle: parsedFilters.bodyStyle,
+      bodyStyle: parsedFilters.bodyStyle?.[0],
     });
 
     // Update applied filters to match the search
