@@ -633,7 +633,8 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
 
               {/* Applied Filters in Mobile Filter Panel */}
-              {(appliedFilters.condition.length > 0 ||
+              {(searchTerm.trim() ||
+                appliedFilters.condition.length > 0 ||
                 appliedFilters.make.length > 0 ||
                 appliedFilters.model.length > 0 ||
                 appliedFilters.trim.length > 0 ||
@@ -653,6 +654,18 @@ export default function MySQLVehiclesOriginalStyle() {
                   >
                     Clear All
                   </button>
+                  {searchTerm.trim() && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs">
+                      <Check className="w-3 h-3 text-red-600" />
+                      "{searchTerm}"
+                      <button
+                        onClick={() => setSearchTerm("")}
+                        className="ml-1 text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
                   {appliedFilters.condition.map((item) => (
                     <span
                       key={item}
