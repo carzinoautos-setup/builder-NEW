@@ -1611,7 +1611,13 @@ export default function MySQLVehiclesOriginalStyle() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {appliedLocation && appliedRadius !== "nationwide" && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs">
+                    <span
+                      onClick={() => {
+                        setAppliedLocation(null);
+                        setAppliedRadius("200");
+                      }}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                    >
                       <Check className="w-3 h-3 text-red-600" />
                       <MapPin className="w-3 h-3" />
                       {appliedRadius} miles
@@ -1629,7 +1635,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.condition.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("condition", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
@@ -1644,7 +1651,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.make.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("make", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
@@ -1659,7 +1667,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.model.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("model", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
@@ -1674,7 +1683,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.trim.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("trim", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
@@ -1689,7 +1699,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.year.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
+                      onClick={() => removeAppliedFilter("year", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
                       {item}
