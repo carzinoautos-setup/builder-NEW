@@ -364,6 +364,7 @@ export class WordPressMigration {
     try {
       await this.createOptimizedTables();
       await this.migrateSellersFromWordPress();
+      await this.migrateVehiclesFromWordPress();
       await this.syncAllSellerCoords();
       await this.createIndexes();
       await this.verifyMigration();
