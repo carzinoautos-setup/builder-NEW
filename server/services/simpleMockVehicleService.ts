@@ -271,6 +271,11 @@ export class SimpleMockVehicleService {
       if (!matches) return false;
     }
 
+    // Transmission filter
+    if (filters.transmission && filters.transmission.length > 0) {
+      if (!filters.transmission.includes(vehicle.transmission)) return false;
+    }
+
     // Mileage filter
     if (filters.mileage) {
       const vehicleMileage = parseInt(vehicle.mileage.replace(/,/g, ""));
