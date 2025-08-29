@@ -147,7 +147,7 @@ export class WordPressSync {
       if (!vehicle.seller_account_number) continue;
 
       // Apply your badge logic: is_featured = "yes" shows "Featured!" badge
-      const featured = vehicle.is_featured === 'yes' ? 1 : 0;
+      const featured = vehicle.is_featured === "yes" ? 1 : 0;
 
       const insertSQL = `
         INSERT INTO vehicles (
@@ -180,7 +180,7 @@ export class WordPressSync {
         vehicle.drivetrain,
         parseFloat(vehicle.price) || 0,
         featured,
-        vehicle.seller_account_number
+        vehicle.seller_account_number,
       ]);
 
       syncedCount++;

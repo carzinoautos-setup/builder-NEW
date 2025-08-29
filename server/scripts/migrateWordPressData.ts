@@ -195,19 +195,22 @@ export class WordPressMigration {
 
     try {
       const [wpVehicles] = await this.db.execute(wpVehicleQuery);
-      console.log(`📊 Found ${(wpVehicles as any[]).length} vehicles in WordPress`);
+      console.log(
+        `📊 Found ${(wpVehicles as any[]).length} vehicles in WordPress`,
+      );
 
       for (const vehicle of wpVehicles as any[]) {
         if (!vehicle.seller_account_number) continue;
 
         // Determine if vehicle is featured based on your logic
-        const featured = vehicle.is_featured === 'yes' ? 1 : 0;
+        const featured = vehicle.is_featured === "yes" ? 1 : 0;
 
         // Generate badges based on condition and featured status
         const badges = [];
-        if (featured) badges.push('Featured');
+        if (featured) badges.push("Featured");
         if (vehicle.condition) badges.push(vehicle.condition);
-        if (vehicle.drivetrain && vehicle.drivetrain !== 'FWD') badges.push(vehicle.drivetrain);
+        if (vehicle.drivetrain && vehicle.drivetrain !== "FWD")
+          badges.push(vehicle.drivetrain);
 
         // Handle image gallery (comma-separated IDs)
         let images = [];
@@ -266,12 +269,12 @@ export class WordPressMigration {
           vehicle.exterior_color,
           vehicle.interior_color,
           vehicle.condition,
-          vehicle.certified === 'yes' ? 1 : 0,
+          vehicle.certified === "yes" ? 1 : 0,
           vehicle.title_status,
           parseFloat(vehicle.price) || 0,
           featured,
           vehicle.seller_account_number,
-          vehicle.seller_type || 'Dealer'
+          vehicle.seller_type || "Dealer",
         ]);
       }
 
