@@ -90,7 +90,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         downPayment,
       );
     }
-    return vehicle.payment || "Call for pricing";
+    return vehicle.payment || "Call for Price";
   };
 
   return (
