@@ -61,7 +61,8 @@ export function NavigationHeader() {
 
           {/* Stats/Info */}
           <div className="text-sm text-gray-500">
-            {isActive('/mysql-vehicles') && 'MySQL Pagination Demo'}
+            {isActive('/mysql-vehicles') && 'MySQL Demo Style (50k Vehicles)'}
+            {isActive('/mysql-vehicles-advanced') && 'MySQL Advanced View'}
             {isActive('/') && 'Original Vehicle Filters'}
           </div>
         </div>
