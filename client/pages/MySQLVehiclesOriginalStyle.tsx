@@ -145,11 +145,14 @@ export default function MySQLVehiclesOriginalStyle() {
   // Get the API base URL - handle different environments
   const getApiBaseUrl = () => {
     // In development, use relative URLs
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      return '';
+    if (
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1"
+    ) {
+      return "";
     }
     // In production, try to use the same origin first
-    return '';
+    return "";
   };
 
   // Fetch vehicles from API
@@ -218,12 +221,12 @@ export default function MySQLVehiclesOriginalStyle() {
       }
 
       const apiUrl = `${getApiBaseUrl()}/api/simple-vehicles?${params}`;
-      console.log('🔍 Fetching vehicles from:', apiUrl);
+      console.log("🔍 Fetching vehicles from:", apiUrl);
 
       const response = await fetch(apiUrl, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -236,18 +239,22 @@ export default function MySQLVehiclesOriginalStyle() {
       if (data.success) {
         setVehicles(data.data);
         setApiResponse(data);
-        console.log('✅ Successfully loaded', data.data.length, 'vehicles');
+        console.log("✅ Successfully loaded", data.data.length, "vehicles");
       } else {
         throw new Error(data.message || "API returned error");
       }
     } catch (err) {
-      console.error('❌ Vehicle fetch error:', err);
+      console.error("❌ Vehicle fetch error:", err);
 
       // If API is completely unavailable, show a helpful message
-      if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
-        setError('Unable to connect to vehicle database. Please check your internet connection or try again later.');
+      if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
+        setError(
+          "Unable to connect to vehicle database. Please check your internet connection or try again later.",
+        );
       } else {
-        setError(err instanceof Error ? err.message : "An unexpected error occurred");
+        setError(
+          err instanceof Error ? err.message : "An unexpected error occurred",
+        );
       }
 
       // Set empty vehicles array
@@ -255,13 +262,13 @@ export default function MySQLVehiclesOriginalStyle() {
       setApiResponse({
         success: false,
         data: [],
-        message: 'No vehicles available',
+        message: "No vehicles available",
         pagination: {
           page: 1,
           pageSize: resultsPerPage,
           total: 0,
-          totalPages: 0
-        }
+          totalPages: 0,
+        },
       });
     } finally {
       setLoading(false);
@@ -450,15 +457,15 @@ export default function MySQLVehiclesOriginalStyle() {
 
       // Call our geocoding API with proper error handling
       const apiUrl = `${getApiBaseUrl()}/api/geocode/${zip}`;
-      console.log('🔍 Geocoding ZIP:', zip, 'using:', apiUrl);
+      console.log("🔍 Geocoding ZIP:", zip, "using:", apiUrl);
 
       const response = await fetch(apiUrl, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         // Add timeout to prevent hanging
-        signal: AbortSignal.timeout(10000) // 10 second timeout
+        signal: AbortSignal.timeout(10000), // 10 second timeout
       });
 
       if (response.ok) {
@@ -496,7 +503,8 @@ export default function MySQLVehiclesOriginalStyle() {
       // Always use fallback for any network error
       if (
         error instanceof TypeError &&
-        (error.message.includes("Failed to fetch") || error.message.includes("NetworkError"))
+        (error.message.includes("Failed to fetch") ||
+          error.message.includes("NetworkError"))
       ) {
         console.log("🔄 Using fallback coordinates due to network error");
         const zipCoordinates: {
@@ -507,15 +515,55 @@ export default function MySQLVehiclesOriginalStyle() {
             state: string;
           };
         } = {
-          "98498": { lat: 47.0379, lng: -122.9015, city: "Lakewood", state: "WA" },
-          "98468": { lat: 47.0379, lng: -122.9015, city: "Lakewood", state: "WA" },
-          "90210": { lat: 34.0901, lng: -118.4065, city: "Beverly Hills", state: "CA" },
-          "10001": { lat: 40.7505, lng: -73.9934, city: "New York", state: "NY" },
-          "60601": { lat: 41.8781, lng: -87.6298, city: "Chicago", state: "IL" },
-          "75001": { lat: 32.9483, lng: -96.7299, city: "Addison", state: "TX" },
+          "98498": {
+            lat: 47.0379,
+            lng: -122.9015,
+            city: "Lakewood",
+            state: "WA",
+          },
+          "98468": {
+            lat: 47.0379,
+            lng: -122.9015,
+            city: "Lakewood",
+            state: "WA",
+          },
+          "90210": {
+            lat: 34.0901,
+            lng: -118.4065,
+            city: "Beverly Hills",
+            state: "CA",
+          },
+          "10001": {
+            lat: 40.7505,
+            lng: -73.9934,
+            city: "New York",
+            state: "NY",
+          },
+          "60601": {
+            lat: 41.8781,
+            lng: -87.6298,
+            city: "Chicago",
+            state: "IL",
+          },
+          "75001": {
+            lat: 32.9483,
+            lng: -96.7299,
+            city: "Addison",
+            state: "TX",
+          },
           "33101": { lat: 25.7617, lng: -80.1918, city: "Miami", state: "FL" },
-          "85001": { lat: 33.4484, lng: -112.0740, city: "Phoenix", state: "AZ" },
-          "97201": { lat: 45.5152, lng: -122.6784, city: "Portland", state: "OR" },
+          "85001": {
+            lat: 33.4484,
+            lng: -112.074,
+            city: "Phoenix",
+            state: "AZ",
+          },
+          "97201": {
+            lat: 45.5152,
+            lng: -122.6784,
+            city: "Portland",
+            state: "OR",
+          },
           "02101": { lat: 42.3601, lng: -71.0589, city: "Boston", state: "MA" },
         };
 
@@ -531,7 +579,7 @@ export default function MySQLVehiclesOriginalStyle() {
           lat: 39.8283,
           lng: -98.5795,
           city: "Geographic Center",
-          state: "US"
+          state: "US",
         };
       }
 
@@ -2330,7 +2378,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
             {/* Connection Status & Results Count - NOT in sticky */}
             <div className="px-3 py-2 bg-gray-50 text-sm">
-              {error && error.includes('Unable to connect') && (
+              {error && error.includes("Unable to connect") && (
                 <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded mb-2 text-xs">
                   ⚠️ Connection issues detected. Some features may be limited.
                 </div>
