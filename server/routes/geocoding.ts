@@ -99,9 +99,7 @@ async function geocodeWithGoogle(
 /**
  * Get cached or fresh geocoded result
  */
-async function getCachedOrFreshGeocode(
-  zip: string,
-): Promise<{
+async function getCachedOrFreshGeocode(zip: string): Promise<{
   lat: number;
   lng: number;
   city: string;
