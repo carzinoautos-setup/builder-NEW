@@ -435,6 +435,13 @@ export default function MySQLVehiclesOriginalStyle() {
       if (appliedFilters.paymentMax) {
         params.append("paymentMax", appliedFilters.paymentMax);
       }
+      // NEW: Additional custom field filters
+      if (appliedFilters.fuelType.length > 0) {
+        params.append("fuelType", appliedFilters.fuelType.join(","));
+      }
+      if (appliedFilters.certified.length > 0) {
+        params.append("certified", appliedFilters.certified.includes("Certified") ? "true" : "false");
+      }
 
       const apiUrl = `${getApiBaseUrl()}/api/vehicles?${params}`;
       console.log("🔍 Fetching vehicles from:", apiUrl);
