@@ -150,13 +150,29 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
     `https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=450&h=300&fit=crop&auto=format&q=80`
   ];
 
-  // Generate badges based on vehicle characteristics
+  // Generate badges based on vehicle characteristics - matching original demo
   const badges = [];
-  if (record.certified) badges.push('Certified');
-  if (record.condition === 'New') badges.push('New');
-  if (record.fuel_type === 'Electric') badges.push('Electric');
-  if (record.fuel_type === 'Hybrid') badges.push('Hybrid');
-  if (record.mileage < 50000) badges.push('Low Miles');
+
+  // Add condition badge (New/Used)
+  if (record.condition === 'New') {
+    badges.push('New');
+  } else {
+    badges.push('Used');
+  }
+
+  // Add drivetrain badge (4WD/AWD/FWD/RWD)
+  if (record.drivetrain) {
+    badges.push(record.drivetrain);
+  } else {
+    // Generate random drivetrain for demo consistency
+    const drivetrains = ['4WD', 'AWD', 'FWD', 'RWD'];
+    badges.push(drivetrains[Math.floor(Math.random() * drivetrains.length)]);
+  }
+
+  // Optional: Add certified badge if applicable
+  if (record.certified) {
+    badges.push('Certified');
+  }
 
   // Generate dealer info (placeholder)
   const dealerNames = ['Premium Auto Group', 'Elite Motors', 'AutoMax', 'Metro Cars', 'City Auto'];
