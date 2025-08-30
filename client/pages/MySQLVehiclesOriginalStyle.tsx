@@ -18,8 +18,9 @@ import { FilterSection } from "@/components/FilterSection";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
+import { VehicleRecord, VehiclesApiResponse, vehicleApi, getVehicleTitle, formatPrice, formatMileage } from "@/lib/vehicleApi";
 
-// Simple vehicle interface matching original demo exactly
+// Enhanced vehicle interface for display with all custom fields
 interface Vehicle {
   id: number;
   featured: boolean;
@@ -36,6 +37,25 @@ interface Vehicle {
   location: string;
   phone: string;
   seller_type: string;
+  seller_account_number: string;
+  // NEW: Additional custom fields from VehicleRecord
+  year: number;
+  make: string;
+  model: string;
+  trim: string;
+  body_style: string;
+  engine_cylinders: number;
+  fuel_type: string;
+  transmission_speed: string;
+  drivetrain: string;
+  exterior_color_generic: string;
+  interior_color_generic: string;
+  title_status: string;
+  highway_mpg: number;
+  condition: string;
+  certified: boolean;
+  rawPrice: number;
+  rawMileage: number;
 }
 
 // API types
