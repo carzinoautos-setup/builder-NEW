@@ -1,25 +1,19 @@
 {
-  "build": {
-    "env": {
-      "VITE_BUILDER_API_KEY": "@builder-api-key",
-      "VITE_WC_API_URL": "@wc-api-url",
-      "VITE_WC_CONSUMER_KEY": "@wc-consumer-key", 
-      "VITE_WC_CONSUMER_SECRET": "@wc-consumer-secret"
-    }
-  },
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/spa",
   "functions": {
-    "app/server/**": {
+    "dist/server/**/*.js": {
       "runtime": "@vercel/node"
     }
   },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/app/server/$1"
+      "dest": "/dist/server/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/app/$1"
+      "dest": "/index.html"
     }
   ],
   "rewrites": [
@@ -27,5 +21,11 @@
       "source": "/inventory",
       "destination": "/builder-inventory"
     }
-  ]
+  ],
+  "env": {
+    "VITE_BUILDER_API_KEY": "@builder-api-key",
+    "VITE_WC_API_URL": "@wc-api-url",
+    "VITE_WC_CONSUMER_KEY": "@wc-consumer-key",
+    "VITE_WC_CONSUMER_SECRET": "@wc-consumer-secret"
+  }
 }
