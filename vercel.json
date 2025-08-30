@@ -1,13 +1,21 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "@vercel/node"
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
     }
-  }
+  ]
 }
