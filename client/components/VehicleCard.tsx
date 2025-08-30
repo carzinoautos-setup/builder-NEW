@@ -21,6 +21,24 @@ interface Vehicle {
   phone: string;
   seller_type: string;
   seller_account_number: string;
+  // NEW: Additional custom fields from VehicleRecord
+  year: number;
+  make: string;
+  model: string;
+  trim: string;
+  body_style: string;
+  engine_cylinders: number;
+  fuel_type: string;
+  transmission_speed: string;
+  drivetrain: string;
+  exterior_color_generic: string;
+  interior_color_generic: string;
+  title_status: string;
+  highway_mpg: number;
+  condition: string;
+  certified: boolean;
+  rawPrice: number;
+  rawMileage: number;
 }
 
 interface VehicleCardProps {
@@ -162,62 +180,88 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           {vehicle.title}
         </h3>
 
-        <div className="flex items-center justify-start mb-3 pb-2 border-b border-gray-200 carzino-vehicle-details">
-          <div className="flex items-center gap-1 mr-4">
-            {vehicle.mileageIcon ? (
-              <img
-                src={vehicle.mileageIcon}
-                alt="Mileage icon"
-                className="w-4 h-4 object-contain"
-              />
-            ) : (
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2b268dcc254a4017a2ef9d9e1c9b3acb?format=webp&width=800"
-                alt="Speedometer"
-                className="w-4 h-4 object-contain"
-              />
-            )}
-            <span className="text-black font-medium">
-              {vehicle.mileage} Mi.
-            </span>
-          </div>
-          <div className="flex items-center gap-1 mr-4">
-            {vehicle.transmissionIcon ? (
-              <img
-                src={vehicle.transmissionIcon}
-                alt="Transmission icon"
-                className="w-4 h-4 object-contain"
-              />
-            ) : (
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F209b197e983f494e94b04a7d87b79174?format=webp&width=800"
-                alt="Car parts"
-                className="w-4 h-4 object-contain"
-              />
-            )}
-            <span className="text-black font-medium">
-              {vehicle.transmission}
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-4 h-4 text-gray-600 flex items-center justify-center">
-              {vehicle.doorIcon ? (
+        <div className="flex flex-col gap-2 mb-3 pb-2 border-b border-gray-200 carzino-vehicle-details">
+          {/* First row - existing details */}
+          <div className="flex items-center justify-start gap-4">
+            <div className="flex items-center gap-1">
+              {vehicle.mileageIcon ? (
                 <img
-                  src={vehicle.doorIcon}
-                  alt="Door icon"
+                  src={vehicle.mileageIcon}
+                  alt="Mileage icon"
                   className="w-4 h-4 object-contain"
                 />
               ) : (
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff5793a859e2548bc9bc984fcae57131c?format=webp&width=800"
-                  alt="Car door"
+                  src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2b268dcc254a4017a2ef9d9e1c9b3acb?format=webp&width=800"
+                  alt="Speedometer"
                   className="w-4 h-4 object-contain"
                 />
               )}
+              <span className="text-black font-medium text-sm">
+                {vehicle.mileage} Mi.
+              </span>
             </div>
-            <span className="text-black font-medium">
-              {vehicle.doors.replace(/doors/g, "Doors")}
-            </span>
+            <div className="flex items-center gap-1">
+              {vehicle.transmissionIcon ? (
+                <img
+                  src={vehicle.transmissionIcon}
+                  alt="Transmission icon"
+                  className="w-4 h-4 object-contain"
+                />
+              ) : (
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F209b197e983f494e94b04a7d87b79174?format=webp&width=800"
+                  alt="Car parts"
+                  className="w-4 h-4 object-contain"
+                />
+              )}
+              <span className="text-black font-medium text-sm">
+                {vehicle.transmission}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-4 h-4 text-gray-600 flex items-center justify-center">
+                {vehicle.doorIcon ? (
+                  <img
+                    src={vehicle.doorIcon}
+                    alt="Door icon"
+                    className="w-4 h-4 object-contain"
+                  />
+                ) : (
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff5793a859e2548bc9bc984fcae57131c?format=webp&width=800"
+                    alt="Car door"
+                    className="w-4 h-4 object-contain"
+                  />
+                )}
+              </div>
+              <span className="text-black font-medium text-sm">
+                {vehicle.doors.replace(/doors/g, "Doors")}
+              </span>
+            </div>
+          </div>
+
+          {/* Second row - NEW custom fields */}
+          <div className="flex items-center justify-start gap-4 text-xs text-gray-600">
+            <span className="font-medium">{vehicle.body_style}</span>
+            <span>•</span>
+            <span>{vehicle.fuel_type}</span>
+            <span>•</span>
+            <span>{vehicle.drivetrain}</span>
+            <span>•</span>
+            <span>{vehicle.exterior_color_generic}</span>
+            {vehicle.highway_mpg > 0 && (
+              <>
+                <span>•</span>
+                <span>{vehicle.highway_mpg} MPG</span>
+              </>
+            )}
+            {vehicle.certified && (
+              <>
+                <span>•</span>
+                <span className="text-green-600 font-medium">Certified</span>
+              </>
+            )}
           </div>
         </div>
 
