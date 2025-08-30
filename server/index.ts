@@ -95,6 +95,9 @@ export function createServer() {
   app.get("/api/geocode/:zip", geocodeZip);
   app.post("/api/geocode/batch", geocodeBatch);
 
+  // WooCommerce API routes (for production)
+  app.use("/api/woocommerce", woocommerceRoutes);
+
   // WordPress sync status endpoint
   app.get("/api/wordpress/sync-status", (_req, res) => {
     res.json({
