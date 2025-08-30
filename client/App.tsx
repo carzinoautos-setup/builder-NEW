@@ -31,7 +31,7 @@ const App = () => (
           />
           <Route
             path="/mysql-vehicles"
-            element={<MySQLVehiclesOriginalStyle />}
+            element={<WorkingVehiclesPage />}
           />
           <Route path="/icon-demo" element={<IconDemo />} />
           <Route path="/payment-demo" element={<PaymentCalculatorDemo />} />
