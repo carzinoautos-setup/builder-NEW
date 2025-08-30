@@ -138,6 +138,72 @@ const normalizeFilterValue = (value: string) => {
     .join(" ");
 };
 
+// Transform VehicleRecord from API to Vehicle for display
+const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
+  // Generate vehicle title from components
+  const title = getVehicleTitle(record);
+
+  // Generate realistic vehicle images (placeholder for now)
+  const vehicleImages = [
+    `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80`,
+    `https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=450&h=300&fit=crop&auto=format&q=80`,
+    `https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=450&h=300&fit=crop&auto=format&q=80`
+  ];
+
+  // Generate badges based on vehicle characteristics
+  const badges = [];
+  if (record.certified) badges.push('Certified');
+  if (record.condition === 'New') badges.push('New');
+  if (record.fuel_type === 'Electric') badges.push('Electric');
+  if (record.fuel_type === 'Hybrid') badges.push('Hybrid');
+  if (record.mileage < 50000) badges.push('Low Miles');
+
+  // Generate dealer info (placeholder)
+  const dealerNames = ['Premium Auto Group', 'Elite Motors', 'AutoMax', 'Metro Cars', 'City Auto'];
+  const dealerName = dealerNames[Math.floor(Math.random() * dealerNames.length)];
+
+  // Generate location based on seller type
+  const locations = ['Seattle, WA', 'Portland, OR', 'Tacoma, WA', 'Bellevue, WA', 'Spokane, WA'];
+  const location = locations[Math.floor(Math.random() * locations.length)];
+
+  return {
+    id: record.id,
+    featured: Math.random() > 0.9, // 10% chance of being featured
+    viewed: Math.random() > 0.8, // 20% chance of being viewed
+    images: vehicleImages,
+    badges,
+    title,
+    mileage: formatMileage(record.mileage),
+    transmission: record.transmission,
+    doors: `${record.doors} doors`,
+    salePrice: formatPrice(record.price),
+    payment: `$${record.payments}`, // Use the payments field from VehicleRecord
+    dealer: dealerName,
+    location,
+    phone: '(555) 123-4567', // Placeholder
+    seller_type: record.seller_type,
+    seller_account_number: record.seller_account_number,
+    // NEW: Include all custom fields from VehicleRecord
+    year: record.year,
+    make: record.make,
+    model: record.model,
+    trim: record.trim,
+    body_style: record.body_style,
+    engine_cylinders: record.engine_cylinders,
+    fuel_type: record.fuel_type,
+    transmission_speed: record.transmission_speed,
+    drivetrain: record.drivetrain,
+    exterior_color_generic: record.exterior_color_generic,
+    interior_color_generic: record.interior_color_generic,
+    title_status: record.title_status,
+    highway_mpg: record.highway_mpg,
+    condition: record.condition,
+    certified: record.certified,
+    rawPrice: record.price,
+    rawMileage: record.mileage
+  };
+};
+
 export default function MySQLVehiclesOriginalStyle() {
   // React Router hooks
   const location = useLocation();
@@ -364,7 +430,7 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("paymentMax", appliedFilters.paymentMax);
       }
 
-      const apiUrl = `${getApiBaseUrl()}/api/simple-vehicles?${params}`;
+      const apiUrl = `${getApiBaseUrl()}/api/vehicles?${params}`;
       console.log("🔍 Fetching vehicles from:", apiUrl);
 
       const controller = new AbortController();
@@ -384,12 +450,22 @@ export default function MySQLVehiclesOriginalStyle() {
         throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
-      const data: VehiclesApiResponse = await response.json();
+      const data = await response.json();
 
       if (data.success) {
-        setVehicles(data.data);
-        setApiResponse(data);
-        console.log("✅ Successfully loaded", data.data.length, "vehicles");
+        // Transform VehicleRecord[] to Vehicle[] for display
+        const transformedVehicles = data.data.map(transformVehicleRecord);
+        setVehicles(transformedVehicles);
+
+        // Create compatible API response
+        const compatibleResponse: VehiclesApiResponse = {
+          success: true,
+          data: transformedVehicles,
+          meta: data.meta,
+          message: data.message
+        };
+        setApiResponse(compatibleResponse);
+        console.log("✅ Successfully loaded and transformed", transformedVehicles.length, "vehicles");
       } else {
         throw new Error(data.message || "API returned error");
       }
