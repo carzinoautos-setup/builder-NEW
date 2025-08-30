@@ -3,12 +3,12 @@
  * Renders your Builder.io visual model with WooCommerce vehicle data
  */
 
-import React, { useEffect, useState } from 'react';
-import { BuilderComponent, builder } from '@builder.io/react';
-import { useBuilderWooCommerce } from '../lib/builderWooCommerceIntegration';
-import { BUILDER_MODELS } from '../lib/builder';
-import { VehicleFilters } from '../lib/woocommerce';
-import { Loader, AlertCircle, RefreshCw } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { BuilderComponent, builder } from "@builder.io/react";
+import { useBuilderWooCommerce } from "../lib/builderWooCommerceIntegration";
+import { BUILDER_MODELS } from "../lib/builder";
+import { VehicleFilters } from "../lib/woocommerce";
+import { Loader, AlertCircle, RefreshCw } from "lucide-react";
 
 interface BuilderInventoryProps {
   /**
@@ -16,12 +16,12 @@ interface BuilderInventoryProps {
    * Defaults to 'vehicle-inventory-page'
    */
   modelName?: string;
-  
+
   /**
    * Initial filters for vehicle loading
    */
   initialFilters?: VehicleFilters;
-  
+
   /**
    * Custom URL for Builder.io targeting
    */
@@ -31,7 +31,7 @@ interface BuilderInventoryProps {
 export const BuilderInventory: React.FC<BuilderInventoryProps> = ({
   modelName = BUILDER_MODELS.VEHICLE_INVENTORY,
   initialFilters = { per_page: 20, page: 1 },
-  builderUrl = '/inventory',
+  builderUrl = "/inventory",
 }) => {
   const {
     vehicles,
@@ -53,21 +53,21 @@ export const BuilderInventory: React.FC<BuilderInventoryProps> = ({
   // Initialize the integration on component mount
   useEffect(() => {
     const initializeIntegration = async () => {
-      console.log('🔄 Initializing Builder.io Inventory Page...');
-      
+      console.log("🔄 Initializing Builder.io Inventory Page...");
+
       try {
         await initialize(initialFilters, {
           modelName,
           url: builderUrl,
           userAttributes: {
-            pageType: 'vehicle-inventory',
+            pageType: "vehicle-inventory",
             timestamp: new Date().toISOString(),
           },
         });
         setIsInitialized(true);
-        console.log('✅ Builder.io Inventory Page initialized');
+        console.log("✅ Builder.io Inventory Page initialized");
       } catch (err) {
-        console.error('❌ Failed to initialize Builder.io Inventory:', err);
+        console.error("❌ Failed to initialize Builder.io Inventory:", err);
       }
     };
 
@@ -78,25 +78,25 @@ export const BuilderInventory: React.FC<BuilderInventoryProps> = ({
   useEffect(() => {
     // Register vehicle data for use in Builder.io repeater blocks
     builder.registerComponent({
-      name: 'VehicleRepeater',
+      name: "VehicleRepeater",
       inputs: [
         {
-          name: 'vehicles',
-          type: 'list',
+          name: "vehicles",
+          type: "list",
           subFields: [
-            { name: 'id', type: 'number' },
-            { name: 'title', type: 'string' },
-            { name: 'price', type: 'number' },
-            { name: 'formattedPrice', type: 'string' },
-            { name: 'payment', type: 'string' },
-            { name: 'make', type: 'string' },
-            { name: 'model', type: 'string' },
-            { name: 'year', type: 'number' },
-            { name: 'mileage', type: 'number' },
-            { name: 'formattedMileage', type: 'string' },
-            { name: 'primaryImage', type: 'string' },
-            { name: 'dealer', type: 'string' },
-            { name: 'location', type: 'string' },
+            { name: "id", type: "number" },
+            { name: "title", type: "string" },
+            { name: "price", type: "number" },
+            { name: "formattedPrice", type: "string" },
+            { name: "payment", type: "string" },
+            { name: "make", type: "string" },
+            { name: "model", type: "string" },
+            { name: "year", type: "number" },
+            { name: "mileage", type: "number" },
+            { name: "formattedMileage", type: "string" },
+            { name: "primaryImage", type: "string" },
+            { name: "dealer", type: "string" },
+            { name: "location", type: "string" },
           ],
         },
       ],
@@ -104,20 +104,20 @@ export const BuilderInventory: React.FC<BuilderInventoryProps> = ({
 
     // Register pagination controls
     builder.registerComponent({
-      name: 'VehiclePagination',
+      name: "VehiclePagination",
       inputs: [
-        { name: 'currentPage', type: 'number' },
-        { name: 'totalPages', type: 'number' },
-        { name: 'totalVehicles', type: 'number' },
+        { name: "currentPage", type: "number" },
+        { name: "totalPages", type: "number" },
+        { name: "totalVehicles", type: "number" },
       ],
     });
 
     // Register search and filter controls
     builder.registerComponent({
-      name: 'VehicleFilters',
+      name: "VehicleFilters",
       inputs: [
-        { name: 'onSearch', type: 'string' },
-        { name: 'onFilter', type: 'string' },
+        { name: "onSearch", type: "string" },
+        { name: "onFilter", type: "string" },
       ],
     });
   }, []);
@@ -158,9 +158,11 @@ export const BuilderInventory: React.FC<BuilderInventoryProps> = ({
               Retry Connection
             </button>
           </div>
-          
+
           <div className="mt-8 text-left">
-            <h3 className="font-semibold text-gray-900 mb-2">Setup Checklist:</h3>
+            <h3 className="font-semibold text-gray-900 mb-2">
+              Setup Checklist:
+            </h3>
             <ul className="text-sm text-gray-600 space-y-1">
               <li>✓ Set VITE_BUILDER_API_KEY in environment variables</li>
               <li>✓ Set VITE_WC_API_URL to your WooCommerce store URL</li>
@@ -185,10 +187,12 @@ export const BuilderInventory: React.FC<BuilderInventoryProps> = ({
               Builder.io Content Not Found
             </h2>
             <p className="text-yellow-700 text-sm mb-4">
-              No content found for model: <code className="bg-yellow-100 px-1 rounded">{modelName}</code>
+              No content found for model:{" "}
+              <code className="bg-yellow-100 px-1 rounded">{modelName}</code>
             </p>
             <p className="text-yellow-600 text-sm">
-              Please create this model in your Builder.io space or check your API key.
+              Please create this model in your Builder.io space or check your
+              API key.
             </p>
           </div>
         </div>
@@ -221,17 +225,19 @@ export const BuilderInventory: React.FC<BuilderInventoryProps> = ({
         context={{
           userAgent: navigator.userAgent,
           url: builderUrl,
-          device: window.innerWidth > 768 ? 'desktop' : 'mobile',
+          device: window.innerWidth > 768 ? "desktop" : "mobile",
         }}
       />
 
       {/* Debug info in development */}
-      {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === "development" && (
         <div className="fixed bottom-4 right-4 bg-black bg-opacity-80 text-white p-3 rounded text-xs max-w-sm">
           <div>🚗 Vehicles: {vehicles.length}</div>
-          <div>📄 Page: {currentPage} / {totalPages}</div>
+          <div>
+            📄 Page: {currentPage} / {totalPages}
+          </div>
           <div>🏗️ Model: {modelName}</div>
-          <div>✅ Content: {builderContent ? 'Loaded' : 'None'}</div>
+          <div>✅ Content: {builderContent ? "Loaded" : "None"}</div>
         </div>
       )}
     </div>

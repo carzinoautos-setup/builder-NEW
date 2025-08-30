@@ -3,9 +3,17 @@
  * Connects WooCommerce vehicle data to Builder.io visual models
  */
 
-import React from 'react';
-import { wooCommerceAPI, type WCVehicle, type VehicleFilters } from './woocommerce';
-import { getBuilderContent, transformVehiclesForBuilder, BUILDER_MODELS } from './builder';
+import React from "react";
+import {
+  wooCommerceAPI,
+  type WCVehicle,
+  type VehicleFilters,
+} from "./woocommerce";
+import {
+  getBuilderContent,
+  transformVehiclesForBuilder,
+  BUILDER_MODELS,
+} from "./builder";
 
 // Integration state interface
 export interface IntegrationState {
@@ -40,7 +48,7 @@ export class BuilderWooCommerceService {
   subscribe(listener: (state: IntegrationState) => void) {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+      this.listeners = this.listeners.filter((l) => l !== listener);
     };
   }
 
@@ -48,7 +56,7 @@ export class BuilderWooCommerceService {
    * Notify all listeners of state changes
    */
   private notify() {
-    this.listeners.forEach(listener => listener(this.state));
+    this.listeners.forEach((listener) => listener(this.state));
   }
 
   /**
@@ -75,16 +83,18 @@ export class BuilderWooCommerceService {
     try {
       // Check if WooCommerce API is available
       if (!wooCommerceAPI.isAvailable()) {
-        throw new Error('WooCommerce API not available. Please check environment variables: VITE_WC_API_URL, VITE_WC_CONSUMER_KEY, VITE_WC_CONSUMER_SECRET');
+        throw new Error(
+          "WooCommerce API not available. Please check environment variables: VITE_WC_API_URL, VITE_WC_CONSUMER_KEY, VITE_WC_CONSUMER_SECRET",
+        );
       }
 
       // Fetch vehicles from WooCommerce
-      console.log('🔄 Fetching vehicles from WooCommerce...', filters);
+      console.log("🔄 Fetching vehicles from WooCommerce...", filters);
       const wcVehicles = await wooCommerceAPI.getVehicles(filters);
-      
+
       // Transform vehicles for Builder.io
       const transformedVehicles = transformVehiclesForBuilder(wcVehicles);
-      
+
       // Calculate pagination info (WooCommerce should provide this in headers)
       const totalVehicles = wcVehicles.length; // This should come from WC response headers
       const perPage = filters.per_page || 20;
@@ -100,12 +110,11 @@ export class BuilderWooCommerceService {
         totalPages,
         loading: false,
       });
-
     } catch (error) {
-      console.error('❌ Failed to load vehicles from WooCommerce:', error);
+      console.error("❌ Failed to load vehicles from WooCommerce:", error);
       this.setState({
         loading: false,
-        error: error.message || 'Failed to load vehicles',
+        error: error.message || "Failed to load vehicles",
         vehicles: [],
       });
     }
@@ -119,11 +128,11 @@ export class BuilderWooCommerceService {
     options: {
       url?: string;
       userAttributes?: Record<string, any>;
-    } = {}
+    } = {},
   ): Promise<void> {
     try {
       console.log(`🔄 Loading Builder.io content for model: ${modelName}`);
-      
+
       const builderContent = await getBuilderContent(
         modelName,
         this.state.vehicles,
@@ -135,21 +144,20 @@ export class BuilderWooCommerceService {
             ...options.userAttributes,
           },
           url: options.url,
-        }
+        },
       );
 
       if (builderContent) {
-        console.log('✅ Builder.io content loaded successfully');
+        console.log("✅ Builder.io content loaded successfully");
         this.setState({ builderContent });
       } else {
-        console.warn('⚠️ No Builder.io content found for model:', modelName);
-        this.setState({ 
-          error: `No Builder.io content found for model: ${modelName}. Please check your Builder.io configuration.` 
+        console.warn("⚠️ No Builder.io content found for model:", modelName);
+        this.setState({
+          error: `No Builder.io content found for model: ${modelName}. Please check your Builder.io configuration.`,
         });
       }
-
     } catch (error) {
-      console.error('❌ Failed to load Builder.io content:', error);
+      console.error("❌ Failed to load Builder.io content:", error);
       this.setState({
         error: `Failed to load Builder.io content: ${error.message}`,
       });
@@ -165,25 +173,22 @@ export class BuilderWooCommerceService {
       modelName?: string;
       url?: string;
       userAttributes?: Record<string, any>;
-    } = {}
+    } = {},
   ): Promise<void> {
-    console.log('🚀 Initializing Builder.io + WooCommerce integration...');
-    
+    console.log("🚀 Initializing Builder.io + WooCommerce integration...");
+
     // Load vehicles first
     await this.loadVehicles(filters);
-    
+
     // Then load Builder.io content with the vehicle data
     if (this.state.vehicles.length > 0 || !this.state.error) {
-      await this.loadBuilderContent(
-        builderOptions.modelName,
-        {
-          url: builderOptions.url,
-          userAttributes: builderOptions.userAttributes,
-        }
-      );
+      await this.loadBuilderContent(builderOptions.modelName, {
+        url: builderOptions.url,
+        userAttributes: builderOptions.userAttributes,
+      });
     }
-    
-    console.log('✅ Integration initialization complete');
+
+    console.log("✅ Integration initialization complete");
   }
 
   /**
@@ -226,7 +231,7 @@ export const builderWooCommerceService = new BuilderWooCommerceService();
  */
 export function useBuilderWooCommerce() {
   const [state, setState] = React.useState<IntegrationState>(
-    builderWooCommerceService.getState()
+    builderWooCommerceService.getState(),
   );
 
   React.useEffect(() => {
@@ -236,12 +241,14 @@ export function useBuilderWooCommerce() {
 
   return {
     ...state,
-    loadVehicles: (filters?: VehicleFilters) => builderWooCommerceService.loadVehicles(filters),
-    loadBuilderContent: (modelName?: string, options?: any) => 
+    loadVehicles: (filters?: VehicleFilters) =>
+      builderWooCommerceService.loadVehicles(filters),
+    loadBuilderContent: (modelName?: string, options?: any) =>
       builderWooCommerceService.loadBuilderContent(modelName, options),
     initialize: (filters?: VehicleFilters, builderOptions?: any) =>
       builderWooCommerceService.initialize(filters, builderOptions),
-    refresh: (filters?: VehicleFilters) => builderWooCommerceService.refresh(filters),
+    refresh: (filters?: VehicleFilters) =>
+      builderWooCommerceService.refresh(filters),
     searchVehicles: (query: string, page?: number) =>
       builderWooCommerceService.searchVehicles(query, page),
     filterVehicles: (filters: VehicleFilters) =>
@@ -259,5 +266,10 @@ export function getVehiclesForBuilder(): any[] {
 // Helper function to check if integration is ready
 export function isIntegrationReady(): boolean {
   const state = builderWooCommerceService.getState();
-  return !state.loading && !state.error && state.vehicles.length > 0 && state.builderContent;
+  return (
+    !state.loading &&
+    !state.error &&
+    state.vehicles.length > 0 &&
+    state.builderContent
+  );
 }

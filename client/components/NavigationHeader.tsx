@@ -53,7 +53,7 @@ export function NavigationHeader() {
               }`}
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
               </svg>
               Builder.io Inventory
             </Link>
@@ -63,7 +63,8 @@ export function NavigationHeader() {
           <div className="text-sm text-gray-500">
             {isActive("/mysql-vehicles") && "MySQL Vehicles (50k)"}
             {isActive("/") && "Original Demo"}
-            {(isActive("/builder-inventory") || isActive("/inventory")) && "Builder.io + WooCommerce"}
+            {(isActive("/builder-inventory") || isActive("/inventory")) &&
+              "Builder.io + WooCommerce"}
           </div>
         </div>
       </div>

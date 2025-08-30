@@ -18,7 +18,14 @@ import { FilterSection } from "@/components/FilterSection";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
-import { VehicleRecord, VehiclesApiResponse, vehicleApi, getVehicleTitle, formatPrice, formatMileage } from "@/lib/vehicleApi";
+import {
+  VehicleRecord,
+  VehiclesApiResponse,
+  vehicleApi,
+  getVehicleTitle,
+  formatPrice,
+  formatMileage,
+} from "@/lib/vehicleApi";
 
 // Enhanced vehicle interface for display with all custom fields
 interface Vehicle {
@@ -147,17 +154,17 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
   const vehicleImages = [
     `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80`,
     `https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=450&h=300&fit=crop&auto=format&q=80`,
-    `https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=450&h=300&fit=crop&auto=format&q=80`
+    `https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=450&h=300&fit=crop&auto=format&q=80`,
   ];
 
   // Generate badges based on vehicle characteristics - matching original demo
   const badges = [];
 
   // Add condition badge (New/Used)
-  if (record.condition === 'New') {
-    badges.push('New');
+  if (record.condition === "New") {
+    badges.push("New");
   } else {
-    badges.push('Used');
+    badges.push("Used");
   }
 
   // Add drivetrain badge (4WD/AWD/FWD/RWD)
@@ -165,21 +172,34 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
     badges.push(record.drivetrain);
   } else {
     // Generate random drivetrain for demo consistency
-    const drivetrains = ['4WD', 'AWD', 'FWD', 'RWD'];
+    const drivetrains = ["4WD", "AWD", "FWD", "RWD"];
     badges.push(drivetrains[Math.floor(Math.random() * drivetrains.length)]);
   }
 
   // Optional: Add certified badge if applicable
   if (record.certified) {
-    badges.push('Certified');
+    badges.push("Certified");
   }
 
   // Generate dealer info (placeholder)
-  const dealerNames = ['Premium Auto Group', 'Elite Motors', 'AutoMax', 'Metro Cars', 'City Auto'];
-  const dealerName = dealerNames[Math.floor(Math.random() * dealerNames.length)];
+  const dealerNames = [
+    "Premium Auto Group",
+    "Elite Motors",
+    "AutoMax",
+    "Metro Cars",
+    "City Auto",
+  ];
+  const dealerName =
+    dealerNames[Math.floor(Math.random() * dealerNames.length)];
 
   // Generate location based on seller type
-  const locations = ['Seattle, WA', 'Portland, OR', 'Tacoma, WA', 'Bellevue, WA', 'Spokane, WA'];
+  const locations = [
+    "Seattle, WA",
+    "Portland, OR",
+    "Tacoma, WA",
+    "Bellevue, WA",
+    "Spokane, WA",
+  ];
   const location = locations[Math.floor(Math.random() * locations.length)];
 
   return {
@@ -196,7 +216,7 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
     payment: `$${record.payments}`, // Use the payments field from VehicleRecord
     dealer: dealerName,
     location,
-    phone: '(555) 123-4567', // Placeholder
+    phone: "(555) 123-4567", // Placeholder
     seller_type: record.seller_type,
     seller_account_number: record.seller_account_number,
     // NEW: Include all custom fields from VehicleRecord
@@ -216,7 +236,7 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
     condition: record.condition,
     certified: record.certified,
     rawPrice: record.price,
-    rawMileage: record.mileage
+    rawMileage: record.mileage,
   };
 };
 
@@ -350,7 +370,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
     // In production with WooCommerce configured, use WooCommerce API
     if (import.meta.env.PROD && hasWooCommerceConfig) {
-      console.log('🔗 Using WooCommerce API for production data');
+      console.log("🔗 Using WooCommerce API for production data");
       return "/api/woocommerce"; // Route to WooCommerce integration
     }
 
@@ -359,7 +379,7 @@ export default function MySQLVehiclesOriginalStyle() {
       window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1"
     ) {
-      console.log('🛠️ Using mock MySQL API for development');
+      console.log("🛠️ Using mock MySQL API for development");
       return "";
     }
 
@@ -470,7 +490,10 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("fuelType", appliedFilters.fuelType.join(","));
       }
       if (appliedFilters.certified.length > 0) {
-        params.append("certified", appliedFilters.certified.includes("Certified") ? "true" : "false");
+        params.append(
+          "certified",
+          appliedFilters.certified.includes("Certified") ? "true" : "false",
+        );
       }
 
       const apiUrl = `${getApiBaseUrl()}/api/vehicles?${params}`;
@@ -505,10 +528,14 @@ export default function MySQLVehiclesOriginalStyle() {
           success: true,
           data: transformedVehicles,
           meta: data.meta,
-          message: data.message
+          message: data.message,
         };
         setApiResponse(compatibleResponse);
-        console.log("✅ Successfully loaded and transformed", transformedVehicles.length, "vehicles");
+        console.log(
+          "✅ Successfully loaded and transformed",
+          transformedVehicles.length,
+          "vehicles",
+        );
       } else {
         throw new Error(data.message || "API returned error");
       }
@@ -2906,7 +2933,9 @@ export default function MySQLVehiclesOriginalStyle() {
                       }
                     }}
                   />
-                  <span className="carzino-filter-option">Certified Pre-Owned</span>
+                  <span className="carzino-filter-option">
+                    Certified Pre-Owned
+                  </span>
                   <span className="carzino-filter-count ml-1">(12,543)</span>
                 </label>
               </div>
