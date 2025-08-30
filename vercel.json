@@ -1,0 +1,31 @@
+{
+  "build": {
+    "env": {
+      "VITE_BUILDER_API_KEY": "@builder-api-key",
+      "VITE_WC_API_URL": "@wc-api-url",
+      "VITE_WC_CONSUMER_KEY": "@wc-consumer-key", 
+      "VITE_WC_CONSUMER_SECRET": "@wc-consumer-secret"
+    }
+  },
+  "functions": {
+    "app/server/**": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/app/server/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/app/$1"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/inventory",
+      "destination": "/builder-inventory"
+    }
+  ]
+}
