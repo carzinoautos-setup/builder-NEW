@@ -286,6 +286,9 @@ export default function MySQLVehiclesOriginalStyle() {
     priceMax: "",
     paymentMin: "",
     paymentMax: "",
+    // NEW: Additional custom field filters
+    fuelType: [] as string[],
+    certified: [] as string[],
   });
 
   const [collapsedFilters, setCollapsedFilters] = useState({
