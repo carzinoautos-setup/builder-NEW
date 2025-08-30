@@ -34,6 +34,7 @@ import {
   getCacheStats as getPaymentCacheStats,
   clearCache as clearPaymentCache,
 } from "./routes/payments.js";
+import woocommerceRoutes from "./routes/woocommerce.js";
 import WordPressSync from "./scripts/syncWordPressUpdates.js";
 
 // Track WordPress sync status
