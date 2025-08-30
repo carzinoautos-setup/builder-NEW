@@ -24,7 +24,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<WooCommerceVehicles />} />
           <Route
             path="/cars-for-sale/*"
             element={<MySQLVehiclesOriginalStyle />}
