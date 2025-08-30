@@ -1,12 +1,22 @@
 {
   "buildCommand": "npm run build:client",
   "outputDirectory": "dist/spa",
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/mysql-vehicles",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/builder-inventory", 
+      "dest": "/index.html"
+    },
+    {
+      "src": "/woocommerce-vehicles",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
