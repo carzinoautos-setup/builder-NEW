@@ -310,6 +310,9 @@ export default function MySQLVehiclesOriginalStyle() {
     dealer: true,
     state: true,
     city: true,
+    // NEW: Additional custom field filters
+    fuelType: true,
+    certified: true,
   });
 
   // Price and payment filter states
