@@ -179,74 +179,138 @@ export class WooCommerceVehicleAPI {
 
   /**
    * Transform WooCommerce meta_data array into direct properties
+   * Based on your actual ACF field mapping from WORDPRESS-FIELD-MAPPING.md
    */
   private transformVehicleMetaData(vehicle: WCVehicle): WCVehicle {
     const transformed = { ...vehicle };
 
-    // Map meta_data to direct properties based on your WooCommerce meta keys
+    // Map meta_data to direct properties based on your actual ACF field names
     vehicle.meta_data?.forEach((meta) => {
       switch (meta.key) {
-        case "_vehicle_make":
-        case "make":
-          transformed.make = meta.value;
-          break;
-        case "_vehicle_model":
-        case "model":
-          transformed.model = meta.value;
-          break;
-        case "_vehicle_year":
+        // Basic Information
         case "year":
           transformed.year = parseInt(meta.value);
           break;
-        case "_vehicle_mileage":
+        case "make":
+          transformed.make = meta.value;
+          break;
+        case "model":
+          transformed.model = meta.value;
+          break;
+        case "trim":
+          transformed.trim = meta.value;
+          break;
+
+        // Technical Specs
         case "mileage":
           transformed.mileage = parseInt(meta.value);
           break;
-        case "_vehicle_transmission":
         case "transmission":
           transformed.transmission = meta.value;
           break;
-        case "_vehicle_fuel_type":
-        case "fuel_type":
-          transformed.fuel_type = meta.value;
+        case "transmission_speed":
+          transformed.transmission_speed = meta.value;
           break;
-        case "_vehicle_body_style":
-        case "body_style":
-          transformed.body_style = meta.value;
-          break;
-        case "_vehicle_drivetrain":
-        case "drivetrain":
-          transformed.drivetrain = meta.value;
-          break;
-        case "_vehicle_exterior_color":
-        case "exterior_color":
-          transformed.exterior_color = meta.value;
-          break;
-        case "_vehicle_interior_color":
-        case "interior_color":
-          transformed.interior_color = meta.value;
-          break;
-        case "_vehicle_condition":
-        case "condition":
-          transformed.condition = meta.value;
-          break;
-        case "_vehicle_doors":
         case "doors":
           transformed.doors = parseInt(meta.value);
           break;
-        case "_vehicle_certified":
+        case "engine_cylinders":
+          transformed.engine_cylinders = parseInt(meta.value);
+          break;
+        case "fuel_type":
+          transformed.fuel_type = meta.value;
+          break;
+        case "drivetrain":
+          transformed.drivetrain = meta.value;
+          break;
+        case "body_style":
+          transformed.body_style = meta.value;
+          break;
+        case "highway_mpg":
+          transformed.highway_mpg = parseInt(meta.value);
+          break;
+
+        // Visual & Media
+        case "exterior_color_generic":
+          transformed.exterior_color = meta.value;
+          break;
+        case "interior_color_generic":
+          transformed.interior_color = meta.value;
+          break;
+        case "_vehicle_mileage_icon":
+          transformed.mileageIcon = meta.value;
+          break;
+        case "_vehicle_transmission_icon":
+          transformed.transmissionIcon = meta.value;
+          break;
+        case "_vehicle_door_icon":
+          transformed.doorIcon = meta.value;
+          break;
+
+        // Status & Condition
+        case "condition":
+          transformed.condition = meta.value;
+          break;
         case "certified":
           transformed.certified = meta.value === "yes" || meta.value === true;
           break;
+        case "title_status":
+          transformed.title_status = meta.value;
+          break;
+        case "is_featured":
+          transformed.featured = meta.value === "yes" || meta.value === true;
+          break;
+        case "_vehicle_badges":
+          transformed.badges = Array.isArray(meta.value) ? meta.value : [];
+          break;
+
+        // Pricing & Financing
+        case "_price":
+          transformed.price = meta.value;
+          break;
+        case "_sale_price":
+          transformed.sale_price = meta.value;
+          break;
+        case "_vehicle_payment":
+          transformed.payment = parseFloat(meta.value);
+          break;
+        case "_vehicle_calculated_payment":
+          transformed.payments = parseFloat(meta.value);
+          break;
+        case "_vehicle_interest_rate":
+          transformed.interest_rate = parseFloat(meta.value);
+          break;
+        case "_vehicle_down_payment":
+          transformed.down_payment = parseFloat(meta.value);
+          break;
+        case "_vehicle_loan_term":
+          transformed.loan_term = parseInt(meta.value);
+          break;
+
+        // Seller Information
         case "_vehicle_dealer":
-        case "dealer":
           transformed.dealer = meta.value;
           break;
+        case "_vehicle_seller_type":
+          transformed.seller_type = meta.value;
+          break;
+        case "_vehicle_seller_account":
+          transformed.seller_account_number = meta.value;
+          break;
         case "_vehicle_location":
-        case "location":
           transformed.location = meta.value;
           break;
-        // Add more meta field mappings as needed
+        case "_vehicle_phone":
+          transformed.phone = meta.value;
+          break;
+
+        // Location data
+        case "car_location_latitude":
+          transformed.latitude = parseFloat(meta.value);
+          break;
+        case "car_location_longitude":
+          transformed.longitude = parseFloat(meta.value);
+          break;
       }
     });
 
