@@ -3,6 +3,7 @@
  * Connects WooCommerce vehicle data to Builder.io visual models
  */
 
+import React from 'react';
 import { wooCommerceAPI, type WCVehicle, type VehicleFilters } from './woocommerce';
 import { getBuilderContent, transformVehiclesForBuilder, BUILDER_MODELS } from './builder';
 
