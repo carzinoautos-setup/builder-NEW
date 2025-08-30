@@ -868,6 +868,9 @@ export default function MySQLVehiclesOriginalStyle() {
       priceMax: "",
       paymentMin: "",
       paymentMax: "",
+      // NEW: Additional custom field filters
+      fuelType: [],
+      certified: [],
     });
     setPriceMin("10000");
     setPriceMax("100000");
