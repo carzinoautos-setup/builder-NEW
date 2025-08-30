@@ -1,5 +1,4 @@
 {
-  "_comment": "Vercel configuration for React SPA routing",
   "buildCommand": "npm run build:client",
   "outputDirectory": "dist/spa",
   "cleanUrls": true,
