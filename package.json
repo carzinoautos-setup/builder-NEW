@@ -12,7 +12,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:client && npm run build:server",
+    "build": "vite build",
+    "build:full": "npm run build:client && npm run build:server",
     "build:client": "vite build",
     "build:server": "vite build --config vite.config.server.ts",
     "start": "node dist/server/node-build.mjs",
@@ -23,6 +24,9 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@builder.io/react": "^8.2.7",
+    "@builder.io/sdk": "^6.1.2",
+    "@woocommerce/woocommerce-rest-api": "^1.0.2",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mysql2": "^3.14.3",

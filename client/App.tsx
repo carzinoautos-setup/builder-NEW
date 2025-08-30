@@ -11,6 +11,7 @@ import MySQLVehiclesOriginalStyle from "./pages/MySQLVehiclesOriginalStyle";
 import { IconDemo } from "./pages/IconDemo";
 import { PaymentCalculatorDemo } from "./pages/PaymentCalculatorDemo";
 import { WooCommerceVehicles } from "./pages/WooCommerceVehicles";
+import BuilderInventory from "./pages/BuilderInventory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,8 @@ const App = () => (
             path="/woocommerce-vehicles"
             element={<WooCommerceVehicles />}
           />
+          <Route path="/builder-inventory" element={<BuilderInventory />} />
+          <Route path="/inventory" element={<BuilderInventory />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
