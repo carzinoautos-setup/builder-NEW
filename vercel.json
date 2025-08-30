@@ -1,8 +1,4 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/spa",
-  "installCommand": "npm install",
-  "framework": null,
   "functions": {
     "api/**/*.js": {
       "runtime": "nodejs18.x"
