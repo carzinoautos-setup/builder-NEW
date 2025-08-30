@@ -29,10 +29,7 @@ const App = () => (
             path="/cars-for-sale/*"
             element={<MySQLVehiclesOriginalStyle />}
           />
-          <Route
-            path="/mysql-vehicles"
-            element={<WorkingVehiclesPage />}
-          />
+          <Route path="/mysql-vehicles" element={<WorkingVehiclesPage />} />
           <Route path="/icon-demo" element={<IconDemo />} />
           <Route path="/payment-demo" element={<PaymentCalculatorDemo />} />
           <Route

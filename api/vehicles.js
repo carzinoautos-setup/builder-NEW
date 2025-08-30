@@ -8,7 +8,8 @@ const mockVehicles = [
     price: 28500,
     mileage: 15000,
     condition: "Used",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 2,
@@ -18,7 +19,8 @@ const mockVehicles = [
     price: 24900,
     mileage: 22000,
     condition: "Used",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 3,
@@ -28,7 +30,8 @@ const mockVehicles = [
     price: 45000,
     mileage: 5000,
     condition: "New",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 4,
@@ -38,7 +41,8 @@ const mockVehicles = [
     price: 42000,
     mileage: 12000,
     condition: "Used",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 5,
@@ -48,7 +52,8 @@ const mockVehicles = [
     price: 38000,
     mileage: 18000,
     condition: "Used",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 6,
@@ -58,7 +63,8 @@ const mockVehicles = [
     price: 45000,
     mileage: 8000,
     condition: "Used",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 7,
@@ -68,7 +74,8 @@ const mockVehicles = [
     price: 42000,
     mileage: 10000,
     condition: "Used",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 8,
@@ -78,7 +85,8 @@ const mockVehicles = [
     price: 39000,
     mileage: 2000,
     condition: "New",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 9,
@@ -88,7 +96,8 @@ const mockVehicles = [
     price: 52000,
     mileage: 8500,
     condition: "Used",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
   },
   {
     id: 10,
@@ -98,23 +107,26 @@ const mockVehicles = [
     price: 22000,
     mileage: 25000,
     condition: "Used",
-    image: "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car"
-  }
+    image:
+      "https://cdn.builder.io/api/v1/image/assets/4d1f1909a98e4ebc8068632229306ce4/placeholder-car",
+  },
 ];
 
 export default async function handler(req, res) {
   // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-  if (req.method === 'OPTIONS') {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ success: false, message: 'Method not allowed' });
+  if (req.method !== "GET") {
+    return res
+      .status(405)
+      .json({ success: false, message: "Method not allowed" });
   }
 
   try {
@@ -132,10 +144,10 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error('Error in vehicles API:', error);
+    console.error("Error in vehicles API:", error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
       data: [],
       meta: {
         totalRecords: 0,
