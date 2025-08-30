@@ -62,22 +62,54 @@ export interface WCVehicle {
     key: string;
     value: any;
   }>;
-  // Add your specific vehicle meta fields here
+
+  // Basic Information
+  year?: number;
   make?: string;
   model?: string;
-  year?: number;
+  trim?: string;
+
+  // Technical Specs
   mileage?: number;
   transmission?: string;
+  transmission_speed?: string;
+  doors?: number;
+  engine_cylinders?: number;
   fuel_type?: string;
-  body_style?: string;
   drivetrain?: string;
+  body_style?: string;
+  highway_mpg?: number;
+
+  // Visual & Media
   exterior_color?: string;
   interior_color?: string;
+  mileageIcon?: string;
+  transmissionIcon?: string;
+  doorIcon?: string;
+
+  // Status & Condition
   condition?: string;
-  doors?: number;
   certified?: boolean;
+  title_status?: string;
+  badges?: string[];
+
+  // Pricing & Financing
+  payment?: number;
+  payments?: number;
+  interest_rate?: number;
+  down_payment?: number;
+  loan_term?: number;
+
+  // Seller Information
   dealer?: string;
+  seller_type?: string;
+  seller_account_number?: string;
   location?: string;
+  phone?: string;
+
+  // Location data
+  latitude?: number;
+  longitude?: number;
 }
 
 // API response interfaces
