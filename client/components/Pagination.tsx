@@ -139,11 +139,13 @@ export const Pagination: React.FC<PaginationProps> = ({
               onChange={(e) => onPageChange(parseInt(e.target.value))}
               className="px-3 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:border-red-600"
             >
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <option key={page} value={page}>
-                  {page}
-                </option>
-              ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <option key={page} value={page}>
+                    {page}
+                  </option>
+                ),
+              )}
             </select>
             <span className="text-sm text-gray-500">of {totalPages}</span>
           </div>
