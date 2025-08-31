@@ -187,14 +187,14 @@ function generateSimpleVehicleRecord(id: number): SimpleVehicleRecord {
     doors: randomChoice(DOORS),
     drivetrain,
     condition,
-    body_style: bodyStyle,
+    body_type: bodyStyle,
     salePrice: hasPrice ? formatPrice(price) : null,
     payment: hasPrice ? `$${monthlyPayment}` : null,
     dealer: randomChoice(DEALERS),
     location: randomChoice(LOCATIONS),
     phone: `(${randomInt(200, 999)}) ${randomInt(100, 999)}-${randomInt(1000, 9999)}`,
     seller_type: randomChoice(SELLER_TYPES),
-    seller_account_number: `ACCT${randomInt(1000, 9999)}`,
+    account_number_seller: `ACCT${randomInt(1000, 9999)}`,
   };
 }
 
@@ -207,15 +207,15 @@ export class SimpleMockVehicleService {
       "🔧 SimpleMockVehicleService: Generating sample data (original demo format)...",
     );
     this.generateMockData();
-    // Apply validation rule to ensure no invalid body_style vehicles
+    // Apply validation rule to ensure no invalid body_type vehicles
     this.vehicles = this.vehicles.filter(
       (vehicle) =>
-        vehicle.body_style &&
-        vehicle.body_style !== "Uncategorized" &&
-        vehicle.body_style.trim() !== "",
+        vehicle.body_type &&
+        vehicle.body_type !== "Uncategorized" &&
+        vehicle.body_type.trim() !== "",
     );
     console.log(
-      `✅ SimpleMockVehicleService: ${this.vehicles.length} vehicles generated (invalid body_style excluded)`,
+      `✅ SimpleMockVehicleService: ${this.vehicles.length} vehicles generated (invalid body_type excluded)`,
     );
   }
 
@@ -229,11 +229,11 @@ export class SimpleMockVehicleService {
     vehicle: SimpleVehicleRecord,
     filters: SimpleVehicleFilters,
   ): boolean {
-    // VALIDATION RULE: Exclude vehicles with invalid body_style
+    // VALIDATION RULE: Exclude vehicles with invalid body_type
     if (
-      !vehicle.body_style ||
-      vehicle.body_style === "Uncategorized" ||
-      vehicle.body_style.trim() === ""
+      !vehicle.body_type ||
+      vehicle.body_type === "Uncategorized" ||
+      vehicle.body_type.trim() === ""
     ) {
       return false;
     }
@@ -249,9 +249,9 @@ export class SimpleMockVehicleService {
       if (!filters.make.includes(vehicleMake)) return false;
     }
 
-    // Vehicle Type filter (maps to body_style field)
+    // Vehicle Type filter (maps to body_type field)
     if (filters.vehicleType && filters.vehicleType.length > 0) {
-      if (!filters.vehicleType.includes(vehicle.body_style)) return false;
+      if (!filters.vehicleType.includes(vehicle.body_type)) return false;
     }
 
     // Drive type filter
@@ -407,13 +407,13 @@ export class SimpleMockVehicleService {
   }
 
   async getDealers(): Promise<{ name: string; count: number }[]> {
-    // Get dealers only from vehicles where seller_type = "Dealer" AND valid body_style
+    // Get dealers only from vehicles where seller_type = "Dealer" AND valid body_type
     const dealerVehicles = this.vehicles.filter(
       (v) =>
         v.seller_type === "Dealer" &&
-        v.body_style &&
-        v.body_style !== "Uncategorized" &&
-        v.body_style.trim() !== "",
+        v.body_type &&
+        v.body_type !== "Uncategorized" &&
+        v.body_type.trim() !== "",
     );
 
     // Count vehicles per dealer
@@ -432,19 +432,19 @@ export class SimpleMockVehicleService {
   }
 
   async getVehicleTypeCounts(): Promise<{ name: string; count: number }[]> {
-    // Only count vehicles with valid body_style
+    // Only count vehicles with valid body_type
     const validVehicles = this.vehicles.filter(
       (v) =>
-        v.body_style &&
-        v.body_style !== "Uncategorized" &&
-        v.body_style.trim() !== "",
+        v.body_type &&
+        v.body_type !== "Uncategorized" &&
+        v.body_type.trim() !== "",
     );
 
-    // Count vehicles per body style
+    // Count vehicles per body type
     const typeCounts = new Map<string, number>();
     validVehicles.forEach((vehicle) => {
-      const current = typeCounts.get(vehicle.body_style) || 0;
-      typeCounts.set(vehicle.body_style, current + 1);
+      const current = typeCounts.get(vehicle.body_type) || 0;
+      typeCounts.set(vehicle.body_type, current + 1);
     });
 
     // Convert to array and sort by count descending
@@ -461,12 +461,12 @@ export class SimpleMockVehicleService {
     driveTypes: string[];
     sellerTypes: string[];
   }> {
-    // Only include options from vehicles with valid body_style
+    // Only include options from vehicles with valid body_type
     const validVehicles = this.vehicles.filter(
       (v) =>
-        v.body_style &&
-        v.body_style !== "Uncategorized" &&
-        v.body_style.trim() !== "",
+        v.body_type &&
+        v.body_type !== "Uncategorized" &&
+        v.body_type.trim() !== "",
     );
 
     // Extract makes from vehicle titles

@@ -20,7 +20,7 @@ import {
   geocodeZip,
   geocodeBatch,
   geocodingHealthCheck,
-  getCacheStats,
+  getCacheStats as getGeocodingCacheStats,
   clearGeocodingCache,
 } from "./routes/geocoding.js";
 import {
@@ -31,9 +31,10 @@ import {
   calculatePayment,
   calculateBulkPayments,
   calculateAffordablePrice,
-  getCacheStats,
-  clearCache,
+  getCacheStats as getPaymentCacheStats,
+  clearCache as clearPaymentCache,
 } from "./routes/payments.js";
+import woocommerceRoutes from "./routes/woocommerce.js";
 import WordPressSync from "./scripts/syncWordPressUpdates.js";
 
 // Track WordPress sync status
@@ -84,15 +85,18 @@ export function createServer() {
   app.post("/api/payments/calculate", calculatePayment);
   app.post("/api/payments/bulk", calculateBulkPayments);
   app.post("/api/payments/affordable-price", calculateAffordablePrice);
-  app.get("/api/payments/cache-stats", getCacheStats);
-  app.delete("/api/payments/cache", clearCache);
+  app.get("/api/payments/cache-stats", getPaymentCacheStats);
+  app.delete("/api/payments/cache", clearPaymentCache);
 
   // Geocoding API routes
   app.get("/api/geocode/health", geocodingHealthCheck);
-  app.get("/api/geocode/cache/stats", getCacheStats);
+  app.get("/api/geocode/cache/stats", getGeocodingCacheStats);
   app.delete("/api/geocode/cache", clearGeocodingCache);
   app.get("/api/geocode/:zip", geocodeZip);
   app.post("/api/geocode/batch", geocodeBatch);
+
+  // WooCommerce API routes (for production)
+  app.use("/api/woocommerce", woocommerceRoutes);
 
   // WordPress sync status endpoint
   app.get("/api/wordpress/sync-status", (_req, res) => {

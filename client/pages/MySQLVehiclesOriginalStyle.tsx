@@ -18,8 +18,16 @@ import { FilterSection } from "@/components/FilterSection";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
+import {
+  VehicleRecord,
+  VehiclesApiResponse,
+  vehicleApi,
+  getVehicleTitle,
+  formatPrice,
+  formatMileage,
+} from "@/lib/vehicleApi";
 
-// Simple vehicle interface matching original demo exactly
+// Enhanced vehicle interface for display with all custom fields
 interface Vehicle {
   id: number;
   featured: boolean;
@@ -36,6 +44,25 @@ interface Vehicle {
   location: string;
   phone: string;
   seller_type: string;
+  seller_account_number: string;
+  // NEW: Additional custom fields from VehicleRecord
+  year: number;
+  make: string;
+  model: string;
+  trim: string;
+  body_style: string;
+  engine_cylinders: number;
+  fuel_type: string;
+  transmission_speed: string;
+  drivetrain: string;
+  exterior_color_generic: string;
+  interior_color_generic: string;
+  title_status: string;
+  highway_mpg: number;
+  condition: string;
+  certified: boolean;
+  rawPrice: number;
+  rawMileage: number;
 }
 
 // API types
@@ -116,6 +143,101 @@ const normalizeFilterValue = (value: string) => {
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+};
+
+// Transform VehicleRecord from API to Vehicle for display
+const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
+  // Generate vehicle title from components
+  const title = getVehicleTitle(record);
+
+  // Generate realistic vehicle images (placeholder for now)
+  const vehicleImages = [
+    `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80`,
+    `https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=450&h=300&fit=crop&auto=format&q=80`,
+    `https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=450&h=300&fit=crop&auto=format&q=80`,
+  ];
+
+  // Generate badges based on vehicle characteristics - matching original demo
+  const badges = [];
+
+  // Add condition badge (New/Used)
+  if (record.condition === "New") {
+    badges.push("New");
+  } else {
+    badges.push("Used");
+  }
+
+  // Add drivetrain badge (4WD/AWD/FWD/RWD)
+  if (record.drivetrain) {
+    badges.push(record.drivetrain);
+  } else {
+    // Generate random drivetrain for demo consistency
+    const drivetrains = ["4WD", "AWD", "FWD", "RWD"];
+    badges.push(drivetrains[Math.floor(Math.random() * drivetrains.length)]);
+  }
+
+  // Optional: Add certified badge if applicable
+  if (record.certified) {
+    badges.push("Certified");
+  }
+
+  // Generate dealer info (placeholder)
+  const dealerNames = [
+    "Premium Auto Group",
+    "Elite Motors",
+    "AutoMax",
+    "Metro Cars",
+    "City Auto",
+  ];
+  const dealerName =
+    dealerNames[Math.floor(Math.random() * dealerNames.length)];
+
+  // Generate location based on seller type
+  const locations = [
+    "Seattle, WA",
+    "Portland, OR",
+    "Tacoma, WA",
+    "Bellevue, WA",
+    "Spokane, WA",
+  ];
+  const location = locations[Math.floor(Math.random() * locations.length)];
+
+  return {
+    id: record.id,
+    featured: Math.random() > 0.9, // 10% chance of being featured
+    viewed: Math.random() > 0.8, // 20% chance of being viewed
+    images: vehicleImages,
+    badges,
+    title,
+    mileage: formatMileage(record.mileage),
+    transmission: record.transmission,
+    doors: `${record.doors} doors`,
+    salePrice: formatPrice(record.price),
+    payment: `$${record.payments}`, // Use the payments field from VehicleRecord
+    dealer: dealerName,
+    location,
+    phone: "(555) 123-4567", // Placeholder
+    seller_type: record.seller_type,
+    seller_account_number: record.seller_account_number,
+    // NEW: Include all custom fields from VehicleRecord
+    year: record.year,
+    make: record.make,
+    model: record.model,
+    trim: record.trim,
+    body_style: record.body_style,
+    engine_cylinders: record.engine_cylinders,
+    fuel_type: record.fuel_type,
+    transmission_speed: record.transmission_speed,
+    drivetrain: record.drivetrain,
+    exterior_color_generic: record.exterior_color_generic,
+    interior_color_generic: record.interior_color_generic,
+    title_status: record.title_status,
+    highway_mpg: record.highway_mpg,
+    condition: record.condition,
+    certified: record.certified,
+    rawPrice: record.price,
+    rawMileage: record.mileage,
+  };
 };
 
 export default function MySQLVehiclesOriginalStyle() {
@@ -200,6 +322,9 @@ export default function MySQLVehiclesOriginalStyle() {
     priceMax: "",
     paymentMin: "",
     paymentMax: "",
+    // NEW: Additional custom field filters
+    fuelType: [] as string[],
+    certified: [] as string[],
   });
 
   const [collapsedFilters, setCollapsedFilters] = useState({
@@ -221,6 +346,9 @@ export default function MySQLVehiclesOriginalStyle() {
     dealer: true,
     state: true,
     city: true,
+    // NEW: Additional custom field filters
+    fuelType: true,
+    certified: true,
   });
 
   // Price and payment filter states
@@ -234,14 +362,28 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Get the API base URL - handle different environments
   const getApiBaseUrl = () => {
-    // In development, use relative URLs
+    // Check if we have WooCommerce API configured for production
+    const hasWooCommerceConfig =
+      import.meta.env.VITE_WC_API_URL &&
+      import.meta.env.VITE_WC_CONSUMER_KEY &&
+      import.meta.env.VITE_WC_CONSUMER_SECRET;
+
+    // In production with WooCommerce configured, use WooCommerce API
+    if (import.meta.env.PROD && hasWooCommerceConfig) {
+      console.log("🔗 Using WooCommerce API for production data");
+      return "/api/woocommerce"; // Route to WooCommerce integration
+    }
+
+    // In development, use mock MySQL API
     if (
       window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1"
     ) {
+      console.log("🛠️ Using mock MySQL API for development");
       return "";
     }
-    // In production, try to use the same origin first
+
+    // Fallback to relative URLs
     return "";
   };
 
@@ -343,8 +485,18 @@ export default function MySQLVehiclesOriginalStyle() {
       if (appliedFilters.paymentMax) {
         params.append("paymentMax", appliedFilters.paymentMax);
       }
+      // NEW: Additional custom field filters
+      if (appliedFilters.fuelType.length > 0) {
+        params.append("fuelType", appliedFilters.fuelType.join(","));
+      }
+      if (appliedFilters.certified.length > 0) {
+        params.append(
+          "certified",
+          appliedFilters.certified.includes("Certified") ? "true" : "false",
+        );
+      }
 
-      const apiUrl = `${getApiBaseUrl()}/api/simple-vehicles?${params}`;
+      const apiUrl = `${getApiBaseUrl()}/api/vehicles?${params}`;
       console.log("🔍 Fetching vehicles from:", apiUrl);
 
       const controller = new AbortController();
@@ -364,12 +516,26 @@ export default function MySQLVehiclesOriginalStyle() {
         throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
 
-      const data: VehiclesApiResponse = await response.json();
+      const data = await response.json();
 
       if (data.success) {
-        setVehicles(data.data);
-        setApiResponse(data);
-        console.log("✅ Successfully loaded", data.data.length, "vehicles");
+        // Transform VehicleRecord[] to Vehicle[] for display
+        const transformedVehicles = data.data.map(transformVehicleRecord);
+        setVehicles(transformedVehicles);
+
+        // Create compatible API response
+        const compatibleResponse: VehiclesApiResponse = {
+          success: true,
+          data: transformedVehicles,
+          meta: data.meta,
+          message: data.message,
+        };
+        setApiResponse(compatibleResponse);
+        console.log(
+          "✅ Successfully loaded and transformed",
+          transformedVehicles.length,
+          "vehicles",
+        );
       } else {
         throw new Error(data.message || "API returned error");
       }
@@ -759,6 +925,9 @@ export default function MySQLVehiclesOriginalStyle() {
       priceMax: "",
       paymentMin: "",
       paymentMax: "",
+      // NEW: Additional custom field filters
+      fuelType: [],
+      certified: [],
     });
     setPriceMin("10000");
     setPriceMax("100000");
@@ -2646,6 +2815,128 @@ export default function MySQLVehiclesOriginalStyle() {
                   <span className="carzino-filter-option">
                     8-Speed Automatic
                   </span>
+                </label>
+              </div>
+            </FilterSection>
+
+            {/* NEW: Fuel Type */}
+            <FilterSection
+              title="Fuel Type"
+              isCollapsed={collapsedFilters.fuelType}
+              onToggle={() => toggleFilter("fuelType")}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.fuelType.includes("Gasoline")}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          fuelType: [...prev.fuelType, "Gasoline"],
+                        }));
+                      } else {
+                        removeAppliedFilter("fuelType", "Gasoline");
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">Gasoline</span>
+                  <span className="carzino-filter-count ml-1">(35,426)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.fuelType.includes("Hybrid")}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          fuelType: [...prev.fuelType, "Hybrid"],
+                        }));
+                      } else {
+                        removeAppliedFilter("fuelType", "Hybrid");
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">Hybrid</span>
+                  <span className="carzino-filter-count ml-1">(8,742)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.fuelType.includes("Electric")}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          fuelType: [...prev.fuelType, "Electric"],
+                        }));
+                      } else {
+                        removeAppliedFilter("fuelType", "Electric");
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">Electric</span>
+                  <span className="carzino-filter-count ml-1">(3,156)</span>
+                </label>
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.fuelType.includes("Diesel")}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          fuelType: [...prev.fuelType, "Diesel"],
+                        }));
+                      } else {
+                        removeAppliedFilter("fuelType", "Diesel");
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">Diesel</span>
+                  <span className="carzino-filter-count ml-1">(2,676)</span>
+                </label>
+              </div>
+            </FilterSection>
+
+            {/* NEW: Certified Status */}
+            <FilterSection
+              title="Certification"
+              isCollapsed={collapsedFilters.certified}
+              onToggle={() => toggleFilter("certified")}
+            >
+              <div className="space-y-1">
+                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={appliedFilters.certified.includes("Certified")}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (e.target.checked) {
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          certified: [...prev.certified, "Certified"],
+                        }));
+                      } else {
+                        removeAppliedFilter("certified", "Certified");
+                      }
+                    }}
+                  />
+                  <span className="carzino-filter-option">
+                    Certified Pre-Owned
+                  </span>
+                  <span className="carzino-filter-count ml-1">(12,543)</span>
                 </label>
               </div>
             </FilterSection>
