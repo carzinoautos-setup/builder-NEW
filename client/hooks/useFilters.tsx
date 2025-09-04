@@ -72,12 +72,41 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
       setLoading(true);
       setError(null);
       const qs = buildFiltersQuery(filters || {});
-      const url = `${getApiBaseUrl()}/wp-json/custom/v1/filters${qs ? `?${qs}` : ""}`;
+      // Use local API proxy to avoid CORS and rely on server-side mock service when available
+      const url = `/api/vehicles/filters${qs ? `?${qs}` : ""}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Filters error ${res.status}`);
       const json = await res.json();
-      if (json && json.success && json.filters) {
-        setFilterOptions(json.filters);
+
+      // Support both WordPress plugin shape (json.filters) and local server shape (json.data)
+      if (json && json.success) {
+        if (json.filters) {
+          setFilterOptions(json.filters);
+        } else if (json.data) {
+          // Normalize server filter data into the expected map shape
+          const map: FilterMap = {};
+
+          if (Array.isArray(json.data.makes))
+            map.make = json.data.makes.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.models))
+            map.model = json.data.models.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.conditions))
+            map.condition = json.data.conditions.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.fuelTypes))
+            map.fuel_type = json.data.fuelTypes.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.transmissions))
+            map.transmission = json.data.transmissions.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.drivetrains))
+            map.drivetrain = json.data.drivetrains.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.bodyStyles))
+            map.body_style = json.data.bodyStyles.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.sellerTypes))
+            map.account_type_seller = json.data.sellerTypes.map((n: string) => ({ name: n, count: 0 }));
+
+          setFilterOptions(map);
+        } else {
+          setFilterOptions({});
+        }
       } else {
         setFilterOptions({});
       }
