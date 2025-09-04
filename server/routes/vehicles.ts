@@ -43,6 +43,17 @@ try {
  * GET /api/vehicles
  * Fetch paginated vehicles with optional filters
  */
+// Helper to build WP API URL and optionally append consumer key/secret
+function buildWpUrl(base: string, path: string, qs: string) {
+  const cleanBase = base.replace(/\/$/, "");
+  const url = `${cleanBase}/${path}${qs ? `?${qs}` : ""}`;
+  if (process.env.WP_CONSUMER_KEY && process.env.WP_CONSUMER_SECRET) {
+    const sep = url.includes("?") ? "&" : "?";
+    return `${url}${sep}consumer_key=${encodeURIComponent(process.env.WP_CONSUMER_KEY)}&consumer_secret=${encodeURIComponent(process.env.WP_CONSUMER_SECRET)}`;
+  }
+  return url;
+}
+
 export const getVehicles: RequestHandler = async (req, res) => {
   try {
     // Parse pagination parameters
