@@ -184,6 +184,21 @@ export const getVehicleById: RequestHandler = async (req, res) => {
  */
 export const getFilterOptions: RequestHandler = async (req, res) => {
   try {
+    // If WP API base configured and not using mock, proxy filter request
+    if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
+      const wpBase = process.env.WP_API_BASE.replace(/\/$/, "");
+      const qs = new URLSearchParams(req.query as Record<string, any>).toString();
+      const url = `${wpBase}/filters${qs ? `?${qs}` : ""}`;
+      const wpResponse = await fetch(url, { method: "GET" });
+      const body = await wpResponse.text();
+      try {
+        const json = JSON.parse(body);
+        return res.status(wpResponse.status).json(json);
+      } catch (e) {
+        return res.status(wpResponse.status).send(body);
+      }
+    }
+
     const options = await vehicleService.getFilterOptions();
 
     res.status(200).json({
