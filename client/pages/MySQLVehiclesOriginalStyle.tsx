@@ -194,26 +194,9 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
     badges.push("Certified");
   }
 
-  // Generate dealer info (placeholder)
-  const dealerNames = [
-    "Premium Auto Group",
-    "Elite Motors",
-    "AutoMax",
-    "Metro Cars",
-    "City Auto",
-  ];
-  const dealerName =
-    dealerNames[Math.floor(Math.random() * dealerNames.length)];
-
-  // Generate location based on seller type
-  const locations = [
-    "Seattle, WA",
-    "Portland, OR",
-    "Tacoma, WA",
-    "Bellevue, WA",
-    "Spokane, WA",
-  ];
-  const location = locations[Math.floor(Math.random() * locations.length)];
+  // Prefer real dealer and location from record when available
+  const dealerName = (record as any).dealer || (record as any).seller_account_number || "Premium Auto Group";
+  const location = (record as any).location || `${(record as any).city_seller || "Unknown"}, ${(record as any).state_seller || ""}`;
 
   return {
     id: record.id,
@@ -1983,7 +1966,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("year", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   ))}
