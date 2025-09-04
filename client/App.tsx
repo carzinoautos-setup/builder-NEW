@@ -19,33 +19,35 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route
-            path="/cars-for-sale/*"
-            element={<MySQLVehiclesOriginalStyle />}
-          />
-          <Route
-            path="/mysql-vehicles"
-            element={<MySQLVehiclesOriginalStyle />}
-          />
-          <Route path="/icon-demo" element={<IconDemo />} />
-          <Route path="/payment-demo" element={<PaymentCalculatorDemo />} />
-          <Route
-            path="/woocommerce-vehicles"
-            element={<WooCommerceVehicles />}
-          />
-          <Route path="/builder-inventory" element={<BuilderInventory />} />
-          <Route path="/inventory" element={<BuilderInventory />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <DevErrorBoundary>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route
+              path="/cars-for-sale/*"
+              element={<MySQLVehiclesOriginalStyle />}
+            />
+            <Route
+              path="/mysql-vehicles"
+              element={<MySQLVehiclesOriginalStyle />}
+            />
+            <Route path="/icon-demo" element={<IconDemo />} />
+            <Route path="/payment-demo" element={<PaymentCalculatorDemo />} />
+            <Route
+              path="/woocommerce-vehicles"
+              element={<WooCommerceVehicles />}
+            />
+            <Route path="/builder-inventory" element={<BuilderInventory />} />
+            <Route path="/inventory" element={<BuilderInventory />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </DevErrorBoundary>
   </QueryClientProvider>
 );
 
