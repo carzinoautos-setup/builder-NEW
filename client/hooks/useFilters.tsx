@@ -81,22 +81,60 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
       // Support both WordPress plugin shape (json.filters) and local server shape (json.data)
       if (json && json.success) {
         if (json.filters) {
-          // Normalize WP filters keys to the UI's expected keys (make, model, trim, year, body_style, etc.)
-          const f = json.filters;
+          const f = json.filters as Record<string, any>;
+
+          const pickArray = (...keys: string[]) => {
+            for (const k of keys) {
+              const v = f[k];
+              if (Array.isArray(v)) return v;
+            }
+            return undefined;
+          };
+
+          const mapItem = (it: any) => {
+            if (it == null) return null;
+            if (typeof it === "string" || typeof it === "number") return { name: String(it), count: 0 };
+            if (typeof it === "object") return { name: String(it.name ?? it.value ?? it.label ?? it), count: typeof it.count === "number" ? it.count : 0 };
+            return null;
+          };
+
           const normalized: FilterMap = {};
 
-          if (Array.isArray(f.makes)) normalized.make = f.makes.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.models)) normalized.model = f.models.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.trims)) normalized.trim = f.trims.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.years)) normalized.year = f.years.map((v: any) => ({ name: String(v.name ?? v), count: v.count ?? 0 }));
-          if (Array.isArray(f.body_style)) normalized.body_style = f.body_style.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.drivetrain)) normalized.drivetrain = f.drivetrain.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.fuel_type)) normalized.fuel_type = f.fuel_type.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.transmission)) normalized.transmission = f.transmission.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.exterior_color)) normalized.exterior_color = f.exterior_color.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.interior_color)) normalized.interior_color = f.interior_color.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.account_name_seller)) normalized.account_name_seller = f.account_name_seller.map((v: any) => ({ name: v.name, count: v.count }));
-          if (Array.isArray(f.account_type_seller)) normalized.account_type_seller = f.account_type_seller.map((v: any) => ({ name: v.name, count: v.count }));
+          const makes = pickArray("makes", "make");
+          if (makes) normalized.make = makes.map(mapItem).filter(Boolean) as any;
+
+          const models = pickArray("models", "model");
+          if (models) normalized.model = models.map(mapItem).filter(Boolean) as any;
+
+          const trims = pickArray("trims", "trim");
+          if (trims) normalized.trim = trims.map(mapItem).filter(Boolean) as any;
+
+          const years = pickArray("years", "year");
+          if (years) normalized.year = years.map(mapItem).filter(Boolean) as any;
+
+          const bodyStyles = pickArray("body_style", "body_styles", "bodyStyles");
+          if (bodyStyles) normalized.body_style = bodyStyles.map(mapItem).filter(Boolean) as any;
+
+          const drivetrains = pickArray("drivetrain", "drivetrains");
+          if (drivetrains) normalized.drivetrain = drivetrains.map(mapItem).filter(Boolean) as any;
+
+          const fuels = pickArray("fuel_type", "fuelTypes", "fuel_types");
+          if (fuels) normalized.fuel_type = fuels.map(mapItem).filter(Boolean) as any;
+
+          const transmissions = pickArray("transmission", "transmissions");
+          if (transmissions) normalized.transmission = transmissions.map(mapItem).filter(Boolean) as any;
+
+          const exterior = pickArray("exterior_color", "exterior_colors", "exteriorColor");
+          if (exterior) normalized.exterior_color = exterior.map(mapItem).filter(Boolean) as any;
+
+          const interior = pickArray("interior_color", "interior_colors", "interiorColor");
+          if (interior) normalized.interior_color = interior.map(mapItem).filter(Boolean) as any;
+
+          const accountNames = pickArray("account_name_seller", "dealer", "account_names_seller");
+          if (accountNames) normalized.account_name_seller = accountNames.map(mapItem).filter(Boolean) as any;
+
+          const accountTypes = pickArray("account_type_seller", "seller_types", "account_types_seller", "sellerType");
+          if (accountTypes) normalized.account_type_seller = accountTypes.map(mapItem).filter(Boolean) as any;
 
           setFilterOptions(normalized);
         } else if (json.data) {
