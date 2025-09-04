@@ -2241,16 +2241,7 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("make")}
             >
               <div className="space-y-1">
-                {(filterOptions.make || [
-                  { name: "Audi", count: 143 },
-                  { name: "BMW", count: 189 },
-                  { name: "Chevrolet", count: 210 },
-                  { name: "Ford", count: 532 },
-                  { name: "Honda", count: 412 },
-                  { name: "Hyundai", count: 198 },
-                  { name: "Mercedes-Benz", count: 256 },
-                  { name: "Nissan", count: 178 },
-                ]).map((m: any) => (
+                {(filterOptions.make || []).map((m: any) => (
                   <label
                     key={m.name}
                     className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
