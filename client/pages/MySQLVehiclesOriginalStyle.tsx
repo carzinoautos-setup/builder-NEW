@@ -360,31 +360,10 @@ export default function MySQLVehiclesOriginalStyle() {
   const [interestRate, setInterestRate] = useState("5");
   const [downPayment, setDownPayment] = useState("2000");
 
-  // Get the API base URL - handle different environments
+  // Get the API base URL - point to WordPress site (Vite env)
   const getApiBaseUrl = () => {
-    // Check if we have WooCommerce API configured for production
-    const hasWooCommerceConfig =
-      import.meta.env.VITE_WC_API_URL &&
-      import.meta.env.VITE_WC_CONSUMER_KEY &&
-      import.meta.env.VITE_WC_CONSUMER_SECRET;
-
-    // In production with WooCommerce configured, use WooCommerce API
-    if (import.meta.env.PROD && hasWooCommerceConfig) {
-      console.log("🔗 Using WooCommerce API for production data");
-      return "/api/woocommerce"; // Route to WooCommerce integration
-    }
-
-    // In development, use mock MySQL API
-    if (
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1"
-    ) {
-      console.log("🛠️ Using mock MySQL API for development");
-      return "";
-    }
-
-    // Fallback to relative URLs
-    return "";
+    const wpUrl = import.meta.env.VITE_WP_URL || "https://env-uploadbackup62225-czdev.kinsta.cloud";
+    return wpUrl.replace(/\/$/, "");
   };
 
   // Get models for a specific make
