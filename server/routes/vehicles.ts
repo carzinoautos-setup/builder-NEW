@@ -217,11 +217,13 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       }
       const wpResponse = await fetch(url, { method: "GET", headers });
       const body = await wpResponse.text();
-      // Log proxied response for debugging conditional filters
+      // Log proxied response for debugging conditional filters (trim large output)
       try {
-        console.log("[WP_PROXY_RESPONSE] /filters -> status:", wpResponse.status, "body-trim:", body.substring(0, 200));
+        console.log("[WP_PROXY_REQUEST] url:", url, "hasAuth:", !!headers["Authorization"]);
+        const trimmed = body && body.length > 5000 ? body.substring(0, 5000) + "...(truncated)" : body;
+        console.log("[WP_PROXY_RESPONSE] /filters -> status:", wpResponse.status, "body:", trimmed);
       } catch (e) {
-        console.log("[WP_PROXY_RESPONSE] /vehicles -> (unable to log body)");
+        console.log("[WP_PROXY_RESPONSE] /filters -> (unable to log body)");
       }
       try {
         const json = JSON.parse(body);
