@@ -395,10 +395,10 @@ export default function MySQLVehiclesOriginalStyle() {
       setLoading(true);
       setError(null);
 
-      // Build query parameters
+      // Build query parameters (map to WordPress plugin expectations)
       const params = new URLSearchParams({
         page: currentPage.toString(),
-        pageSize: resultsPerPage.toString(),
+        per_page: resultsPerPage.toString(),
       });
 
       // Add search term
@@ -406,9 +406,9 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("search", searchTerm.trim());
       }
 
-      // Add sorting parameter
+      // Add sorting parameter (plugin expects 'sort')
       if (sortBy !== "relevance") {
-        params.append("sortBy", sortBy);
+        params.append("sort", sortBy);
       }
 
       // Add location/distance parameters
@@ -418,7 +418,7 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("radius", appliedRadius);
       }
 
-      // Add filters
+      // Add filters (use ACF meta keys expected by the plugin)
       if (appliedFilters.condition.length > 0) {
         params.append("condition", appliedFilters.condition.join(","));
       }
@@ -432,41 +432,44 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("trim", appliedFilters.trim.join(","));
       }
       if (appliedFilters.vehicleType.length > 0) {
-        params.append("body_type", appliedFilters.vehicleType.join(","));
+        // plugin uses 'body_style' meta key
+        params.append("body_style", appliedFilters.vehicleType.join(","));
       }
       if (appliedFilters.driveType.length > 0) {
-        params.append("driveType", appliedFilters.driveType.join(","));
+        // map to 'drivetrain'
+        params.append("drivetrain", appliedFilters.driveType.join(","));
       }
       if (appliedFilters.transmission.length > 0) {
         params.append("transmission", appliedFilters.transmission.join(","));
       }
       if (appliedFilters.mileage) {
-        params.append("mileage", appliedFilters.mileage);
+        // Treat as maximum mileage
+        params.append("max_mileage", appliedFilters.mileage);
       }
       if (appliedFilters.exteriorColor.length > 0) {
-        params.append("exteriorColor", appliedFilters.exteriorColor.join(","));
+        params.append("exterior_color", appliedFilters.exteriorColor.join(","));
       }
       if (appliedFilters.sellerType.length > 0) {
-        params.append("sellerType", appliedFilters.sellerType.join(","));
+        params.append("account_type_seller", appliedFilters.sellerType.join(","));
       }
       if (appliedFilters.dealer.length > 0) {
-        params.append("dealer", appliedFilters.dealer.join(","));
+        params.append("account_name_seller", appliedFilters.dealer.join(","));
       }
       if (appliedFilters.priceMin) {
-        params.append("priceMin", appliedFilters.priceMin);
+        params.append("min_price", appliedFilters.priceMin);
       }
       if (appliedFilters.priceMax) {
-        params.append("priceMax", appliedFilters.priceMax);
+        params.append("max_price", appliedFilters.priceMax);
       }
       if (appliedFilters.paymentMin) {
-        params.append("paymentMin", appliedFilters.paymentMin);
+        params.append("payment_min", appliedFilters.paymentMin);
       }
       if (appliedFilters.paymentMax) {
-        params.append("paymentMax", appliedFilters.paymentMax);
+        params.append("payment_max", appliedFilters.paymentMax);
       }
       // NEW: Additional custom field filters
       if (appliedFilters.fuelType.length > 0) {
-        params.append("fuelType", appliedFilters.fuelType.join(","));
+        params.append("fuel_type", appliedFilters.fuelType.join(","));
       }
       if (appliedFilters.certified.length > 0) {
         params.append(
@@ -475,7 +478,7 @@ export default function MySQLVehiclesOriginalStyle() {
         );
       }
 
-      const apiUrl = `${getApiBaseUrl()}/api/vehicles?${params}`;
+      const apiUrl = `${getApiBaseUrl()}/wp-json/custom/v1/vehicles?${params.toString()}`;
       console.log("🔍 Fetching vehicles from:", apiUrl);
 
       const controller = new AbortController();
