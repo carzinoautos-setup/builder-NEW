@@ -871,23 +871,15 @@ export default function MySQLVehiclesOriginalStyle() {
             );
             return;
           }
+
+          // No body_style filters available
+          console.warn("⚠️ body_style filters not present in response");
+          setVehicleTypes([]);
+          return;
         }
 
-        // Fallback vehicle types
-        console.warn("⚠️ Failed to fetch vehicle types or no body_style filters available");
-        setVehicleTypes([
-          { name: "Sedan", count: 1698 },
-          { name: "Crossover/SUV", count: 3405 },
-          { name: "Coupe", count: 419 },
-          { name: "Convertible", count: 125 },
-          { name: "Hatchback", count: 342 },
-          { name: "Van / Minivan", count: 298 },
-          { name: "Wagon", count: 156 },
-          { name: "Trucks", count: 2217 },
-          { name: "Regular Cab", count: 421 },
-          { name: "Extended Cab", count: 543 },
-          { name: "Crew Cab", count: 687 },
-        ]);
+        console.warn("⚠️ Failed to fetch vehicle types from API");
+        setVehicleTypes([]);
       } catch (error) {
         console.error("❌ Error fetching vehicle types:", error);
         // Set fallback vehicle types for now
