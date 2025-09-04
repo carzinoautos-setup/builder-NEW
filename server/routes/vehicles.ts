@@ -99,7 +99,26 @@ export const getVehicles: RequestHandler = async (req, res) => {
     if (req.query.sellerType)
       filters.sellerType = req.query.sellerType as string;
 
-    // Fetch vehicles from service
+    // If WP API base is configured and not using mock, proxy the request directly to WordPress plugin API
+    if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
+      const wpBase = process.env.WP_API_BASE.replace(/\/$/, "");
+      // Preserve original query string from the incoming request
+      const qs = new URLSearchParams(req.query as Record<string, any>).toString();
+      const url = `${wpBase}/vehicles${qs ? `?${qs}` : ""}`;
+
+      const wpResponse = await fetch(url, { method: "GET" });
+      const body = await wpResponse.text();
+
+      // Try to parse JSON, otherwise proxy raw
+      try {
+        const json = JSON.parse(body);
+        return res.status(wpResponse.status).json(json);
+      } catch (e) {
+        return res.status(wpResponse.status).send(body);
+      }
+    }
+
+    // Otherwise use the configured service (MySQL or Mock)
     const result = await vehicleService.getVehicles(filters, pagination);
 
     // Return response
