@@ -217,6 +217,12 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       }
       const wpResponse = await fetch(url, { method: "GET", headers });
       const body = await wpResponse.text();
+      // Log proxied response for debugging conditional filters
+      try {
+        console.log("[WP_PROXY_RESPONSE] /vehicles -> status:", wpResponse.status, "body-trim:", body.substring(0, 200));
+      } catch (e) {
+        console.log("[WP_PROXY_RESPONSE] /vehicles -> (unable to log body)");
+      }
       try {
         const json = JSON.parse(body);
         return res.status(wpResponse.status).json(json);
