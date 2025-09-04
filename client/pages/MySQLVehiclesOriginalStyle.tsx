@@ -361,79 +361,18 @@ export default function MySQLVehiclesOriginalStyle() {
   const [interestRate, setInterestRate] = useState("5");
   const [downPayment, setDownPayment] = useState("2000");
 
-  // Dynamic filter options loaded from WordPress /filters endpoint
-  const [filterOptions, setFilterOptions] = useState<Record<string, { name: string; count: number }[]>>({});
+  // Load filter options from WordPress and keep them in sync with appliedFilters
+  const { filterOptions, filtersLoading, filtersError, refetch, pruneInvalid } = useFilters(appliedFilters);
 
-  const fetchFilterOptions = useCallback(async (filtersParam = appliedFilters) => {
-    try {
-      const params = new URLSearchParams();
-
-      if (filtersParam.make.length) params.append("make", filtersParam.make.join(","));
-      if (filtersParam.model.length) params.append("model", filtersParam.model.join(","));
-      if (filtersParam.trim.length) params.append("trim", filtersParam.trim.join(","));
-      if (filtersParam.year.length) params.append("year", filtersParam.year.join(","));
-      if (filtersParam.bodyStyle.length) params.append("body_style", filtersParam.bodyStyle.join(","));
-      if (filtersParam.driveType.length) params.append("drivetrain", filtersParam.driveType.join(","));
-      if (filtersParam.transmission.length) params.append("transmission", filtersParam.transmission.join(","));
-      if (filtersParam.exteriorColor.length) params.append("exterior_color", filtersParam.exteriorColor.join(","));
-      if (filtersParam.interiorColor.length) params.append("interior_color", filtersParam.interiorColor.join(","));
-      if (filtersParam.priceMin) params.append("min_price", filtersParam.priceMin);
-      if (filtersParam.priceMax) params.append("max_price", filtersParam.priceMax);
-      if (filtersParam.certified.length) params.append("certified", filtersParam.certified.join(","));
-
-      const url = `${getApiBaseUrl()}/wp-json/custom/v1/filters?${params.toString()}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Filters error ${res.status}`);
-      const data = await res.json();
-
-      if (data && data.success && data.filters) {
-        setFilterOptions(data.filters);
-
-        // Prune any applied filters that are no longer valid for this narrowed pool
-        const keyMap: Record<string, string> = {
-          make: "make",
-          model: "model",
-          trim: "trim",
-          year: "year",
-          bodyStyle: "body_style",
-          driveType: "drivetrain",
-          transmission: "transmission",
-          exteriorColor: "exterior_color",
-          interiorColor: "interior_color",
-          dealer: "account_name_seller",
-          sellerType: "account_type_seller",
-          fuelType: "fuel_type",
-        };
-
-        let pruned = { ...filtersParam } as typeof appliedFilters;
-        let changed = false;
-
-        for (const [localKey, respKey] of Object.entries(keyMap)) {
-          const available = (data.filters[respKey] || []).map((v: any) => v.name);
-          const current = (filtersParam as any)[localKey];
-          if (Array.isArray(current) && current.length > 0) {
-            const filtered = current.filter((v: string) => available.includes(v));
-            if (JSON.stringify(filtered) !== JSON.stringify(current)) {
-              (pruned as any)[localKey] = filtered;
-              changed = true;
-            }
-          }
-        }
-
-        if (changed) {
-          setAppliedFilters(pruned);
-          updateURLFromFilters(pruned);
-        }
-      }
-    } catch (err) {
-      console.warn("Failed to fetch filter options:", err);
-    }
-  }, [getApiBaseUrl, appliedFilters, updateURLFromFilters]);
-
+  // When filterOptions update, prune any applied filters that are no longer valid
   useEffect(() => {
-    // Always refresh available filter options whenever appliedFilters changes
-    fetchFilterOptions();
-  }, [appliedFilters, fetchFilterOptions]);
+    if (!filterOptions) return;
+    const { pruned, changed } = pruneInvalid(appliedFilters as any);
+    if (changed) {
+      setAppliedFilters(pruned as any);
+      updateURLFromFilters(pruned as any);
+    }
+  }, [filterOptions]);
 
   // Get the API base URL - point to WordPress site (Vite env)
   const getApiBaseUrl = () => {
