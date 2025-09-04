@@ -110,9 +110,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
     // If WP API base is configured and not using mock, proxy the request directly to WordPress plugin API
     if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
       const wpBase = process.env.WP_API_BASE.replace(/\/$/, "");
-      // Preserve original query string from the incoming request
-      const qs = new URLSearchParams(req.query as Record<string, any>).toString();
-      const url = `${wpBase}/vehicles${qs ? `?${qs}` : ""}`;
+      // Preserve original query string exactly as received (avoid modifying array/comma params)
+      const rawQs = (req.originalUrl && req.originalUrl.split("?")[1]) || "";
+      const url = `${wpBase}/vehicles${rawQs ? `?${rawQs}` : ""}`;
 
       // Build Authorization header using Basic auth if consumer key/secret are available
       const headers: Record<string, string> = {
@@ -205,8 +205,8 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
     // If WP API base configured and not using mock, proxy filter request
     if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
       const wpBase = process.env.WP_API_BASE.replace(/\/$/, "");
-      const qs = new URLSearchParams(req.query as Record<string, any>).toString();
-      const url = `${wpBase}/filters${qs ? `?${qs}` : ""}`;
+      const rawQs = (req.originalUrl && req.originalUrl.split("?")[1]) || "";
+      const url = `${wpBase}/filters${rawQs ? `?${rawQs}` : ""}`;
       const headers: Record<string, string> = {
         "Accept": "application/json",
       };
@@ -219,7 +219,7 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       const body = await wpResponse.text();
       // Log proxied response for debugging conditional filters
       try {
-        console.log("[WP_PROXY_RESPONSE] /vehicles -> status:", wpResponse.status, "body-trim:", body.substring(0, 200));
+        console.log("[WP_PROXY_RESPONSE] /filters -> status:", wpResponse.status, "body-trim:", body.substring(0, 200));
       } catch (e) {
         console.log("[WP_PROXY_RESPONSE] /vehicles -> (unable to log body)");
       }
