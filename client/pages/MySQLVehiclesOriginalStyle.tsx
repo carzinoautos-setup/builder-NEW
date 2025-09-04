@@ -818,14 +818,16 @@ export default function MySQLVehiclesOriginalStyle() {
             );
             return;
           }
+
+          // If response.ok but no dealer filters, set empty list to reflect API
+          console.warn("⚠️ Dealer filters not present in response");
+          setAvailableDealers([]);
+          return;
         }
 
-        // Fallback dealers
-        console.warn("⚠️ Failed to fetch dealers or no dealer filters available");
-        setAvailableDealers([
-          { name: "Bayside Auto Sales", count: 234 },
-          { name: "ABC Car Sales", count: 156 },
-        ]);
+        // Non-ok response -> empty list
+        console.warn("⚠️ Failed to fetch dealers from API");
+        setAvailableDealers([]);
       } catch (error) {
         console.error("❌ Error fetching dealers:", error);
         // Set fallback dealers for now
