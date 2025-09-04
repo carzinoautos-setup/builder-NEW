@@ -151,12 +151,24 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
   // Generate vehicle title from components
   const title = getVehicleTitle(record);
 
-  // Generate realistic vehicle images (placeholder for now)
-  const vehicleImages = [
-    `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80`,
-    `https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=450&h=300&fit=crop&auto=format&q=80`,
-    `https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=450&h=300&fit=crop&auto=format&q=80`,
-  ];
+  // Choose images from API: prefer featured_image, then images array; fall back to placeholder
+  const vehicleImages = [] as string[];
+  const featured = (record as any).featured_image || (record as any).featuredImage || (record as any).acf?.featured_image;
+  if (featured) {
+    vehicleImages.push(featured);
+  } else if ((record as any).images && Array.isArray((record as any).images) && (record as any).images.length > 0) {
+    // images may be array of urls or objects
+    const imgs = (record as any).images;
+    const first = typeof imgs[0] === "string" ? imgs[0] : imgs[0].src || imgs[0].url;
+    if (first) vehicleImages.push(first);
+  }
+  // Add 2 placeholders to ensure UI has multiple images
+  if (vehicleImages.length === 0) {
+    vehicleImages.push(`https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80`);
+  }
+  if (vehicleImages.length === 1) {
+    vehicleImages.push(`https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=450&h=300&fit=crop&auto=format&q=80`);
+  }
 
   // Generate badges based on vehicle characteristics - matching original demo
   const badges = [];
