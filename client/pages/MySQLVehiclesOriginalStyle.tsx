@@ -515,17 +515,73 @@ export default function MySQLVehiclesOriginalStyle() {
       const data = await response.json();
 
       if (data.success) {
+        // Support both internal API and WordPress plugin shapes
+        let records: any[] = data.data || [];
+
+        // If WordPress plugin (acf nested), map to VehicleRecord shape
+        const isWP = records.length > 0 && records[0].acf;
+
+        const mappedRecords = records.map((r: any) => {
+          if (!isWP) return r; // already VehicleRecord-like
+
+          const acf = r.acf || {};
+          return {
+            id: r.id,
+            year: Number(acf.year) || new Date().getFullYear(),
+            make: acf.make || "",
+            model: acf.model || "",
+            trim: acf.trim || "",
+            body_style: acf.body_style || acf.bodyStyle || "",
+            engine_cylinders: Number(acf.engine_cylinders) || 0,
+            fuel_type: acf.fuel_type || "",
+            transmission: acf.transmission || "",
+            transmission_speed: acf.transmission_speed || "",
+            drivetrain: acf.drivetrain || "",
+            exterior_color_generic: acf.exterior_color || "",
+            interior_color_generic: acf.interior_color || "",
+            doors: parseInt(acf.doors) || 4,
+            price: Number(acf.price) || 0,
+            mileage: Number(acf.mileage) || 0,
+            title_status: acf.title_status || "",
+            highway_mpg: Number(acf.highway_mpg) || 0,
+            condition: acf.condition || "",
+            certified: acf.certified === true || acf.certified === "1" || acf.is_certified === true,
+            seller_account_number: acf.account_number_seller || acf.account_number || "",
+            seller_type: acf.account_type_seller || acf.account_type || "",
+            interest_rate: Number(acf.interest_rate) || 0,
+            down_payment: Number(acf.down_payment) || 0,
+            loan_term: Number(acf.loan_term) || 0,
+            payments: Number(acf.payment) || 0,
+          } as any;
+        });
+
         // Transform VehicleRecord[] to Vehicle[] for display
-        const transformedVehicles = data.data.map(transformVehicleRecord);
+        const transformedVehicles = mappedRecords.map(transformVehicleRecord);
         setVehicles(transformedVehicles);
 
-        // Create compatible API response
+        // Build meta compatible with VehiclesApiResponse
+        const pagination = data.pagination || data.meta || {};
+        const page = pagination.page || pagination.currentPage || currentPage;
+        const perPage = pagination.per_page || pagination.pageSize || resultsPerPage;
+        const total = pagination.total || pagination.totalRecords || 0;
+        const totalPages = pagination.total_pages || pagination.totalPages || Math.ceil(total / perPage || 1);
+
+        const compatibleMeta = {
+          totalRecords: total,
+          totalPages,
+          currentPage: page,
+          pageSize: perPage,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1,
+        };
+
         const compatibleResponse: VehiclesApiResponse = {
           success: true,
           data: transformedVehicles,
-          meta: data.meta,
+          meta: compatibleMeta,
           message: data.message,
         };
+
         setApiResponse(compatibleResponse);
         console.log(
           "✅ Successfully loaded and transformed",
