@@ -564,6 +564,7 @@ export default function MySQLVehiclesOriginalStyle() {
             down_payment: Number(acf.down_payment) || 0,
             loan_term: Number(acf.loan_term) || 0,
             payments: Number(acf.payment) || 0,
+            featured_image: r.featured_image || acf.featured_image || r.featuredImage || null,
           } as any;
         });
 
