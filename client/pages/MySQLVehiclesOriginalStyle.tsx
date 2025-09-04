@@ -709,8 +709,9 @@ export default function MySQLVehiclesOriginalStyle() {
   useEffect(() => {
     const fetchDealers = async () => {
       try {
-        const apiUrl = `${getApiBaseUrl()}/api/dealers`;
-        console.log("🔍 Fetching dealers from:", apiUrl);
+        // Try loading dealer names from WordPress filters endpoint
+        const apiUrl = `${getApiBaseUrl()}/wp-json/custom/v1/filters`;
+        console.log("🔍 Fetching filter options from:", apiUrl);
 
         const response = await fetch(apiUrl, {
           method: "GET",
@@ -721,18 +722,28 @@ export default function MySQLVehiclesOriginalStyle() {
 
         if (response.ok) {
           const data = await response.json();
-          if (data.success && data.data) {
-            setAvailableDealers(data.data);
-            console.log("✅ Successfully loaded", data.data.length, "dealers");
+          if (data.success && data.filters && data.filters.account_name_seller) {
+            setAvailableDealers(
+              data.filters.account_name_seller.map((v: any) => ({
+                name: v.name,
+                count: v.count,
+              })),
+            );
+            console.log(
+              "✅ Successfully loaded",
+              data.filters.account_name_seller.length,
+              "dealers",
+            );
+            return;
           }
-        } else {
-          console.warn("⚠️ Failed to fetch dealers:", response.status);
-          // Set fallback dealers for now
-          setAvailableDealers([
-            { name: "Bayside Auto Sales", count: 234 },
-            { name: "ABC Car Sales", count: 156 },
-          ]);
         }
+
+        // Fallback dealers
+        console.warn("⚠️ Failed to fetch dealers or no dealer filters available");
+        setAvailableDealers([
+          { name: "Bayside Auto Sales", count: 234 },
+          { name: "ABC Car Sales", count: 156 },
+        ]);
       } catch (error) {
         console.error("❌ Error fetching dealers:", error);
         // Set fallback dealers for now
