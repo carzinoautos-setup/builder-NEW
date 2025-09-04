@@ -26,6 +26,7 @@ import {
   formatPrice,
   formatMileage,
 } from "@/lib/vehicleApi";
+import useFilters from "@/hooks/useFilters";
 
 // Enhanced vehicle interface for display with all custom fields
 interface Vehicle {
