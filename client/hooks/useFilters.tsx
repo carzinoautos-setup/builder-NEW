@@ -90,6 +90,10 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             map.make = json.data.makes.map((n: string) => ({ name: n, count: 0 }));
           if (Array.isArray(json.data.models))
             map.model = json.data.models.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.trims))
+            map.trim = json.data.trims.map((n: string) => ({ name: n, count: 0 }));
+          if (Array.isArray(json.data.years))
+            map.year = json.data.years.map((n: string) => ({ name: String(n), count: 0 }));
           if (Array.isArray(json.data.conditions))
             map.condition = json.data.conditions.map((n: string) => ({ name: n, count: 0 }));
           if (Array.isArray(json.data.fuelTypes))
