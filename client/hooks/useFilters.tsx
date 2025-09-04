@@ -81,7 +81,24 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
       // Support both WordPress plugin shape (json.filters) and local server shape (json.data)
       if (json && json.success) {
         if (json.filters) {
-          setFilterOptions(json.filters);
+          // Normalize WP filters keys to the UI's expected keys (make, model, trim, year, body_style, etc.)
+          const f = json.filters;
+          const normalized: FilterMap = {};
+
+          if (Array.isArray(f.makes)) normalized.make = f.makes.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.models)) normalized.model = f.models.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.trims)) normalized.trim = f.trims.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.years)) normalized.year = f.years.map((v: any) => ({ name: String(v.name ?? v), count: v.count ?? 0 }));
+          if (Array.isArray(f.body_style)) normalized.body_style = f.body_style.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.drivetrain)) normalized.drivetrain = f.drivetrain.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.fuel_type)) normalized.fuel_type = f.fuel_type.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.transmission)) normalized.transmission = f.transmission.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.exterior_color)) normalized.exterior_color = f.exterior_color.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.interior_color)) normalized.interior_color = f.interior_color.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.account_name_seller)) normalized.account_name_seller = f.account_name_seller.map((v: any) => ({ name: v.name, count: v.count }));
+          if (Array.isArray(f.account_type_seller)) normalized.account_type_seller = f.account_type_seller.map((v: any) => ({ name: v.name, count: v.count }));
+
+          setFilterOptions(normalized);
         } else if (json.data) {
           // Normalize server filter data into the expected map shape
           const map: FilterMap = {};
