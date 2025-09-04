@@ -11,6 +11,8 @@ const hasWpApi = !!process.env.WP_API_BASE;
 if (useMock) {
   console.log("🚀 USE_MOCK is true — using MockVehicleService");
 }
+
+// Prefer WP_API proxy when configured
 if (hasWpApi && !useMock) {
   console.log("🔁 WP_API_BASE detected — proxying /api/vehicles to WordPress plugin API at:", process.env.WP_API_BASE);
 } else if (hasDbEnv && !useMock) {
@@ -23,12 +25,12 @@ if (hasWpApi && !useMock) {
 
 let vehicleService: any = null;
 try {
-  if (!useMock && hasDbEnv) {
+  if (!useMock && hasWpApi) {
+    // WP proxy mode — routes will forward requests to WP API directly
+    vehicleService = null;
+  } else if (!useMock && hasDbEnv) {
     vehicleService = new VehicleService();
     console.log("✅ Using VehicleService (MySQL) for real data");
-  } else if (!useMock && hasWpApi) {
-    // vehicleService will be null and routes will proxy directly to WP API
-    vehicleService = null;
   } else {
     vehicleService = new MockVehicleService();
   }
