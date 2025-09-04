@@ -492,7 +492,7 @@ export default function MySQLVehiclesOriginalStyle() {
         );
       }
 
-      const apiUrl = `${getApiBaseUrl()}/wp-json/custom/v1/vehicles?${params.toString()}`;
+      const apiUrl = `/api/vehicles?${params.toString()}`;
       console.log("🔍 Fetching vehicles from:", apiUrl);
 
       const controller = new AbortController();
@@ -779,8 +779,8 @@ export default function MySQLVehiclesOriginalStyle() {
   useEffect(() => {
     const fetchDealers = async () => {
       try {
-        // Try loading dealer names from WordPress filters endpoint
-        const apiUrl = `${getApiBaseUrl()}/wp-json/custom/v1/filters`;
+        // Load dealer names from local API filters endpoint
+        const apiUrl = `/api/vehicles/filters`;
         console.log("🔍 Fetching filter options from:", apiUrl);
 
         const response = await fetch(apiUrl, {
@@ -831,7 +831,7 @@ export default function MySQLVehiclesOriginalStyle() {
   useEffect(() => {
     const fetchVehicleTypes = async () => {
       try {
-        const apiUrl = `${getApiBaseUrl()}/wp-json/custom/v1/filters`;
+        const apiUrl = `/api/vehicles/filters`;
         console.log("🔍 Fetching filter options from:", apiUrl);
 
         const response = await fetch(apiUrl, {
@@ -1925,7 +1925,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("make", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   ))}
