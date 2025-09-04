@@ -3,15 +3,30 @@ import { VehicleService } from "../services/vehicleService.js";
 import { MockVehicleService } from "../services/mockVehicleService.js";
 import { PaginationParams, VehicleFilters } from "../types/vehicle.js";
 
-// Use mock service for immediate testing with sample data
-console.log(
-  "🚀 Using MockVehicleService with 50,000 sample vehicles for testing",
-);
-console.log(
-  "   To use real MySQL later, update the routes to use VehicleService",
-);
+// Decide whether to use the real VehicleService (MySQL) or MockVehicleService
+const shouldUseMock = process.env.USE_MOCK === "true" || !process.env.DB_HOST || !process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_PASSWORD;
 
-const vehicleService = new MockVehicleService();
+if (shouldUseMock) {
+  console.log(
+    "🚀 Using MockVehicleService with 50,000 sample vehicles for testing",
+  );
+  console.log(
+    "   To use real MySQL, set DB_HOST, DB_NAME, DB_USER and DB_PASSWORD in the environment",
+  );
+}
+
+let vehicleService: any;
+try {
+  if (shouldUseMock) {
+    vehicleService = new MockVehicleService();
+  } else {
+    vehicleService = new VehicleService();
+    console.log("✅ Using VehicleService (MySQL) for real data");
+  }
+} catch (err) {
+  console.error("Failed to initialize VehicleService, falling back to MockVehicleService:", err);
+  vehicleService = new MockVehicleService();
+}
 
 /**
  * GET /api/vehicles
