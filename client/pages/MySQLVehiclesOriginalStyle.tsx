@@ -360,6 +360,80 @@ export default function MySQLVehiclesOriginalStyle() {
   const [interestRate, setInterestRate] = useState("5");
   const [downPayment, setDownPayment] = useState("2000");
 
+  // Dynamic filter options loaded from WordPress /filters endpoint
+  const [filterOptions, setFilterOptions] = useState<Record<string, { name: string; count: number }[]>>({});
+
+  const fetchFilterOptions = useCallback(async (filtersParam = appliedFilters) => {
+    try {
+      const params = new URLSearchParams();
+
+      if (filtersParam.make.length) params.append("make", filtersParam.make.join(","));
+      if (filtersParam.model.length) params.append("model", filtersParam.model.join(","));
+      if (filtersParam.trim.length) params.append("trim", filtersParam.trim.join(","));
+      if (filtersParam.year.length) params.append("year", filtersParam.year.join(","));
+      if (filtersParam.bodyStyle.length) params.append("body_style", filtersParam.bodyStyle.join(","));
+      if (filtersParam.driveType.length) params.append("drivetrain", filtersParam.driveType.join(","));
+      if (filtersParam.transmission.length) params.append("transmission", filtersParam.transmission.join(","));
+      if (filtersParam.exteriorColor.length) params.append("exterior_color", filtersParam.exteriorColor.join(","));
+      if (filtersParam.interiorColor.length) params.append("interior_color", filtersParam.interiorColor.join(","));
+      if (filtersParam.priceMin) params.append("min_price", filtersParam.priceMin);
+      if (filtersParam.priceMax) params.append("max_price", filtersParam.priceMax);
+      if (filtersParam.certified.length) params.append("certified", filtersParam.certified.join(","));
+
+      const url = `${getApiBaseUrl()}/wp-json/custom/v1/filters?${params.toString()}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Filters error ${res.status}`);
+      const data = await res.json();
+
+      if (data && data.success && data.filters) {
+        setFilterOptions(data.filters);
+
+        // Prune any applied filters that are no longer valid for this narrowed pool
+        const keyMap: Record<string, string> = {
+          make: "make",
+          model: "model",
+          trim: "trim",
+          year: "year",
+          bodyStyle: "body_style",
+          driveType: "drivetrain",
+          transmission: "transmission",
+          exteriorColor: "exterior_color",
+          interiorColor: "interior_color",
+          dealer: "account_name_seller",
+          sellerType: "account_type_seller",
+          fuelType: "fuel_type",
+        };
+
+        let pruned = { ...filtersParam } as typeof appliedFilters;
+        let changed = false;
+
+        for (const [localKey, respKey] of Object.entries(keyMap)) {
+          const available = (data.filters[respKey] || []).map((v: any) => v.name);
+          const current = (filtersParam as any)[localKey];
+          if (Array.isArray(current) && current.length > 0) {
+            const filtered = current.filter((v: string) => available.includes(v));
+            if (JSON.stringify(filtered) !== JSON.stringify(current)) {
+              (pruned as any)[localKey] = filtered;
+              changed = true;
+            }
+          }
+        }
+
+        if (changed) {
+          setAppliedFilters(pruned);
+          updateURLFromFilters(pruned);
+        }
+      }
+    } catch (err) {
+      console.warn("Failed to fetch filter options:", err);
+    }
+  }, [getApiBaseUrl, appliedFilters, updateURLFromFilters]);
+
+  useEffect(() => {
+    // Always refresh available filter options whenever appliedFilters changes
+    fetchFilterOptions();
+  }, [appliedFilters, fetchFilterOptions]);
+
   // Get the API base URL - point to WordPress site (Vite env)
   const getApiBaseUrl = () => {
     const wpUrl = import.meta.env.VITE_WP_URL || "https://env-uploadbackup62225-czdev.kinsta.cloud";
@@ -2159,42 +2233,40 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("make")}
             >
               <div className="space-y-1">
-                {[
-                  "Audi",
-                  "BMW",
-                  "Chevrolet",
-                  "Ford",
-                  "Honda",
-                  "Hyundai",
-                  "Mercedes-Benz",
-                  "Nissan",
-                ].map((make) => (
+                {(filterOptions.make || [
+                  { name: "Audi", count: 143 },
+                  { name: "BMW", count: 189 },
+                  { name: "Chevrolet", count: 210 },
+                  { name: "Ford", count: 532 },
+                  { name: "Honda", count: 412 },
+                  { name: "Hyundai", count: 198 },
+                  { name: "Mercedes-Benz", count: 256 },
+                  { name: "Nissan", count: 178 },
+                ]).map((m: any) => (
                   <label
-                    key={make}
+                    key={m.name}
                     className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       className="mr-2"
-                      checked={appliedFilters.make.includes(make)}
+                      checked={appliedFilters.make.includes(m.name)}
                       onChange={(e) => {
                         e.stopPropagation();
                         if (e.target.checked) {
                           const newFilters = {
                             ...appliedFilters,
-                            make: [...appliedFilters.make, make],
+                            make: [...appliedFilters.make, m.name],
                           };
                           setAppliedFilters(newFilters);
                           updateURLFromFilters(newFilters);
                         } else {
-                          removeAppliedFilter("make", make);
+                          removeAppliedFilter("make", m.name);
                         }
                       }}
                     />
-                    <span className="carzino-filter-option">{make}</span>
-                    <span className="carzino-filter-count ml-1">
-                      ({Math.floor(Math.random() * 1000) + 100})
-                    </span>
+                    <span className="carzino-filter-option">{m.name}</span>
+                    <span className="carzino-filter-count ml-1">({m.count || 0})</span>
                   </label>
                 ))}
               </div>
@@ -2212,35 +2284,38 @@ export default function MySQLVehiclesOriginalStyle() {
                     Select a make first to see available models
                   </div>
                 ) : (
-                  getModelsForMake(appliedFilters.make[0]).map((model) => (
-                    <label
-                      key={model}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.model.includes(model)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if (e.target.checked) {
-                            const newFilters = {
-                              ...appliedFilters,
-                              model: [...appliedFilters.model, model],
-                            };
-                            setAppliedFilters(newFilters);
-                            updateURLFromFilters(newFilters);
-                          } else {
-                            removeAppliedFilter("model", model);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{model}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({Math.floor(Math.random() * 100) + 10})
-                      </span>
-                    </label>
-                  ))
+                  // Use filter options returned by WP /filters endpoint when available
+                  (filterOptions.model || getModelsForMake(appliedFilters.make[0])).map((m: any) => {
+                    const name = typeof m === "string" ? m : m.name;
+                    const count = typeof m === "string" ? undefined : m.count;
+                    return (
+                      <label
+                        key={name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={appliedFilters.model.includes(name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if (e.target.checked) {
+                              const newFilters = {
+                                ...appliedFilters,
+                                model: [...appliedFilters.model, name],
+                              };
+                              setAppliedFilters(newFilters);
+                              updateURLFromFilters(newFilters);
+                            } else {
+                              removeAppliedFilter("model", name);
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{name}</span>
+                        <span className="carzino-filter-count ml-1">({count ?? "—"})</span>
+                      </label>
+                    );
+                  })
                 )}
               </div>
             </FilterSection>
@@ -2257,37 +2332,34 @@ export default function MySQLVehiclesOriginalStyle() {
                     Select a make first to see available trims
                   </div>
                 ) : (
-                  ["Premium", "Premium Plus", "Prestige", "S Line"].map(
-                    (trim) => (
-                      <label
-                        key={trim}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                      >
+                  (filterOptions.trim || ["Premium", "Premium Plus", "Prestige", "S Line"]).map((t: any) => {
+                    const name = typeof t === "string" ? t : t.name;
+                    const count = typeof t === "string" ? undefined : t.count;
+                    return (
+                      <label key={name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
                         <input
                           type="checkbox"
                           className="mr-2"
-                          checked={appliedFilters.trim.includes(trim)}
+                          checked={appliedFilters.trim.includes(name)}
                           onChange={(e) => {
                             e.stopPropagation();
                             if (e.target.checked) {
                               const newFilters = {
                                 ...appliedFilters,
-                                trim: [...appliedFilters.trim, trim],
+                                trim: [...appliedFilters.trim, name],
                               };
                               setAppliedFilters(newFilters);
                               updateURLFromFilters(newFilters);
                             } else {
-                              removeAppliedFilter("trim", trim);
+                              removeAppliedFilter("trim", name);
                             }
                           }}
                         />
-                        <span className="carzino-filter-option">{trim}</span>
-                        <span className="carzino-filter-count ml-1">
-                          ({Math.floor(Math.random() * 50) + 5})
-                        </span>
+                        <span className="carzino-filter-option">{name}</span>
+                        <span className="carzino-filter-count ml-1">({count ?? "—"})</span>
                       </label>
-                    ),
-                  )
+                    );
+                  })
                 )}
               </div>
             </FilterSection>
@@ -2299,38 +2371,34 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("year")}
             >
               <div className="space-y-1">
-                {Array.from(
-                  { length: 10 },
-                  (_, i) => new Date().getFullYear() - i,
-                ).map((year) => (
-                  <label
-                    key={year}
-                    className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      checked={appliedFilters.year.includes(year.toString())}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        if (e.target.checked) {
-                          const newFilters = {
-                            ...appliedFilters,
-                            year: [...appliedFilters.year, year.toString()],
-                          };
-                          setAppliedFilters(newFilters);
-                          updateURLFromFilters(newFilters);
-                        } else {
-                          removeAppliedFilter("year", year.toString());
-                        }
-                      }}
-                    />
-                    <span className="carzino-filter-option">{year}</span>
-                    <span className="carzino-filter-count ml-1">
-                      ({Math.floor(Math.random() * 500) + 50})
-                    </span>
-                  </label>
-                ))}
+                {(filterOptions.year || Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i)).map((year: any) => {
+                  const name = typeof year === "string" || typeof year === "number" ? String(year) : year.name;
+                  const count = typeof year === "object" && year.count ? year.count : undefined;
+                  return (
+                    <label key={name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.year.includes(name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if (e.target.checked) {
+                            const newFilters = {
+                              ...appliedFilters,
+                              year: [...appliedFilters.year, name],
+                            };
+                            setAppliedFilters(newFilters);
+                            updateURLFromFilters(newFilters);
+                          } else {
+                            removeAppliedFilter("year", name);
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{name}</span>
+                      <span className="carzino-filter-count ml-1">({count ?? "—"})</span>
+                    </label>
+                  );
+                })}
               </div>
             </FilterSection>
 
