@@ -774,120 +774,25 @@ export default function MySQLVehiclesOriginalStyle() {
     loadImages();
   }, []);
 
-  // Load available dealers
+  // Load available dealers from normalized filterOptions (prefer WP ACF data)
   useEffect(() => {
-    const fetchDealers = async () => {
-      try {
-        // Load dealer names from local API filters endpoint
-        const apiUrl = `/api/vehicles/filters`;
-        console.log("🔍 Fetching filter options from:", apiUrl);
+    if (filterOptions && Array.isArray(filterOptions.account_name_seller)) {
+      setAvailableDealers(
+        filterOptions.account_name_seller.map((v: any) => ({ name: v.name, count: v.count })),
+      );
+    } else {
+      setAvailableDealers([]);
+    }
+  }, [filterOptions]);
 
-        const response = await fetch(apiUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.filters && data.filters.account_name_seller) {
-            setAvailableDealers(
-              data.filters.account_name_seller.map((v: any) => ({
-                name: v.name,
-                count: v.count,
-              })),
-            );
-            console.log(
-              "✅ Successfully loaded",
-              data.filters.account_name_seller.length,
-              "dealers",
-            );
-            return;
-          }
-
-          // If response.ok but no dealer filters, set empty list to reflect API
-          console.warn("⚠️ Dealer filters not present in response");
-          setAvailableDealers([]);
-          return;
-        }
-
-        // Non-ok response -> empty list
-        console.warn("⚠️ Failed to fetch dealers from API");
-        setAvailableDealers([]);
-      } catch (error) {
-        console.error("❌ Error fetching dealers:", error);
-        // Set fallback dealers for now
-        setAvailableDealers([
-          { name: "Bayside Auto Sales", count: 234 },
-          { name: "ABC Car Sales", count: 156 },
-        ]);
-      }
-    };
-
-    fetchDealers();
-  }, []);
-
-  // Load available vehicle types
+  // Load available vehicle types from normalized filterOptions (prefer WP ACF data)
   useEffect(() => {
-    const fetchVehicleTypes = async () => {
-      try {
-        const apiUrl = `/api/vehicles/filters`;
-        console.log("🔍 Fetching filter options from:", apiUrl);
-
-        const response = await fetch(apiUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.filters && data.filters.body_style) {
-            setVehicleTypes(
-              data.filters.body_style.map((v: any) => ({
-                name: v.name,
-                count: v.count,
-              })),
-            );
-            console.log(
-              "✅ Successfully loaded",
-              data.filters.body_style.length,
-              "vehicle types",
-            );
-            return;
-          }
-
-          // No body_style filters available
-          console.warn("⚠️ body_style filters not present in response");
-          setVehicleTypes([]);
-          return;
-        }
-
-        console.warn("⚠️ Failed to fetch vehicle types from API");
-        setVehicleTypes([]);
-      } catch (error) {
-        console.error("❌ Error fetching vehicle types:", error);
-        // Set fallback vehicle types for now
-        setVehicleTypes([
-          { name: "Sedan", count: 1698 },
-          { name: "Crossover/SUV", count: 3405 },
-          { name: "Coupe", count: 419 },
-          { name: "Convertible", count: 125 },
-          { name: "Hatchback", count: 342 },
-          { name: "Van / Minivan", count: 298 },
-          { name: "Wagon", count: 156 },
-          { name: "Trucks", count: 2217 },
-          { name: "Regular Cab", count: 421 },
-          { name: "Extended Cab", count: 543 },
-          { name: "Crew Cab", count: 687 },
-        ]);
-      }
-    };
-
-    fetchVehicleTypes();
-  }, []);
+    if (filterOptions && Array.isArray(filterOptions.body_style)) {
+      setVehicleTypes(filterOptions.body_style.map((v: any) => ({ name: v.name, count: v.count })));
+    } else {
+      setVehicleTypes([]);
+    }
+  }, [filterOptions]);
 
   // Helper functions for price formatting
   const formatPrice = (value: string): string => {
