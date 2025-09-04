@@ -114,7 +114,17 @@ export const getVehicles: RequestHandler = async (req, res) => {
       const qs = new URLSearchParams(req.query as Record<string, any>).toString();
       const url = `${wpBase}/vehicles${qs ? `?${qs}` : ""}`;
 
-      const wpResponse = await fetch(url, { method: "GET" });
+      // Build Authorization header using Basic auth if consumer key/secret are available
+      const headers: Record<string, string> = {
+        "Accept": "application/json",
+      };
+      if (process.env.WP_CONSUMER_KEY && process.env.WP_CONSUMER_SECRET) {
+        const creds = `${process.env.WP_CONSUMER_KEY}:${process.env.WP_CONSUMER_SECRET}`;
+        const encoded = Buffer.from(creds).toString("base64");
+        headers["Authorization"] = `Basic ${encoded}`;
+      }
+
+      const wpResponse = await fetch(url, { method: "GET", headers });
       const body = await wpResponse.text();
 
       // Try to parse JSON, otherwise proxy raw
