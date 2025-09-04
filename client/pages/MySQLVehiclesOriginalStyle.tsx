@@ -2382,7 +2382,7 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("year")}
             >
               <div className="space-y-1">
-                {(filterOptions.year || Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i)).map((year: any) => {
+                {((filterOptions.year && filterOptions.year.length > 0) ? filterOptions.year : Array.from({ length: 10 }, (_, i) => String(new Date().getFullYear() - i))).map((year: any) => {
                   const name = typeof year === "string" || typeof year === "number" ? String(year) : year.name;
                   const count = typeof year === "object" && year.count ? year.count : undefined;
                   return (
