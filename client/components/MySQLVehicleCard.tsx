@@ -147,7 +147,7 @@ export function MySQLVehicleCard({
         <div className="border-t pt-3 mt-auto">
           <div className="flex items-center justify-between mb-2">
             <div className="text-2xl font-bold text-gray-900">
-              {formatPrice(vehicle.price)}
+              {vehicle.price && vehicle.price > 0 ? formatPrice(vehicle.price) : "No Sale Price Listed"}
             </div>
             {vehicle.title_status !== "Clean" && (
               <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
@@ -157,7 +157,7 @@ export function MySQLVehicleCard({
           </div>
 
           {/* Payment Details */}
-          {vehicle.price ? (
+          {vehicle.price && vehicle.price > 0 ? (
             <div className="text-sm text-gray-600">
               <div className="flex justify-between items-center">
                 <span>Est. Payment:</span>
@@ -188,7 +188,11 @@ export function MySQLVehicleCard({
                 <span>Down: {formatPrice(vehicle.down_payment)}</span>
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div className="text-sm text-gray-600">
+              <div className="carzino-price-value text-gray-900">Call for Price</div>
+            </div>
+          )}
         </div>
 
         {/* Action Buttons */}
