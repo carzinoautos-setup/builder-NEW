@@ -1789,7 +1789,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Desktop Search Section */}
-            <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
+            <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200 sticky top-16 z-40 bg-white">
               <form onSubmit={handleUnifiedSearchSubmit}>
                 <div className="relative">
                   <input
@@ -1826,7 +1826,7 @@ export default function MySQLVehiclesOriginalStyle() {
               appliedFilters.priceMax ||
               appliedFilters.paymentMin ||
               appliedFilters.paymentMax) && (
-              <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
+              <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200 sticky top-16 z-40 bg-white">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="carzino-filter-title">Applied Filters</h3>
                   <button
