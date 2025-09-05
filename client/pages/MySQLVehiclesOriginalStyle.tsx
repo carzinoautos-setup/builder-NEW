@@ -3410,7 +3410,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Sticky wrapper - will stick throughout the entire scrollable area */}
-            <div className={mobileFiltersOpen ? "" : "sticky top-0 z-50"}>
+            <div className="sticky top-0 z-50">
               {/* Filter, Sort, Favorites Bar */}
               <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md">
                 <button
