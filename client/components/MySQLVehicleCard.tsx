@@ -7,6 +7,7 @@ import {
   getVehicleTitle,
   getVehicleImageUrl,
 } from "../lib/vehicleApi";
+import { calculateMonthlyPayment } from "../lib/paymentCalculator";
 
 interface MySQLVehicleCardProps {
   vehicle: VehicleRecord;
