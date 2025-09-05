@@ -2876,16 +2876,29 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("state")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">Washington</span>
-                  <span className="carzino-filter-count ml-1">(12,456)</span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">Oregon</span>
-                  <span className="carzino-filter-count ml-1">(8,234)</span>
-                </label>
+                {(filterOptions.state_seller && filterOptions.state_seller.length > 0) ? (
+                  filterOptions.state_seller.map((s: any) => (
+                    <label key={s.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={((appliedFilters as any).state || []).includes(s.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({ ...prev, /* @ts-ignore */ state: [...((prev as any).state || []), s.name] }));
+                          } else {
+                            setAppliedFilters((prev) => ({ ...prev, /* @ts-ignore */ state: ((prev as any).state || []).filter((v: string) => v !== s.name) }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{s.name}</span>
+                      <span className="carzino-filter-count ml-1">({s.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No states available.</div>
+                )}
               </div>
             </FilterSection>
 
