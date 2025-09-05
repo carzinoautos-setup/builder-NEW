@@ -2184,60 +2184,62 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </div>
 
-            {/* Make Filter */}
-            <FilterSection
-              title="Make"
-              isCollapsed={collapsedFilters.make}
-              onToggle={() => toggleFilter("make")}
-            >
-              <div className="space-y-1">
-                {displayedMakes.map((m: any) => (
-                  <label
-                    key={m.name}
-                    className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      checked={appliedFilters.make.includes(m.name)}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        if (e.target.checked) {
-                          const newFilters = {
-                            ...appliedFilters,
-                            make: [...appliedFilters.make, m.name],
-                          };
-                          setAppliedFilters(newFilters);
-                          // Keep the Make filter section open to allow multi-select
-                          setCollapsedFilters((prev) => ({ ...prev, make: false }));
-                          updateURLFromFilters(newFilters);
-                        } else {
-                          removeAppliedFilter("make", m.name);
-                          // When removing, also keep it open so users can continue modifying
-                          setCollapsedFilters((prev) => ({ ...prev, make: false }));
-                        }
-                      }}
-                    />
-                    <span className="carzino-filter-option">{m.name}</span>
-                    <span className="carzino-filter-count ml-1">({m.count || 0})</span>
-                  </label>
-                ))}
-
-                {allMakes.length > 8 && (
-                  <div className="pt-1">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowMoreMakes(!showMoreMakes);
-                      }}
-                      className="text-red-600 text-sm font-medium"
+            {/* Make Filter (conditional) */}
+            {((filterOptions && filterOptions.make && filterOptions.make.length > 0) || appliedFilters.make.length > 0) && (
+              <FilterSection
+                title="Make"
+                isCollapsed={collapsedFilters.make}
+                onToggle={() => toggleFilter("make")}
+              >
+                <div className="space-y-1">
+                  {displayedMakes.map((m: any) => (
+                    <label
+                      key={m.name}
+                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                     >
-                      {showMoreMakes ? "Show Less" : "Show More"}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.make.includes(m.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if (e.target.checked) {
+                            const newFilters = {
+                              ...appliedFilters,
+                              make: [...appliedFilters.make, m.name],
+                            };
+                            setAppliedFilters(newFilters);
+                            // Keep the Make filter section open to allow multi-select
+                            setCollapsedFilters((prev) => ({ ...prev, make: false }));
+                            updateURLFromFilters(newFilters);
+                          } else {
+                            removeAppliedFilter("make", m.name);
+                            // When removing, also keep it open so users can continue modifying
+                            setCollapsedFilters((prev) => ({ ...prev, make: false }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{m.name}</span>
+                      <span className="carzino-filter-count ml-1">({m.count || 0})</span>
+                    </label>
+                  ))}
+
+                  {allMakes.length > 8 && (
+                    <div className="pt-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowMoreMakes(!showMoreMakes);
+                        }}
+                        className="text-red-600 text-sm font-medium"
+                      >
+                        {showMoreMakes ? "Show Less" : "Show More"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
 
             {/* Model (Conditional) */}
             <FilterSection
