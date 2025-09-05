@@ -401,8 +401,20 @@ export default function MySQLVehiclesOriginalStyle() {
   const [showMoreModels, setShowMoreModels] = useState(false);
   const [showMoreTrims, setShowMoreTrims] = useState(false);
 
+  // Helper to compute displayed items with 'Show More' and ensure selected items are visible
+  const getDisplayed = (all: any[] | undefined, selected: string[], showMore: boolean, limit = 8) => {
+    if (!all) return [];
+    const items = all.map((it) => (typeof it === "string" ? { name: it } : it));
+    if (showMore) return items;
+    const selectedSet = new Set(selected || []);
+    const selectedItems = items.filter((it) => selectedSet.has(it.name));
+    const rest = items.filter((it) => !selectedSet.has(it.name));
+    const remaining = Math.max(0, limit - selectedItems.length);
+    return [...selectedItems, ...rest.slice(0, remaining)];
+  };
+
   const allMakes = filterOptions?.make || [];
-  const displayedMakes = showMoreMakes ? allMakes : allMakes.slice(0, 8);
+  const displayedMakes = getDisplayed(allMakes, appliedFilters.make, showMoreMakes, 8);
 
   // When filterOptions update, prune any applied filters that are no longer valid
   useEffect(() => {
@@ -2315,58 +2327,78 @@ export default function MySQLVehiclesOriginalStyle() {
                     </div>
                   ) : // Use filter options returned by WP /filters endpoint when available
                   filterOptions.model && filterOptions.model.length > 0 ? (
-                    filterOptions.model.map((m: any) => {
-                      const name = typeof m === "string" ? m : m.name;
-                      const count = typeof m === "string" ? undefined : m.count;
-                      const id = `model-${name.replace(/[^a-z0-9]/gi, "_")}`;
+                    (() => {
+                      const displayedModels = getDisplayed(filterOptions.model, appliedFilters.model, showMoreModels, 8);
                       return (
-                        <div
-                          key={name}
-                          className="flex items-center hover:bg-gray-50 p-1 rounded"
-                        >
-                          <input
-                            id={id}
-                            type="checkbox"
-                            className="mr-2"
-                            onClick={(e) => e.stopPropagation()}
-                            checked={appliedFilters.model.includes(name)}
-                            onChange={(e) => {
-                              e.stopPropagation();
-                              const checked = (e.target as HTMLInputElement)
-                                .checked;
-                              setAppliedFilters((prev) => {
-                                const current = prev.model || [];
-                                const next = new Set(current);
-                                if (checked) next.add(name);
-                                else next.delete(name);
-                                const newFilters = {
-                                  ...prev,
-                                  model: Array.from(next),
-                                } as any;
-                                setCollapsedFilters((cprev) => ({
-                                  ...cprev,
-                                  model: false,
-                                }));
-                                updateURLFromFilters(newFilters);
-                                return newFilters;
-                              });
-                            }}
-                          />
-                          <label
-                            htmlFor={id}
-                            className="flex-1 cursor-pointer"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <span className="carzino-filter-option">
-                              {name}
-                            </span>
-                          </label>
-                          <span className="carzino-filter-count ml-1">
-                            {count ? `(${count})` : ""}
-                          </span>
-                        </div>
+                        <>
+                          {displayedModels.map((m: any) => {
+                            const name = typeof m === "string" ? m : m.name;
+                            const count = typeof m === "string" ? undefined : m.count;
+                            const id = `model-${name.replace(/[^a-z0-9]/gi, "_")}`;
+                            return (
+                              <div
+                                key={name}
+                                className="flex items-center hover:bg-gray-50 p-1 rounded"
+                              >
+                                <input
+                                  id={id}
+                                  type="checkbox"
+                                  className="mr-2"
+                                  onClick={(e) => e.stopPropagation()}
+                                  checked={appliedFilters.model.includes(name)}
+                                  onChange={(e) => {
+                                    e.stopPropagation();
+                                    const checked = (e.target as HTMLInputElement).checked;
+                                    setAppliedFilters((prev) => {
+                                      const current = prev.model || [];
+                                      const next = new Set(current);
+                                      if (checked) next.add(name);
+                                      else next.delete(name);
+                                      const newFilters = {
+                                        ...prev,
+                                        model: Array.from(next),
+                                      } as any;
+                                      setCollapsedFilters((cprev) => ({
+                                        ...cprev,
+                                        model: false,
+                                      }));
+                                      updateURLFromFilters(newFilters);
+                                      return newFilters;
+                                    });
+                                  }}
+                                />
+                                <label
+                                  htmlFor={id}
+                                  className="flex-1 cursor-pointer"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <span className="carzino-filter-option">
+                                    {name}
+                                  </span>
+                                </label>
+                                <span className="carzino-filter-count ml-1">
+                                  {count ? `(${count})` : ""}
+                                </span>
+                              </div>
+                            );
+                          })}
+
+                          {filterOptions.model.length > 8 && (
+                            <div className="pt-1">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowMoreModels(!showMoreModels);
+                                }}
+                                className="text-red-600 text-sm font-medium"
+                              >
+                                {showMoreModels ? "Show Less" : "Show More"}
+                              </button>
+                            </div>
+                          )}
+                        </>
                       );
-                    })
+                    })()
                   ) : (
                     <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
                       No models available for the selected make(s).
@@ -2393,58 +2425,78 @@ export default function MySQLVehiclesOriginalStyle() {
                       Select a make first to see available trims
                     </div>
                   ) : filterOptions.trim && filterOptions.trim.length > 0 ? (
-                    filterOptions.trim.map((t: any) => {
-                      const name = typeof t === "string" ? t : t.name;
-                      const count = typeof t === "string" ? undefined : t.count;
-                      const id = `trim-${name.replace(/[^a-z0-9]/gi, "_")}`;
+                    (() => {
+                      const displayedTrims = getDisplayed(filterOptions.trim, appliedFilters.trim, showMoreTrims, 8);
                       return (
-                        <div
-                          key={name}
-                          className="flex items-center hover:bg-gray-50 p-1 rounded"
-                        >
-                          <input
-                            id={id}
-                            type="checkbox"
-                            className="mr-2"
-                            onClick={(e) => e.stopPropagation()}
-                            checked={appliedFilters.trim.includes(name)}
-                            onChange={(e) => {
-                              e.stopPropagation();
-                              const checked = (e.target as HTMLInputElement)
-                                .checked;
-                              setAppliedFilters((prev) => {
-                                const current = prev.trim || [];
-                                const next = new Set(current);
-                                if (checked) next.add(name);
-                                else next.delete(name);
-                                const newFilters = {
-                                  ...prev,
-                                  trim: Array.from(next),
-                                } as any;
-                                setCollapsedFilters((cprev) => ({
-                                  ...cprev,
-                                  trim: false,
-                                }));
-                                updateURLFromFilters(newFilters);
-                                return newFilters;
-                              });
-                            }}
-                          />
-                          <label
-                            htmlFor={id}
-                            className="flex-1 cursor-pointer"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <span className="carzino-filter-option">
-                              {name}
-                            </span>
-                          </label>
-                          <span className="carzino-filter-count ml-1">
-                            {count ? `(${count})` : ""}
-                          </span>
-                        </div>
+                        <>
+                          {displayedTrims.map((t: any) => {
+                            const name = typeof t === "string" ? t : t.name;
+                            const count = typeof t === "string" ? undefined : t.count;
+                            const id = `trim-${name.replace(/[^a-z0-9]/gi, "_")}`;
+                            return (
+                              <div
+                                key={name}
+                                className="flex items-center hover:bg-gray-50 p-1 rounded"
+                              >
+                                <input
+                                  id={id}
+                                  type="checkbox"
+                                  className="mr-2"
+                                  onClick={(e) => e.stopPropagation()}
+                                  checked={appliedFilters.trim.includes(name)}
+                                  onChange={(e) => {
+                                    e.stopPropagation();
+                                    const checked = (e.target as HTMLInputElement).checked;
+                                    setAppliedFilters((prev) => {
+                                      const current = prev.trim || [];
+                                      const next = new Set(current);
+                                      if (checked) next.add(name);
+                                      else next.delete(name);
+                                      const newFilters = {
+                                        ...prev,
+                                        trim: Array.from(next),
+                                      } as any;
+                                      setCollapsedFilters((cprev) => ({
+                                        ...cprev,
+                                        trim: false,
+                                      }));
+                                      updateURLFromFilters(newFilters);
+                                      return newFilters;
+                                    });
+                                  }}
+                                />
+                                <label
+                                  htmlFor={id}
+                                  className="flex-1 cursor-pointer"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <span className="carzino-filter-option">
+                                    {name}
+                                  </span>
+                                </label>
+                                <span className="carzino-filter-count ml-1">
+                                  {count ? `(${count})` : ""}
+                                </span>
+                              </div>
+                            );
+                          })}
+
+                          {filterOptions.trim.length > 8 && (
+                            <div className="pt-1">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowMoreTrims(!showMoreTrims);
+                                }}
+                                className="text-red-600 text-sm font-medium"
+                              >
+                                {showMoreTrims ? "Show Less" : "Show More"}
+                              </button>
+                            </div>
+                          )}
+                        </>
                       );
-                    })
+                    })()
                   ) : (
                     <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
                       No trims available for the selected make(s).
