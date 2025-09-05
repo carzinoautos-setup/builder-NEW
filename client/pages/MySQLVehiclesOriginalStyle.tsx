@@ -85,24 +85,36 @@ interface VehiclesApiResponse {
 
 // URL utility functions
 const parseFiltersFromURL = (pathname: string) => {
-  // Expected format: /cars-for-sale/{make}/{model}/{trim}/{condition}/{year}/{body_style}/
-  const segments = pathname.split("/").filter(Boolean);
-
-  // Remove 'cars-for-sale' from segments
-  if (segments[0] === "cars-for-sale") {
-    segments.shift();
-  }
-
-  const filters = {
-    make: segments[0] || "",
-    model: segments[1] || "",
-    trim: segments[2] || "",
-    condition: segments[3] || "",
-    year: segments[4] || "",
-    bodyStyle: segments[5] || "",
+  // Check query params first (e.g. ?make=Toyota,Ford&model=Camry,Corolla)
+  const qs = new URLSearchParams(window.location.search || "");
+  const getArr = (key: string) => {
+    const v = qs.get(key);
+    if (!v) return undefined;
+    return v.split(",").map((s) => s.trim()).filter(Boolean);
   };
 
-  return filters;
+  const make = getArr("make");
+  const model = getArr("model");
+  const trim = getArr("trim");
+  const condition = getArr("condition");
+  const year = getArr("year");
+  const bodyStyle = getArr("bodyStyle") || getArr("body_style");
+
+  // If no query params, fall back to path segments (legacy)
+  if (!make && !model && !trim && !condition && !year && !bodyStyle) {
+    const segments = pathname.split("/").filter(Boolean);
+    if (segments[0] === "cars-for-sale") segments.shift();
+    return {
+      make: segments[0] ? [segments[0]] : undefined,
+      model: segments[1] ? [segments[1]] : undefined,
+      trim: segments[2] ? [segments[2]] : undefined,
+      condition: segments[3] ? [segments[3]] : undefined,
+      year: segments[4] ? [segments[4]] : undefined,
+      bodyStyle: segments[5] ? [segments[5]] : undefined,
+    };
+  }
+
+  return { make, model, trim, condition, year, bodyStyle };
 };
 
 const generateURLFromFilters = (filters: {
@@ -715,15 +727,21 @@ export default function MySQLVehiclesOriginalStyle() {
     ) {
       setAppliedFilters((prev) => ({
         ...prev,
-        make: urlFilters.make ? [normalizeFilterValue(urlFilters.make)] : [],
-        model: urlFilters.model ? [normalizeFilterValue(urlFilters.model)] : [],
-        trim: urlFilters.trim ? [normalizeFilterValue(urlFilters.trim)] : [],
-        condition: urlFilters.condition
-          ? [normalizeFilterValue(urlFilters.condition)]
+        make: Array.isArray(urlFilters.make)
+          ? urlFilters.make.map((v) => normalizeFilterValue(v))
           : [],
-        year: urlFilters.year ? [urlFilters.year] : [],
-        bodyStyle: urlFilters.bodyStyle
-          ? [normalizeFilterValue(urlFilters.bodyStyle)]
+        model: Array.isArray(urlFilters.model)
+          ? urlFilters.model.map((v) => normalizeFilterValue(v))
+          : [],
+        trim: Array.isArray(urlFilters.trim)
+          ? urlFilters.trim.map((v) => normalizeFilterValue(v))
+          : [],
+        condition: Array.isArray(urlFilters.condition)
+          ? urlFilters.condition.map((v) => normalizeFilterValue(v))
+          : [],
+        year: Array.isArray(urlFilters.year) ? urlFilters.year : [],
+        bodyStyle: Array.isArray(urlFilters.bodyStyle)
+          ? urlFilters.bodyStyle.map((v) => normalizeFilterValue(v))
           : [],
       }));
     }
