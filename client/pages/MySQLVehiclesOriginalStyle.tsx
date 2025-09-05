@@ -741,8 +741,16 @@ export default function MySQLVehiclesOriginalStyle() {
 
       const newURL = generateURLFromFilters(urlFilters);
 
-      // Only navigate if we're changing the URL structure
+      // If user has selected multiple makes/models/trim, do NOT navigate —
+      // navigating replaces the URL-based single-selection and prevents multi-select.
+      const multiSelectPresent =
+        (urlFilters.make && urlFilters.make.length > 1) ||
+        (urlFilters.model && urlFilters.model.length > 1) ||
+        (urlFilters.trim && urlFilters.trim.length > 1);
+
+      // Only navigate if we're changing the URL structure and there's no multi-select active
       if (
+        !multiSelectPresent &&
         location.pathname !== newURL &&
         (urlFilters.make?.length ||
           urlFilters.model?.length ||
