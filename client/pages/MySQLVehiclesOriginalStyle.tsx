@@ -1167,7 +1167,7 @@ export default function MySQLVehiclesOriginalStyle() {
         const result = await response.json();
         if (result.success && result.data) {
           console.log(
-            `�� Geocoded ${zip} to ${result.data.city}, ${result.data.state}`,
+            `✅ Geocoded ${zip} to ${result.data.city}, ${result.data.state}`,
           );
           return {
             lat: result.data.lat,
@@ -1269,7 +1269,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
 
         // If ZIP not in our fallback list, use a default location
-        console.warn(`���� Using default coordinates for unknown ZIP: ${zip}`);
+        console.warn(`Using default coordinates for unknown ZIP: ${zip}`);
         return {
           lat: 39.8283,
           lng: -98.5795,
@@ -1740,7 +1740,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white"
                       >
-                        ��
+                        ×
                       </button>
                     </span>
                   ))}
@@ -1879,7 +1879,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("make", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ��
+                        ×
                       </button>
                     </span>
                   ))}
@@ -1927,7 +1927,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("year", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ��
+                        ×
                       </button>
                     </span>
                   ))}
@@ -3205,7 +3205,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="ml-1 text-white"
                       >
-                        ��
+                        ×
                       </button>
                     </span>
                   ))}
