@@ -1229,7 +1229,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
 
         // If ZIP not in our fallback list, use a default location
-        console.warn(`🆘 Using default coordinates for unknown ZIP: ${zip}`);
+        console.warn(`���� Using default coordinates for unknown ZIP: ${zip}`);
         return {
           lat: 39.8283,
           lng: -98.5795,
@@ -1244,22 +1244,30 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   };
 
-  // Color data for filters
-  const exteriorColors = [
-    { name: "Black", color: "#000000", count: 8234 },
-    { name: "White", color: "#FFFFFF", count: 7456 },
-    { name: "Silver", color: "#C0C0C0", count: 6789 },
-    { name: "Gray", color: "#808080", count: 5234 },
-    { name: "Blue", color: "#0000FF", count: 4567 },
-    { name: "Red", color: "#FF0000", count: 3456 },
-  ];
+  // Color data for filters - derived from WP /filters (fallback palette for unknown colors)
+  const colorPalette: Record<string, string> = {
+    Black: "#000000",
+    White: "#FFFFFF",
+    Silver: "#C0C0C0",
+    Gray: "#808080",
+    Blue: "#0000FF",
+    Red: "#FF0000",
+    Beige: "#F5F5DC",
+    Brown: "#8B4513",
+    Tan: "#D2B48C",
+    Gold: "#D4AF37",
+    Green: "#008000",
+  };
 
-  const interiorColors = [
-    { name: "Black", color: "#000000", count: 12456 },
-    { name: "Gray", color: "#808080", count: 8234 },
-    { name: "Beige", color: "#F5F5DC", count: 6789 },
-    { name: "Brown", color: "#8B4513", count: 4567 },
-  ];
+  const exteriorColors = useMemo(() => {
+    const list = (filterOptions.exterior_color || []) as any[];
+    return list.map((c) => ({ name: c.name, color: colorPalette[c.name] || "#D1D5DB", count: c.count || 0 }));
+  }, [filterOptions.exterior_color]);
+
+  const interiorColors = useMemo(() => {
+    const list = (filterOptions.interior_color || []) as any[];
+    return list.map((c) => ({ name: c.name, color: colorPalette[c.name] || "#E5E7EB", count: c.count || 0 }));
+  }, [filterOptions.interior_color]);
 
   // Color swatch component
   const ColorSwatch = ({
