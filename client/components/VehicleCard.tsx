@@ -43,6 +43,20 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   interestRate = "5",
   downPayment = "2000",
 }) => {
+  // Helper to determine if a formatted price string represents a positive price
+  const parseFormattedPrice = (priceStr?: string | null): number | null => {
+    if (!priceStr) return null;
+    const num = parseFloat(String(priceStr).replace(/[^0-9.-]+/g, ""));
+    if (isNaN(num)) return null;
+    return num;
+  };
+
+  const hasValidSalePrice = (): boolean => {
+    const n = parseFormattedPrice(vehicle.salePrice);
+    return n !== null && n > 0;
+  };
+
+  const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
   const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
 
   // Calculate monthly payment based on sale price and loan terms
