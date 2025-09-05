@@ -741,25 +741,21 @@ export default function MySQLVehiclesOriginalStyle() {
 
       const newURL = generateURLFromFilters(urlFilters);
 
-      // If user has selected multiple makes/models/trim, do NOT navigate —
-      // navigating replaces the URL-based single-selection and prevents multi-select.
-      const multiSelectPresent =
-        (urlFilters.make && urlFilters.make.length > 1) ||
-        (urlFilters.model && urlFilters.model.length > 1) ||
-        (urlFilters.trim && urlFilters.trim.length > 1);
+      // Do not navigate for make/model/trim changes — URLs only support single values and
+      // navigating on selection prevents multi-select UX. Keep URL navigation for other filters.
+      const hasMakeModelTrim =
+        (urlFilters.make && urlFilters.make.length > 0) ||
+        (urlFilters.model && urlFilters.model.length > 0) ||
+        (urlFilters.trim && urlFilters.trim.length > 0);
 
-      // Only navigate if we're changing the URL structure and there's no multi-select active
-      if (
-        !multiSelectPresent &&
-        location.pathname !== newURL &&
-        (urlFilters.make?.length ||
-          urlFilters.model?.length ||
-          urlFilters.trim?.length ||
-          urlFilters.condition?.length ||
-          urlFilters.year ||
-          urlFilters.bodyStyle?.length)
-      ) {
-        navigate(newURL, { replace: true });
+      if (!hasMakeModelTrim) {
+        // Only navigate if we're changing the URL structure for non make/model/trim filters
+        if (
+          location.pathname !== newURL &&
+          (urlFilters.condition?.length || urlFilters.year || urlFilters.bodyStyle?.length)
+        ) {
+          navigate(newURL, { replace: true });
+        }
       }
     },
     [navigate, location.pathname],
