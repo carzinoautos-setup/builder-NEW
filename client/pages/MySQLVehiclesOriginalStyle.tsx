@@ -2887,50 +2887,6 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </FilterSection>
 
-            {/* NEW: Certified Status */}
-            <FilterSection
-              title="Certification"
-              isCollapsed={collapsedFilters.certified}
-              onToggle={() => toggleFilter("certified")}
-            >
-              <div className="space-y-1">
-                {filterOptions.certified &&
-                filterOptions.certified.length > 0 ? (
-                  filterOptions.certified.map((c: any) => (
-                    <label
-                      key={c.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.certified.includes(c.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              certified: [...prev.certified, c.name],
-                            }));
-                          } else {
-                            removeAppliedFilter("certified", c.name);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{c.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({c.count ?? 0})
-                      </span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No certification options available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
-
             {/* Exterior Color */}
             <FilterSection
               title="Exterior Color"
