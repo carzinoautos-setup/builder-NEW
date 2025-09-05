@@ -2909,16 +2909,29 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("city")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">Seattle</span>
-                  <span className="carzino-filter-count ml-1">(4,567)</span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">Portland</span>
-                  <span className="carzino-filter-count ml-1">(3,234)</span>
-                </label>
+                {(filterOptions.city_seller && filterOptions.city_seller.length > 0) ? (
+                  filterOptions.city_seller.map((c: any) => (
+                    <label key={c.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={((appliedFilters as any).city || []).includes(c.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({ ...prev, /* @ts-ignore */ city: [...((prev as any).city || []), c.name] }));
+                          } else {
+                            setAppliedFilters((prev) => ({ ...prev, /* @ts-ignore */ city: ((prev as any).city || []).filter((v: string) => v !== c.name) }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{c.name}</span>
+                      <span className="carzino-filter-count ml-1">({c.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No cities available.</div>
+                )}
               </div>
             </FilterSection>
 
