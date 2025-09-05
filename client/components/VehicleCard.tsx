@@ -57,7 +57,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   };
 
   const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
-  const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
 
   // Calculate monthly payment based on sale price and loan terms
   const calculateMonthlyPayment = (
