@@ -234,23 +234,18 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         </div>
 
         <div className="flex justify-center items-start gap-6 mb-1 flex-1">
-          {vehicle.salePrice ? (
+          {hasValidSalePrice() ? (
             <>
               <div className="text-center">
-                <div className="carzino-price-label text-gray-500 mb-0">
-                  Sale Price
-                </div>
-                <div className="carzino-price-value text-gray-900">
-                  {vehicle.salePrice}
-                </div>
+                <div className="carzino-price-label text-gray-500 mb-0">Sale Price</div>
+                <div className="carzino-price-value text-gray-900">{vehicle.salePrice}</div>
               </div>
-              {/* Always show Payments section when a Sale Price exists. If no explicit payment is provided, getDisplayPayment() will return a calculated value or 'Call for Price'. */}
+
+              {/* Payments shown only when a valid sale price exists. */}
               <>
                 <div className="w-px h-12 bg-gray-200"></div>
                 <div className="text-center">
-                  <div className="carzino-price-label text-gray-500 mb-0">
-                    Payments
-                  </div>
+                  <div className="carzino-price-label text-gray-500 mb-0">Payments</div>
                   <div className="carzino-price-value text-red-600">
                     {getDisplayPayment()}
                     <span className="text-xs text-black font-normal">/mo*</span>
@@ -260,12 +255,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             </>
           ) : (
             <div className="text-center">
-              <div className="carzino-price-label text-gray-500 mb-0">
-                No Sale Price Listed
-              </div>
-              <div className="carzino-price-value text-gray-900">
-                Call for Price
-              </div>
+              <div className="carzino-price-label text-gray-500 mb-0">No Sale Price Listed</div>
+              <div className="carzino-price-value text-gray-900">Call for Price</div>
             </div>
           )}
         </div>
