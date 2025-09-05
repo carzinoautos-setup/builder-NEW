@@ -2224,11 +2224,13 @@ export default function MySQLVehiclesOriginalStyle() {
                   {displayedMakes.map((m: any) => (
                     <label
                       key={m.name}
+                      onClick={(e) => e.stopPropagation()}
                       className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                     >
                       <input
                         type="checkbox"
                         className="mr-2"
+                        onClick={(e) => e.stopPropagation()}
                         checked={appliedFilters.make.includes(m.name)}
                         onChange={(e) => {
                           e.stopPropagation();
@@ -2290,11 +2292,13 @@ export default function MySQLVehiclesOriginalStyle() {
                       return (
                         <label
                           key={name}
+                          onClick={(e) => e.stopPropagation()}
                           className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                         >
                           <input
                             type="checkbox"
                             className="mr-2"
+                            onClick={(e) => e.stopPropagation()}
                             checked={appliedFilters.model.includes(name)}
                             onChange={(e) => {
                               e.stopPropagation();
@@ -2347,11 +2351,13 @@ export default function MySQLVehiclesOriginalStyle() {
                       return (
                         <label
                           key={name}
+                          onClick={(e) => e.stopPropagation()}
                           className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                         >
                           <input
                             type="checkbox"
                             className="mr-2"
+                            onClick={(e) => e.stopPropagation()}
                             checked={appliedFilters.trim.includes(name)}
                             onChange={(e) => {
                               e.stopPropagation();
