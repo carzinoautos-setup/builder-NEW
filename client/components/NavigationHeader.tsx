@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { Database, Home } from "lucide-react";
 
 export function NavigationHeader() {
+  const hideHeader = import.meta.env.VITE_HIDE_HEADER === 'true';
+  if (hideHeader) return null;
   const location = useLocation();
 
   const isActive = (path: string) => {
