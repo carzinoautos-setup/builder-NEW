@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Database, Home } from "lucide-react";
 
 export function NavigationHeader() {
-  const hideHeader = import.meta.env.VITE_HIDE_HEADER === 'true';
+  const hideHeader = import.meta.env.VITE_HIDE_HEADER === "true";
   if (hideHeader) return null;
   const location = useLocation();
 
@@ -45,7 +45,6 @@ export function NavigationHeader() {
               <Database className="w-4 h-4" />
               MySQL Vehicles (50k)
             </Link>
-
           </nav>
 
           {/* Stats/Info */}
