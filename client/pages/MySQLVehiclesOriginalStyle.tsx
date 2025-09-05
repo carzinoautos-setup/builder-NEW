@@ -377,6 +377,14 @@ export default function MySQLVehiclesOriginalStyle() {
   const { filterOptions, filtersLoading, filtersError, refetch, pruneInvalid } =
     useFilters(appliedFilters);
 
+  // UI: show more state for Make/Model/Trim lists
+  const [showMoreMakes, setShowMoreMakes] = useState(false);
+  const [showMoreModels, setShowMoreModels] = useState(false);
+  const [showMoreTrims, setShowMoreTrims] = useState(false);
+
+  const allMakes = filterOptions?.make || [];
+  const displayedMakes = showMoreMakes ? allMakes : allMakes.slice(0, 8);
+
   // When filterOptions update, prune any applied filters that are no longer valid
   useEffect(() => {
     if (!filterOptions) return;
