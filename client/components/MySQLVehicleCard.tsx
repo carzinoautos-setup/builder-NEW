@@ -156,12 +156,31 @@ export function MySQLVehicleCard({
           </div>
 
           {/* Payment Details */}
-          {vehicle.payments > 0 && (
+          {vehicle.price ? (
             <div className="text-sm text-gray-600">
               <div className="flex justify-between items-center">
                 <span>Est. Payment:</span>
                 <span className="font-medium">
-                  {formatPrice(vehicle.payments)}/mo
+                  {vehicle.payments && vehicle.payments > 0
+                    ? formatPrice(vehicle.payments) + "/mo"
+                    : (() => {
+                        try {
+                          const params = {
+                            salePrice: vehicle.price,
+                            downPayment: vehicle.down_payment || 0,
+                            interestRate: vehicle.interest_rate || 5,
+                            loanTermMonths: vehicle.loan_term || 60,
+                          };
+                          // Lazy import of calculator to avoid circular issues
+                          // @ts-ignore
+                          const { calculateMonthlyPayment } = require("../lib/paymentCalculator");
+                          const res = calculateMonthlyPayment(params);
+                          return `$${Math.round(res.monthlyPayment).toLocaleString()}/mo`;
+                        } catch (e) {
+                          return "Call for Price";
+                        }
+                      })()
+                  }
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
@@ -171,7 +190,7 @@ export function MySQLVehicleCard({
                 <span>Down: {formatPrice(vehicle.down_payment)}</span>
               </div>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Action Buttons */}
