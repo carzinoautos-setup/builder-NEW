@@ -83,8 +83,13 @@ export class BuilderWooCommerceService {
     try {
       // Prefer the local /api/vehicles proxy (which itself proxies to WP custom API) to ensure ACF fields are returned
       try {
-        const qs = new URLSearchParams(filters as Record<string, any>).toString();
-        console.log("🔄 Fetching vehicles from local proxy /api/vehicles...", filters);
+        const qs = new URLSearchParams(
+          filters as Record<string, any>,
+        ).toString();
+        console.log(
+          "🔄 Fetching vehicles from local proxy /api/vehicles...",
+          filters,
+        );
         const res = await fetch(`/api/vehicles${qs ? `?${qs}` : ""}`);
         if (!res.ok) throw new Error(`Proxy error ${res.status}`);
         const json = await res.json();
@@ -95,12 +100,15 @@ export class BuilderWooCommerceService {
         else if (Array.isArray(json)) vehiclesData = json;
 
         const transformedVehicles = transformVehiclesForBuilder(vehiclesData);
-        const totalVehicles = (json && json.meta && json.meta.totalRecords) || vehiclesData.length;
+        const totalVehicles =
+          (json && json.meta && json.meta.totalRecords) || vehiclesData.length;
         const perPage = parseInt((filters as any).per_page) || 20;
         const currentPage = parseInt((filters as any).page) || 1;
         const totalPages = Math.ceil(totalVehicles / perPage) || 1;
 
-        console.log(`✅ Loaded ${vehiclesData.length} vehicles from /api/vehicles proxy`);
+        console.log(
+          `✅ Loaded ${vehiclesData.length} vehicles from /api/vehicles proxy`,
+        );
 
         this.setState({
           vehicles: transformedVehicles,
@@ -111,7 +119,10 @@ export class BuilderWooCommerceService {
         });
         return;
       } catch (err) {
-        console.warn("⚠️ Local /api/vehicles proxy failed, falling back to WooCommerce client:", err);
+        console.warn(
+          "⚠️ Local /api/vehicles proxy failed, falling back to WooCommerce client:",
+          err,
+        );
       }
 
       // Fallback to WooCommerce client if proxy is not available

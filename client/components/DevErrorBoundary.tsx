@@ -27,13 +27,24 @@ export class DevErrorBoundary extends React.Component<{}, State> {
     return (
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-6">
         <div className="max-w-3xl w-full bg-white border border-red-200 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-red-800 mb-2">Runtime Error</h2>
-          <p className="text-sm text-red-700 mb-4">An error occurred while rendering the application. See details below.</p>
-          <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-64">{this.state.error?.message}</pre>
+          <h2 className="text-xl font-semibold text-red-800 mb-2">
+            Runtime Error
+          </h2>
+          <p className="text-sm text-red-700 mb-4">
+            An error occurred while rendering the application. See details
+            below.
+          </p>
+          <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-64">
+            {this.state.error?.message}
+          </pre>
           {this.state.info && (
             <details className="mt-3 text-xs">
-              <summary className="cursor-pointer text-gray-700">Component stack</summary>
-              <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-64">{this.state.info.componentStack}</pre>
+              <summary className="cursor-pointer text-gray-700">
+                Component stack
+              </summary>
+              <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-64">
+                {this.state.info.componentStack}
+              </pre>
             </details>
           )}
           <div className="mt-4 flex gap-2">

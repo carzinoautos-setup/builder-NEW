@@ -5,7 +5,12 @@ import { PaginationParams, VehicleFilters } from "../types/vehicle.js";
 
 // Decide whether to use the real VehicleService (MySQL), a WordPress proxy, or MockVehicleService
 const useMock = process.env.USE_MOCK === "true";
-const hasDbEnv = !!(process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD);
+const hasDbEnv = !!(
+  process.env.DB_HOST &&
+  process.env.DB_NAME &&
+  process.env.DB_USER &&
+  process.env.DB_PASSWORD
+);
 const hasWpApi = !!process.env.WP_API_BASE;
 
 if (useMock) {
@@ -14,9 +19,14 @@ if (useMock) {
 
 // Prefer WP_API proxy when configured
 if (hasWpApi && !useMock) {
-  console.log("🔁 WP_API_BASE detected — proxying /api/vehicles to WordPress plugin API at:", process.env.WP_API_BASE);
+  console.log(
+    "🔁 WP_API_BASE detected — proxying /api/vehicles to WordPress plugin API at:",
+    process.env.WP_API_BASE,
+  );
 } else if (hasDbEnv && !useMock) {
-  console.log("✅ DB env vars present — attempting to use VehicleService (MySQL)");
+  console.log(
+    "✅ DB env vars present — attempting to use VehicleService (MySQL)",
+  );
 } else if (!hasWpApi && !hasDbEnv && !useMock) {
   console.log(
     "⚠️ No data backend configured (no WP_API_BASE and no DB_*). Falling back to MockVehicleService",
@@ -35,7 +45,10 @@ try {
     vehicleService = new MockVehicleService();
   }
 } catch (err) {
-  console.error("Failed to initialize VehicleService, falling back to MockVehicleService:", err);
+  console.error(
+    "Failed to initialize VehicleService, falling back to MockVehicleService:",
+    err,
+  );
   vehicleService = new MockVehicleService();
 }
 
@@ -116,7 +129,7 @@ export const getVehicles: RequestHandler = async (req, res) => {
 
       // Build Authorization header using Basic auth if consumer key/secret are available
       const headers: Record<string, string> = {
-        "Accept": "application/json",
+        Accept: "application/json",
       };
       if (process.env.WP_CONSUMER_KEY && process.env.WP_CONSUMER_SECRET) {
         const creds = `${process.env.WP_CONSUMER_KEY}:${process.env.WP_CONSUMER_SECRET}`;
@@ -208,7 +221,7 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       const rawQs = (req.originalUrl && req.originalUrl.split("?")[1]) || "";
       const url = `${wpBase}/filters${rawQs ? `?${rawQs}` : ""}`;
       const headers: Record<string, string> = {
-        "Accept": "application/json",
+        Accept: "application/json",
       };
       if (process.env.WP_CONSUMER_KEY && process.env.WP_CONSUMER_SECRET) {
         const creds = `${process.env.WP_CONSUMER_KEY}:${process.env.WP_CONSUMER_SECRET}`;
@@ -219,9 +232,22 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       const body = await wpResponse.text();
       // Log proxied response for debugging conditional filters (trim large output)
       try {
-        console.log("[WP_PROXY_REQUEST] url:", url, "hasAuth:", !!headers["Authorization"]);
-        const trimmed = body && body.length > 5000 ? body.substring(0, 5000) + "...(truncated)" : body;
-        console.log("[WP_PROXY_RESPONSE] /filters -> status:", wpResponse.status, "body:", trimmed);
+        console.log(
+          "[WP_PROXY_REQUEST] url:",
+          url,
+          "hasAuth:",
+          !!headers["Authorization"],
+        );
+        const trimmed =
+          body && body.length > 5000
+            ? body.substring(0, 5000) + "...(truncated)"
+            : body;
+        console.log(
+          "[WP_PROXY_RESPONSE] /filters -> status:",
+          wpResponse.status,
+          "body:",
+          trimmed,
+        );
       } catch (e) {
         console.log("[WP_PROXY_RESPONSE] /filters -> (unable to log body)");
       }
