@@ -106,7 +106,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         const unscopedQs = buildFiltersQuery(unscopedFilters || {});
         const unscopedUrl = `/api/vehicles/filters${unscopedQs ? `?${unscopedQs}` : ""}`;
         const unscopedRes = await fetch(unscopedUrl);
-        if (!unscopedRes.ok) throw new Error(`Filters error ${unscopedRes.status}`);
+        if (!unscopedRes.ok)
+          throw new Error(`Filters error ${unscopedRes.status}`);
         const unscopedJson = await unscopedRes.json();
 
         // Parse helper to convert WP plugin json.filters or json.data into a FilterMap
@@ -117,68 +118,202 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             const f = json.filters as Record<string, any>;
 
             const makes = pickArrayFromFilters(f, "makes", "make");
-            if (makes) normalized.make = makes.map(mapItem).filter(Boolean) as any;
+            if (makes)
+              normalized.make = makes.map(mapItem).filter(Boolean) as any;
 
             const models = pickArrayFromFilters(f, "models", "model");
-            if (models) normalized.model = models.map(mapItem).filter(Boolean) as any;
+            if (models)
+              normalized.model = models.map(mapItem).filter(Boolean) as any;
 
             const trims = pickArrayFromFilters(f, "trims", "trim");
-            if (trims) normalized.trim = trims.map(mapItem).filter(Boolean) as any;
+            if (trims)
+              normalized.trim = trims.map(mapItem).filter(Boolean) as any;
 
             const years = pickArrayFromFilters(f, "years", "year");
-            if (years) normalized.year = years.map(mapItem).filter(Boolean) as any;
+            if (years)
+              normalized.year = years.map(mapItem).filter(Boolean) as any;
 
-            const bodyStyles = pickArrayFromFilters(f, "body_style", "body_styles", "bodyStyles");
-            if (bodyStyles) normalized.body_style = bodyStyles.map(mapItem).filter(Boolean) as any;
+            const bodyStyles = pickArrayFromFilters(
+              f,
+              "body_style",
+              "body_styles",
+              "bodyStyles",
+            );
+            if (bodyStyles)
+              normalized.body_style = bodyStyles
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const drivetrains = pickArrayFromFilters(f, "drivetrain", "drivetrains");
-            if (drivetrains) normalized.drivetrain = drivetrains.map(mapItem).filter(Boolean) as any;
+            const drivetrains = pickArrayFromFilters(
+              f,
+              "drivetrain",
+              "drivetrains",
+            );
+            if (drivetrains)
+              normalized.drivetrain = drivetrains
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const fuels = pickArrayFromFilters(f, "fuel_type", "fuelTypes", "fuel_types");
-            if (fuels) normalized.fuel_type = fuels.map(mapItem).filter(Boolean) as any;
+            const fuels = pickArrayFromFilters(
+              f,
+              "fuel_type",
+              "fuelTypes",
+              "fuel_types",
+            );
+            if (fuels)
+              normalized.fuel_type = fuels.map(mapItem).filter(Boolean) as any;
 
-            const transmissions = pickArrayFromFilters(f, "transmission", "transmissions");
-            if (transmissions) normalized.transmission = transmissions.map(mapItem).filter(Boolean) as any;
+            const transmissions = pickArrayFromFilters(
+              f,
+              "transmission",
+              "transmissions",
+            );
+            if (transmissions)
+              normalized.transmission = transmissions
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const exterior = pickArrayFromFilters(f, "exterior_color", "exterior_colors", "exteriorColor");
-            if (exterior) normalized.exterior_color = exterior.map(mapItem).filter(Boolean) as any;
+            const exterior = pickArrayFromFilters(
+              f,
+              "exterior_color",
+              "exterior_colors",
+              "exteriorColor",
+            );
+            if (exterior)
+              normalized.exterior_color = exterior
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const interior = pickArrayFromFilters(f, "interior_color", "interior_colors", "interiorColor");
-            if (interior) normalized.interior_color = interior.map(mapItem).filter(Boolean) as any;
+            const interior = pickArrayFromFilters(
+              f,
+              "interior_color",
+              "interior_colors",
+              "interiorColor",
+            );
+            if (interior)
+              normalized.interior_color = interior
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const accountNames = pickArrayFromFilters(f, "account_name_seller", "dealer", "account_names_seller");
-            if (accountNames) normalized.account_name_seller = accountNames.map(mapItem).filter(Boolean) as any;
+            const accountNames = pickArrayFromFilters(
+              f,
+              "account_name_seller",
+              "dealer",
+              "account_names_seller",
+            );
+            if (accountNames)
+              normalized.account_name_seller = accountNames
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const accountTypes = pickArrayFromFilters(f, "account_type_seller", "seller_types", "account_types_seller", "sellerType");
-            if (accountTypes) normalized.account_type_seller = accountTypes.map(mapItem).filter(Boolean) as any;
+            const accountTypes = pickArrayFromFilters(
+              f,
+              "account_type_seller",
+              "seller_types",
+              "account_types_seller",
+              "sellerType",
+            );
+            if (accountTypes)
+              normalized.account_type_seller = accountTypes
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const conditions = pickArrayFromFilters(f, "condition", "conditions");
-            if (conditions) normalized.condition = conditions.map(mapItem).filter(Boolean) as any;
+            const conditions = pickArrayFromFilters(
+              f,
+              "condition",
+              "conditions",
+            );
+            if (conditions)
+              normalized.condition = conditions
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const certified = pickArrayFromFilters(f, "certified", "is_certified");
-            if (certified) normalized.certified = certified.map(mapItem).filter(Boolean) as any;
+            const certified = pickArrayFromFilters(
+              f,
+              "certified",
+              "is_certified",
+            );
+            if (certified)
+              normalized.certified = certified
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const cities = pickArrayFromFilters(f, "city_seller", "cities", "city");
-            if (cities) normalized.city_seller = cities.map(mapItem).filter(Boolean) as any;
+            const cities = pickArrayFromFilters(
+              f,
+              "city_seller",
+              "cities",
+              "city",
+            );
+            if (cities)
+              normalized.city_seller = cities
+                .map(mapItem)
+                .filter(Boolean) as any;
 
-            const states = pickArrayFromFilters(f, "state_seller", "states", "state");
-            if (states) normalized.state_seller = states.map(mapItem).filter(Boolean) as any;
+            const states = pickArrayFromFilters(
+              f,
+              "state_seller",
+              "states",
+              "state",
+            );
+            if (states)
+              normalized.state_seller = states
+                .map(mapItem)
+                .filter(Boolean) as any;
 
             return normalized;
           }
 
           if (json && json.success && json.data) {
             const map: FilterMap = {};
-            if (Array.isArray(json.data.makes)) map.make = json.data.makes.map((n: string) => ({ name: n, count: 0 }));
-            if (Array.isArray(json.data.models)) map.model = json.data.models.map((n: string) => ({ name: n, count: 0 }));
-            if (Array.isArray(json.data.trims)) map.trim = json.data.trims.map((n: string) => ({ name: n, count: 0 }));
-            if (Array.isArray(json.data.years)) map.year = json.data.years.map((n: string) => ({ name: String(n), count: 0 }));
-            if (Array.isArray(json.data.conditions)) map.condition = json.data.conditions.map((n: string) => ({ name: n, count: 0 }));
-            if (Array.isArray(json.data.fuelTypes)) map.fuel_type = json.data.fuelTypes.map((n: string) => ({ name: n, count: 0 }));
-            if (Array.isArray(json.data.transmissions)) map.transmission = json.data.transmissions.map((n: string) => ({ name: n, count: 0 }));
-            if (Array.isArray(json.data.drivetrains)) map.drivetrain = json.data.drivetrains.map((n: string) => ({ name: n, count: 0 }));
-            if (Array.isArray(json.data.bodyStyles)) map.body_style = json.data.bodyStyles.map((n: string) => ({ name: n, count: 0 }));
-            if (Array.isArray(json.data.sellerTypes)) map.account_type_seller = json.data.sellerTypes.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.makes))
+              map.make = json.data.makes.map((n: string) => ({
+                name: n,
+                count: 0,
+              }));
+            if (Array.isArray(json.data.models))
+              map.model = json.data.models.map((n: string) => ({
+                name: n,
+                count: 0,
+              }));
+            if (Array.isArray(json.data.trims))
+              map.trim = json.data.trims.map((n: string) => ({
+                name: n,
+                count: 0,
+              }));
+            if (Array.isArray(json.data.years))
+              map.year = json.data.years.map((n: string) => ({
+                name: String(n),
+                count: 0,
+              }));
+            if (Array.isArray(json.data.conditions))
+              map.condition = json.data.conditions.map((n: string) => ({
+                name: n,
+                count: 0,
+              }));
+            if (Array.isArray(json.data.fuelTypes))
+              map.fuel_type = json.data.fuelTypes.map((n: string) => ({
+                name: n,
+                count: 0,
+              }));
+            if (Array.isArray(json.data.transmissions))
+              map.transmission = json.data.transmissions.map((n: string) => ({
+                name: n,
+                count: 0,
+              }));
+            if (Array.isArray(json.data.drivetrains))
+              map.drivetrain = json.data.drivetrains.map((n: string) => ({
+                name: n,
+                count: 0,
+              }));
+            if (Array.isArray(json.data.bodyStyles))
+              map.body_style = json.data.bodyStyles.map((n: string) => ({
+                name: n,
+                count: 0,
+              }));
+            if (Array.isArray(json.data.sellerTypes))
+              map.account_type_seller = json.data.sellerTypes.map(
+                (n: string) => ({ name: n, count: 0 }),
+              );
             return map;
           }
 
@@ -189,11 +324,16 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
         // If we have selected makes, fetch scoped filters (models/trims) for those makes
         let scopedMap: FilterMap = {};
-        if (filters && Array.isArray((filters as any).make) && (filters as any).make.length > 0) {
+        if (
+          filters &&
+          Array.isArray((filters as any).make) &&
+          (filters as any).make.length > 0
+        ) {
           const scopedQs = buildFiltersQuery({ make: (filters as any).make });
           const scopedUrl = `/api/vehicles/filters${scopedQs ? `?${scopedQs}` : ""}`;
           const scopedRes = await fetch(scopedUrl);
-          if (!scopedRes.ok) throw new Error(`Filters error ${scopedRes.status}`);
+          if (!scopedRes.ok)
+            throw new Error(`Filters error ${scopedRes.status}`);
           const scopedJson = await scopedRes.json();
           scopedMap = parseJsonToMap(scopedJson);
         }

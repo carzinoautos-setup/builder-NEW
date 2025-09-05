@@ -90,7 +90,10 @@ const parseFiltersFromURL = (pathname: string) => {
   const getArr = (key: string) => {
     const v = qs.get(key);
     if (!v) return undefined;
-    return v.split(",").map((s) => s.trim()).filter(Boolean);
+    return v
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
   };
 
   const make = getArr("make");
@@ -774,7 +777,9 @@ export default function MySQLVehiclesOriginalStyle() {
         // Only navigate if we're changing the URL structure for non make/model/trim filters
         if (
           location.pathname !== newURL &&
-          (urlFilters.condition?.length || urlFilters.year || urlFilters.bodyStyle?.length)
+          (urlFilters.condition?.length ||
+            urlFilters.year ||
+            urlFilters.bodyStyle?.length)
         ) {
           navigate(newURL, { replace: true });
         }
@@ -2214,7 +2219,10 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Make Filter (conditional) */}
-            {((filterOptions && filterOptions.make && filterOptions.make.length > 0) || appliedFilters.make.length > 0) && (
+            {((filterOptions &&
+              filterOptions.make &&
+              filterOptions.make.length > 0) ||
+              appliedFilters.make.length > 0) && (
               <FilterSection
                 title="Make"
                 isCollapsed={collapsedFilters.make}
@@ -2224,7 +2232,10 @@ export default function MySQLVehiclesOriginalStyle() {
                   {displayedMakes.map((m: any) => {
                     const id = `make-${m.name.replace(/[^a-z0-9]/gi, "_")}`;
                     return (
-                      <div key={m.name} className="flex items-center hover:bg-gray-50 p-1 rounded">
+                      <div
+                        key={m.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded"
+                      >
                         <input
                           id={id}
                           type="checkbox"
@@ -2233,23 +2244,38 @@ export default function MySQLVehiclesOriginalStyle() {
                           checked={appliedFilters.make.includes(m.name)}
                           onChange={(e) => {
                             e.stopPropagation();
-                            const checked = (e.target as HTMLInputElement).checked;
+                            const checked = (e.target as HTMLInputElement)
+                              .checked;
                             setAppliedFilters((prev) => {
                               const current = prev.make || [];
                               const next = new Set(current);
                               if (checked) next.add(m.name);
                               else next.delete(m.name);
-                              const newFilters = { ...prev, make: Array.from(next) } as any;
-                              setCollapsedFilters((cprev) => ({ ...cprev, make: false }));
+                              const newFilters = {
+                                ...prev,
+                                make: Array.from(next),
+                              } as any;
+                              setCollapsedFilters((cprev) => ({
+                                ...cprev,
+                                make: false,
+                              }));
                               updateURLFromFilters(newFilters);
                               return newFilters;
                             });
                           }}
                         />
-                        <label htmlFor={id} className="flex-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
-                          <span className="carzino-filter-option">{m.name}</span>
+                        <label
+                          htmlFor={id}
+                          className="flex-1 cursor-pointer"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span className="carzino-filter-option">
+                            {m.name}
+                          </span>
                         </label>
-                        <span className="carzino-filter-count ml-1">({m.count || 0})</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({m.count || 0})
+                        </span>
                       </div>
                     );
                   })}
@@ -2272,7 +2298,11 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Model (Conditional & depends on Make) */}
-            {((appliedFilters.make.length > 0) || (filterOptions && filterOptions.model && filterOptions.model.length > 0) || appliedFilters.model.length > 0) && (
+            {(appliedFilters.make.length > 0 ||
+              (filterOptions &&
+                filterOptions.model &&
+                filterOptions.model.length > 0) ||
+              appliedFilters.model.length > 0) && (
               <FilterSection
                 title={`Model${appliedFilters.make.length > 0 ? ` (${appliedFilters.make[0]})` : ""}`}
                 isCollapsed={collapsedFilters.model}
@@ -2290,7 +2320,10 @@ export default function MySQLVehiclesOriginalStyle() {
                       const count = typeof m === "string" ? undefined : m.count;
                       const id = `model-${name.replace(/[^a-z0-9]/gi, "_")}`;
                       return (
-                        <div key={name} className="flex items-center hover:bg-gray-50 p-1 rounded">
+                        <div
+                          key={name}
+                          className="flex items-center hover:bg-gray-50 p-1 rounded"
+                        >
                           <input
                             id={id}
                             type="checkbox"
@@ -2299,23 +2332,38 @@ export default function MySQLVehiclesOriginalStyle() {
                             checked={appliedFilters.model.includes(name)}
                             onChange={(e) => {
                               e.stopPropagation();
-                              const checked = (e.target as HTMLInputElement).checked;
+                              const checked = (e.target as HTMLInputElement)
+                                .checked;
                               setAppliedFilters((prev) => {
                                 const current = prev.model || [];
                                 const next = new Set(current);
                                 if (checked) next.add(name);
                                 else next.delete(name);
-                                const newFilters = { ...prev, model: Array.from(next) } as any;
-                                setCollapsedFilters((cprev) => ({ ...cprev, model: false }));
+                                const newFilters = {
+                                  ...prev,
+                                  model: Array.from(next),
+                                } as any;
+                                setCollapsedFilters((cprev) => ({
+                                  ...cprev,
+                                  model: false,
+                                }));
                                 updateURLFromFilters(newFilters);
                                 return newFilters;
                               });
                             }}
                           />
-                          <label htmlFor={id} className="flex-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
-                            <span className="carzino-filter-option">{name}</span>
+                          <label
+                            htmlFor={id}
+                            className="flex-1 cursor-pointer"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <span className="carzino-filter-option">
+                              {name}
+                            </span>
                           </label>
-                          <span className="carzino-filter-count ml-1">{count ? `(${count})` : ""}</span>
+                          <span className="carzino-filter-count ml-1">
+                            {count ? `(${count})` : ""}
+                          </span>
                         </div>
                       );
                     })
@@ -2329,7 +2377,11 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Trim (Conditional & depends on Make) */}
-            {((appliedFilters.make.length > 0) || (filterOptions && filterOptions.trim && filterOptions.trim.length > 0) || appliedFilters.trim.length > 0) && (
+            {(appliedFilters.make.length > 0 ||
+              (filterOptions &&
+                filterOptions.trim &&
+                filterOptions.trim.length > 0) ||
+              appliedFilters.trim.length > 0) && (
               <FilterSection
                 title="Trim"
                 isCollapsed={collapsedFilters.trim}
@@ -2346,7 +2398,10 @@ export default function MySQLVehiclesOriginalStyle() {
                       const count = typeof t === "string" ? undefined : t.count;
                       const id = `trim-${name.replace(/[^a-z0-9]/gi, "_")}`;
                       return (
-                        <div key={name} className="flex items-center hover:bg-gray-50 p-1 rounded">
+                        <div
+                          key={name}
+                          className="flex items-center hover:bg-gray-50 p-1 rounded"
+                        >
                           <input
                             id={id}
                             type="checkbox"
@@ -2355,23 +2410,38 @@ export default function MySQLVehiclesOriginalStyle() {
                             checked={appliedFilters.trim.includes(name)}
                             onChange={(e) => {
                               e.stopPropagation();
-                              const checked = (e.target as HTMLInputElement).checked;
+                              const checked = (e.target as HTMLInputElement)
+                                .checked;
                               setAppliedFilters((prev) => {
                                 const current = prev.trim || [];
                                 const next = new Set(current);
                                 if (checked) next.add(name);
                                 else next.delete(name);
-                                const newFilters = { ...prev, trim: Array.from(next) } as any;
-                                setCollapsedFilters((cprev) => ({ ...cprev, trim: false }));
+                                const newFilters = {
+                                  ...prev,
+                                  trim: Array.from(next),
+                                } as any;
+                                setCollapsedFilters((cprev) => ({
+                                  ...cprev,
+                                  trim: false,
+                                }));
                                 updateURLFromFilters(newFilters);
                                 return newFilters;
                               });
                             }}
                           />
-                          <label htmlFor={id} className="flex-1 cursor-pointer" onClick={(e) => e.stopPropagation()}>
-                            <span className="carzino-filter-option">{name}</span>
+                          <label
+                            htmlFor={id}
+                            className="flex-1 cursor-pointer"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <span className="carzino-filter-option">
+                              {name}
+                            </span>
                           </label>
-                          <span className="carzino-filter-count ml-1">{count ? `(${count})` : ""}</span>
+                          <span className="carzino-filter-count ml-1">
+                            {count ? `(${count})` : ""}
+                          </span>
                         </div>
                       );
                     })
@@ -2392,7 +2462,9 @@ export default function MySQLVehiclesOriginalStyle() {
             >
               <div className="flex gap-2">
                 <div className="flex-1">
-                  <label className="block text-sm carzino-location-label mb-1">From</label>
+                  <label className="block text-sm carzino-location-label mb-1">
+                    From
+                  </label>
                   <select
                     value={yearFrom}
                     onChange={(e) => {
@@ -2409,9 +2481,14 @@ export default function MySQLVehiclesOriginalStyle() {
                     <option value="">Any</option>
                     {(filterOptions.year && filterOptions.year.length > 0
                       ? filterOptions.year
-                      : Array.from({ length: 10 }, (_, i) => String(new Date().getFullYear() - i))
+                      : Array.from({ length: 10 }, (_, i) =>
+                          String(new Date().getFullYear() - i),
+                        )
                     ).map((y: any) => {
-                      const name = typeof y === "string" || typeof y === "number" ? String(y) : y.name;
+                      const name =
+                        typeof y === "string" || typeof y === "number"
+                          ? String(y)
+                          : y.name;
                       return (
                         <option key={name} value={name}>
                           {name}
@@ -2422,7 +2499,9 @@ export default function MySQLVehiclesOriginalStyle() {
                 </div>
 
                 <div className="flex-1">
-                  <label className="block text-sm carzino-location-label mb-1">To</label>
+                  <label className="block text-sm carzino-location-label mb-1">
+                    To
+                  </label>
                   <select
                     value={yearTo}
                     onChange={(e) => {
@@ -2439,9 +2518,14 @@ export default function MySQLVehiclesOriginalStyle() {
                     <option value="">Any</option>
                     {(filterOptions.year && filterOptions.year.length > 0
                       ? filterOptions.year
-                      : Array.from({ length: 10 }, (_, i) => String(new Date().getFullYear() - i))
+                      : Array.from({ length: 10 }, (_, i) =>
+                          String(new Date().getFullYear() - i),
+                        )
                     ).map((y: any) => {
-                      const name = typeof y === "string" || typeof y === "number" ? String(y) : y.name;
+                      const name =
+                        typeof y === "string" || typeof y === "number"
+                          ? String(y)
+                          : y.name;
                       return (
                         <option key={name} value={name}>
                           {name}
@@ -2679,7 +2763,8 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("certified")}
             >
               <div className="space-y-1">
-                {filterOptions.certified && filterOptions.certified.length > 0 ? (
+                {filterOptions.certified &&
+                filterOptions.certified.length > 0 ? (
                   filterOptions.certified.map((c: any) => (
                     <label
                       key={c.name}
@@ -2702,7 +2787,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         }}
                       />
                       <span className="carzino-filter-option">{c.name}</span>
-                      <span className="carzino-filter-count ml-1">({c.count ?? 0})</span>
+                      <span className="carzino-filter-count ml-1">
+                        ({c.count ?? 0})
+                      </span>
                     </label>
                   ))
                 ) : (
