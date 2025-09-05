@@ -2479,72 +2479,31 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("condition")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    checked={appliedFilters.condition.includes("New")}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      if (e.target.checked) {
-                        const newFilters = {
-                          ...appliedFilters,
-                          condition: [...appliedFilters.condition, "New"],
-                        };
-                        setAppliedFilters(newFilters);
-                        updateURLFromFilters(newFilters);
-                      } else {
-                        removeAppliedFilter("condition", "New");
-                      }
-                    }}
-                  />
-                  <span className="carzino-filter-option">New</span>
-                  <span className="carzino-filter-count ml-1">(125,989)</span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    checked={appliedFilters.condition.includes("Used")}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      if (e.target.checked) {
-                        const newFilters = {
-                          ...appliedFilters,
-                          condition: [...appliedFilters.condition, "Used"],
-                        };
-                        setAppliedFilters(newFilters);
-                        updateURLFromFilters(newFilters);
-                      } else {
-                        removeAppliedFilter("condition", "Used");
-                      }
-                    }}
-                  />
-                  <span className="carzino-filter-option">Used</span>
-                  <span className="carzino-filter-count ml-1">(78,800)</span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    checked={appliedFilters.condition.includes("Certified")}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      if (e.target.checked) {
-                        const newFilters = {
-                          ...appliedFilters,
-                          condition: [...appliedFilters.condition, "Certified"],
-                        };
-                        setAppliedFilters(newFilters);
-                        updateURLFromFilters(newFilters);
-                      } else {
-                        removeAppliedFilter("condition", "Certified");
-                      }
-                    }}
-                  />
-                  <span className="carzino-filter-option">Certified</span>
-                  <span className="carzino-filter-count ml-1">(9,889)</span>
-                </label>
+                {(filterOptions.condition && filterOptions.condition.length > 0) ? (
+                  filterOptions.condition.map((c: any) => (
+                    <label key={c.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.condition.includes(c.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            const newFilters = { ...appliedFilters, condition: [...appliedFilters.condition, c.name] };
+                            setAppliedFilters(newFilters);
+                            updateURLFromFilters(newFilters);
+                          } else {
+                            removeAppliedFilter("condition", c.name);
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{c.name}</span>
+                      <span className="carzino-filter-count ml-1">({c.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No conditions available.</div>
+                )}
               </div>
             </FilterSection>
 
