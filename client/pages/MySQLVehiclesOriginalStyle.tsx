@@ -2304,9 +2304,13 @@ export default function MySQLVehiclesOriginalStyle() {
                                   model: [...appliedFilters.model, name],
                                 };
                                 setAppliedFilters(newFilters);
+                                // Keep the Model filter section open to allow multi-select
+                                setCollapsedFilters((prev) => ({ ...prev, model: false }));
                                 updateURLFromFilters(newFilters);
                               } else {
                                 removeAppliedFilter("model", name);
+                                // Keep it open when removing
+                                setCollapsedFilters((prev) => ({ ...prev, model: false }));
                               }
                             }}
                           />
@@ -2357,9 +2361,13 @@ export default function MySQLVehiclesOriginalStyle() {
                                   trim: [...appliedFilters.trim, name],
                                 };
                                 setAppliedFilters(newFilters);
+                                // Keep the Trim filter section open to allow multi-select
+                                setCollapsedFilters((prev) => ({ ...prev, trim: false }));
                                 updateURLFromFilters(newFilters);
                               } else {
                                 removeAppliedFilter("trim", name);
+                                // Keep it open when removing
+                                setCollapsedFilters((prev) => ({ ...prev, trim: false }));
                               }
                             }}
                           />
