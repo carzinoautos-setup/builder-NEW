@@ -232,22 +232,19 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                   {vehicle.salePrice}
                 </div>
               </div>
-              {vehicle.payment && (
-                <>
-                  <div className="w-px h-12 bg-gray-200"></div>
-                  <div className="text-center">
-                    <div className="carzino-price-label text-gray-500 mb-0">
-                      Payments
-                    </div>
-                    <div className="carzino-price-value text-red-600">
-                      {getDisplayPayment()}
-                      <span className="text-xs text-black font-normal">
-                        /mo*
-                      </span>
-                    </div>
+              {/* Always show Payments section when a Sale Price exists. If no explicit payment is provided, getDisplayPayment() will return a calculated value or 'Call for Price'. */}
+              <>
+                <div className="w-px h-12 bg-gray-200"></div>
+                <div className="text-center">
+                  <div className="carzino-price-label text-gray-500 mb-0">
+                    Payments
                   </div>
-                </>
-              )}
+                  <div className="carzino-price-value text-red-600">
+                    {getDisplayPayment()}
+                    <span className="text-xs text-black font-normal">/mo*</span>
+                  </div>
+                </div>
+              </>
             </>
           ) : (
             <div className="text-center">
