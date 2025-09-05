@@ -29,7 +29,7 @@ export function NavigationHeader() {
               }`}
             >
               <Home className="w-4 h-4" />
-              Original Demo
+              Demo
             </Link>
 
             <Link
@@ -49,7 +49,7 @@ export function NavigationHeader() {
           {/* Stats/Info */}
           <div className="text-sm text-gray-500">
             {isActive("/mysql-vehicles") && "MySQL Vehicles (50k)"}
-            {isActive("/") && "Original Demo"}
+            {isActive("/") && "Demo"}
           </div>
         </div>
       </div>
