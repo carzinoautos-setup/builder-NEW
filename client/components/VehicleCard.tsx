@@ -78,18 +78,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // Get the payment to display - either calculated or original
   const getDisplayPayment = (): string => {
-    if (
-      vehicle.salePrice &&
-      (termLength !== "60" || interestRate !== "5" || downPayment !== "2000")
-    ) {
-      // Recalculate if any payment parameters have changed from defaults
-      return calculateMonthlyPayment(
-        vehicle.salePrice,
-        termLength,
-        interestRate,
-        downPayment,
-      );
+    if (vehicle.salePrice) {
+      try {
+        // Always calculate a payment when a sale price exists, using current parameters
+        return calculateMonthlyPayment(vehicle.salePrice, termLength, interestRate, downPayment);
+      } catch (e) {
+        // Fallback to provided payment or call for price
+        return vehicle.payment || "Call for Price";
+      }
     }
+
     return vehicle.payment || "Call for Price";
   };
 
