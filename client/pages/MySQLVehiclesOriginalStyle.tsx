@@ -2241,59 +2241,59 @@ export default function MySQLVehiclesOriginalStyle() {
               </FilterSection>
             )}
 
-            {/* Model (Conditional) */}
-            <FilterSection
-              title={`Model${appliedFilters.make.length > 0 ? ` (${appliedFilters.make[0]})` : ""}`}
-              isCollapsed={collapsedFilters.model}
-              onToggle={() => toggleFilter("model")}
-            >
-              <div className="space-y-1">
-                {appliedFilters.make.length === 0 ? (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    Select a make first to see available models
-                  </div>
-                ) : // Use filter options returned by WP /filters endpoint when available
-                filterOptions.model && filterOptions.model.length > 0 ? (
-                  filterOptions.model.map((m: any) => {
-                    const name = typeof m === "string" ? m : m.name;
-                    const count = typeof m === "string" ? undefined : m.count;
-                    return (
-                      <label
-                        key={name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          className="mr-2"
-                          checked={appliedFilters.model.includes(name)}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            if ((e.target as HTMLInputElement).checked) {
-                              const newFilters = {
-                                ...appliedFilters,
-                                model: [...appliedFilters.model, name],
-                              };
-                              setAppliedFilters(newFilters);
-                              updateURLFromFilters(newFilters);
-                            } else {
-                              removeAppliedFilter("model", name);
-                            }
-                          }}
-                        />
-                        <span className="carzino-filter-option">{name}</span>
-                        <span className="carzino-filter-count ml-1">
-                          ({count ?? "—"})
-                        </span>
-                      </label>
-                    );
-                  })
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No models available for the selected make(s).
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+            {/* Model (Conditional & depends on Make) */}
+            {((appliedFilters.make.length > 0) || (filterOptions && filterOptions.model && filterOptions.model.length > 0) || appliedFilters.model.length > 0) && (
+              <FilterSection
+                title={`Model${appliedFilters.make.length > 0 ? ` (${appliedFilters.make[0]})` : ""}`}
+                isCollapsed={collapsedFilters.model}
+                onToggle={() => toggleFilter("model")}
+              >
+                <div className="space-y-1">
+                  {appliedFilters.make.length === 0 ? (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      Select a make first to see available models
+                    </div>
+                  ) : // Use filter options returned by WP /filters endpoint when available
+                  filterOptions.model && filterOptions.model.length > 0 ? (
+                    filterOptions.model.map((m: any) => {
+                      const name = typeof m === "string" ? m : m.name;
+                      const count = typeof m === "string" ? undefined : m.count;
+                      return (
+                        <label
+                          key={name}
+                          className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            className="mr-2"
+                            checked={appliedFilters.model.includes(name)}
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              if ((e.target as HTMLInputElement).checked) {
+                                const newFilters = {
+                                  ...appliedFilters,
+                                  model: [...appliedFilters.model, name],
+                                };
+                                setAppliedFilters(newFilters);
+                                updateURLFromFilters(newFilters);
+                              } else {
+                                removeAppliedFilter("model", name);
+                              }
+                            }}
+                          />
+                          <span className="carzino-filter-option">{name}</span>
+                          <span className="carzino-filter-count ml-1">{count ? `(${count})` : ""}</span>
+                        </label>
+                      );
+                    })
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No models available for the selected make(s).
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
 
             {/* Trim (Conditional) */}
             <FilterSection
