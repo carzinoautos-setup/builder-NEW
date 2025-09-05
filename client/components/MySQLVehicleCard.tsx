@@ -172,10 +172,7 @@ export function MySQLVehicleCard({
                             interestRate: vehicle.interest_rate || 5,
                             loanTermMonths: vehicle.loan_term || 60,
                           };
-                          // Lazy import of calculator to avoid circular issues
-                          // @ts-ignore
-                          const { calculateMonthlyPayment } = require("../lib/paymentCalculator");
-                          const res = calculateMonthlyPayment(params);
+                          const res = calculateMonthlyPayment(params as any);
                           return `$${Math.round(res.monthlyPayment).toLocaleString()}/mo`;
                         } catch (e) {
                           return "Call for Price";
