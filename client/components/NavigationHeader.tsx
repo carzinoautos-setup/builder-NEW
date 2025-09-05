@@ -44,19 +44,6 @@ export function NavigationHeader() {
               MySQL Vehicles (50k)
             </Link>
 
-            <Link
-              to="/builder-inventory"
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive("/builder-inventory") || isActive("/inventory")
-                  ? "bg-red-100 text-red-700"
-                  : "text-red-600 hover:text-red-700 hover:bg-red-50"
-              }`}
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-              Builder.io Inventory
-            </Link>
           </nav>
 
           {/* Stats/Info */}
