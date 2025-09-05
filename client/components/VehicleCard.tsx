@@ -92,7 +92,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // Get the payment to display - either calculated or original
   const getDisplayPayment = (): string => {
-    if (vehicle.salePrice) {
+    if (hasValidSalePrice()) {
       try {
         // Always calculate a payment when a sale price exists, using current parameters
         return calculateMonthlyPayment(vehicle.salePrice, termLength, interestRate, downPayment);
