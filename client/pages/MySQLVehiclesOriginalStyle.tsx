@@ -2581,66 +2581,29 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("driveType")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    checked={appliedFilters.driveType.includes("AWD/4WD")}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      if (e.target.checked) {
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          driveType: [...prev.driveType, "AWD/4WD"],
-                        }));
-                      } else {
-                        removeAppliedFilter("driveType", "AWD/4WD");
-                      }
-                    }}
-                  />
-                  <span className="carzino-filter-option">AWD/4WD</span>
-                  <span className="carzino-filter-count ml-1">(25,309)</span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    checked={appliedFilters.driveType.includes("FWD")}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      if (e.target.checked) {
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          driveType: [...prev.driveType, "FWD"],
-                        }));
-                      } else {
-                        removeAppliedFilter("driveType", "FWD");
-                      }
-                    }}
-                  />
-                  <span className="carzino-filter-option">FWD</span>
-                  <span className="carzino-filter-count ml-1">(12,057)</span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    checked={appliedFilters.driveType.includes("RWD")}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      if (e.target.checked) {
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          driveType: [...prev.driveType, "RWD"],
-                        }));
-                      } else {
-                        removeAppliedFilter("driveType", "RWD");
-                      }
-                    }}
-                  />
-                  <span className="carzino-filter-option">RWD</span>
-                  <span className="carzino-filter-count ml-1">(5,883)</span>
-                </label>
+                {(filterOptions.drivetrain && filterOptions.drivetrain.length > 0) ? (
+                  filterOptions.drivetrain.map((d: any) => (
+                    <label key={d.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.driveType.includes(d.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({ ...prev, driveType: [...prev.driveType, d.name] }));
+                          } else {
+                            removeAppliedFilter("driveType", d.name);
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{d.name}</span>
+                      <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No drive types available.</div>
+                )}
               </div>
             </FilterSection>
 
