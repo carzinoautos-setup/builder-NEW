@@ -2200,9 +2200,13 @@ export default function MySQLVehiclesOriginalStyle() {
                             make: [...appliedFilters.make, m.name],
                           };
                           setAppliedFilters(newFilters);
+                          // Keep the Make filter section open to allow multi-select
+                          setCollapsedFilters((prev) => ({ ...prev, make: false }));
                           updateURLFromFilters(newFilters);
                         } else {
                           removeAppliedFilter("make", m.name);
+                          // When removing, also keep it open so users can continue modifying
+                          setCollapsedFilters((prev) => ({ ...prev, make: false }));
                         }
                       }}
                     />
