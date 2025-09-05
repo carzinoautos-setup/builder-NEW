@@ -2191,7 +2191,7 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("make")}
             >
               <div className="space-y-1">
-                {(filterOptions.make || []).map((m: any) => (
+                {displayedMakes.map((m: any) => (
                   <label
                     key={m.name}
                     className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
@@ -2219,11 +2219,23 @@ export default function MySQLVehiclesOriginalStyle() {
                       }}
                     />
                     <span className="carzino-filter-option">{m.name}</span>
-                    <span className="carzino-filter-count ml-1">
-                      ({m.count || 0})
-                    </span>
+                    <span className="carzino-filter-count ml-1">({m.count || 0})</span>
                   </label>
                 ))}
+
+                {allMakes.length > 8 && (
+                  <div className="pt-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowMoreMakes(!showMoreMakes);
+                      }}
+                      className="text-red-600 text-sm font-medium"
+                    >
+                      {showMoreMakes ? "Show Less" : "Show More"}
+                    </button>
+                  </div>
+                )}
               </div>
             </FilterSection>
 
