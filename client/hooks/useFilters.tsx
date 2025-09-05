@@ -136,6 +136,21 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           const accountTypes = pickArray("account_type_seller", "seller_types", "account_types_seller", "sellerType");
           if (accountTypes) normalized.account_type_seller = accountTypes.map(mapItem).filter(Boolean) as any;
 
+          // Condition (ACF may provide 'condition' or 'conditions')
+          const conditions = pickArray("condition", "conditions");
+          if (conditions) normalized.condition = conditions.map(mapItem).filter(Boolean) as any;
+
+          // Certified flag
+          const certified = pickArray("certified", "is_certified");
+          if (certified) normalized.certified = certified.map(mapItem).filter(Boolean) as any;
+
+          // City and State seller fields
+          const cities = pickArray("city_seller", "cities", "city");
+          if (cities) normalized.city_seller = cities.map(mapItem).filter(Boolean) as any;
+
+          const states = pickArray("state_seller", "states", "state");
+          if (states) normalized.state_seller = states.map(mapItem).filter(Boolean) as any;
+
           setFilterOptions(normalized);
         } else if (json.data) {
           // Normalize server filter data into the expected map shape
