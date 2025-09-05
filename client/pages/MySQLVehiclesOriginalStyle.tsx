@@ -373,6 +373,10 @@ export default function MySQLVehiclesOriginalStyle() {
   const [interestRate, setInterestRate] = useState("5");
   const [downPayment, setDownPayment] = useState("2000");
 
+  // Year range filter state (From / To)
+  const [yearFrom, setYearFrom] = useState("");
+  const [yearTo, setYearTo] = useState("");
+
   // Load filter options from WordPress and keep them in sync with appliedFilters
   const { filterOptions, filtersLoading, filtersError, refetch, pruneInvalid } =
     useFilters(appliedFilters);
@@ -952,6 +956,9 @@ export default function MySQLVehiclesOriginalStyle() {
     setPriceMax("100000");
     setPaymentMin("100");
     setPaymentMax("2000");
+    // Reset year range selects
+    setYearFrom("");
+    setYearTo("");
     setCurrentPage(1);
 
     // Reset URL to base cars-for-sale path
@@ -2358,51 +2365,66 @@ export default function MySQLVehiclesOriginalStyle() {
               isCollapsed={collapsedFilters.year || false}
               onToggle={() => toggleFilter("year")}
             >
-              <div className="space-y-1">
-                {(filterOptions.year && filterOptions.year.length > 0
-                  ? filterOptions.year
-                  : Array.from({ length: 10 }, (_, i) =>
-                      String(new Date().getFullYear() - i),
-                    )
-                ).map((year: any) => {
-                  const name =
-                    typeof year === "string" || typeof year === "number"
-                      ? String(year)
-                      : year.name;
-                  const count =
-                    typeof year === "object" && year.count
-                      ? year.count
-                      : undefined;
-                  return (
-                    <label
-                      key={name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.year.includes(name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if (e.target.checked) {
-                            const newFilters = {
-                              ...appliedFilters,
-                              year: [...appliedFilters.year, name],
-                            };
-                            setAppliedFilters(newFilters);
-                            updateURLFromFilters(newFilters);
-                          } else {
-                            removeAppliedFilter("year", name);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({count ?? "—"})
-                      </span>
-                    </label>
-                  );
-                })}
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <label className="block text-sm carzino-location-label mb-1">From</label>
+                  <select
+                    value={yearFrom}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setYearFrom(val);
+                      const years = [val, yearTo].filter(Boolean);
+                      const newFilters = { ...appliedFilters, year: years };
+                      setAppliedFilters(newFilters);
+                      updateURLFromFilters(newFilters);
+                      setCurrentPage(1);
+                    }}
+                    className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none bg-white"
+                  >
+                    <option value="">Any</option>
+                    {(filterOptions.year && filterOptions.year.length > 0
+                      ? filterOptions.year
+                      : Array.from({ length: 10 }, (_, i) => String(new Date().getFullYear() - i))
+                    ).map((y: any) => {
+                      const name = typeof y === "string" || typeof y === "number" ? String(y) : y.name;
+                      return (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                <div className="flex-1">
+                  <label className="block text-sm carzino-location-label mb-1">To</label>
+                  <select
+                    value={yearTo}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setYearTo(val);
+                      const years = [yearFrom, val].filter(Boolean);
+                      const newFilters = { ...appliedFilters, year: years };
+                      setAppliedFilters(newFilters);
+                      updateURLFromFilters(newFilters);
+                      setCurrentPage(1);
+                    }}
+                    className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none bg-white"
+                  >
+                    <option value="">Any</option>
+                    {(filterOptions.year && filterOptions.year.length > 0
+                      ? filterOptions.year
+                      : Array.from({ length: 10 }, (_, i) => String(new Date().getFullYear() - i))
+                    ).map((y: any) => {
+                      const name = typeof y === "string" || typeof y === "number" ? String(y) : y.name;
+                      return (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
               </div>
             </FilterSection>
 
