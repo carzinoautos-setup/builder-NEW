@@ -2295,58 +2295,58 @@ export default function MySQLVehiclesOriginalStyle() {
               </FilterSection>
             )}
 
-            {/* Trim (Conditional) */}
-            <FilterSection
-              title="Trim"
-              isCollapsed={collapsedFilters.trim}
-              onToggle={() => toggleFilter("trim")}
-            >
-              <div className="space-y-1">
-                {appliedFilters.make.length === 0 ? (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    Select a make first to see available trims
-                  </div>
-                ) : filterOptions.trim && filterOptions.trim.length > 0 ? (
-                  filterOptions.trim.map((t: any) => {
-                    const name = typeof t === "string" ? t : t.name;
-                    const count = typeof t === "string" ? undefined : t.count;
-                    return (
-                      <label
-                        key={name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          className="mr-2"
-                          checked={appliedFilters.trim.includes(name)}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            if ((e.target as HTMLInputElement).checked) {
-                              const newFilters = {
-                                ...appliedFilters,
-                                trim: [...appliedFilters.trim, name],
-                              };
-                              setAppliedFilters(newFilters);
-                              updateURLFromFilters(newFilters);
-                            } else {
-                              removeAppliedFilter("trim", name);
-                            }
-                          }}
-                        />
-                        <span className="carzino-filter-option">{name}</span>
-                        <span className="carzino-filter-count ml-1">
-                          ({count ?? "—"})
-                        </span>
-                      </label>
-                    );
-                  })
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No trims available for the selected make(s).
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+            {/* Trim (Conditional & depends on Make) */}
+            {((appliedFilters.make.length > 0) || (filterOptions && filterOptions.trim && filterOptions.trim.length > 0) || appliedFilters.trim.length > 0) && (
+              <FilterSection
+                title="Trim"
+                isCollapsed={collapsedFilters.trim}
+                onToggle={() => toggleFilter("trim")}
+              >
+                <div className="space-y-1">
+                  {appliedFilters.make.length === 0 ? (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      Select a make first to see available trims
+                    </div>
+                  ) : filterOptions.trim && filterOptions.trim.length > 0 ? (
+                    filterOptions.trim.map((t: any) => {
+                      const name = typeof t === "string" ? t : t.name;
+                      const count = typeof t === "string" ? undefined : t.count;
+                      return (
+                        <label
+                          key={name}
+                          className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            className="mr-2"
+                            checked={appliedFilters.trim.includes(name)}
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              if ((e.target as HTMLInputElement).checked) {
+                                const newFilters = {
+                                  ...appliedFilters,
+                                  trim: [...appliedFilters.trim, name],
+                                };
+                                setAppliedFilters(newFilters);
+                                updateURLFromFilters(newFilters);
+                              } else {
+                                removeAppliedFilter("trim", name);
+                              }
+                            }}
+                          />
+                          <span className="carzino-filter-option">{name}</span>
+                          <span className="carzino-filter-count ml-1">{count ? `(${count})` : ""}</span>
+                        </label>
+                      );
+                    })
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No trims available for the selected make(s).
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
 
             {/* Year Filter */}
             <FilterSection
