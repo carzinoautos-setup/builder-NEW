@@ -3102,7 +3102,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         type={type.name}
                         count={type.count}
                         vehicleImages={vehicleImages}
-                        isSelected={appliedFilters.vehicleType.includes(type.name)}
+                        isSelected={appliedFilters.vehicleType.includes(
+                          type.name,
+                        )}
                         onToggle={() => {
                           setAppliedFilters((prev) => ({
                             ...prev,
@@ -3828,176 +3830,179 @@ export default function MySQLVehiclesOriginalStyle() {
 
             {/* Sticky wrapper - will stick throughout the entire scrollable area */}
             {!mobileFiltersOpen && (
-            <div className="sticky top-0 z-50">
-              {/* Filter, Sort, Favorites Bar */}
-              <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md">
-                <button
-                  className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
-                  onClick={() => setMobileFiltersOpen(true)}
-                >
-                  <Sliders className="w-4 h-4" />
-                  Filter
-                  {appliedFilters.condition.length +
-                    appliedFilters.make.length +
-                    appliedFilters.model.length +
-                    appliedFilters.trim.length +
-                    appliedFilters.vehicleType.length +
-                    appliedFilters.driveType.length +
-                    appliedFilters.exteriorColor.length +
-                    (appliedFilters.mileage ? 1 : 0) +
-                    (appliedFilters.priceMin || appliedFilters.priceMax
-                      ? 1
-                      : 0) +
-                    (appliedFilters.paymentMin || appliedFilters.paymentMax
-                      ? 1
-                      : 0) >
-                    0 && (
-                    <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                      {appliedFilters.condition.length +
-                        appliedFilters.make.length +
-                        appliedFilters.model.length +
-                        appliedFilters.trim.length +
-                        appliedFilters.vehicleType.length +
-                        appliedFilters.driveType.length +
-                        appliedFilters.exteriorColor.length +
-                        (appliedFilters.mileage ? 1 : 0) +
-                        (appliedFilters.priceMin || appliedFilters.priceMax
-                          ? 1
-                          : 0) +
-                        (appliedFilters.paymentMin || appliedFilters.paymentMax
-                          ? 1
-                          : 0)}
-                    </span>
-                  )}
-                </button>
-
-                <div className="border-l border-gray-400 h-8"></div>
-
-                <div className="relative">
+              <div className="sticky top-0 z-50">
+                {/* Filter, Sort, Favorites Bar */}
+                <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md">
                   <button
                     className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
-                    onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+                    onClick={() => setMobileFiltersOpen(true)}
                   >
-                    <svg
-                      className="w-4 h-4"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M2 4h12M2 8h8M2 12h4" />
-                    </svg>
-                    Sort
+                    <Sliders className="w-4 h-4" />
+                    Filter
+                    {appliedFilters.condition.length +
+                      appliedFilters.make.length +
+                      appliedFilters.model.length +
+                      appliedFilters.trim.length +
+                      appliedFilters.vehicleType.length +
+                      appliedFilters.driveType.length +
+                      appliedFilters.exteriorColor.length +
+                      (appliedFilters.mileage ? 1 : 0) +
+                      (appliedFilters.priceMin || appliedFilters.priceMax
+                        ? 1
+                        : 0) +
+                      (appliedFilters.paymentMin || appliedFilters.paymentMax
+                        ? 1
+                        : 0) >
+                      0 && (
+                      <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                        {appliedFilters.condition.length +
+                          appliedFilters.make.length +
+                          appliedFilters.model.length +
+                          appliedFilters.trim.length +
+                          appliedFilters.vehicleType.length +
+                          appliedFilters.driveType.length +
+                          appliedFilters.exteriorColor.length +
+                          (appliedFilters.mileage ? 1 : 0) +
+                          (appliedFilters.priceMin || appliedFilters.priceMax
+                            ? 1
+                            : 0) +
+                          (appliedFilters.paymentMin ||
+                          appliedFilters.paymentMax
+                            ? 1
+                            : 0)}
+                      </span>
+                    )}
                   </button>
-                  {sortDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-56">
-                      <button
-                        onClick={() => {
-                          setSortBy("relevance");
-                          setSortDropdownOpen(false);
-                        }}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "relevance" ? "bg-red-50 text-red-600" : ""}`}
-                      >
-                        Relevance
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSortBy("price-low");
-                          setSortDropdownOpen(false);
-                        }}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "price-low" ? "bg-red-50 text-red-600" : ""}`}
-                      >
-                        Price: Low to High
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSortBy("price-high");
-                          setSortDropdownOpen(false);
-                        }}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "price-high" ? "bg-red-50 text-red-600" : ""}`}
-                      >
-                        Price: High to Low
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSortBy("miles-low");
-                          setSortDropdownOpen(false);
-                        }}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "miles-low" ? "bg-red-50 text-red-600" : ""}`}
-                      >
-                        Miles: Low to High
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSortBy("miles-high");
-                          setSortDropdownOpen(false);
-                        }}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "miles-high" ? "bg-red-50 text-red-600" : ""}`}
-                      >
-                        Miles: High to Low
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSortBy("year-newest");
-                          setSortDropdownOpen(false);
-                        }}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "year-newest" ? "bg-red-50 text-red-600" : ""}`}
-                      >
-                        Year: Newest to Oldest
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSortBy("year-oldest");
-                          setSortDropdownOpen(false);
-                        }}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "year-oldest" ? "bg-red-50 text-red-600" : ""}`}
-                      >
-                        Year: Oldest to Newest
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSortBy("distance-closest");
-                          setSortDropdownOpen(false);
-                        }}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "distance-closest" ? "bg-red-50 text-red-600" : ""}`}
-                      >
-                        Distance: Closest to Me
-                      </button>
-                    </div>
-                  )}
-                </div>
 
-                <div className="border-l border-gray-400 h-8"></div>
+                  <div className="border-l border-gray-400 h-8"></div>
 
-                <button
-                  className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium ${viewMode === "favorites" ? "text-red-600" : ""}`}
-                  onClick={() =>
-                    setViewMode(viewMode === "favorites" ? "all" : "favorites")
-                  }
-                >
-                  Favorites
                   <div className="relative">
-                    <div
-                      className={`w-12 h-6 rounded-full ${viewMode === "favorites" ? "bg-red-600" : "bg-gray-300"} transition-colors`}
+                    <button
+                      className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
+                      onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
                     >
-                      <div
-                        className={`absolute top-0.5 w-5 h-5 rounded-full transition-transform ${
-                          viewMode === "favorites"
-                            ? "translate-x-6"
-                            : "translate-x-0.5"
-                        } ${
-                          viewMode === "favorites"
-                            ? "bg-white"
-                            : favoritesCount > 0
-                              ? "bg-red-600 md:bg-white"
-                              : "bg-white"
-                        }`}
-                      />
-                    </div>
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M2 4h12M2 8h8M2 12h4" />
+                      </svg>
+                      Sort
+                    </button>
+                    {sortDropdownOpen && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-56">
+                        <button
+                          onClick={() => {
+                            setSortBy("relevance");
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "relevance" ? "bg-red-50 text-red-600" : ""}`}
+                        >
+                          Relevance
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy("price-low");
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "price-low" ? "bg-red-50 text-red-600" : ""}`}
+                        >
+                          Price: Low to High
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy("price-high");
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "price-high" ? "bg-red-50 text-red-600" : ""}`}
+                        >
+                          Price: High to Low
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy("miles-low");
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "miles-low" ? "bg-red-50 text-red-600" : ""}`}
+                        >
+                          Miles: Low to High
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy("miles-high");
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "miles-high" ? "bg-red-50 text-red-600" : ""}`}
+                        >
+                          Miles: High to Low
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy("year-newest");
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "year-newest" ? "bg-red-50 text-red-600" : ""}`}
+                        >
+                          Year: Newest to Oldest
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy("year-oldest");
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "year-oldest" ? "bg-red-50 text-red-600" : ""}`}
+                        >
+                          Year: Oldest to Newest
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy("distance-closest");
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === "distance-closest" ? "bg-red-50 text-red-600" : ""}`}
+                        >
+                          Distance: Closest to Me
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </button>
+
+                  <div className="border-l border-gray-400 h-8"></div>
+
+                  <button
+                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium ${viewMode === "favorites" ? "text-red-600" : ""}`}
+                    onClick={() =>
+                      setViewMode(
+                        viewMode === "favorites" ? "all" : "favorites",
+                      )
+                    }
+                  >
+                    Favorites
+                    <div className="relative">
+                      <div
+                        className={`w-12 h-6 rounded-full ${viewMode === "favorites" ? "bg-red-600" : "bg-gray-300"} transition-colors`}
+                      >
+                        <div
+                          className={`absolute top-0.5 w-5 h-5 rounded-full transition-transform ${
+                            viewMode === "favorites"
+                              ? "translate-x-6"
+                              : "translate-x-0.5"
+                          } ${
+                            viewMode === "favorites"
+                              ? "bg-white"
+                              : favoritesCount > 0
+                                ? "bg-red-600 md:bg-white"
+                                : "bg-white"
+                          }`}
+                        />
+                      </div>
+                    </div>
+                  </button>
+                </div>
               </div>
-            </div>
             )}
 
             {/* Connection Status & Results Count - NOT in sticky */}
