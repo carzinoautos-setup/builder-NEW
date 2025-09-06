@@ -44,8 +44,9 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
   }, []);
 
   React.useEffect(() => {
-    setPreview(vehicleImages[type]);
-  }, [vehicleImages, type]);
+    // Prefer explicit image prop (from Builder editor) over vehicleImages mapping
+    setPreview(image || vehicleImages[type]);
+  }, [vehicleImages, type, image]);
 
   // Clean up object URLs when preview changes from an object URL
   React.useEffect(() => {
