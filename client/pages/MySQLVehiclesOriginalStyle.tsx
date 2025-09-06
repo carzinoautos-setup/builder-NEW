@@ -971,6 +971,13 @@ export default function MySQLVehiclesOriginalStyle() {
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
             console.log("🔁 Merged Builder VehicleTypeCard images into runtime mapping", foundImages);
+            // Clear persisted local overrides so Builder/editor images take effect immediately
+            try {
+              localStorage.removeItem(VEHICLE_IMAGES_KEY);
+              console.log("🧹 Cleared persisted vehicle images from localStorage to prioritize Builder images");
+            } catch (e) {
+              /* ignore */
+            }
           }
         } catch (err) {
           // ignore - builder may not be configured in this environment
