@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Database, Home } from "lucide-react";
+import { Database } from "lucide-react";
 
 export function NavigationHeader() {
   const hideHeader = import.meta.env.VITE_HIDE_HEADER === "true";
