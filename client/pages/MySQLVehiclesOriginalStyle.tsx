@@ -405,8 +405,8 @@ export default function MySQLVehiclesOriginalStyle() {
   });
 
   // Price and payment filter states
-  const [priceMin, setPriceMin] = useState("10000");
-  const [priceMax, setPriceMax] = useState("100000");
+  const [priceMin, setPriceMin] = useState("1000");
+  const [priceMax, setPriceMax] = useState("50000");
   const [paymentMin, setPaymentMin] = useState("100");
   const [paymentMax, setPaymentMax] = useState("2000");
   const [termLength, setTermLength] = useState("60");
@@ -1142,8 +1142,8 @@ export default function MySQLVehiclesOriginalStyle() {
       fuelType: [],
       certified: [],
     });
-    setPriceMin("10000");
-    setPriceMax("100000");
+    setPriceMin("1000");
+    setPriceMax("50000");
     setPaymentMin("100");
     setPaymentMax("2000");
     // Reset year range selects
@@ -2257,8 +2257,8 @@ export default function MySQLVehiclesOriginalStyle() {
                           priceMin: "",
                           priceMax: "",
                         }));
-                        setPriceMin("10000");
-                        setPriceMax("100000");
+                        setPriceMin("1000");
+                        setPriceMax("50000");
                       }}
                       className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
@@ -2272,8 +2272,8 @@ export default function MySQLVehiclesOriginalStyle() {
                             priceMin: "",
                             priceMax: "",
                           }));
-                          setPriceMin("10000");
-                          setPriceMax("100000");
+                          setPriceMin("1000");
+                          setPriceMax("50000");
                         }}
                         className="ml-1 text-white hover:text-gray-300"
                       >
@@ -2774,7 +2774,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     </span>
                     <input
                       type="text"
-                      placeholder="10,000"
+                      placeholder="1,000"
                       value={formatPrice(priceMin)}
                       onChange={(e) => {
                         const unformattedValue = unformatPrice(e.target.value);
@@ -2797,7 +2797,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     </span>
                     <input
                       type="text"
-                      placeholder="100,000"
+                      placeholder="50,000"
                       value={formatPrice(priceMax)}
                       onChange={(e) => {
                         const unformattedValue = unformatPrice(e.target.value);
@@ -3796,8 +3796,8 @@ export default function MySQLVehiclesOriginalStyle() {
                             priceMin: "",
                             priceMax: "",
                           }));
-                          setPriceMin("10000");
-                          setPriceMax("100000");
+                          setPriceMin("1000");
+                          setPriceMax("50000");
                         }}
                         className="ml-1 text-white"
                       >
