@@ -120,6 +120,16 @@ export const BuilderInventory: React.FC<BuilderInventoryProps> = ({
         { name: "onFilter", type: "string" },
       ],
     });
+
+    // Register individual vehicle type card so designers can set an image in the right-hand styles pane
+    builder.registerComponent({
+      name: "VehicleTypeCard",
+      inputs: [
+        { name: "type", type: "string" },
+        { name: "count", type: "number" },
+        { name: "image", type: "file" },
+      ],
+    });
   }, []);
 
   // Handle loading state
