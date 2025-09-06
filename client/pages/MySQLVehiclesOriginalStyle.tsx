@@ -1016,30 +1016,9 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, [filterOptions]);
 
-  // Ensure every vehicle type has an image (fill missing with placeholder)
+  // No longer auto-fill missing vehicle types into localStorage — runtime mapping is controlled by imageMapping and Builder/editor overrides.
   React.useEffect(() => {
-    if (!vehicleTypes || vehicleTypes.length === 0) return;
-    setVehicleImages((prev) => {
-      const next = { ...prev };
-      let changed = false;
-      const placeholder =
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80";
-      vehicleTypes.forEach((vt: any) => {
-        const name = vt.name;
-        if (!next[name]) {
-          next[name] = placeholder;
-          changed = true;
-        }
-      });
-      if (changed) {
-        try {
-          localStorage.setItem(VEHICLE_IMAGES_KEY, JSON.stringify(next));
-        } catch (e) {
-          /* ignore */
-        }
-      }
-      return next;
-    });
+    // keep vehicleImages unchanged here; mapping is set from loadImages()
   }, [vehicleTypes]);
 
   // Helper functions for price formatting
