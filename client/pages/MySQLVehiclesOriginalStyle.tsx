@@ -2972,7 +2972,6 @@ export default function MySQLVehiclesOriginalStyle() {
                           : [...prev.vehicleType, type.name],
                       }));
                     }}
-                    onImageUpload={(t, file) => handleVehicleTypeImageUpload(t, file)}
                   />
                 ))}
                 {vehicleTypes.length === 0 && (
