@@ -6,6 +6,8 @@ interface VehicleTypeCardProps {
   vehicleImages: { [key: string]: string };
   isSelected: boolean;
   onToggle: (type: string) => void;
+  // optional image override (exposed to Builder editor)
+  image?: string;
   // optional callback when an image is uploaded (not used in production)
   onImageUpload?: (type: string, file: File) => void;
 }
@@ -16,10 +18,11 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
   vehicleImages,
   isSelected,
   onToggle,
+  image,
   onImageUpload,
 }) => {
   const [preview, setPreview] = React.useState<string | undefined>(
-    vehicleImages[type],
+    image || vehicleImages[type],
   );
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
