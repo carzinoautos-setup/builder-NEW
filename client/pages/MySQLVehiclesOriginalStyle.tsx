@@ -281,6 +281,31 @@ export default function MySQLVehiclesOriginalStyle() {
   const [vehicleImages, setVehicleImages] = useState<{ [key: string]: string }>(
     {},
   );
+
+  // Persisted custom vehicle type images in localStorage key
+  const VEHICLE_IMAGES_KEY = "carzino_vehicle_type_images";
+
+  // Handler to upload and persist an image for a vehicle type
+  const handleVehicleTypeImageUpload = async (type: string, file: File) => {
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        setVehicleImages((prev) => {
+          const next = { ...prev, [type]: result };
+          try {
+            localStorage.setItem(VEHICLE_IMAGES_KEY, JSON.stringify(next));
+          } catch (e) {
+            /* ignore */
+          }
+          return next;
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Failed to read vehicle image", err);
+    }
+  };
   const [sortBy, setSortBy] = useState("relevance");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
@@ -861,6 +886,18 @@ export default function MySQLVehiclesOriginalStyle() {
       for (const [vehicleType, imageUrl] of Object.entries(imageMapping)) {
         loadedImages[vehicleType] = imageUrl;
       }
+
+      // Merge any saved custom images from localStorage
+      try {
+        const saved = localStorage.getItem(VEHICLE_IMAGES_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved) as { [key: string]: string };
+          Object.assign(loadedImages, parsed);
+        }
+      } catch (e) {
+        // ignore JSON errors
+      }
+
       setVehicleImages(loadedImages);
     };
 
@@ -2935,6 +2972,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           : [...prev.vehicleType, type.name],
                       }));
                     }}
+                    onImageUpload={(t, file) => handleVehicleTypeImageUpload(t, file)}
                   />
                 ))}
                 {vehicleTypes.length === 0 && (
