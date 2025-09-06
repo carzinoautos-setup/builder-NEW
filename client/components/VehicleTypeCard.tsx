@@ -64,7 +64,7 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
 
   // Provide small set of default images (CDN) for common vehicle types
   const defaultImages: { [key: string]: string } = {
-    "sedan": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+    "sedan": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
     "crossover-suv": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F98d1869674c64e419bf7ca7da66e25b8",
     "crew-cab": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
     "van-minivan": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff0d0c6c20e02423dad8eefa6f0ef508a",
