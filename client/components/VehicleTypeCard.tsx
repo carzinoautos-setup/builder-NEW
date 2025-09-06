@@ -18,7 +18,9 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
   onToggle,
   onImageUpload,
 }) => {
-  const [preview, setPreview] = React.useState<string | undefined>(vehicleImages[type]);
+  const [preview, setPreview] = React.useState<string | undefined>(
+    vehicleImages[type],
+  );
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
