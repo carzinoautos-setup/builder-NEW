@@ -154,10 +154,21 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
         )}
       </div>
 
+      {/* Format label for display (e.g., "crossover-suv" -> "Crossover/SUV") */}
       <div
         className={`carzino-vehicle-type-name ${isSelected ? "text-red-600 font-semibold" : ""}`}
       >
-        {type}
+        <p>{(
+          (type || "")
+            .split("/")
+            .map((part) =>
+              part
+                .split(/[-_\s]+/)
+                .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : ""))
+                .join(" ")
+            )
+            .join("/")
+        )}</p>
       </div>
       <div className="carzino-vehicle-type-count">({count})</div>
     </div>
