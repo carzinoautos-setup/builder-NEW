@@ -2476,8 +2476,9 @@ export default function MySQLVehiclesOriginalStyle() {
                 onToggle={() => toggleFilter("model")}
               >
                 <div className="space-y-1">
-                  {appliedFilters.make.length === 0 ? null : // Use filter options returned by WP /filters endpoint when available
-                  filterOptions.model && filterOptions.model.length > 0 ? (
+                  {appliedFilters.make.length ===
+                  0 ? null : filterOptions.model && // Use filter options returned by WP /filters endpoint when available
+                    filterOptions.model.length > 0 ? (
                     (() => {
                       const displayedModels = getDisplayed(
                         filterOptions.model,
@@ -2579,7 +2580,9 @@ export default function MySQLVehiclesOriginalStyle() {
                 onToggle={() => toggleFilter("trim")}
               >
                 <div className="space-y-1">
-                  {appliedFilters.make.length === 0 ? null : filterOptions.trim && filterOptions.trim.length > 0 ? (
+                  {appliedFilters.make.length ===
+                  0 ? null : filterOptions.trim &&
+                    filterOptions.trim.length > 0 ? (
                     (() => {
                       const displayedTrims = getDisplayed(
                         filterOptions.trim,
