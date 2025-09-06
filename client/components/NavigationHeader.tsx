@@ -25,19 +25,7 @@ export function NavigationHeader() {
             <Link
               to="/"
               className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive("/")
-                  ? "bg-red-100 text-red-700"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-              }`}
-            >
-              <Home className="w-4 h-4" />
-              Demo
-            </Link>
-
-            <Link
-              to="/mysql-vehicles"
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive("/mysql-vehicles")
+                isActive("/") || isActive("/mysql-vehicles")
                   ? "bg-red-100 text-red-700"
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               }`}
@@ -48,10 +36,7 @@ export function NavigationHeader() {
           </nav>
 
           {/* Stats/Info */}
-          <div className="text-sm text-gray-500">
-            {isActive("/mysql-vehicles") && "MySQL Vehicles (50k)"}
-            {isActive("/") && "Demo"}
-          </div>
+          <div className="text-sm text-gray-500">MySQL Vehicles (50k)</div>
         </div>
       </div>
     </header>
