@@ -6,8 +6,6 @@ interface VehicleTypeCardProps {
   vehicleImages: { [key: string]: string };
   isSelected: boolean;
   onToggle: (type: string) => void;
-  // Optional callback when a user uploads an image for this vehicle type
-  onImageUpload?: (type: string, file: File) => void;
 }
 
 export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
@@ -16,23 +14,8 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
   vehicleImages,
   isSelected,
   onToggle,
-  onImageUpload,
 }) => {
-  const [preview, setPreview] = React.useState<string | undefined>(
-    vehicleImages[type],
-  );
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
-
-  React.useEffect(() => {
-    setPreview(vehicleImages[type]);
-  }, [vehicleImages, type]);
-
-  const handleFile = (file?: File) => {
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    if (onImageUpload) onImageUpload(type, file);
-  };
+  const imageSrc = vehicleImages[type];
 
   return (
     <div
@@ -46,9 +29,9 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
         onClick={() => onToggle(type)}
         className="relative rounded-lg p-3 mb-2 h-14 flex items-center justify-center transition-colors bg-gray-100 group-hover:bg-gray-200"
       >
-        {preview ? (
+        {imageSrc ? (
           <img
-            src={preview}
+            src={imageSrc}
             alt={`${type} vehicle type`}
             className="max-w-full max-h-full object-contain rounded-lg overflow-hidden"
             style={{ width: "auto", height: "35px" }}
@@ -56,36 +39,6 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
         ) : (
           <div className="text-gray-400 text-xs">{type}</div>
         )}
-
-        {/* Upload button overlay shown on hover */}
-        {onImageUpload && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              inputRef.current?.click();
-            }}
-            className="absolute right-1 top-1 hidden group-hover:block bg-white/90 rounded p-1 border border-gray-200 text-xs"
-            aria-label={`Upload image for ${type}`}
-          >
-            Upload
-          </button>
-        )}
-
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onClick={(e) => e.stopPropagation()}
-          onChange={(e) => {
-            e.stopPropagation();
-            const f = e.target.files && e.target.files[0];
-            if (f) handleFile(f);
-            // reset value so same file can be selected again
-            e.currentTarget.value = "";
-          }}
-        />
       </div>
 
       <div
