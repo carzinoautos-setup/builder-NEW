@@ -546,8 +546,19 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("transmission", appliedFilters.transmission.join(","));
       }
       if (appliedFilters.mileage) {
-        // Treat as maximum mileage
-        params.append("max_mileage", appliedFilters.mileage);
+        const m = appliedFilters.mileage;
+        if (m.includes("-")) {
+          const parts = m.split("-").map((s) => s.replace(/\D/g, "")).map(Number);
+          const [min, max] = parts;
+          if (!isNaN(min)) params.append("min_mileage", String(min));
+          if (!isNaN(max)) params.append("max_mileage", String(max));
+        } else if (m.endsWith("+")) {
+          const n = parseInt(m.replace(/\D/g, ""), 10);
+          if (!isNaN(n)) params.append("min_mileage", String(n));
+        } else {
+          // numeric max
+          params.append("max_mileage", m.replace(/\D/g, ""));
+        }
       }
       if (appliedFilters.exteriorColor.length > 0) {
         params.append("exterior_color", appliedFilters.exteriorColor.join(","));
@@ -2233,9 +2244,18 @@ export default function MySQLVehiclesOriginalStyle() {
                       className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
-                      {appliedFilters.mileage === "100001"
-                        ? "100k+ miles"
-                        : `Under ${parseInt(appliedFilters.mileage).toLocaleString()} mi`}
+                      {(() => {
+                      const m = appliedFilters.mileage;
+                      if (!m) return null;
+                      if (m.includes("-")) {
+                        const [min, max] = m.split("-");
+                        return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                      }
+                      if (m.endsWith("+")) {
+                        return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
+                      }
+                      return `Under ${Number(m).toLocaleString()} Miles`;
+                    })()}
                       <button
                         onClick={() =>
                           setAppliedFilters((prev) => ({
@@ -3035,18 +3055,13 @@ export default function MySQLVehiclesOriginalStyle() {
                     }))
                   }
                 >
-                  <option value="">Any Mileage</option>
-                  <option value="10000">10,000 or less</option>
-                  <option value="20000">20,000 or less</option>
-                  <option value="30000">30,000 or less</option>
-                  <option value="40000">40,000 or less</option>
-                  <option value="50000">50,000 or less</option>
-                  <option value="60000">60,000 or less</option>
-                  <option value="70000">70,000 or less</option>
-                  <option value="80000">80,000 or less</option>
-                  <option value="90000">90,000 or less</option>
-                  <option value="100000">100,000 or less</option>
-                  <option value="100001">100,000 or more</option>
+                  <option value="">All Miles (default)</option>
+                  <option value="25000">Under 25,000 Miles</option>
+                  <option value="25000-50000">25,000–50,000 Miles</option>
+                  <option value="50000-75000">50,000–75,000 Miles</option>
+                  <option value="75000-100000">75,000–100,000 Miles</option>
+                  <option value="100000-150000">100,000–150,000 Miles</option>
+                  <option value="150000+">150,000+ Miles</option>
                 </select>
               </div>
             </FilterSection>
@@ -3763,9 +3778,18 @@ export default function MySQLVehiclesOriginalStyle() {
                   {appliedFilters.mileage && (
                     <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
                       <Check className="w-3 h-3 text-red-600" />
-                      {appliedFilters.mileage === "100001"
-                        ? "100k+ miles"
-                        : `Under ${parseInt(appliedFilters.mileage).toLocaleString()} mi`}
+                      {(() => {
+                      const m = appliedFilters.mileage;
+                      if (!m) return null;
+                      if (m.includes("-")) {
+                        const [min, max] = m.split("-");
+                        return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                      }
+                      if (m.endsWith("+")) {
+                        return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
+                      }
+                      return `Under ${Number(m).toLocaleString()} Miles`;
+                    })()}
                       <button
                         onClick={() =>
                           setAppliedFilters((prev) => ({
