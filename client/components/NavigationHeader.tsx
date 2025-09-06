@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { Database, Home } from "lucide-react";
 
 export function NavigationHeader() {
+  const hideHeader = import.meta.env.VITE_HIDE_HEADER === "true";
+  if (hideHeader) return null;
   const location = useLocation();
 
   const isActive = (path: string) => {
@@ -29,7 +31,7 @@ export function NavigationHeader() {
               }`}
             >
               <Home className="w-4 h-4" />
-              Original Demo
+              Demo
             </Link>
 
             <Link
@@ -43,28 +45,12 @@ export function NavigationHeader() {
               <Database className="w-4 h-4" />
               MySQL Vehicles (50k)
             </Link>
-
-            <Link
-              to="/builder-inventory"
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive("/builder-inventory") || isActive("/inventory")
-                  ? "bg-red-100 text-red-700"
-                  : "text-red-600 hover:text-red-700 hover:bg-red-50"
-              }`}
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-              Builder.io Inventory
-            </Link>
           </nav>
 
           {/* Stats/Info */}
           <div className="text-sm text-gray-500">
             {isActive("/mysql-vehicles") && "MySQL Vehicles (50k)"}
-            {isActive("/") && "Original Demo"}
-            {(isActive("/builder-inventory") || isActive("/inventory")) &&
-              "Builder.io + WooCommerce"}
+            {isActive("/") && "Demo"}
           </div>
         </div>
       </div>

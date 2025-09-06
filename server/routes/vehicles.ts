@@ -3,20 +3,65 @@ import { VehicleService } from "../services/vehicleService.js";
 import { MockVehicleService } from "../services/mockVehicleService.js";
 import { PaginationParams, VehicleFilters } from "../types/vehicle.js";
 
-// Use mock service for immediate testing with sample data
-console.log(
-  "🚀 Using MockVehicleService with 50,000 sample vehicles for testing",
+// Decide whether to use the real VehicleService (MySQL), a WordPress proxy, or MockVehicleService
+const useMock = process.env.USE_MOCK === "true";
+const hasDbEnv = !!(
+  process.env.DB_HOST &&
+  process.env.DB_NAME &&
+  process.env.DB_USER &&
+  process.env.DB_PASSWORD
 );
-console.log(
-  "   To use real MySQL later, update the routes to use VehicleService",
-);
+const hasWpApi = !!process.env.WP_API_BASE;
 
-const vehicleService = new MockVehicleService();
+if (useMock) {
+  console.log("🚀 USE_MOCK is true — using MockVehicleService");
+}
+
+// Prefer WP_API proxy when configured
+if (hasWpApi && !useMock) {
+  console.log(
+    "🔁 WP_API_BASE detected — proxying /api/vehicles to WordPress plugin API at:",
+    process.env.WP_API_BASE,
+  );
+} else if (hasDbEnv && !useMock) {
+  console.log(
+    "✅ DB env vars present — attempting to use VehicleService (MySQL)",
+  );
+} else if (!hasWpApi && !hasDbEnv && !useMock) {
+  console.log(
+    "⚠️ No data backend configured (no WP_API_BASE and no DB_*). Falling back to MockVehicleService",
+  );
+}
+
+let vehicleService: any = null;
+try {
+  if (!useMock && hasWpApi) {
+    // WP proxy mode — routes will forward requests to WP API directly
+    vehicleService = null;
+  } else if (!useMock && hasDbEnv) {
+    vehicleService = new VehicleService();
+    console.log("✅ Using VehicleService (MySQL) for real data");
+  } else {
+    vehicleService = new MockVehicleService();
+  }
+} catch (err) {
+  console.error(
+    "Failed to initialize VehicleService, falling back to MockVehicleService:",
+    err,
+  );
+  vehicleService = new MockVehicleService();
+}
 
 /**
  * GET /api/vehicles
  * Fetch paginated vehicles with optional filters
  */
+// Helper to build WP API URL (do NOT append credentials to query string)
+function buildWpUrl(base: string, path: string, qs: string) {
+  const cleanBase = base.replace(/\/$/, "");
+  return `${cleanBase}/${path}${qs ? `?${qs}` : ""}`;
+}
+
 export const getVehicles: RequestHandler = async (req, res) => {
   try {
     // Parse pagination parameters
@@ -75,7 +120,36 @@ export const getVehicles: RequestHandler = async (req, res) => {
     if (req.query.sellerType)
       filters.sellerType = req.query.sellerType as string;
 
-    // Fetch vehicles from service
+    // If WP API base is configured and not using mock, proxy the request directly to WordPress plugin API
+    if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
+      const wpBase = process.env.WP_API_BASE.replace(/\/$/, "");
+      // Preserve original query string exactly as received (avoid modifying array/comma params)
+      const rawQs = (req.originalUrl && req.originalUrl.split("?")[1]) || "";
+      const url = `${wpBase}/vehicles${rawQs ? `?${rawQs}` : ""}`;
+
+      // Build Authorization header using Basic auth if consumer key/secret are available
+      const headers: Record<string, string> = {
+        Accept: "application/json",
+      };
+      if (process.env.WP_CONSUMER_KEY && process.env.WP_CONSUMER_SECRET) {
+        const creds = `${process.env.WP_CONSUMER_KEY}:${process.env.WP_CONSUMER_SECRET}`;
+        const encoded = Buffer.from(creds).toString("base64");
+        headers["Authorization"] = `Basic ${encoded}`;
+      }
+
+      const wpResponse = await fetch(url, { method: "GET", headers });
+      const body = await wpResponse.text();
+
+      // Try to parse JSON, otherwise proxy raw
+      try {
+        const json = JSON.parse(body);
+        return res.status(wpResponse.status).json(json);
+      } catch (e) {
+        return res.status(wpResponse.status).send(body);
+      }
+    }
+
+    // Otherwise use the configured service (MySQL or Mock)
     const result = await vehicleService.getVehicles(filters, pagination);
 
     // Return response
@@ -141,6 +215,50 @@ export const getVehicleById: RequestHandler = async (req, res) => {
  */
 export const getFilterOptions: RequestHandler = async (req, res) => {
   try {
+    // If WP API base configured and not using mock, proxy filter request
+    if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
+      const wpBase = process.env.WP_API_BASE.replace(/\/$/, "");
+      const rawQs = (req.originalUrl && req.originalUrl.split("?")[1]) || "";
+      const url = `${wpBase}/filters${rawQs ? `?${rawQs}` : ""}`;
+      const headers: Record<string, string> = {
+        Accept: "application/json",
+      };
+      if (process.env.WP_CONSUMER_KEY && process.env.WP_CONSUMER_SECRET) {
+        const creds = `${process.env.WP_CONSUMER_KEY}:${process.env.WP_CONSUMER_SECRET}`;
+        const encoded = Buffer.from(creds).toString("base64");
+        headers["Authorization"] = `Basic ${encoded}`;
+      }
+      const wpResponse = await fetch(url, { method: "GET", headers });
+      const body = await wpResponse.text();
+      // Log proxied response for debugging conditional filters (trim large output)
+      try {
+        console.log(
+          "[WP_PROXY_REQUEST] url:",
+          url,
+          "hasAuth:",
+          !!headers["Authorization"],
+        );
+        const trimmed =
+          body && body.length > 5000
+            ? body.substring(0, 5000) + "...(truncated)"
+            : body;
+        console.log(
+          "[WP_PROXY_RESPONSE] /filters -> status:",
+          wpResponse.status,
+          "body:",
+          trimmed,
+        );
+      } catch (e) {
+        console.log("[WP_PROXY_RESPONSE] /filters -> (unable to log body)");
+      }
+      try {
+        const json = JSON.parse(body);
+        return res.status(wpResponse.status).json(json);
+      } catch (e) {
+        return res.status(wpResponse.status).send(body);
+      }
+    }
+
     const options = await vehicleService.getFilterOptions();
 
     res.status(200).json({

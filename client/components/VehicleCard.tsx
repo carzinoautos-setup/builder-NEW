@@ -43,6 +43,19 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   interestRate = "5",
   downPayment = "2000",
 }) => {
+  // Helper to determine if a formatted price string represents a positive price
+  const parseFormattedPrice = (priceStr?: string | null): number | null => {
+    if (!priceStr) return null;
+    const num = parseFloat(String(priceStr).replace(/[^0-9.-]+/g, ""));
+    if (isNaN(num)) return null;
+    return num;
+  };
+
+  const hasValidSalePrice = (): boolean => {
+    const n = parseFormattedPrice(vehicle.salePrice);
+    return n !== null && n > 0;
+  };
+
   const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
 
   // Calculate monthly payment based on sale price and loan terms
@@ -78,18 +91,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // Get the payment to display - either calculated or original
   const getDisplayPayment = (): string => {
-    if (
-      vehicle.salePrice &&
-      (termLength !== "60" || interestRate !== "5" || downPayment !== "2000")
-    ) {
-      // Recalculate if any payment parameters have changed from defaults
-      return calculateMonthlyPayment(
-        vehicle.salePrice,
-        termLength,
-        interestRate,
-        downPayment,
-      );
+    if (hasValidSalePrice()) {
+      try {
+        // Always calculate a payment when a sale price exists, using current parameters
+        return calculateMonthlyPayment(vehicle.salePrice, termLength, interestRate, downPayment);
+      } catch (e) {
+        // Fallback to provided payment or call for price
+        return vehicle.payment || "Call for Price";
+      }
     }
+
     return vehicle.payment || "Call for Price";
   };
 
@@ -222,41 +233,29 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         </div>
 
         <div className="flex justify-center items-start gap-6 mb-1 flex-1">
-          {vehicle.salePrice ? (
+          {hasValidSalePrice() ? (
             <>
               <div className="text-center">
-                <div className="carzino-price-label text-gray-500 mb-0">
-                  Sale Price
-                </div>
-                <div className="carzino-price-value text-gray-900">
-                  {vehicle.salePrice}
-                </div>
+                <div className="carzino-price-label text-gray-500 mb-0">Sale Price</div>
+                <div className="carzino-price-value text-gray-900">{vehicle.salePrice}</div>
               </div>
-              {vehicle.payment && (
-                <>
-                  <div className="w-px h-12 bg-gray-200"></div>
-                  <div className="text-center">
-                    <div className="carzino-price-label text-gray-500 mb-0">
-                      Payments
-                    </div>
-                    <div className="carzino-price-value text-red-600">
-                      {getDisplayPayment()}
-                      <span className="text-xs text-black font-normal">
-                        /mo*
-                      </span>
-                    </div>
+
+              {/* Payments shown only when a valid sale price exists. */}
+              <>
+                <div className="w-px h-12 bg-gray-200"></div>
+                <div className="text-center">
+                  <div className="carzino-price-label text-gray-500 mb-0">Payments</div>
+                  <div className="carzino-price-value text-red-600">
+                    {getDisplayPayment()}
+                    <span className="text-xs text-black font-normal">/mo*</span>
                   </div>
-                </>
-              )}
+                </div>
+              </>
             </>
           ) : (
             <div className="text-center">
-              <div className="carzino-price-label text-gray-500 mb-0">
-                No Sale Price Listed
-              </div>
-              <div className="carzino-price-value text-gray-900">
-                Call for Price
-              </div>
+              <div className="carzino-price-label text-gray-500 mb-0">No Sale Price Listed</div>
+              <div className="carzino-price-value text-gray-900">Call for Price</div>
             </div>
           )}
         </div>

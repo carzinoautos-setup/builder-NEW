@@ -7,6 +7,7 @@ import {
   getVehicleTitle,
   getVehicleImageUrl,
 } from "../lib/vehicleApi";
+import { calculateMonthlyPayment } from "../lib/paymentCalculator";
 
 interface MySQLVehicleCardProps {
   vehicle: VehicleRecord;
@@ -146,7 +147,7 @@ export function MySQLVehicleCard({
         <div className="border-t pt-3 mt-auto">
           <div className="flex items-center justify-between mb-2">
             <div className="text-2xl font-bold text-gray-900">
-              {formatPrice(vehicle.price)}
+              {vehicle.price && vehicle.price > 0 ? formatPrice(vehicle.price) : "No Sale Price Listed"}
             </div>
             {vehicle.title_status !== "Clean" && (
               <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
@@ -156,12 +157,28 @@ export function MySQLVehicleCard({
           </div>
 
           {/* Payment Details */}
-          {vehicle.payments > 0 && (
+          {vehicle.price && vehicle.price > 0 ? (
             <div className="text-sm text-gray-600">
               <div className="flex justify-between items-center">
                 <span>Est. Payment:</span>
                 <span className="font-medium">
-                  {formatPrice(vehicle.payments)}/mo
+                  {vehicle.payments && vehicle.payments > 0
+                    ? formatPrice(vehicle.payments) + "/mo"
+                    : (() => {
+                        try {
+                          const params = {
+                            salePrice: vehicle.price,
+                            downPayment: vehicle.down_payment || 0,
+                            interestRate: vehicle.interest_rate || 5,
+                            loanTermMonths: vehicle.loan_term || 60,
+                          };
+                          const res = calculateMonthlyPayment(params as any);
+                          return `$${Math.round(res.monthlyPayment).toLocaleString()}/mo`;
+                        } catch (e) {
+                          return "Call for Price";
+                        }
+                      })()
+                  }
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
@@ -170,6 +187,10 @@ export function MySQLVehicleCard({
                 </span>
                 <span>Down: {formatPrice(vehicle.down_payment)}</span>
               </div>
+            </div>
+          ) : (
+            <div className="text-sm text-gray-600">
+              <div className="carzino-price-value text-gray-900">Call for Price</div>
             </div>
           )}
         </div>
