@@ -6,6 +6,8 @@ interface VehicleTypeCardProps {
   vehicleImages: { [key: string]: string };
   isSelected: boolean;
   onToggle: (type: string) => void;
+  // Optional callback when a user uploads an image for this vehicle type
+  onImageUpload?: (type: string, file: File) => void;
 }
 
 export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
