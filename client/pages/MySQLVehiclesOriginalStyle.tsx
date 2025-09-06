@@ -3827,6 +3827,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Sticky wrapper - will stick throughout the entire scrollable area */}
+            {!mobileFiltersOpen && (
             <div className="sticky top-0 z-50">
               {/* Filter, Sort, Favorites Bar */}
               <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md">
@@ -3997,6 +3998,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 </button>
               </div>
             </div>
+            )}
 
             {/* Connection Status & Results Count - NOT in sticky */}
             <div className="px-3 py-2 bg-gray-50 text-sm">
