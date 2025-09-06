@@ -925,6 +925,65 @@ export default function MySQLVehiclesOriginalStyle() {
     loadImages();
   }, []);
 
+  // Attempt to read VehicleTypeCard image overrides from Builder.io model so Design edits show in interactive mode
+  React.useEffect(() => {
+    // lazy import builder to avoid errors when no key is present
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { builder, BUILDER_MODELS } = require("@/lib/builder");
+      if (!builder || !BUILDER_MODELS) return;
+
+      const fetchBuilderContent = async () => {
+        try {
+          const modelName = BUILDER_MODELS.VEHICLE_INVENTORY;
+          const content = await builder.get(modelName, { url: "/mysql-vehicles" }).toPromise();
+          if (!content) return;
+
+          const foundImages: { [key: string]: string } = {};
+
+          const walk = (node: any) => {
+            if (!node) return;
+            if (Array.isArray(node)) return node.forEach(walk);
+            if (typeof node !== "object") return;
+
+            // Common builder component markers
+            const compName = (node.component || node.name || node.type || "").toString();
+            if (compName && /vehicletypecard/i.test(compName)) {
+              // Try to extract type and image inputs
+              const inputs = node.inputs || node.data || node.props || node;
+              const typeVal = inputs && (inputs.type || inputs.name || inputs.title || inputs.label);
+              const imageVal = inputs && (inputs.image || inputs.src || (inputs.imageUrl && inputs.imageUrl[0]) || (inputs.image && inputs.image.src) );
+              if (typeVal && imageVal && typeof imageVal === "string") {
+                foundImages[typeVal] = imageVal;
+              }
+            }
+
+            // Direct property patterns
+            if (node.type && node.image && typeof node.image === "string") {
+              foundImages[node.type] = node.image;
+            }
+
+            Object.values(node).forEach(walk);
+          };
+
+          walk(content);
+
+          if (Object.keys(foundImages).length > 0) {
+            setVehicleImages((prev) => ({ ...prev, ...foundImages }));
+            console.log("🔁 Merged Builder VehicleTypeCard images into runtime mapping", foundImages);
+          }
+        } catch (err) {
+          // ignore - builder may not be configured in this environment
+          // console.warn("Builder image sync failed:", err);
+        }
+      };
+
+      fetchBuilderContent();
+    } catch (e) {
+      // require failed or builder not available
+    }
+  }, []);
+
   // Load available dealers from normalized filterOptions (prefer WP ACF data)
   useEffect(() => {
     if (filterOptions && Array.isArray(filterOptions.account_name_seller)) {
