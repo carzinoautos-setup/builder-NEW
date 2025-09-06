@@ -908,18 +908,15 @@ export default function MySQLVehiclesOriginalStyle() {
         loadedImages[vehicleType] = imageUrl;
       }
 
-      // Merge any saved custom images from localStorage
-      try {
-        const saved = localStorage.getItem(VEHICLE_IMAGES_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved) as { [key: string]: string };
-          Object.assign(loadedImages, parsed);
-        }
-      } catch (e) {
-        // ignore JSON errors
-      }
-
+      // Do NOT merge saved local overrides here — prefer the canonical mapping from editor/CDN.
       setVehicleImages(loadedImages);
+
+      // Remove any persisted overrides so runtime shows the mapping you edited in Design
+      try {
+        localStorage.removeItem(VEHICLE_IMAGES_KEY);
+      } catch (e) {
+        /* ignore */
+      }
     };
 
     loadImages();
