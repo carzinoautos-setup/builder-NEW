@@ -858,50 +858,50 @@ export default function MySQLVehiclesOriginalStyle() {
   useEffect(() => {
     const loadImages = async () => {
       const imageMapping = {
-      // Common title-cased keys
-      Convertible:
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F064c51214995430a9384ae9f1722bee9",
-      Coupe:
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F1d042ebb458842a8a468794ae563fcc6",
-      Hatchback:
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fb06dd82e2c564b7eb30b1d5fa14e0562",
-      Sedan:
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
-      "Crossover/SUV":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fffc8b9d69ce743d080a0b5ba9a64e89a",
-      Trucks:
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
-      "Regular Cab":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
-      "Extended Cab":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
-      "Crew Cab":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
-      "Van / Minivan":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff0d0c6c20e02423dad8eefa6f0ef508a",
-      Wagon:
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F24bf3ece0537462bbd1edd12a2485c0a?format=webp",
+        // Common title-cased keys
+        Convertible:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F064c51214995430a9384ae9f1722bee9",
+        Coupe:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F1d042ebb458842a8a468794ae563fcc6",
+        Hatchback:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fb06dd82e2c564b7eb30b1d5fa14e0562",
+        Sedan:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
+        "Crossover/SUV":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fffc8b9d69ce743d080a0b5ba9a64e89a",
+        Trucks:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
+        "Regular Cab":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
+        "Extended Cab":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
+        "Crew Cab":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
+        "Van / Minivan":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff0d0c6c20e02423dad8eefa6f0ef508a",
+        Wagon:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F24bf3ece0537462bbd1edd12a2485c0a?format=webp",
 
-      // Additional keys that Builder/editor may use (normalized/lowercase/hyphenated)
-      "crossover-suv":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F98d1869674c64e419bf7ca7da66e25b8",
-      "crew-cab":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
-      "van-minivan":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff0d0c6c20e02423dad8eefa6f0ef508a",
-      "convertible":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F064c51214995430a9384ae9f1722bee9",
-      "wagon":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F24bf3ece0537462bbd1edd12a2485c0a?format=webp",
-      "coupe":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F1d042ebb458842a8a468794ae563fcc6",
-      "regular-cab-truck":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F30f147c94e904a5ba1b1ce7ce9ebd89b",
-      "hatchback":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fb06dd82e2c564b7eb30b1d5fa14e0562",
-      "extended-cab":
-        "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
-    };
+        // Additional keys that Builder/editor may use (normalized/lowercase/hyphenated)
+        "crossover-suv":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F98d1869674c64e419bf7ca7da66e25b8",
+        "crew-cab":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
+        "van-minivan":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff0d0c6c20e02423dad8eefa6f0ef508a",
+        convertible:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F064c51214995430a9384ae9f1722bee9",
+        wagon:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F24bf3ece0537462bbd1edd12a2485c0a?format=webp",
+        coupe:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F1d042ebb458842a8a468794ae563fcc6",
+        "regular-cab-truck":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F30f147c94e904a5ba1b1ce7ce9ebd89b",
+        hatchback:
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fb06dd82e2c564b7eb30b1d5fa14e0562",
+        "extended-cab":
+          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
+      };
 
       const loadedImages: { [key: string]: string } = {};
       for (const [vehicleType, imageUrl] of Object.entries(imageMapping)) {
@@ -933,7 +933,9 @@ export default function MySQLVehiclesOriginalStyle() {
       const fetchBuilderContent = async () => {
         try {
           const modelName = BUILDER_MODELS.VEHICLE_INVENTORY;
-          const content = await builder.get(modelName, { url: "/mysql-vehicles" }).toPromise();
+          const content = await builder
+            .get(modelName, { url: "/mysql-vehicles" })
+            .toPromise();
           if (!content) return;
 
           const foundImages: { [key: string]: string } = {};
@@ -944,12 +946,24 @@ export default function MySQLVehiclesOriginalStyle() {
             if (typeof node !== "object") return;
 
             // Common builder component markers
-            const compName = (node.component || node.name || node.type || "").toString();
+            const compName = (
+              node.component ||
+              node.name ||
+              node.type ||
+              ""
+            ).toString();
             if (compName && /vehicletypecard/i.test(compName)) {
               // Try to extract type and image inputs
               const inputs = node.inputs || node.data || node.props || node;
-              const typeVal = inputs && (inputs.type || inputs.name || inputs.title || inputs.label);
-              const imageVal = inputs && (inputs.image || inputs.src || (inputs.imageUrl && inputs.imageUrl[0]) || (inputs.image && inputs.image.src) );
+              const typeVal =
+                inputs &&
+                (inputs.type || inputs.name || inputs.title || inputs.label);
+              const imageVal =
+                inputs &&
+                (inputs.image ||
+                  inputs.src ||
+                  (inputs.imageUrl && inputs.imageUrl[0]) ||
+                  (inputs.image && inputs.image.src));
               if (typeVal && imageVal && typeof imageVal === "string") {
                 foundImages[typeVal] = imageVal;
               }
@@ -967,11 +981,16 @@ export default function MySQLVehiclesOriginalStyle() {
 
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
-            console.log("🔁 Merged Builder VehicleTypeCard images into runtime mapping", foundImages);
+            console.log(
+              "🔁 Merged Builder VehicleTypeCard images into runtime mapping",
+              foundImages,
+            );
             // Clear persisted local overrides so Builder/editor images take effect immediately
             try {
               localStorage.removeItem(VEHICLE_IMAGES_KEY);
-              console.log("🧹 Cleared persisted vehicle images from localStorage to prioritize Builder images");
+              console.log(
+                "🧹 Cleared persisted vehicle images from localStorage to prioritize Builder images",
+              );
             } catch (e) {
               /* ignore */
             }
@@ -3061,7 +3080,9 @@ export default function MySQLVehiclesOriginalStyle() {
                           : [...prev.vehicleType, type.name],
                       }));
                     }}
-                    onImageUpload={(t, file) => handleVehicleTypeImageUpload(t, file)}
+                    onImageUpload={(t, file) =>
+                      handleVehicleTypeImageUpload(t, file)
+                    }
                   />
                 ))}
                 {vehicleTypes.length === 0 && (
