@@ -36,7 +36,7 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
         search.includes("builder") ||
         search.includes("edit") ||
         host.includes("localhost") ||
-        host.endsWith(".local")
+        host.endsWith(".local"),
     );
   }, []);
 
