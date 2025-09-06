@@ -3063,33 +3063,67 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("vehicleType")}
             >
               <div className="grid grid-cols-2 gap-2">
-                {vehicleTypes.map((type, index) => (
-                  <VehicleTypeCard
-                    key={index}
-                    type={type.name}
-                    count={type.count}
-                    vehicleImages={vehicleImages}
-                    isSelected={appliedFilters.vehicleType.includes(type.name)}
-                    onToggle={() => {
-                      setAppliedFilters((prev) => ({
-                        ...prev,
-                        vehicleType: prev.vehicleType.includes(type.name)
-                          ? prev.vehicleType.filter(
-                              (item) => item !== type.name,
-                            )
-                          : [...prev.vehicleType, type.name],
-                      }));
-                    }}
-                    onImageUpload={(t, file) =>
-                      handleVehicleTypeImageUpload(t, file)
+                {(() => {
+                  const normalize = (s: string) =>
+                    s
+                      .toLowerCase()
+                      .replace(/[\s\/]+/g, "-")
+                      .replace(/[^a-z0-9\-]/g, "");
+
+                  const bottomKeys = new Set([
+                    "crew-cab",
+                    "regular-cab-truck",
+                    "truck",
+                    "extended-cab",
+                  ]);
+
+                  const top: any[] = [];
+                  const bottom: any[] = [];
+
+                  for (const t of vehicleTypes) {
+                    const key = normalize(t.name || "");
+                    if (key === "uncategorized" || key === "") {
+                      // skip Uncategorized or empty labels entirely
+                      continue;
                     }
-                  />
-                ))}
-                {vehicleTypes.length === 0 && (
-                  <div className="text-gray-500 text-sm p-2 col-span-2 text-center">
-                    Loading vehicle types...
-                  </div>
-                )}
+                    if (bottomKeys.has(key)) {
+                      bottom.push(t);
+                    } else {
+                      top.push(t);
+                    }
+                  }
+
+                  const ordered = [...top, ...bottom];
+
+                  return ordered.length > 0 ? (
+                    ordered.map((type, index) => (
+                      <VehicleTypeCard
+                        key={index}
+                        type={type.name}
+                        count={type.count}
+                        vehicleImages={vehicleImages}
+                        isSelected={appliedFilters.vehicleType.includes(type.name)}
+                        onToggle={() => {
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            vehicleType: prev.vehicleType.includes(type.name)
+                              ? prev.vehicleType.filter(
+                                  (item) => item !== type.name,
+                                )
+                              : [...prev.vehicleType, type.name],
+                          }));
+                        }}
+                        onImageUpload={(t, file) =>
+                          handleVehicleTypeImageUpload(t, file)
+                        }
+                      />
+                    ))
+                  ) : (
+                    <div className="text-gray-500 text-sm p-2 col-span-2 text-center">
+                      Loading vehicle types...
+                    </div>
+                  );
+                })()}
               </div>
             </FilterSection>
 
