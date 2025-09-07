@@ -379,6 +379,19 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
             json.filters.body_style = toArray(bodyMap);
             json.filters.account_type_seller = toArray(sellerTypeMap);
             json.filters.account_name_seller = toArray(dealerMap);
+
+            // Remove known non-car manufacturers if present (blacklist)
+            try {
+              const blacklist = new Set(["harley-davidson","harley davidson","harley","forest river","fleetwood"]);
+              const filterKey = (arr: any[]) => arr.filter((it: any) => {
+                const name = (it && (it.name || it.value || it.label || it)) || "";
+                return !blacklist.has(String(name).toLowerCase());
+              });
+              json.filters.makes = filterKey(json.filters.makes || []);
+              json.filters.make = filterKey(json.filters.make || []);
+            } catch (e) {
+              // ignore
+            }
           } catch (e) {
             console.warn('Failed to recompute /filters from proxied data:', e);
           }
