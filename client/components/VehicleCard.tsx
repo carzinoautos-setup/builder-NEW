@@ -104,11 +104,58 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     return vehicle.payment || "Call for Price";
   };
 
+  // Attempt to use a medium-sized (450x300) variant of the featured image when possible
+  const getMediumImage = (url?: string) => {
+    if (!url) return "";
+
+    try {
+      const u = new URL(url);
+
+      // If the URL already has width/height query params, adjust them
+      if (u.searchParams.has("w") || u.searchParams.has("width") || u.searchParams.has("h") || u.searchParams.has("height")) {
+        if (u.searchParams.has("w")) u.searchParams.set("w", "450");
+        if (u.searchParams.has("width")) u.searchParams.set("width", "450");
+        if (u.searchParams.has("h")) u.searchParams.set("h", "300");
+        if (u.searchParams.has("height")) u.searchParams.set("height", "300");
+        return u.toString();
+      }
+
+      // If it's a common image CDN that supports width via query (e.g., images.unsplash.com), append params
+      if (u.hostname.includes("images.unsplash.com") || u.hostname.includes("cdn.")) {
+        // Preserve any existing query but enforce w/h
+        const s = u.origin + u.pathname + `?w=450&h=300&fit=crop&auto=format&q=80`;
+        return s;
+      }
+
+      // Try WordPress-style size suffix insertion before file extension (image.jpg -> image-450x300.jpg)
+      const pathname = u.pathname;
+      const lastDot = pathname.lastIndexOf(".");
+      if (lastDot > 0) {
+        const prefix = pathname.substring(0, lastDot);
+        const ext = pathname.substring(lastDot);
+        const sized = `${prefix}-450x300${ext}`;
+        return u.origin + sized;
+      }
+
+      return url;
+    } catch (e) {
+      // If URL parsing fails, fallback to simple transformation heuristics
+      if (url.includes("?")) {
+        return url + "&w=450&h=300";
+      }
+      const dot = url.lastIndexOf(".");
+      if (dot > 0) {
+        return url.substring(0, dot) + "-450x300" + url.substring(dot);
+      }
+      return url;
+    }
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
       <div className="relative">
         <img
-          src={vehicle.images ? vehicle.images[0] : ""}
+          src={getMediumImage(vehicle.images ? vehicle.images[0] : "")}
           alt={vehicle.title}
           className="w-full object-cover"
           style={{ height: "200px" }}
