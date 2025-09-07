@@ -181,5 +181,6 @@ export function getVehicleImageUrl(vehicle: VehicleRecord): string {
     const first = typeof images[0] === "string" ? images[0] : images[0].src || images[0].url;
     if (first) return String(first);
   }
-  return "/placeholder.svg";
+  // Prefer user-provided placeholder via env, then public assets, then default placeholder
+  return import.meta.env.VITE_PLACEHOLDER_IMAGE || "/assets/fallback-image-450.webp" || "/placeholder.svg";
 }
