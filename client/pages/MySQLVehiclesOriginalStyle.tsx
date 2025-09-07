@@ -651,10 +651,20 @@ export default function MySQLVehiclesOriginalStyle() {
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
       const { fetchWithRetry } = await (await import("@/lib/fetchWithRetry"));
+      // Watchdog to avoid long loading spinners if backend is slow
+      const watchdog = setTimeout(() => {
+        console.warn("Fetch vehicles watchdog triggered — aborting loading state");
+        setLoading(false);
+        setError("Request timed out. Please try again.");
+      }, 12000); // 12s
+
+      // Use fewer retries and a shorter timeout for main vehicle fetch to improve UX
       const response = await fetchWithRetry(apiUrl, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
-      });
+      }, 1, 8000);
+
+      clearTimeout(watchdog);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} ${response.statusText}`);
