@@ -610,7 +610,10 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("sort", sortBy);
 
         // Map UI sort keys to API sortBy and sortOrder
-        const mapping: Record<string, { field?: string; order?: "ASC" | "DESC" }> = {
+        const mapping: Record<
+          string,
+          { field?: string; order?: "ASC" | "DESC" }
+        > = {
           "price-low": { field: "price", order: "ASC" },
           "price-high": { field: "price", order: "DESC" },
           "miles-low": { field: "mileage", order: "ASC" },

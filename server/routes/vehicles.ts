@@ -284,7 +284,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 let cur: any = item;
                 for (const p of parts) {
                   if (!cur) break;
-                  cur = cur[p] ?? cur[p.replace(/_(.)/g, (s, ch) => ch.toUpperCase())];
+                  cur =
+                    cur[p] ??
+                    cur[p.replace(/_(.)/g, (s, ch) => ch.toUpperCase())];
                 }
                 if (cur !== undefined && cur !== null) {
                   const s = String(cur);
@@ -295,15 +297,52 @@ export const getVehicles: RequestHandler = async (req, res) => {
               return null;
             };
 
-            const sortMap: Record<string, { keyCandidates: string[]; dir: number }> = {
-              "price-low": { keyCandidates: ["acf.price", "price", "sale_price", "meta.price"], dir: 1 },
-              "price-high": { keyCandidates: ["acf.price", "price", "sale_price", "meta.price"], dir: -1 },
-              "miles-low": { keyCandidates: ["acf.mileage", "mileage", "meta.mileage"], dir: 1 },
-              "miles-high": { keyCandidates: ["acf.mileage", "mileage", "meta.mileage"], dir: -1 },
-              "mileage-low": { keyCandidates: ["acf.mileage", "mileage", "meta.mileage"], dir: 1 },
-              "mileage-high": { keyCandidates: ["acf.mileage", "mileage", "meta.mileage"], dir: -1 },
-              "year-newest": { keyCandidates: ["acf.year", "year", "meta.year"], dir: -1 },
-              "year-oldest": { keyCandidates: ["acf.year", "year", "meta.year"], dir: 1 },
+            const sortMap: Record<
+              string,
+              { keyCandidates: string[]; dir: number }
+            > = {
+              "price-low": {
+                keyCandidates: [
+                  "acf.price",
+                  "price",
+                  "sale_price",
+                  "meta.price",
+                ],
+                dir: 1,
+              },
+              "price-high": {
+                keyCandidates: [
+                  "acf.price",
+                  "price",
+                  "sale_price",
+                  "meta.price",
+                ],
+                dir: -1,
+              },
+              "miles-low": {
+                keyCandidates: ["acf.mileage", "mileage", "meta.mileage"],
+                dir: 1,
+              },
+              "miles-high": {
+                keyCandidates: ["acf.mileage", "mileage", "meta.mileage"],
+                dir: -1,
+              },
+              "mileage-low": {
+                keyCandidates: ["acf.mileage", "mileage", "meta.mileage"],
+                dir: 1,
+              },
+              "mileage-high": {
+                keyCandidates: ["acf.mileage", "mileage", "meta.mileage"],
+                dir: -1,
+              },
+              "year-newest": {
+                keyCandidates: ["acf.year", "year", "meta.year"],
+                dir: -1,
+              },
+              "year-oldest": {
+                keyCandidates: ["acf.year", "year", "meta.year"],
+                dir: 1,
+              },
             };
 
             const mapping = sortMap[uiSort];
@@ -320,7 +359,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
               // After sorting a large set, paginate server-side according to original requested page & per_page
               try {
                 const origPage = parseInt(String(req.query.page || "1")) || 1;
-                const origPer = parseInt(String(req.query.per_page || req.query.pageSize || "20")) || 20;
+                const origPer =
+                  parseInt(
+                    String(req.query.per_page || req.query.pageSize || "20"),
+                  ) || 20;
                 const total = json.data.length;
                 const totalPages = Math.max(1, Math.ceil(total / origPer));
                 const start = (origPage - 1) * origPer;
@@ -341,7 +383,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
             }
           }
         } catch (err) {
-          console.warn("Failed to apply server-side sort on proxied data:", err);
+          console.warn(
+            "Failed to apply server-side sort on proxied data:",
+            err,
+          );
         }
 
         return res.status(wpResponse.status).json(json);
