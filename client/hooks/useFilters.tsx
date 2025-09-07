@@ -437,6 +437,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               { respKey: "city_seller", localKey: "city" },
               // Ensure makes that only exist on uncategorized vehicles are removed
               { respKey: "make", localKey: "make" },
+              // Ensure condition counts are authoritative
+              { respKey: "condition", localKey: "condition" },
             ];
 
             for (const cat of categoriesToCompute) {
