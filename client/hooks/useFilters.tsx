@@ -21,6 +21,12 @@ export type AppliedFilters = {
   paymentMax: string;
   fuelType: string[];
   certified: string[];
+  // Newly supported filters
+  doors?: string[];
+  transmissionSpeed?: string[];
+  highwayMpg?: string[];
+  titleStatus?: string[];
+  status?: string[];
 };
 
 type FilterMap = Record<string, { name: string; count: number }[]>;
@@ -49,6 +55,12 @@ export function buildFiltersQuery(paramsObj: Partial<AppliedFilters>) {
     ["sellerType", "account_type_seller"],
     ["fuelType", "fuel_type"],
     ["certified", "certified"],
+    // New mappings
+    ["doors", "doors"],
+    ["transmissionSpeed", "transmission_speed"],
+    ["highwayMpg", "highway_mpg"],
+    ["titleStatus", "title_status"],
+    ["status", "status"],
   ];
 
   for (const [localKey, apiKey] of mapping) {
@@ -172,6 +184,36 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               normalized.transmission = transmissions
                 .map(mapItem)
                 .filter(Boolean) as any;
+
+            // Transmission speed (e.g., 4,6,8)
+            const transSpeeds = pickArrayFromFilters(
+              f,
+              "transmission_speed",
+              "transmissionSpeeds",
+              "transmission_speed"
+            );
+            if (transSpeeds)
+              normalized.transmission_speed = transSpeeds
+                .map(mapItem)
+                .filter(Boolean) as any;
+
+            // Doors
+            const doors = pickArrayFromFilters(f, "doors");
+            if (doors)
+              normalized.doors = doors.map(mapItem).filter(Boolean) as any;
+
+            // Highway MPG
+            const highway = pickArrayFromFilters(f, "highway_mpg", "highwayMpg");
+            if (highway)
+              normalized.highway_mpg = highway.map(mapItem).filter(Boolean) as any;
+
+            // Title status
+            const titles = pickArrayFromFilters(f, "title_status", "titleStatus");
+            if (titles) normalized.title_status = titles.map(mapItem).filter(Boolean) as any;
+
+            // Generic status
+            const statuses = pickArrayFromFilters(f, "status");
+            if (statuses) normalized.status = statuses.map(mapItem).filter(Boolean) as any;
 
             const exterior = pickArrayFromFilters(
               f,
