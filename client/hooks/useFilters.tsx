@@ -64,6 +64,9 @@ export function buildFiltersQuery(paramsObj: Partial<AppliedFilters>) {
     ["highwayMpg", "highway_mpg"],
     ["titleStatus", "title_status"],
     ["status", "status"],
+    // Location mappings
+    ["state", "state_seller"],
+    ["city", "city_seller"],
   ];
 
   for (const [localKey, apiKey] of mapping) {
