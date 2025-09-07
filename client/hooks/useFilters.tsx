@@ -519,22 +519,23 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
   const pruneInvalid = useCallback(
     (filters: Partial<AppliedFilters>) => {
       const keyMap: Record<string, string> = {
-        make: "make",
-        model: "model",
-        trim: "trim",
-        year: "year",
-        bodyStyle: "body_style",
-        driveType: "drivetrain",
-        transmission: "transmission",
-        exteriorColor: "exterior_color",
-        interiorColor: "interior_color",
-        dealer: "account_name_seller",
-        sellerType: "account_type_seller",
-        fuelType: "fuel_type",
-        // Location keys
-        state: "state_seller",
-        city: "city_seller",
-      };
+  make: "make",
+  model: "model",
+  trim: "trim",
+  year: "year",
+  bodyStyle: "body_style",
+  driveType: "drivetrain",
+  transmission: "transmission",
+  exteriorColor: "exterior_color",
+  interiorColor: "interior_color",
+  dealer: "account_name_seller",
+  sellerType: "account_type_seller",
+  fuelType: "fuel_type",
+  condition: "condition",
+  // Location keys
+  state: "state_seller",
+  city: "city_seller",
+};
 
       let pruned = { ...(filters as any) } as Partial<AppliedFilters>;
       let changed = false;
