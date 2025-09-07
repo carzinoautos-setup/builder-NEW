@@ -185,17 +185,8 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
       typeof imgs[0] === "string" ? imgs[0] : imgs[0].src || imgs[0].url;
     if (first) vehicleImages.push(first);
   }
-  // Add 2 placeholders to ensure UI has multiple images
-  if (vehicleImages.length === 0) {
-    vehicleImages.push(
-      `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80`,
-    );
-  }
-  if (vehicleImages.length === 1) {
-    vehicleImages.push(
-      `https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=450&h=300&fit=crop&auto=format&q=80`,
-    );
-  }
+  // Do not add external fallback images here. Leave images empty so UI can decide how to render a local placeholder.
+  // vehicleImages may be empty if no images provided by the API.
 
   // Generate badges based on vehicle characteristics - matching original demo
   const badges = [];
