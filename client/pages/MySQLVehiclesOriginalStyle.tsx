@@ -429,6 +429,8 @@ export default function MySQLVehiclesOriginalStyle() {
   const [showMoreTrims, setShowMoreTrims] = useState(false);
   // UI: show more for transmission speeds
   const [showMoreTransmission, setShowMoreTransmission] = useState(false);
+  // UI: fuel type show more and default selection
+  const [showMoreFuel, setShowMoreFuel] = useState(false);
 
   // Highway MPG slider state (min/max)
   const [highwayMpgMin, setHighwayMpgMin] = useState<number | null>(null);
