@@ -173,6 +173,13 @@ export function getVehicleTitle(vehicle: VehicleRecord): string {
 }
 
 export function getVehicleImageUrl(vehicle: VehicleRecord): string {
-  // Use a placeholder service or implement your image logic
-  return `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80`;
+  // Prefer featured_image or first image when available, otherwise use local placeholder
+  const featured = (vehicle as any).featured_image || (vehicle as any).featuredImage;
+  if (featured) return String(featured);
+  const images = (vehicle as any).images;
+  if (images && Array.isArray(images) && images.length > 0) {
+    const first = typeof images[0] === "string" ? images[0] : images[0].src || images[0].url;
+    if (first) return String(first);
+  }
+  return "/placeholder.svg";
 }
