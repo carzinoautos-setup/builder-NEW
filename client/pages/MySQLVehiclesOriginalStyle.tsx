@@ -963,9 +963,12 @@ export default function MySQLVehiclesOriginalStyle() {
     [navigate, location.pathname],
   );
 
-  // Fetch vehicles when dependencies change
+  // Fetch vehicles when dependencies change (debounced)
   useEffect(() => {
-    fetchVehicles();
+    const t = setTimeout(() => {
+      fetchVehicles();
+    }, 200);
+    return () => clearTimeout(t);
   }, [fetchVehicles]);
 
   // Geocode ZIP code when it changes (with debouncing)
