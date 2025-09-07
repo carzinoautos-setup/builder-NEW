@@ -3613,35 +3613,49 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("fuelType")}
             >
               <div className="space-y-1">
-                {filterOptions.fuel_type &&
-                filterOptions.fuel_type.length > 0 ? (
-                  filterOptions.fuel_type.map((f: any) => (
-                    <label
-                      key={f.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.fuelType.includes(f.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              fuelType: [...prev.fuelType, f.name],
-                            }));
-                          } else {
-                            removeAppliedFilter("fuelType", f.name);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{f.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({f.count ?? 0})
-                      </span>
-                    </label>
-                  ))
+                {fuelOptions && fuelOptions.length > 0 ? (
+                  <>
+                    {displayedFuels.map((f: any) => (
+                      <label
+                        key={f.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={appliedFilters.fuelType.includes(f.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                fuelType: [...prev.fuelType, f.name],
+                              }));
+                            } else {
+                              removeAppliedFilter("fuelType", f.name);
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{f.name}</span>
+                        <span className="carzino-filter-count ml-1">({f.count ?? 0})</span>
+                      </label>
+                    ))}
+
+                    {fuelOptions.length > 8 && (
+                      <div className="p-1">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowMoreFuel((v) => !v);
+                          }}
+                          className="text-sm text-blue-600 hover:underline px-2 py-1 rounded"
+                        >
+                          {showMoreFuel ? "Show Less" : `Show More (${fuelOptions.length - 8})`}
+                        </button>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
                     No fuel types available.
