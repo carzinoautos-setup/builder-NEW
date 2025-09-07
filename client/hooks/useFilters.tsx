@@ -118,9 +118,10 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         const unscopedQs = buildFiltersQuery(unscopedFilters || {});
         const unscopedUrl = `/api/vehicles/filters${unscopedQs ? `?${unscopedQs}` : ""}`;
         console.log("🔍 Fetching unscoped filter options:", unscopedUrl);
-        const unscopedRes = await fetch(unscopedUrl);
-        if (!unscopedRes.ok)
-          throw new Error(`Filters error ${unscopedRes.status}`);
+        import { fetchWithRetry } from "@/lib/fetchWithRetry";
+
+        const unscopedRes = await fetchWithRetry(unscopedUrl, { method: "GET" });
+        if (!unscopedRes.ok) throw new Error(`Filters error ${unscopedRes.status}`);
         const unscopedJson = await unscopedRes.json();
 
         // Parse helper to convert WP plugin json.filters or json.data into a FilterMap
