@@ -632,18 +632,12 @@ export default function MySQLVehiclesOriginalStyle() {
       const apiUrl = `/api/vehicles?${params.toString()}`;
       console.log("🔍 Fetching vehicles from:", apiUrl);
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-
-      const response = await fetch(apiUrl, {
+      // Use fetchWithRetry to avoid noisy failures for transient network issues
+      const { fetchWithRetry } = await (await import("@/lib/fetchWithRetry"));
+      const response = await fetchWithRetry(apiUrl, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        signal: controller.signal,
+        headers: { "Content-Type": "application/json" },
       });
-
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} ${response.statusText}`);
