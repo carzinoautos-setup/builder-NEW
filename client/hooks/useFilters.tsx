@@ -118,9 +118,12 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
         // Fetch unscoped (global) filter options to ensure Make list remains complete
         const unscopedFilters: any = { ...(filters || {}) };
+        // Keep Make/Model/Trim lists complete by removing their scoping filters
         delete unscopedFilters.make;
         delete unscopedFilters.model;
         delete unscopedFilters.trim;
+        // Also remove fuelType so the fuel list remains complete even if a default selection exists
+        delete unscopedFilters.fuelType;
         const unscopedQs = buildFiltersQuery(unscopedFilters || {});
         const unscopedUrl = `/api/vehicles/filters${unscopedQs ? `?${unscopedQs}` : ""}`;
         console.log("🔍 Fetching unscoped filter options:", unscopedUrl);
