@@ -143,6 +143,43 @@ export const getVehicles: RequestHandler = async (req, res) => {
       // Try to parse JSON, otherwise proxy raw
       try {
         const json = JSON.parse(body);
+
+        // Remove uncategorized vehicles from proxied data responses
+        if (Array.isArray(json.data)) {
+          const before = json.data.length;
+          json.data = json.data.filter((item: any) => {
+            const acf = item.acf || item || {};
+            const bodyStyle = (
+              acf.body_style || acf.bodyStyle || item.body_style || item.body_type || ""
+            ).toString();
+            return bodyStyle.trim() !== "" && bodyStyle.toLowerCase() !== "uncategorized";
+          });
+          const removed = before - json.data.length;
+          // Adjust pagination counts if present
+          const pagination = json.pagination || json.meta || {};
+          if (pagination && typeof pagination.total === "number") {
+            pagination.total = Math.max(0, pagination.total - removed);
+            if (pagination.total_pages && pagination.pageSize) {
+              pagination.total_pages = Math.ceil(pagination.total / pagination.pageSize);
+            }
+            json.pagination = pagination;
+            json.meta = pagination;
+          }
+        }
+
+        // Also filter out 'Uncategorized' from filter lists when present
+        if (json.filters && typeof json.filters === "object") {
+          for (const key of Object.keys(json.filters)) {
+            const arr = (json.filters as any)[key];
+            if (Array.isArray(arr)) {
+              (json.filters as any)[key] = arr.filter((it: any) => {
+                const name = (it && (it.name || it.value || it.label || it)) || "";
+                return String(name).trim().toLowerCase() !== "uncategorized" && String(name).trim() !== "";
+              });
+            }
+          }
+        }
+
         return res.status(wpResponse.status).json(json);
       } catch (e) {
         return res.status(wpResponse.status).send(body);
