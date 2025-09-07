@@ -2341,30 +2341,39 @@ export default function MySQLVehiclesOriginalStyle() {
               <label className="carzino-location-label block mb-2">
                 Distance
               </label>
-              <input
-                type="text"
-                placeholder="Enter your zip code"
-                value={zipCode}
-                onChange={(e) => setZipCode(e.target.value)}
-                className={`carzino-search-input w-full px-3 py-2 border rounded-md focus:outline-none ${
-                  zipCode.trim() === ""
-                    ? "border-red-500 focus:border-red-600"
-                    : "border-gray-300 focus:border-red-600"
-                }`}
-              />
-              <select
-                value={radius}
-                onChange={(e) => setRadius(e.target.value)}
-                className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none mt-2"
-              >
-                <option value="10">10 Miles</option>
-                <option value="25">25 Miles</option>
-                <option value="50">50 Miles</option>
-                <option value="100">100 Miles</option>
-                <option value="200">200 Miles</option>
-                <option value="500">500 Miles</option>
-                <option value="nationwide">Nationwide</option>
-              </select>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      placeholder="Enter your zip code"
+                      value={zipCode}
+                      onChange={(e) => setZipCode(e.target.value)}
+                      className={`carzino-search-input w-full px-3 py-2 border rounded-md focus:outline-none ${
+                        zipCode.trim() === ""
+                          ? "border-red-500 focus:border-red-600"
+                          : "border-gray-300 focus:border-red-600"
+                      }`}
+                    />
+                  </div>
+
+                  <div className="flex-1">
+                    <select
+                      value={radius}
+                      onChange={(e) => setRadius(e.target.value)}
+                      className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+                    >
+                      <option value="10">10 Miles</option>
+                      <option value="25">25 Miles</option>
+                      <option value="50">50 Miles</option>
+                      <option value="100">100 Miles</option>
+                      <option value="200">200 Miles</option>
+                      <option value="500">500 Miles</option>
+                      <option value="nationwide">Nationwide</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
               {/* Location Status */}
               {isGeocodingLoading && (
