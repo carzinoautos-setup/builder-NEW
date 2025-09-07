@@ -430,6 +430,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               { respKey: "account_name_seller", localKey: "dealer" },
               { respKey: "state_seller", localKey: "state" },
               { respKey: "city_seller", localKey: "city" },
+              // Ensure makes that only exist on uncategorized vehicles are removed
+              { respKey: "make", localKey: "make" },
             ];
 
             for (const cat of categoriesToCompute) {
