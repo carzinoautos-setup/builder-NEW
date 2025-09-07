@@ -478,6 +478,19 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, [filterOptions]);
 
+  // Initialize highway MPG slider defaults when filter options change
+  useEffect(() => {
+    if (filterOptions && filterOptions.highway_mpg && filterOptions.highway_mpg.length > 0) {
+      const nums = (filterOptions.highway_mpg || []).map((o: any) => Number(o.name)).filter(Boolean);
+      if (nums.length > 0) {
+        const min = Math.min(...nums);
+        const max = Math.max(...nums);
+        if (highwayMpgMin === null) setHighwayMpgMin(min);
+        if (highwayMpgMax === null) setHighwayMpgMax(max);
+      }
+    }
+  }, [filterOptions?.highway_mpg]);
+
   // Get the API base URL - point to WordPress site (Vite env)
   const getApiBaseUrl = () => {
     const wpUrl =
