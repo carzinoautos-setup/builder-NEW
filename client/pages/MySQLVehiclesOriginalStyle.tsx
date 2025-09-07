@@ -609,6 +609,26 @@ export default function MySQLVehiclesOriginalStyle() {
         );
       }
 
+      // Newly added filters from WP ACF/plugin
+      if ((appliedFilters as any).doors && (appliedFilters as any).doors.length > 0) {
+        params.append("doors", (appliedFilters as any).doors.join(","));
+      }
+      if ((appliedFilters as any).transmissionSpeed && (appliedFilters as any).transmissionSpeed.length > 0) {
+        params.append(
+          "transmission_speed",
+          (appliedFilters as any).transmissionSpeed.join(","),
+        );
+      }
+      if ((appliedFilters as any).highwayMpg && (appliedFilters as any).highwayMpg.length > 0) {
+        params.append("highway_mpg", (appliedFilters as any).highwayMpg.join(","));
+      }
+      if ((appliedFilters as any).titleStatus && (appliedFilters as any).titleStatus.length > 0) {
+        params.append("title_status", (appliedFilters as any).titleStatus.join(","));
+      }
+      if ((appliedFilters as any).status && (appliedFilters as any).status.length > 0) {
+        params.append("status", (appliedFilters as any).status.join(","));
+      }
+
       const apiUrl = `/api/vehicles?${params.toString()}`;
       console.log("🔍 Fetching vehicles from:", apiUrl);
 
