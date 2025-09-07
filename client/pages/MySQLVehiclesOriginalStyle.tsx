@@ -3340,34 +3340,60 @@ export default function MySQLVehiclesOriginalStyle() {
             >
               <div className="space-y-1">
                 {filterOptions.transmission_speed && filterOptions.transmission_speed.length > 0 ? (
-                  filterOptions.transmission_speed.map((t: any) => (
-                    <label
-                      key={t.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.transmissionSpeed.includes(t.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              transmissionSpeed: [...prev.transmissionSpeed, t.name],
-                            }));
-                          } else {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              transmissionSpeed: prev.transmissionSpeed.filter((v) => v !== t.name),
-                            }));
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{t.name}</span>
-                      <span className="carzino-filter-count ml-1">({t.count ?? 0})</span>
-                    </label>
-                  ))
+                  (() => {
+                    const displayed = getDisplayed(
+                      filterOptions.transmission_speed,
+                      appliedFilters.transmissionSpeed,
+                      showMoreTransmission,
+                      8,
+                    );
+                    return (
+                      <>
+                        {displayed.map((t: any) => (
+                          <label
+                            key={t.name}
+                            className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              className="mr-2"
+                              checked={appliedFilters.transmissionSpeed.includes(t.name)}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                if ((e.target as HTMLInputElement).checked) {
+                                  setAppliedFilters((prev) => ({
+                                    ...prev,
+                                    transmissionSpeed: [...prev.transmissionSpeed, t.name],
+                                  }));
+                                } else {
+                                  setAppliedFilters((prev) => ({
+                                    ...prev,
+                                    transmissionSpeed: prev.transmissionSpeed.filter((v) => v !== t.name),
+                                  }));
+                                }
+                              }}
+                            />
+                            <span className="carzino-filter-option">{t.name}</span>
+                            <span className="carzino-filter-count ml-1">({t.count ?? 0})</span>
+                          </label>
+                        ))}
+
+                        {filterOptions.transmission_speed.length > 8 && (
+                          <div className="pt-1">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowMoreTransmission(!showMoreTransmission);
+                              }}
+                              className="text-red-600 text-sm font-medium"
+                            >
+                              {showMoreTransmission ? "Show Less" : "Show More"}
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()
                 ) : (
                   <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No transmission speeds available.</div>
                 )}
@@ -3413,30 +3439,74 @@ export default function MySQLVehiclesOriginalStyle() {
               isCollapsed={collapsedFilters.highwayMpg}
               onToggle={() => toggleFilter("highwayMpg")}
             >
-              <div className="space-y-1">
-                {filterOptions.highway_mpg && filterOptions.highway_mpg.length > 0 ? (
-                  filterOptions.highway_mpg.map((m: any) => (
-                    <label key={m.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.highwayMpg.includes(m.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({ ...prev, highwayMpg: [...prev.highwayMpg, m.name] }));
-                          } else {
-                            setAppliedFilters((prev) => ({ ...prev, highwayMpg: prev.highwayMpg.filter((v) => v !== m.name) }));
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{m.name}</span>
-                      <span className="carzino-filter-count ml-1">({m.count ?? 0})</span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No highway MPG options available.</div>
-                )}
+              <div className="space-y-2">
+                {(() => {
+                  const options = (filterOptions.highway_mpg || []).map((o: any) => Number(o.name)).filter(Boolean);
+                  const minAvailable = options.length ? Math.min(...options) : 0;
+                  const maxAvailable = options.length ? Math.max(...options) : 100;
+
+                  // Initialize local slider state if not set
+                  const localMin = highwayMpgMin ?? minAvailable;
+                  const localMax = highwayMpgMax ?? maxAvailable;
+
+                  return (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          min={minAvailable}
+                          max={maxAvailable}
+                          value={localMin}
+                          onChange={(e) => setHighwayMpgMin(Number(e.target.value))}
+                          className="carzino-search-input w-1/2 p-1 border rounded"
+                        />
+                        <span className="text-sm text-gray-500">to</span>
+                        <input
+                          type="number"
+                          min={minAvailable}
+                          max={maxAvailable}
+                          value={localMax}
+                          onChange={(e) => setHighwayMpgMax(Number(e.target.value))}
+                          className="carzino-search-input w-1/2 p-1 border rounded"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Apply range to filters as min,max
+                            const min = Number(highwayMpgMin ?? minAvailable);
+                            const max = Number(highwayMpgMax ?? maxAvailable);
+                            if (min > max) return;
+                            const newFilters = { ...appliedFilters, highwayMpg: [String(min), String(max)] } as any;
+                            setAppliedFilters(newFilters);
+                            updateURLFromFilters(newFilters);
+                            setCurrentPage(1);
+                          }}
+                          className="text-red-600 text-sm font-medium"
+                        >
+                          Apply
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setHighwayMpgMin(minAvailable);
+                            setHighwayMpgMax(maxAvailable);
+                            const newFilters = { ...appliedFilters, highwayMpg: [] } as any;
+                            setAppliedFilters(newFilters);
+                            updateURLFromFilters(newFilters);
+                            setCurrentPage(1);
+                          }}
+                          className="text-gray-600 text-sm ml-2"
+                        >
+                          Clear
+                        </button>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </FilterSection>
 
@@ -3473,38 +3543,6 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </FilterSection>
 
-            {/* Status */}
-            <FilterSection
-              title="Status"
-              isCollapsed={collapsedFilters.status}
-              onToggle={() => toggleFilter("status")}
-            >
-              <div className="space-y-1">
-                {filterOptions.status && filterOptions.status.length > 0 ? (
-                  filterOptions.status.map((s: any) => (
-                    <label key={s.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.status.includes(s.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({ ...prev, status: [...prev.status, s.name] }));
-                          } else {
-                            setAppliedFilters((prev) => ({ ...prev, status: prev.status.filter((v) => v !== s.name) }));
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{s.name}</span>
-                      <span className="carzino-filter-count ml-1">({s.count ?? 0})</span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No status options available.</div>
-                )}
-              </div>
-            </FilterSection>
 
             {/* NEW: Fuel Type */}
             <FilterSection
