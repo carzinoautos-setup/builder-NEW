@@ -393,7 +393,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         // preserving other applied filters (but excluding the category being counted).
         const computeCountsForCategory = async (
           respKey: string,
-          localKey: keyof typeof filters,
+          localKey: string,
         ) => {
           if (!finalMap[respKey]) return;
           const items = finalMap[respKey] as any[];
