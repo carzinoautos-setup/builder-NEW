@@ -414,6 +414,13 @@ export default function MySQLVehiclesOriginalStyle() {
   const [termLength, setTermLength] = useState("60");
   const [interestRate, setInterestRate] = useState("5");
   const [downPayment, setDownPayment] = useState("2000");
+  const [isEditingDownPayment, setIsEditingDownPayment] = useState(false);
+  const [prevDownPayment, setPrevDownPayment] = useState<string | null>(null);
+
+  const formatCurrency = (val: string | number) => {
+    const n = Number(String(val).replace(/[^0-9.-]/g, "")) || 0;
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(n);
+  };
 
   // Year range filter state (From / To)
   const [yearFrom, setYearFrom] = useState("");
