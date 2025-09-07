@@ -626,7 +626,14 @@ export default function MySQLVehiclesOriginalStyle() {
         );
       }
       if ((appliedFilters as any).highwayMpg && (appliedFilters as any).highwayMpg.length > 0) {
-        params.append("highway_mpg", (appliedFilters as any).highwayMpg.join(","));
+        const h = (appliedFilters as any).highwayMpg;
+        if (h.length === 2) {
+          // support range: highway_mpg_min and highway_mpg_max
+          params.append("highway_mpg_min", String(h[0]));
+          params.append("highway_mpg_max", String(h[1]));
+        } else {
+          params.append("highway_mpg", (appliedFilters as any).highwayMpg.join(","));
+        }
       }
       if ((appliedFilters as any).titleStatus && (appliedFilters as any).titleStatus.length > 0) {
         params.append("title_status", (appliedFilters as any).titleStatus.join(","));
