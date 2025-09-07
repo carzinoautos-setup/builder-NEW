@@ -316,6 +316,28 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 if (vb === null) return -1 * mapping.dir;
                 return (va - vb) * mapping.dir;
               });
+
+              // After sorting a large set, paginate server-side according to original requested page & per_page
+              try {
+                const origPage = parseInt(String(req.query.page || "1")) || 1;
+                const origPer = parseInt(String(req.query.per_page || req.query.pageSize || "20")) || 20;
+                const total = json.data.length;
+                const totalPages = Math.max(1, Math.ceil(total / origPer));
+                const start = (origPage - 1) * origPer;
+                const end = start + origPer;
+                const sliced = json.data.slice(start, end);
+                json.data = sliced;
+                const pagination = {
+                  total,
+                  page: origPage,
+                  per_page: origPer,
+                  total_pages: totalPages,
+                };
+                json.pagination = pagination;
+                json.meta = pagination;
+              } catch (e) {
+                // ignore pagination errors
+              }
             }
           }
         } catch (err) {
