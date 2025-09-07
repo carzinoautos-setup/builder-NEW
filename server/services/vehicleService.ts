@@ -236,7 +236,7 @@ export class VehicleService {
         "SELECT DISTINCT drivetrain FROM vehicles ORDER BY drivetrain",
       );
       const [bodyStylesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT body_style FROM vehicles ORDER BY body_style",
+        "SELECT DISTINCT body_style FROM vehicles WHERE body_style IS NOT NULL AND body_style <> 'Uncategorized' ORDER BY body_style",
       );
       const [sellerTypesResult] = await this.db.execute<RowDataPacket[]>(
         "SELECT DISTINCT seller_type FROM vehicles ORDER BY seller_type",
