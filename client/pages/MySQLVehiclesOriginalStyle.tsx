@@ -4132,6 +4132,55 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </FilterSection>
 
+            {/* Title Status (moved to bottom) */}
+            <FilterSection
+              title="Title Status"
+              isCollapsed={collapsedFilters.titleStatus}
+              onToggle={() => toggleFilter("titleStatus")}
+            >
+              <div className="space-y-1">
+                {filterOptions.title_status &&
+                filterOptions.title_status.length > 0 ? (
+                  filterOptions.title_status.map((t: any) => (
+                    <label
+                      key={t.name}
+                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.titleStatus.includes(t.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              titleStatus: [...prev.titleStatus, t.name],
+                            }));
+                          } else {
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              titleStatus: prev.titleStatus.filter(
+                                (v) => v !== t.name,
+                              ),
+                            }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{t.name}</span>
+                      <span className="carzino-filter-count ml-1">
+                        ({t.count ?? 0})
+                      </span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    No title status options available.
+                  </div>
+                )}
+              </div>
+            </FilterSection>
+
             {/* Mobile Filter Action Buttons */}
             <div className="lg:hidden sticky bottom-0 bg-white border-t border-gray-200 p-4 mt-6">
               <div className="flex gap-3">
