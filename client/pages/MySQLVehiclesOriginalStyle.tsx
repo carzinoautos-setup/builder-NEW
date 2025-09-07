@@ -738,12 +738,74 @@ export default function MySQLVehiclesOriginalStyle() {
     } catch (err) {
       console.error("❌ Vehicle fetch error:", err);
 
+      // Try fallback to simplified mock API if available
+      try {
+        const fallbackUrl = apiUrl.replace("/api/vehicles", "/api/simple-vehicles");
+        console.log("🔁 Attempting fallback fetch to:", fallbackUrl);
+        const { fetchWithRetry } = await (await import("@/lib/fetchWithRetry"));
+        const fallbackRes = await fetchWithRetry(fallbackUrl, { method: "GET" });
+        if (fallbackRes.ok) {
+          const fallbackJson = await fallbackRes.json();
+          if (fallbackJson.success && Array.isArray(fallbackJson.data)) {
+            // Map to VehicleRecord-like shape where possible
+            const mapped = fallbackJson.data.map((r: any) => ({
+              id: r.id,
+              year: r.year || 2020,
+              make: r.make || "",
+              model: r.model || "",
+              trim: r.trim || "",
+              body_style: r.body_type || r.body_style || "",
+              engine_cylinders: r.engine_cylinders || 0,
+              fuel_type: r.fuel_type || "",
+              transmission: r.transmission || "",
+              transmission_speed: r.transmission_speed || "",
+              drivetrain: r.drivetrain || "",
+              exterior_color_generic: r.exterior_color || "",
+              interior_color_generic: r.interior_color || "",
+              doors: r.doors || 4,
+              price: r.price || 0,
+              mileage: r.mileage || 0,
+              title_status: r.title || "",
+              highway_mpg: r.highway_mpg || 0,
+              condition: r.condition || "",
+              certified: r.certified || false,
+              seller_account_number: r.seller_account_number || "",
+              seller_type: r.seller_type || "",
+              dealer: r.dealer || "",
+              city_seller: r.city_seller || "",
+              state_seller: r.state_seller || "",
+              payments: r.payments || 0,
+              featured_image: r.featured_image || null,
+            }));
+
+            const transformedVehicles = mapped.map(transformVehicleRecord);
+            setVehicles(transformedVehicles);
+            setApiResponse({
+              success: true,
+              data: transformedVehicles,
+              meta: {
+                totalRecords: fallbackJson.meta?.total || fallbackJson.meta?.totalRecords || transformedVehicles.length,
+                totalPages: fallbackJson.meta?.total_pages || Math.ceil((fallbackJson.meta?.total || transformedVehicles.length) / resultsPerPage),
+                currentPage: fallbackJson.meta?.page || 1,
+                pageSize: resultsPerPage,
+                hasNextPage: false,
+                hasPreviousPage: false,
+              },
+            });
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (fallbackErr) {
+        console.warn("Fallback fetch failed:", fallbackErr);
+      }
+
       // Provide specific error messages based on error type
       if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
         setError(
           "Unable to connect to vehicle database. Please refresh the page or try again later.",
         );
-      } else if (err.name === "AbortError") {
+      } else if ((err as any).name === "AbortError") {
         setError(
           "Request timed out. Please check your internet connection and try again.",
         );
