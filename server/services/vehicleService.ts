@@ -76,6 +76,10 @@ export class VehicleService {
     if (filters.bodyStyle) {
       whereConditions.push("body_style = ?");
       params.push(filters.bodyStyle);
+    } else {
+      // By default exclude Uncategorized body styles from results
+      whereConditions.push("(body_style IS NOT NULL AND body_style <> ?)");
+      params.push("Uncategorized");
     }
 
     if (filters.certified !== undefined) {
