@@ -2491,7 +2491,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 filterOptions.model.length > 0) ||
               appliedFilters.model.length > 0) && (
               <FilterSection
-                title={`Model${appliedFilters.make.length > 0 ? ` (${appliedFilters.make[0]})` : ""}`}
+                title="Model"
                 isCollapsed={collapsedFilters.model}
                 onToggle={() => toggleFilter("model")}
               >
