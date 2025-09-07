@@ -405,6 +405,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             const categoriesToCompute: { respKey: string; localKey: string }[] = [
               { respKey: "account_type_seller", localKey: "sellerType" },
               { respKey: "account_name_seller", localKey: "dealer" },
+              { respKey: "state_seller", localKey: "state" },
+              { respKey: "city_seller", localKey: "city" },
             ];
 
             for (const cat of categoriesToCompute) {
