@@ -375,7 +375,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           const scopedQs = buildFiltersQuery({ make: (filters as any).make });
           const scopedUrl = `/api/vehicles/filters${scopedQs ? `?${scopedQs}` : ""}`;
           console.log("🔍 Fetching scoped filter options for selected makes:", scopedUrl);
-          const scopedRes = await fetchWithRetry(scopedUrl, { method: "GET" });
+          const scopedRes = await fetchWithRetry(scopedUrl, { method: "GET" }, 1, 8000);
           if (!scopedRes.ok) throw new Error(`Filters error ${scopedRes.status}`);
           const scopedJson = await scopedRes.json();
           scopedMap = parseJsonToMap(scopedJson);
