@@ -174,13 +174,21 @@ export function getVehicleTitle(vehicle: VehicleRecord): string {
 
 export function getVehicleImageUrl(vehicle: VehicleRecord): string {
   // Prefer featured_image or first image when available, otherwise use local placeholder
-  const featured = (vehicle as any).featured_image || (vehicle as any).featuredImage;
+  const featured =
+    (vehicle as any).featured_image || (vehicle as any).featuredImage;
   if (featured) return String(featured);
   const images = (vehicle as any).images;
   if (images && Array.isArray(images) && images.length > 0) {
-    const first = typeof images[0] === "string" ? images[0] : images[0].src || images[0].url;
+    const first =
+      typeof images[0] === "string"
+        ? images[0]
+        : images[0].src || images[0].url;
     if (first) return String(first);
   }
   // Prefer user-provided placeholder via env, then public assets, then default placeholder
-  return import.meta.env.VITE_PLACEHOLDER_IMAGE || "/assets/fallback-image-450.webp" || "/placeholder.svg";
+  return (
+    import.meta.env.VITE_PLACEHOLDER_IMAGE ||
+    "/assets/fallback-image-450.webp" ||
+    "/placeholder.svg"
+  );
 }

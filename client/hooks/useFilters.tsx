@@ -127,8 +127,14 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         const unscopedQs = buildFiltersQuery(unscopedFilters || {});
         const unscopedUrl = `/api/vehicles/filters${unscopedQs ? `?${unscopedQs}` : ""}`;
         console.log("🔍 Fetching unscoped filter options:", unscopedUrl);
-        const unscopedRes = await fetchWithRetry(unscopedUrl, { method: "GET" }, 1, 8000);
-        if (!unscopedRes.ok) throw new Error(`Filters error ${unscopedRes.status}`);
+        const unscopedRes = await fetchWithRetry(
+          unscopedUrl,
+          { method: "GET" },
+          1,
+          8000,
+        );
+        if (!unscopedRes.ok)
+          throw new Error(`Filters error ${unscopedRes.status}`);
         const unscopedJson = await unscopedRes.json();
 
         // Parse helper to convert WP plugin json.filters or json.data into a FilterMap
@@ -199,7 +205,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               f,
               "transmission_speed",
               "transmissionSpeeds",
-              "transmission_speed"
+              "transmission_speed",
             );
             if (transSpeeds)
               normalized.transmission_speed = transSpeeds
@@ -212,17 +218,31 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               normalized.doors = doors.map(mapItem).filter(Boolean) as any;
 
             // Highway MPG
-            const highway = pickArrayFromFilters(f, "highway_mpg", "highwayMpg");
+            const highway = pickArrayFromFilters(
+              f,
+              "highway_mpg",
+              "highwayMpg",
+            );
             if (highway)
-              normalized.highway_mpg = highway.map(mapItem).filter(Boolean) as any;
+              normalized.highway_mpg = highway
+                .map(mapItem)
+                .filter(Boolean) as any;
 
             // Title status
-            const titles = pickArrayFromFilters(f, "title_status", "titleStatus");
-            if (titles) normalized.title_status = titles.map(mapItem).filter(Boolean) as any;
+            const titles = pickArrayFromFilters(
+              f,
+              "title_status",
+              "titleStatus",
+            );
+            if (titles)
+              normalized.title_status = titles
+                .map(mapItem)
+                .filter(Boolean) as any;
 
             // Generic status
             const statuses = pickArrayFromFilters(f, "status");
-            if (statuses) normalized.status = statuses.map(mapItem).filter(Boolean) as any;
+            if (statuses)
+              normalized.status = statuses.map(mapItem).filter(Boolean) as any;
 
             const exterior = pickArrayFromFilters(
               f,
@@ -382,9 +402,18 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         ) {
           const scopedQs = buildFiltersQuery({ make: (filters as any).make });
           const scopedUrl = `/api/vehicles/filters${scopedQs ? `?${scopedQs}` : ""}`;
-          console.log("🔍 Fetching scoped filter options for selected makes:", scopedUrl);
-          const scopedRes = await fetchWithRetry(scopedUrl, { method: "GET" }, 1, 8000);
-          if (!scopedRes.ok) throw new Error(`Filters error ${scopedRes.status}`);
+          console.log(
+            "🔍 Fetching scoped filter options for selected makes:",
+            scopedUrl,
+          );
+          const scopedRes = await fetchWithRetry(
+            scopedUrl,
+            { method: "GET" },
+            1,
+            8000,
+          );
+          if (!scopedRes.ok)
+            throw new Error(`Filters error ${scopedRes.status}`);
           const scopedJson = await scopedRes.json();
           scopedMap = parseJsonToMap(scopedJson);
         }
@@ -399,7 +428,13 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         // Remove any 'Uncategorized' or empty labels from all filter arrays
         const sanitize = (map: FilterMap) => {
           const out: FilterMap = {};
-          const blacklist = new Set(["harley-davidson","harley davidson","harley","forest river","fleetwood"]);
+          const blacklist = new Set([
+            "harley-davidson",
+            "harley davidson",
+            "harley",
+            "forest river",
+            "fleetwood",
+          ]);
           for (const [k, arr] of Object.entries(map)) {
             if (!Array.isArray(arr)) {
               (out as any)[k] = arr as any;
@@ -407,7 +442,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             }
             (out as any)[k] = (arr as any[])
               .filter((it) => {
-                const name = (it && (it.name || it.value || it.label || it)) || "";
+                const name =
+                  (it && (it.name || it.value || it.label || it)) || "";
                 const n = String(name).trim();
                 if (n === "") return false;
                 if (n.toLowerCase() === "uncategorized") return false;
@@ -430,16 +466,17 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         // This runs asynchronously and will update filterOptions when completed.
         const backgroundCompute = async () => {
           try {
-            const categoriesToCompute: { respKey: string; localKey: string }[] = [
-              { respKey: "account_type_seller", localKey: "sellerType" },
-              { respKey: "account_name_seller", localKey: "dealer" },
-              { respKey: "state_seller", localKey: "state" },
-              { respKey: "city_seller", localKey: "city" },
-              // Ensure makes that only exist on uncategorized vehicles are removed
-              { respKey: "make", localKey: "make" },
-              // Ensure condition counts are authoritative
-              { respKey: "condition", localKey: "condition" },
-            ];
+            const categoriesToCompute: { respKey: string; localKey: string }[] =
+              [
+                { respKey: "account_type_seller", localKey: "sellerType" },
+                { respKey: "account_name_seller", localKey: "dealer" },
+                { respKey: "state_seller", localKey: "state" },
+                { respKey: "city_seller", localKey: "city" },
+                // Ensure makes that only exist on uncategorized vehicles are removed
+                { respKey: "make", localKey: "make" },
+                // Ensure condition counts are authoritative
+                { respKey: "condition", localKey: "condition" },
+              ];
 
             for (const cat of categoriesToCompute) {
               const items = (finalMap as any)[cat.respKey] as any[] | undefined;
@@ -447,7 +484,9 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
               // Avoid huge numbers of background requests — skip if list too large
               if (items.length > 60) {
-                console.warn(`Skipping authoritative counts for ${cat.respKey} (too many items: ${items.length})`);
+                console.warn(
+                  `Skipping authoritative counts for ${cat.respKey} (too many items: ${items.length})`,
+                );
                 continue;
               }
 
@@ -473,22 +512,39 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                     }
                     const json = await res.json();
                     const pagination = json.pagination || json.meta || {};
-                    const total = pagination.total || pagination.totalRecords || pagination.total_records || json.total || 0;
+                    const total =
+                      pagination.total ||
+                      pagination.totalRecords ||
+                      pagination.total_records ||
+                      json.total ||
+                      0;
                     (item as any).count = Number(total) || 0;
                   } catch (e) {
-                    console.warn("Failed to compute count for", cat.respKey, item.name, e);
+                    console.warn(
+                      "Failed to compute count for",
+                      cat.respKey,
+                      item.name,
+                      e,
+                    );
                   }
                 }
               };
 
               // Launch workers
-              await Promise.all(Array.from({ length: concurrency }).map(() => worker()));
+              await Promise.all(
+                Array.from({ length: concurrency }).map(() => worker()),
+              );
 
               // After computing counts for this category, remove zero-count or blank options
               const cleaned = (items || []).filter((it: any) => {
-                const name = (it && (it.name || it.value || it.label || it)) || "";
+                const name =
+                  (it && (it.name || it.value || it.label || it)) || "";
                 const count = Number((it && it.count) || 0);
-                return String(name).trim() !== "" && String(name).trim().toLowerCase() !== "uncategorized" && count > 0;
+                return (
+                  String(name).trim() !== "" &&
+                  String(name).trim().toLowerCase() !== "uncategorized" &&
+                  count > 0
+                );
               });
               setFilterOptions((prev) => ({ ...prev, [cat.respKey]: cleaned }));
             }
@@ -519,23 +575,23 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
   const pruneInvalid = useCallback(
     (filters: Partial<AppliedFilters>) => {
       const keyMap: Record<string, string> = {
-  make: "make",
-  model: "model",
-  trim: "trim",
-  year: "year",
-  bodyStyle: "body_style",
-  driveType: "drivetrain",
-  transmission: "transmission",
-  exteriorColor: "exterior_color",
-  interiorColor: "interior_color",
-  dealer: "account_name_seller",
-  sellerType: "account_type_seller",
-  fuelType: "fuel_type",
-  condition: "condition",
-  // Location keys
-  state: "state_seller",
-  city: "city_seller",
-};
+        make: "make",
+        model: "model",
+        trim: "trim",
+        year: "year",
+        bodyStyle: "body_style",
+        driveType: "drivetrain",
+        transmission: "transmission",
+        exteriorColor: "exterior_color",
+        interiorColor: "interior_color",
+        dealer: "account_name_seller",
+        sellerType: "account_type_seller",
+        fuelType: "fuel_type",
+        condition: "condition",
+        // Location keys
+        state: "state_seller",
+        city: "city_seller",
+      };
 
       let pruned = { ...(filters as any) } as Partial<AppliedFilters>;
       let changed = false;

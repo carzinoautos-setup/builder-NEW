@@ -112,7 +112,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   // Attempt to use a medium-sized (450x300) variant of the featured image when possible
   const getMediumImage = (url?: string) => {
     // Use placeholder from env or public assets if no URL provided
-    if (!url) return import.meta.env.VITE_PLACEHOLDER_IMAGE || "/assets/fallback-image-450.webp" || "/placeholder.svg";
+    if (!url)
+      return (
+        import.meta.env.VITE_PLACEHOLDER_IMAGE ||
+        "/assets/fallback-image-450.webp" ||
+        "/placeholder.svg"
+      );
 
     try {
       const u = new URL(url);

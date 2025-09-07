@@ -150,9 +150,16 @@ export const getVehicles: RequestHandler = async (req, res) => {
           json.data = json.data.filter((item: any) => {
             const acf = item.acf || item || {};
             const bodyStyle = (
-              acf.body_style || acf.bodyStyle || item.body_style || item.body_type || ""
+              acf.body_style ||
+              acf.bodyStyle ||
+              item.body_style ||
+              item.body_type ||
+              ""
             ).toString();
-            return bodyStyle.trim() !== "" && bodyStyle.toLowerCase() !== "uncategorized";
+            return (
+              bodyStyle.trim() !== "" &&
+              bodyStyle.toLowerCase() !== "uncategorized"
+            );
           });
           const removed = before - json.data.length;
           // Adjust pagination counts if present
@@ -160,7 +167,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
           if (pagination && typeof pagination.total === "number") {
             pagination.total = Math.max(0, pagination.total - removed);
             if (pagination.total_pages && pagination.pageSize) {
-              pagination.total_pages = Math.ceil(pagination.total / pagination.pageSize);
+              pagination.total_pages = Math.ceil(
+                pagination.total / pagination.pageSize,
+              );
             }
             json.pagination = pagination;
             json.meta = pagination;
@@ -168,35 +177,56 @@ export const getVehicles: RequestHandler = async (req, res) => {
 
           // Recompute filter lists from remaining data so filters match visible vehicles
           try {
-            const computeCounts = (arr: any[], keyPath: string[]): Map<string, number> => {
+            const computeCounts = (
+              arr: any[],
+              keyPath: string[],
+            ): Map<string, number> => {
               const m = new Map();
               for (const item of arr) {
                 let cur: any = item;
                 for (const p of keyPath) {
                   if (!cur) break;
-                  cur = cur[p] ?? cur[p.replace(/_(.)/g, (s, c) => c.toUpperCase())];
+                  cur =
+                    cur[p] ??
+                    cur[p.replace(/_(.)/g, (s, c) => c.toUpperCase())];
                 }
-                const v = cur || (item && item.acf && item.acf[keyPath[keyPath.length - 1]]) || '';
-                const name = (typeof v === 'string' || typeof v === 'number') ? String(v).trim() : '';
+                const v =
+                  cur ||
+                  (item && item.acf && item.acf[keyPath[keyPath.length - 1]]) ||
+                  "";
+                const name =
+                  typeof v === "string" || typeof v === "number"
+                    ? String(v).trim()
+                    : "";
                 if (!name) continue;
                 const lower = name.toLowerCase();
-                if (lower === 'uncategorized') continue;
+                if (lower === "uncategorized") continue;
                 m.set(name, (m.get(name) || 0) + 1);
               }
               return m;
             };
 
-            const makesMap = computeCounts(json.data, ['acf','make']);
-            const modelsMap = computeCounts(json.data, ['acf','model']);
-            const fuelMap = computeCounts(json.data, ['acf','fuel_type']);
-            const bodyMap = computeCounts(json.data, ['acf','body_style']);
-            const sellerTypeMap = computeCounts(json.data, ['acf','account_type_seller']);
-            const dealerMap = computeCounts(json.data, ['acf','account_name_seller']);
-            const statesMap = computeCounts(json.data, ['acf','state_seller']);
-            const citiesMap = computeCounts(json.data, ['acf','city_seller']);
+            const makesMap = computeCounts(json.data, ["acf", "make"]);
+            const modelsMap = computeCounts(json.data, ["acf", "model"]);
+            const fuelMap = computeCounts(json.data, ["acf", "fuel_type"]);
+            const bodyMap = computeCounts(json.data, ["acf", "body_style"]);
+            const sellerTypeMap = computeCounts(json.data, [
+              "acf",
+              "account_type_seller",
+            ]);
+            const dealerMap = computeCounts(json.data, [
+              "acf",
+              "account_name_seller",
+            ]);
+            const statesMap = computeCounts(json.data, ["acf", "state_seller"]);
+            const citiesMap = computeCounts(json.data, ["acf", "city_seller"]);
 
             const toArray = (m: Map<string, number>) =>
-              Array.from(m.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+              Array.from(m.entries())
+                .map(([name, count]) => ({ name, count }))
+                .sort(
+                  (a, b) => b.count - a.count || a.name.localeCompare(b.name),
+                );
 
             json.filters = json.filters || {};
             // Prefer keys used by WP plugin; set multiple possible keys
@@ -211,7 +241,7 @@ export const getVehicles: RequestHandler = async (req, res) => {
             json.filters.state_seller = toArray(statesMap);
             json.filters.city_seller = toArray(citiesMap);
           } catch (e) {
-            console.warn('Failed to recompute filters from proxied data:', e);
+            console.warn("Failed to recompute filters from proxied data:", e);
           }
         }
 
@@ -221,8 +251,12 @@ export const getVehicles: RequestHandler = async (req, res) => {
             const arr = (json.filters as any)[key];
             if (Array.isArray(arr)) {
               (json.filters as any)[key] = arr.filter((it: any) => {
-                const name = (it && (it.name || it.value || it.label || it)) || "";
-                return String(name).trim().toLowerCase() !== "uncategorized" && String(name).trim() !== "";
+                const name =
+                  (it && (it.name || it.value || it.label || it)) || "";
+                return (
+                  String(name).trim().toLowerCase() !== "uncategorized" &&
+                  String(name).trim() !== ""
+                );
               });
             }
           }
@@ -342,33 +376,54 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
         // If data array present, recompute filters from data to ensure consistency
         if (Array.isArray(json.data)) {
           try {
-            const computeCounts = (arr: any[], keyPath: string[]): Map<string, number> => {
+            const computeCounts = (
+              arr: any[],
+              keyPath: string[],
+            ): Map<string, number> => {
               const m = new Map();
               for (const item of arr) {
                 let cur: any = item;
                 for (const p of keyPath) {
                   if (!cur) break;
-                  cur = cur[p] ?? cur[p.replace(/_(.)/g, (s, c) => c.toUpperCase())];
+                  cur =
+                    cur[p] ??
+                    cur[p.replace(/_(.)/g, (s, c) => c.toUpperCase())];
                 }
-                const v = cur || (item && item.acf && item.acf[keyPath[keyPath.length - 1]]) || '';
-                const name = (typeof v === 'string' || typeof v === 'number') ? String(v).trim() : '';
+                const v =
+                  cur ||
+                  (item && item.acf && item.acf[keyPath[keyPath.length - 1]]) ||
+                  "";
+                const name =
+                  typeof v === "string" || typeof v === "number"
+                    ? String(v).trim()
+                    : "";
                 if (!name) continue;
                 const lower = name.toLowerCase();
-                if (lower === 'uncategorized') continue;
+                if (lower === "uncategorized") continue;
                 m.set(name, (m.get(name) || 0) + 1);
               }
               return m;
             };
 
-            const makesMap = computeCounts(json.data, ['acf','make']);
-            const modelsMap = computeCounts(json.data, ['acf','model']);
-            const fuelMap = computeCounts(json.data, ['acf','fuel_type']);
-            const bodyMap = computeCounts(json.data, ['acf','body_style']);
-            const sellerTypeMap = computeCounts(json.data, ['acf','account_type_seller']);
-            const dealerMap = computeCounts(json.data, ['acf','account_name_seller']);
+            const makesMap = computeCounts(json.data, ["acf", "make"]);
+            const modelsMap = computeCounts(json.data, ["acf", "model"]);
+            const fuelMap = computeCounts(json.data, ["acf", "fuel_type"]);
+            const bodyMap = computeCounts(json.data, ["acf", "body_style"]);
+            const sellerTypeMap = computeCounts(json.data, [
+              "acf",
+              "account_type_seller",
+            ]);
+            const dealerMap = computeCounts(json.data, [
+              "acf",
+              "account_name_seller",
+            ]);
 
             const toArray = (m: Map<string, number>) =>
-              Array.from(m.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+              Array.from(m.entries())
+                .map(([name, count]) => ({ name, count }))
+                .sort(
+                  (a, b) => b.count - a.count || a.name.localeCompare(b.name),
+                );
 
             json.filters = json.filters || {};
             json.filters.makes = toArray(makesMap);
@@ -382,18 +437,26 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
 
             // Remove known non-car manufacturers if present (blacklist)
             try {
-              const blacklist = new Set(["harley-davidson","harley davidson","harley","forest river","fleetwood"]);
-              const filterKey = (arr: any[]) => arr.filter((it: any) => {
-                const name = (it && (it.name || it.value || it.label || it)) || "";
-                return !blacklist.has(String(name).toLowerCase());
-              });
+              const blacklist = new Set([
+                "harley-davidson",
+                "harley davidson",
+                "harley",
+                "forest river",
+                "fleetwood",
+              ]);
+              const filterKey = (arr: any[]) =>
+                arr.filter((it: any) => {
+                  const name =
+                    (it && (it.name || it.value || it.label || it)) || "";
+                  return !blacklist.has(String(name).toLowerCase());
+                });
               json.filters.makes = filterKey(json.filters.makes || []);
               json.filters.make = filterKey(json.filters.make || []);
             } catch (e) {
               // ignore
             }
           } catch (e) {
-            console.warn('Failed to recompute /filters from proxied data:', e);
+            console.warn("Failed to recompute /filters from proxied data:", e);
           }
         }
 
@@ -403,8 +466,12 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
             const arr = json.filters[key];
             if (Array.isArray(arr)) {
               json.filters[key] = arr.filter((it: any) => {
-                const name = (it && (it.name || it.value || it.label || it)) || "";
-                return String(name).trim().toLowerCase() !== "uncategorized" && String(name).trim() !== "";
+                const name =
+                  (it && (it.name || it.value || it.label || it)) || "";
+                return (
+                  String(name).trim().toLowerCase() !== "uncategorized" &&
+                  String(name).trim() !== ""
+                );
               });
             }
           }

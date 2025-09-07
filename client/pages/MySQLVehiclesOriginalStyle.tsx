@@ -419,7 +419,11 @@ export default function MySQLVehiclesOriginalStyle() {
 
   const formatCurrency = (val: string | number) => {
     const n = Number(String(val).replace(/[^0-9.-]/g, "")) || 0;
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(n);
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+    }).format(n);
   };
 
   // Year range filter state (From / To)
@@ -486,7 +490,9 @@ export default function MySQLVehiclesOriginalStyle() {
   });
   // Ensure 'Other' appears at the end if present
   const fuelOptions = (() => {
-    const idx = fuelOptionsSorted.findIndex((f: any) => String(f.name || "").toLowerCase() === "other");
+    const idx = fuelOptionsSorted.findIndex(
+      (f: any) => String(f.name || "").toLowerCase() === "other",
+    );
     if (idx > -1) {
       const arr = [...fuelOptionsSorted];
       const [other] = arr.splice(idx, 1);
@@ -518,9 +524,14 @@ export default function MySQLVehiclesOriginalStyle() {
     const fuels = filterOptions?.fuel_type || [];
     if (fuels.length === 0) return;
     if (appliedFilters.fuelType && appliedFilters.fuelType.length > 0) return;
-    const hasGas = fuels.some((f: any) => String(f.name).toLowerCase() === "gasoline");
+    const hasGas = fuels.some(
+      (f: any) => String(f.name).toLowerCase() === "gasoline",
+    );
     if (hasGas) {
-      const newFilters = { ...appliedFilters, fuelType: ["Gasoline"] } as typeof appliedFilters;
+      const newFilters = {
+        ...appliedFilters,
+        fuelType: ["Gasoline"],
+      } as typeof appliedFilters;
       setAppliedFilters(newFilters);
       updateURLFromFilters(newFilters);
       setCurrentPage(1);
@@ -529,8 +540,14 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Initialize highway MPG slider defaults when filter options change
   useEffect(() => {
-    if (filterOptions && filterOptions.highway_mpg && filterOptions.highway_mpg.length > 0) {
-      const nums = (filterOptions.highway_mpg || []).map((o: any) => Number(o.name)).filter(Boolean);
+    if (
+      filterOptions &&
+      filterOptions.highway_mpg &&
+      filterOptions.highway_mpg.length > 0
+    ) {
+      const nums = (filterOptions.highway_mpg || [])
+        .map((o: any) => Number(o.name))
+        .filter(Boolean);
       if (nums.length > 0) {
         const min = Math.min(...nums);
         const max = Math.max(...nums);
@@ -655,10 +672,16 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("account_name_seller", appliedFilters.dealer.join(","));
       }
       // State & City filters (map to seller meta keys)
-      if ((appliedFilters as any).state && (appliedFilters as any).state.length > 0) {
+      if (
+        (appliedFilters as any).state &&
+        (appliedFilters as any).state.length > 0
+      ) {
         params.append("state_seller", (appliedFilters as any).state.join(","));
       }
-      if ((appliedFilters as any).city && (appliedFilters as any).city.length > 0) {
+      if (
+        (appliedFilters as any).city &&
+        (appliedFilters as any).city.length > 0
+      ) {
         params.append("city_seller", (appliedFilters as any).city.join(","));
       }
 
@@ -686,29 +709,50 @@ export default function MySQLVehiclesOriginalStyle() {
       }
 
       // Newly added filters from WP ACF/plugin
-      if ((appliedFilters as any).doors && (appliedFilters as any).doors.length > 0) {
+      if (
+        (appliedFilters as any).doors &&
+        (appliedFilters as any).doors.length > 0
+      ) {
         params.append("doors", (appliedFilters as any).doors.join(","));
       }
-      if ((appliedFilters as any).transmissionSpeed && (appliedFilters as any).transmissionSpeed.length > 0) {
+      if (
+        (appliedFilters as any).transmissionSpeed &&
+        (appliedFilters as any).transmissionSpeed.length > 0
+      ) {
         params.append(
           "transmission_speed",
           (appliedFilters as any).transmissionSpeed.join(","),
         );
       }
-      if ((appliedFilters as any).highwayMpg && (appliedFilters as any).highwayMpg.length > 0) {
+      if (
+        (appliedFilters as any).highwayMpg &&
+        (appliedFilters as any).highwayMpg.length > 0
+      ) {
         const h = (appliedFilters as any).highwayMpg;
         if (h.length === 2) {
           // support range: highway_mpg_min and highway_mpg_max
           params.append("highway_mpg_min", String(h[0]));
           params.append("highway_mpg_max", String(h[1]));
         } else {
-          params.append("highway_mpg", (appliedFilters as any).highwayMpg.join(","));
+          params.append(
+            "highway_mpg",
+            (appliedFilters as any).highwayMpg.join(","),
+          );
         }
       }
-      if ((appliedFilters as any).titleStatus && (appliedFilters as any).titleStatus.length > 0) {
-        params.append("title_status", (appliedFilters as any).titleStatus.join(","));
+      if (
+        (appliedFilters as any).titleStatus &&
+        (appliedFilters as any).titleStatus.length > 0
+      ) {
+        params.append(
+          "title_status",
+          (appliedFilters as any).titleStatus.join(","),
+        );
       }
-      if ((appliedFilters as any).status && (appliedFilters as any).status.length > 0) {
+      if (
+        (appliedFilters as any).status &&
+        (appliedFilters as any).status.length > 0
+      ) {
         params.append("status", (appliedFilters as any).status.join(","));
       }
 
@@ -716,19 +760,26 @@ export default function MySQLVehiclesOriginalStyle() {
       console.log("��� Fetching vehicles from:", apiUrl);
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
-      const { fetchWithRetry } = await (await import("@/lib/fetchWithRetry"));
+      const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
       // Watchdog to avoid long loading spinners if backend is slow
       const watchdog = setTimeout(() => {
-        console.warn("Fetch vehicles watchdog triggered — aborting loading state");
+        console.warn(
+          "Fetch vehicles watchdog triggered — aborting loading state",
+        );
         setLoading(false);
         setError("Request timed out. Please try again.");
       }, 12000); // 12s
 
       // Use fewer retries and a shorter timeout for main vehicle fetch to improve UX
-      const response = await fetchWithRetry(apiUrl, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }, 1, 8000);
+      const response = await fetchWithRetry(
+        apiUrl,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        },
+        1,
+        8000,
+      );
 
       clearTimeout(watchdog);
 
@@ -839,10 +890,15 @@ export default function MySQLVehiclesOriginalStyle() {
 
       // Try fallback to simplified mock API if available
       try {
-        const fallbackUrl = apiUrl.replace("/api/vehicles", "/api/simple-vehicles");
+        const fallbackUrl = apiUrl.replace(
+          "/api/vehicles",
+          "/api/simple-vehicles",
+        );
         console.log("🔁 Attempting fallback fetch to:", fallbackUrl);
-        const { fetchWithRetry } = await (await import("@/lib/fetchWithRetry"));
-        const fallbackRes = await fetchWithRetry(fallbackUrl, { method: "GET" });
+        const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
+        const fallbackRes = await fetchWithRetry(fallbackUrl, {
+          method: "GET",
+        });
         if (fallbackRes.ok) {
           const fallbackJson = await fallbackRes.json();
           if (fallbackJson.success && Array.isArray(fallbackJson.data)) {
@@ -889,8 +945,16 @@ export default function MySQLVehiclesOriginalStyle() {
               success: true,
               data: transformedVehicles,
               meta: {
-                totalRecords: fallbackJson.meta?.total || fallbackJson.meta?.totalRecords || transformedVehicles.length,
-                totalPages: fallbackJson.meta?.total_pages || Math.ceil((fallbackJson.meta?.total || transformedVehicles.length) / resultsPerPage),
+                totalRecords:
+                  fallbackJson.meta?.total ||
+                  fallbackJson.meta?.totalRecords ||
+                  transformedVehicles.length,
+                totalPages:
+                  fallbackJson.meta?.total_pages ||
+                  Math.ceil(
+                    (fallbackJson.meta?.total || transformedVehicles.length) /
+                      resultsPerPage,
+                  ),
                 currentPage: fallbackJson.meta?.page || 1,
                 pageSize: resultsPerPage,
                 hasNextPage: false,
@@ -3130,7 +3194,11 @@ export default function MySQLVehiclesOriginalStyle() {
                   <input
                     type="text"
                     placeholder={`Down Payment: ${formatCurrency(downPayment)}`}
-                    value={isEditingDownPayment ? downPayment : `Down Payment: ${formatCurrency(downPayment)}`}
+                    value={
+                      isEditingDownPayment
+                        ? downPayment
+                        : `Down Payment: ${formatCurrency(downPayment)}`
+                    }
                     onFocus={(e) => {
                       e.stopPropagation();
                       setPrevDownPayment(downPayment);
@@ -3367,23 +3435,39 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("driveType")}
             >
               <div className="space-y-1">
-                {filterOptions.drivetrain && filterOptions.drivetrain.length > 0 ? (
+                {filterOptions.drivetrain &&
+                filterOptions.drivetrain.length > 0 ? (
                   (() => {
                     // Normalize and group drivetrain raw values into display groups
-                    const groups = new Map<string, { names: string[]; count: number }>();
+                    const groups = new Map<
+                      string,
+                      { names: string[]; count: number }
+                    >();
                     const rawList = filterOptions.drivetrain || [];
 
                     const getDisplay = (raw: string) => {
-                      const r = String(raw || '').trim();
+                      const r = String(raw || "").trim();
                       const lower = r.toLowerCase();
-                      if (lower === 'front wheel drive' || lower === 'front-wheel drive' || lower === 'fwd') return 'FWD';
-                      if (r.includes('4MATIC') || r.includes('4MATIC®') || lower.includes('4matic') || lower.includes('4matic®')) return 'AWD/4WD';
-                      if (lower === 'other' || lower === 'other/unknown') return 'Other';
+                      if (
+                        lower === "front wheel drive" ||
+                        lower === "front-wheel drive" ||
+                        lower === "fwd"
+                      )
+                        return "FWD";
+                      if (
+                        r.includes("4MATIC") ||
+                        r.includes("4MATIC®") ||
+                        lower.includes("4matic") ||
+                        lower.includes("4matic®")
+                      )
+                        return "AWD/4WD";
+                      if (lower === "other" || lower === "other/unknown")
+                        return "Other";
                       return r;
                     };
 
                     for (const d of rawList) {
-                      const raw = String(d.name || '').trim();
+                      const raw = String(d.name || "").trim();
                       if (!raw) continue;
                       const display = getDisplay(raw);
                       const key = display;
@@ -3394,9 +3478,20 @@ export default function MySQLVehiclesOriginalStyle() {
                     }
 
                     // Build ordered array: keep 'Other' at the end
-                    const ordered = Array.from(groups.entries()).map(([display, val]) => ({ display, names: val.names, count: val.count }));
-                    ordered.sort((a, b) => b.count - a.count || a.display.localeCompare(b.display));
-                    const otherIdx = ordered.findIndex((o) => o.display === 'Other');
+                    const ordered = Array.from(groups.entries()).map(
+                      ([display, val]) => ({
+                        display,
+                        names: val.names,
+                        count: val.count,
+                      }),
+                    );
+                    ordered.sort(
+                      (a, b) =>
+                        b.count - a.count || a.display.localeCompare(b.display),
+                    );
+                    const otherIdx = ordered.findIndex(
+                      (o) => o.display === "Other",
+                    );
                     if (otherIdx > -1) {
                       const [other] = ordered.splice(otherIdx, 1);
                       ordered.push(other);
@@ -3405,9 +3500,14 @@ export default function MySQLVehiclesOriginalStyle() {
                     return (
                       <>
                         {ordered.map((g) => {
-                          const isChecked = g.names.some((n) => appliedFilters.driveType.includes(n));
+                          const isChecked = g.names.some((n) =>
+                            appliedFilters.driveType.includes(n),
+                          );
                           return (
-                            <label key={g.display} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                            <label
+                              key={g.display}
+                              className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                            >
                               <input
                                 type="checkbox"
                                 className="mr-2"
@@ -3418,19 +3518,30 @@ export default function MySQLVehiclesOriginalStyle() {
                                     // add all underlying raw names to appliedFilters
                                     setAppliedFilters((prev) => ({
                                       ...prev,
-                                      driveType: Array.from(new Set([...prev.driveType, ...g.names])),
+                                      driveType: Array.from(
+                                        new Set([
+                                          ...prev.driveType,
+                                          ...g.names,
+                                        ]),
+                                      ),
                                     }));
                                   } else {
                                     // remove all underlying names
                                     setAppliedFilters((prev) => ({
                                       ...prev,
-                                      driveType: prev.driveType.filter((v) => !g.names.includes(v)),
+                                      driveType: prev.driveType.filter(
+                                        (v) => !g.names.includes(v),
+                                      ),
                                     }));
                                   }
                                 }}
                               />
-                              <span className="carzino-filter-option">{g.display}</span>
-                              <span className="carzino-filter-count ml-1">({g.count ?? 0})</span>
+                              <span className="carzino-filter-option">
+                                {g.display}
+                              </span>
+                              <span className="carzino-filter-count ml-1">
+                                ({g.count ?? 0})
+                              </span>
                             </label>
                           );
                         })}
@@ -3438,11 +3549,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     );
                   })()
                 ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No drive types available.</div>
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    No drive types available.
+                  </div>
                 )}
               </div>
             </FilterSection>
-
 
             {/* Transmission */}
             <FilterSection
@@ -3495,7 +3607,8 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("transmissionSpeed")}
             >
               <div className="space-y-1">
-                {filterOptions.transmission_speed && filterOptions.transmission_speed.length > 0 ? (
+                {filterOptions.transmission_speed &&
+                filterOptions.transmission_speed.length > 0 ? (
                   (() => {
                     const displayed = getDisplayed(
                       filterOptions.transmission_speed,
@@ -3513,24 +3626,36 @@ export default function MySQLVehiclesOriginalStyle() {
                             <input
                               type="checkbox"
                               className="mr-2"
-                              checked={appliedFilters.transmissionSpeed.includes(t.name)}
+                              checked={appliedFilters.transmissionSpeed.includes(
+                                t.name,
+                              )}
                               onChange={(e) => {
                                 e.stopPropagation();
                                 if ((e.target as HTMLInputElement).checked) {
                                   setAppliedFilters((prev) => ({
                                     ...prev,
-                                    transmissionSpeed: [...prev.transmissionSpeed, t.name],
+                                    transmissionSpeed: [
+                                      ...prev.transmissionSpeed,
+                                      t.name,
+                                    ],
                                   }));
                                 } else {
                                   setAppliedFilters((prev) => ({
                                     ...prev,
-                                    transmissionSpeed: prev.transmissionSpeed.filter((v) => v !== t.name),
+                                    transmissionSpeed:
+                                      prev.transmissionSpeed.filter(
+                                        (v) => v !== t.name,
+                                      ),
                                   }));
                                 }
                               }}
                             />
-                            <span className="carzino-filter-option">{t.name}</span>
-                            <span className="carzino-filter-count ml-1">({t.count ?? 0})</span>
+                            <span className="carzino-filter-option">
+                              {t.name}
+                            </span>
+                            <span className="carzino-filter-count ml-1">
+                              ({t.count ?? 0})
+                            </span>
                           </label>
                         ))}
 
@@ -3551,7 +3676,9 @@ export default function MySQLVehiclesOriginalStyle() {
                     );
                   })()
                 ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No transmission speeds available.</div>
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    No transmission speeds available.
+                  </div>
                 )}
               </div>
             </FilterSection>
@@ -3565,7 +3692,10 @@ export default function MySQLVehiclesOriginalStyle() {
               <div className="space-y-1">
                 {filterOptions.doors && filterOptions.doors.length > 0 ? (
                   filterOptions.doors.map((d: any) => (
-                    <label key={d.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                    <label
+                      key={d.name}
+                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                    >
                       <input
                         type="checkbox"
                         className="mr-2"
@@ -3573,18 +3703,28 @@ export default function MySQLVehiclesOriginalStyle() {
                         onChange={(e) => {
                           e.stopPropagation();
                           if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({ ...prev, doors: [...prev.doors, d.name] }));
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              doors: [...prev.doors, d.name],
+                            }));
                           } else {
-                            setAppliedFilters((prev) => ({ ...prev, doors: prev.doors.filter((v) => v !== d.name) }));
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              doors: prev.doors.filter((v) => v !== d.name),
+                            }));
                           }
                         }}
                       />
                       <span className="carzino-filter-option">{d.name}</span>
-                      <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
+                      <span className="carzino-filter-count ml-1">
+                        ({d.count ?? 0})
+                      </span>
                     </label>
                   ))
                 ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No door options available.</div>
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    No door options available.
+                  </div>
                 )}
               </div>
             </FilterSection>
@@ -3608,28 +3748,47 @@ export default function MySQLVehiclesOriginalStyle() {
                   ];
 
                   // compute counts by summing available highway_mpg buckets >= min
-                  const buckets = (filterOptions.highway_mpg || []).map((b: any) => ({ n: Number(b.name), count: Number(b.count || 0) })).filter((b: any) => !Number.isNaN(b.n));
+                  const buckets = (filterOptions.highway_mpg || [])
+                    .map((b: any) => ({
+                      n: Number(b.name),
+                      count: Number(b.count || 0),
+                    }))
+                    .filter((b: any) => !Number.isNaN(b.n));
 
                   const getCount = (min: number) => {
-                    if (min <= 0) return buckets.reduce((s: number, b: any) => s + b.count, 0);
-                    return buckets.filter((b: any) => b.n >= min).reduce((s: number, b: any) => s + b.count, 0);
+                    if (min <= 0)
+                      return buckets.reduce(
+                        (s: number, b: any) => s + b.count,
+                        0,
+                      );
+                    return buckets
+                      .filter((b: any) => b.n >= min)
+                      .reduce((s: number, b: any) => s + b.count, 0);
                   };
 
                   return options.map((opt) => (
-                    <label key={opt.key} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                    <label
+                      key={opt.key}
+                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                    >
                       <input
                         type="checkbox"
                         className="mr-2"
                         checked={
                           opt.key === "any"
                             ? (appliedFilters.highwayMpg || []).length === 0
-                            : (appliedFilters.highwayMpg || []).includes(String(opt.min))
+                            : (appliedFilters.highwayMpg || []).includes(
+                                String(opt.min),
+                              )
                         }
                         onChange={(e) => {
                           e.stopPropagation();
                           if (opt.key === "any") {
                             // clear selection
-                            const newFilters = { ...appliedFilters, highwayMpg: [] } as any;
+                            const newFilters = {
+                              ...appliedFilters,
+                              highwayMpg: [],
+                            } as any;
                             setAppliedFilters(newFilters);
                             updateURLFromFilters(newFilters);
                             setCurrentPage(1);
@@ -3637,15 +3796,25 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
 
                           if ((e.target as HTMLInputElement).checked) {
-                            const newFilters = { ...(appliedFilters as any), highwayMpg: [
-                              ...(appliedFilters.highwayMpg || []).filter((v: string) => v !== ""),
-                              String(opt.min),
-                            ] } as any;
+                            const newFilters = {
+                              ...(appliedFilters as any),
+                              highwayMpg: [
+                                ...(appliedFilters.highwayMpg || []).filter(
+                                  (v: string) => v !== "",
+                                ),
+                                String(opt.min),
+                              ],
+                            } as any;
                             setAppliedFilters(newFilters);
                             updateURLFromFilters(newFilters);
                             setCurrentPage(1);
                           } else {
-                            const newFilters = { ...(appliedFilters as any), highwayMpg: (appliedFilters.highwayMpg || []).filter((v: string) => v !== String(opt.min)) } as any;
+                            const newFilters = {
+                              ...(appliedFilters as any),
+                              highwayMpg: (
+                                appliedFilters.highwayMpg || []
+                              ).filter((v: string) => v !== String(opt.min)),
+                            } as any;
                             setAppliedFilters(newFilters);
                             updateURLFromFilters(newFilters);
                             setCurrentPage(1);
@@ -3653,7 +3822,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         }}
                       />
                       <span className="carzino-filter-option">{opt.label}</span>
-                      <span className="carzino-filter-count ml-1">({getCount(opt.min)})</span>
+                      <span className="carzino-filter-count ml-1">
+                        ({getCount(opt.min)})
+                      </span>
                     </label>
                   ));
                 })()}
@@ -3667,9 +3838,13 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("titleStatus")}
             >
               <div className="space-y-1">
-                {filterOptions.title_status && filterOptions.title_status.length > 0 ? (
+                {filterOptions.title_status &&
+                filterOptions.title_status.length > 0 ? (
                   filterOptions.title_status.map((t: any) => (
-                    <label key={t.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                    <label
+                      key={t.name}
+                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                    >
                       <input
                         type="checkbox"
                         className="mr-2"
@@ -3677,22 +3852,33 @@ export default function MySQLVehiclesOriginalStyle() {
                         onChange={(e) => {
                           e.stopPropagation();
                           if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({ ...prev, titleStatus: [...prev.titleStatus, t.name] }));
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              titleStatus: [...prev.titleStatus, t.name],
+                            }));
                           } else {
-                            setAppliedFilters((prev) => ({ ...prev, titleStatus: prev.titleStatus.filter((v) => v !== t.name) }));
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              titleStatus: prev.titleStatus.filter(
+                                (v) => v !== t.name,
+                              ),
+                            }));
                           }
                         }}
                       />
                       <span className="carzino-filter-option">{t.name}</span>
-                      <span className="carzino-filter-count ml-1">({t.count ?? 0})</span>
+                      <span className="carzino-filter-count ml-1">
+                        ({t.count ?? 0})
+                      </span>
                     </label>
                   ))
                 ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No title status options available.</div>
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                    No title status options available.
+                  </div>
                 )}
               </div>
             </FilterSection>
-
 
             {/* NEW: Fuel Type */}
             <FilterSection
@@ -3725,7 +3911,9 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                         />
                         <span className="carzino-filter-option">{f.name}</span>
-                        <span className="carzino-filter-count ml-1">({f.count ?? 0})</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({f.count ?? 0})
+                        </span>
                       </label>
                     ))}
 
@@ -3739,7 +3927,9 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="text-sm text-blue-600 hover:underline px-2 py-1 rounded"
                         >
-                          {showMoreFuel ? "Show Less" : `Show More (${fuelOptions.length - 8})`}
+                          {showMoreFuel
+                            ? "Show Less"
+                            : `Show More (${fuelOptions.length - 8})`}
                         </button>
                       </div>
                     )}
