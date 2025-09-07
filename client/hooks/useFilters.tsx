@@ -494,6 +494,9 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         dealer: "account_name_seller",
         sellerType: "account_type_seller",
         fuelType: "fuel_type",
+        // Location keys
+        state: "state_seller",
+        city: "city_seller",
       };
 
       let pruned = { ...(filters as any) } as Partial<AppliedFilters>;
