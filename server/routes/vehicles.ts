@@ -339,6 +339,51 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       try {
         const json = JSON.parse(body);
 
+        // If data array present, recompute filters from data to ensure consistency
+        if (Array.isArray(json.data)) {
+          try {
+            const computeCounts = (arr: any[], keyPath: string[]): Map<string, number> => {
+              const m = new Map();
+              for (const item of arr) {
+                let cur: any = item;
+                for (const p of keyPath) {
+                  if (!cur) break;
+                  cur = cur[p] ?? cur[p.replace(/_(.)/g, (s, c) => c.toUpperCase())];
+                }
+                const v = cur || (item && item.acf && item.acf[keyPath[keyPath.length - 1]]) || '';
+                const name = (typeof v === 'string' || typeof v === 'number') ? String(v).trim() : '';
+                if (!name) continue;
+                const lower = name.toLowerCase();
+                if (lower === 'uncategorized') continue;
+                m.set(name, (m.get(name) || 0) + 1);
+              }
+              return m;
+            };
+
+            const makesMap = computeCounts(json.data, ['acf','make']);
+            const modelsMap = computeCounts(json.data, ['acf','model']);
+            const fuelMap = computeCounts(json.data, ['acf','fuel_type']);
+            const bodyMap = computeCounts(json.data, ['acf','body_style']);
+            const sellerTypeMap = computeCounts(json.data, ['acf','account_type_seller']);
+            const dealerMap = computeCounts(json.data, ['acf','account_name_seller']);
+
+            const toArray = (m: Map<string, number>) =>
+              Array.from(m.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+
+            json.filters = json.filters || {};
+            json.filters.makes = toArray(makesMap);
+            json.filters.make = toArray(makesMap);
+            json.filters.models = toArray(modelsMap);
+            json.filters.model = toArray(modelsMap);
+            json.filters.fuel_type = toArray(fuelMap);
+            json.filters.body_style = toArray(bodyMap);
+            json.filters.account_type_seller = toArray(sellerTypeMap);
+            json.filters.account_name_seller = toArray(dealerMap);
+          } catch (e) {
+            console.warn('Failed to recompute /filters from proxied data:', e);
+          }
+        }
+
         // Remove 'Uncategorized' entries from returned filter lists
         if (json && json.filters && typeof json.filters === "object") {
           for (const key of Object.keys(json.filters)) {
