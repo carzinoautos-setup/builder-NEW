@@ -436,6 +436,12 @@ export default function MySQLVehiclesOriginalStyle() {
   const [showMoreMakes, setShowMoreMakes] = useState(false);
   const [showMoreModels, setShowMoreModels] = useState(false);
   const [showMoreTrims, setShowMoreTrims] = useState(false);
+  // UI: show more for transmission speeds
+  const [showMoreTransmission, setShowMoreTransmission] = useState(false);
+
+  // Highway MPG slider state (min/max)
+  const [highwayMpgMin, setHighwayMpgMin] = useState<number | null>(null);
+  const [highwayMpgMax, setHighwayMpgMax] = useState<number | null>(null);
 
   // Helper to compute displayed items with 'Show More' and ensure selected items are visible
   const getDisplayed = (
@@ -630,7 +636,7 @@ export default function MySQLVehiclesOriginalStyle() {
       }
 
       const apiUrl = `/api/vehicles?${params.toString()}`;
-      console.log("🔍 Fetching vehicles from:", apiUrl);
+      console.log("��� Fetching vehicles from:", apiUrl);
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
       const { fetchWithRetry } = await (await import("@/lib/fetchWithRetry"));
