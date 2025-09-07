@@ -162,7 +162,9 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
           {(() => {
             // Normalize specific verbose types like "regular cab truck" to "truck"
             const raw = (type || "").toString();
-            const normalized = raw.replace(/regular\s*[-_ ]?\s*cab\s*/i, "").trim();
+            const normalized = raw
+              .replace(/regular\s*[-_ ]?\s*cab\s*/i, "")
+              .trim();
             return normalized
               .split("/")
               .map((part) =>

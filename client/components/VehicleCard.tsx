@@ -94,7 +94,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     if (hasValidSalePrice()) {
       try {
         // Always calculate a payment when a sale price exists, using current parameters
-        return calculateMonthlyPayment(vehicle.salePrice, termLength, interestRate, downPayment);
+        return calculateMonthlyPayment(
+          vehicle.salePrice,
+          termLength,
+          interestRate,
+          downPayment,
+        );
       } catch (e) {
         // Fallback to provided payment or call for price
         return vehicle.payment || "Call for Price";
@@ -112,7 +117,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       const u = new URL(url);
 
       // If the URL already has width/height query params, adjust them
-      if (u.searchParams.has("w") || u.searchParams.has("width") || u.searchParams.has("h") || u.searchParams.has("height")) {
+      if (
+        u.searchParams.has("w") ||
+        u.searchParams.has("width") ||
+        u.searchParams.has("h") ||
+        u.searchParams.has("height")
+      ) {
         if (u.searchParams.has("w")) u.searchParams.set("w", "450");
         if (u.searchParams.has("width")) u.searchParams.set("width", "450");
         if (u.searchParams.has("h")) u.searchParams.set("h", "300");
@@ -121,9 +131,13 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       }
 
       // If it's a common image CDN that supports width via query (e.g., images.unsplash.com), append params
-      if (u.hostname.includes("images.unsplash.com") || u.hostname.includes("cdn.")) {
+      if (
+        u.hostname.includes("images.unsplash.com") ||
+        u.hostname.includes("cdn.")
+      ) {
         // Preserve any existing query but enforce w/h
-        const s = u.origin + u.pathname + `?w=450&h=300&fit=crop&auto=format&q=80`;
+        const s =
+          u.origin + u.pathname + `?w=450&h=300&fit=crop&auto=format&q=80`;
         return s;
       }
 
@@ -283,15 +297,21 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           {hasValidSalePrice() ? (
             <>
               <div className="text-center">
-                <div className="carzino-price-label text-gray-500 mb-0">Sale Price</div>
-                <div className="carzino-price-value text-gray-900">{vehicle.salePrice}</div>
+                <div className="carzino-price-label text-gray-500 mb-0">
+                  Sale Price
+                </div>
+                <div className="carzino-price-value text-gray-900">
+                  {vehicle.salePrice}
+                </div>
               </div>
 
               {/* Payments shown only when a valid sale price exists. */}
               <>
                 <div className="w-px h-12 bg-gray-200"></div>
                 <div className="text-center">
-                  <div className="carzino-price-label text-gray-500 mb-0">Payments</div>
+                  <div className="carzino-price-label text-gray-500 mb-0">
+                    Payments
+                  </div>
                   <div className="carzino-price-value text-red-600">
                     {getDisplayPayment()}
                     <span className="text-xs text-black font-normal">/mo*</span>
@@ -301,8 +321,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             </>
           ) : (
             <div className="text-center">
-              <div className="carzino-price-label text-gray-500 mb-0">No Sale Price Listed</div>
-              <div className="carzino-price-value text-gray-900">Call for Price</div>
+              <div className="carzino-price-label text-gray-500 mb-0">
+                No Sale Price Listed
+              </div>
+              <div className="carzino-price-value text-gray-900">
+                Call for Price
+              </div>
             </div>
           )}
         </div>
@@ -321,7 +345,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               {vehicle.location}
             </div>
             {vehicle.seller_account_number && (
-              <div className="text-xs text-gray-500 mt-1 truncate hidden" style={{ fontSize: "10px" }}>
+              <div
+                className="text-xs text-gray-500 mt-1 truncate hidden"
+                style={{ fontSize: "10px" }}
+              >
                 {vehicle.seller_account_number}
               </div>
             )}

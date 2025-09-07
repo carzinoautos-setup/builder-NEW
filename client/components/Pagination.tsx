@@ -129,7 +129,6 @@ export const Pagination: React.FC<PaginationProps> = ({
             <span className="hidden sm:inline sm:ml-1">Next</span>
           </button>
         </div>
-
       </div>
     </div>
   );
