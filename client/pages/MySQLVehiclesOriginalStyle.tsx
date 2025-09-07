@@ -605,9 +605,26 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("search", searchTerm.trim());
       }
 
-      // Add sorting parameter (plugin expects 'sort')
+      // Add sorting parameter (plugin expects 'sort'). Also add sortBy/sortOrder for internal API.
       if (sortBy !== "relevance") {
         params.append("sort", sortBy);
+
+        // Map UI sort keys to API sortBy and sortOrder
+        const mapping: Record<string, { field?: string; order?: "ASC" | "DESC" }> = {
+          "price-low": { field: "price", order: "ASC" },
+          "price-high": { field: "price", order: "DESC" },
+          "miles-low": { field: "mileage", order: "ASC" },
+          "miles-high": { field: "mileage", order: "DESC" },
+          "year-newest": { field: "year", order: "DESC" },
+          "year-oldest": { field: "year", order: "ASC" },
+          "distance-closest": { field: "id", order: "ASC" }, // fallback; WP plugin handles actual distance
+        };
+
+        const mapped = mapping[sortBy];
+        if (mapped && mapped.field) {
+          params.append("sortBy", mapped.field);
+          params.append("sortOrder", mapped.order || "DESC");
+        }
       }
 
       // Add location/distance parameters
