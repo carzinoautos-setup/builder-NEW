@@ -388,52 +388,75 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           ...(scopedMap.trim ? { trim: scopedMap.trim } : {}),
         } as any;
 
+        // Merge maps set immediately so UI isn't blocked by additional count work
+        setFilterOptions(finalMap);
+
         // For certain filter categories where WP counts may be unreliable (seller/dealer),
-        // compute authoritative counts by querying /api/vehicles for each option while
-        // preserving other applied filters (but excluding the category being counted).
-        const computeCountsForCategory = async (
-          respKey: string,
-          localKey: string,
-        ) => {
-          if (!finalMap[respKey]) return;
-          const items = finalMap[respKey] as any[];
-          // Limit concurrency — do sequentially to avoid spamming backend
-          for (let i = 0; i < items.length; i++) {
-            const item = items[i];
-            try {
-              // Build filters copy excluding the current category
-              const filtersCopy: any = { ...(filters || {}) };
-              delete filtersCopy[localKey as string];
-              // Set only this option for the category
-              filtersCopy[localKey as string] = [item.name];
-              const qs = buildFiltersQuery(filtersCopy);
-              const url = `/api/vehicles${qs ? `?${qs}&page=1&per_page=1` : "?page=1&per_page=1"}`;
-              const res = await fetchWithRetry(url, { method: "GET" });
-              if (!res.ok) {
-                console.warn("Count fetch failed for", url, res.status);
+        // compute authoritative counts in the background (non-blocking) by querying /api/vehicles
+        // for each option while preserving other applied filters (excluding the category being counted).
+        // This runs asynchronously and will update filterOptions when completed.
+        const backgroundCompute = async () => {
+          try {
+            const categoriesToCompute: { respKey: string; localKey: string }[] = [
+              { respKey: "account_type_seller", localKey: "sellerType" },
+              { respKey: "account_name_seller", localKey: "dealer" },
+            ];
+
+            for (const cat of categoriesToCompute) {
+              const items = (finalMap as any)[cat.respKey] as any[] | undefined;
+              if (!items || items.length === 0) continue;
+
+              // Avoid huge numbers of background requests — skip if list too large
+              if (items.length > 60) {
+                console.warn(`Skipping authoritative counts for ${cat.respKey} (too many items: ${items.length})`);
                 continue;
               }
-              const json = await res.json();
-              // extract total records from possible shapes
-              const pagination = json.pagination || json.meta || {};
-              const total = pagination.total || pagination.totalRecords || pagination.total_records || json.total || 0;
-              item.count = Number(total) || 0;
-            } catch (e) {
-              console.warn("Failed to compute count for", respKey, item.name, e);
+
+              // Small concurrency pool
+              const concurrency = 4;
+              let idx = 0;
+
+              const worker = async () => {
+                while (idx < items.length) {
+                  const i = idx++;
+                  const item = items[i];
+                  try {
+                    const filtersCopy: any = { ...(filters || {}) };
+                    delete filtersCopy[cat.localKey];
+                    filtersCopy[cat.localKey] = [item.name];
+                    const qs = buildFiltersQuery(filtersCopy);
+                    const url = `/api/vehicles${qs ? `?${qs}&page=1&per_page=1` : "?page=1&per_page=1"}`;
+                    const res = await fetchWithRetry(url, { method: "GET" });
+                    if (!res.ok) {
+                      console.warn("Count fetch failed for", url, res.status);
+                      (item as any).count = (item as any).count || 0;
+                      continue;
+                    }
+                    const json = await res.json();
+                    const pagination = json.pagination || json.meta || {};
+                    const total = pagination.total || pagination.totalRecords || pagination.total_records || json.total || 0;
+                    (item as any).count = Number(total) || 0;
+                  } catch (e) {
+                    console.warn("Failed to compute count for", cat.respKey, item.name, e);
+                  }
+                }
+              };
+
+              // Launch workers
+              await Promise.all(Array.from({ length: concurrency }).map(() => worker()));
+
+              // After computing counts for this category, merge into filterOptions state
+              setFilterOptions((prev) => ({ ...prev, [cat.respKey]: items }));
             }
+          } catch (ex) {
+            console.warn("Background authoritative counts failed:", ex);
           }
         };
 
-        try {
-          // Compute authoritative counts for seller type (account_type_seller) and dealer (account_name_seller)
-          await computeCountsForCategory("account_type_seller", "sellerType");
-          await computeCountsForCategory("account_name_seller", "dealer");
-        } catch (e) {
-          // ignore, we will fall back to WP counts if these fail
-          console.warn("Failed to refresh authoritative filter counts", e);
-        }
-
-        setFilterOptions(finalMap);
+        // Fire and forget
+        setTimeout(() => {
+          backgroundCompute();
+        }, 50);
       } catch (err: any) {
         setError(err?.message || "Failed to fetch filters");
         setFilterOptions({});
