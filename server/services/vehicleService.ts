@@ -217,29 +217,30 @@ export class VehicleService {
     sellerTypes: string[];
   }> {
     try {
+      const baseWhere = "WHERE body_style IS NOT NULL AND body_style <> 'Uncategorized'";
       const [makesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT make FROM vehicles ORDER BY make",
+        `SELECT DISTINCT make FROM vehicles ${baseWhere} ORDER BY make`,
       );
       const [modelsResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT model FROM vehicles ORDER BY model",
+        `SELECT DISTINCT model FROM vehicles ${baseWhere} ORDER BY model`,
       );
       const [conditionsResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT condition FROM vehicles ORDER BY condition",
+        `SELECT DISTINCT condition FROM vehicles ${baseWhere} ORDER BY condition`,
       );
       const [fuelTypesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT fuel_type FROM vehicles ORDER BY fuel_type",
+        `SELECT DISTINCT fuel_type FROM vehicles ${baseWhere} ORDER BY fuel_type`,
       );
       const [transmissionsResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT transmission FROM vehicles ORDER BY transmission",
+        `SELECT DISTINCT transmission FROM vehicles ${baseWhere} ORDER BY transmission`,
       );
       const [drivetrainsResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT drivetrain FROM vehicles ORDER BY drivetrain",
+        `SELECT DISTINCT drivetrain FROM vehicles ${baseWhere} ORDER BY drivetrain`,
       );
       const [bodyStylesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT body_style FROM vehicles WHERE body_style IS NOT NULL AND body_style <> 'Uncategorized' ORDER BY body_style",
+        `SELECT DISTINCT body_style FROM vehicles ${baseWhere} ORDER BY body_style`,
       );
       const [sellerTypesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT seller_type FROM vehicles ORDER BY seller_type",
+        `SELECT DISTINCT seller_type FROM vehicles ${baseWhere} ORDER BY seller_type`,
       );
 
       return {
