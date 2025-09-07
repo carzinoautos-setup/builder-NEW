@@ -463,17 +463,32 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Fuel type: sort with Gasoline first, compute displayed list with Show More
   const fuelOptionsRaw = filterOptions?.fuel_type || [];
-  const fuelOptions = [...fuelOptionsRaw].sort((a: any, b: any) => {
+  const fuelOptionsSorted = [...fuelOptionsRaw].sort((a: any, b: any) => {
     const an = String(a.name || "").toLowerCase();
     const bn = String(b.name || "").toLowerCase();
     if (an === "gasoline" && bn !== "gasoline") return -1;
     if (bn === "gasoline" && an !== "gasoline") return 1;
+    // Keep 'other' last
+    if (an === "other" && bn !== "other") return 1;
+    if (bn === "other" && an !== "other") return -1;
     // secondary sort by count desc then name
     const ac = Number(a.count || 0);
     const bc = Number(b.count || 0);
     if (ac !== bc) return bc - ac;
     return an.localeCompare(bn);
   });
+  // Ensure 'Other' appears at the end if present
+  const fuelOptions = (() => {
+    const idx = fuelOptionsSorted.findIndex((f: any) => String(f.name || "").toLowerCase() === "other");
+    if (idx > -1) {
+      const arr = [...fuelOptionsSorted];
+      const [other] = arr.splice(idx, 1);
+      arr.push(other);
+      return arr;
+    }
+    return fuelOptionsSorted;
+  })();
+
   const displayedFuels = getDisplayed(
     fuelOptions,
     appliedFilters.fuelType,
