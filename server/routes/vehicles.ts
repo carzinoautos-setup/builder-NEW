@@ -262,6 +262,54 @@ export const getVehicles: RequestHandler = async (req, res) => {
           }
         }
 
+        // Apply UI-driven sorting server-side when proxying to WP: helps ensure sorting by custom fields works
+        try {
+          const uiSort = String(req.query.sort || "").trim();
+          if (uiSort && Array.isArray(json.data) && json.data.length > 0) {
+            const getNumeric = (item: any, candidates: string[]) => {
+              for (const c of candidates) {
+                const parts = c.split(".");
+                let cur: any = item;
+                for (const p of parts) {
+                  if (!cur) break;
+                  cur = cur[p] ?? cur[p.replace(/_(.)/g, (s, ch) => ch.toUpperCase())];
+                }
+                if (cur !== undefined && cur !== null) {
+                  const s = String(cur);
+                  const n = parseFloat(s.replace(/[^0-9.-]+/g, ""));
+                  if (!isNaN(n)) return n;
+                }
+              }
+              return null;
+            };
+
+            const sortMap: Record<string, { keyCandidates: string[]; dir: number }> = {
+              "price-low": { keyCandidates: ["acf.price", "price", "sale_price", "meta.price"], dir: 1 },
+              "price-high": { keyCandidates: ["acf.price", "price", "sale_price", "meta.price"], dir: -1 },
+              "miles-low": { keyCandidates: ["acf.mileage", "mileage", "meta.mileage"], dir: 1 },
+              "miles-high": { keyCandidates: ["acf.mileage", "mileage", "meta.mileage"], dir: -1 },
+              "mileage-low": { keyCandidates: ["acf.mileage", "mileage", "meta.mileage"], dir: 1 },
+              "mileage-high": { keyCandidates: ["acf.mileage", "mileage", "meta.mileage"], dir: -1 },
+              "year-newest": { keyCandidates: ["acf.year", "year", "meta.year"], dir: -1 },
+              "year-oldest": { keyCandidates: ["acf.year", "year", "meta.year"], dir: 1 },
+            };
+
+            const mapping = sortMap[uiSort];
+            if (mapping) {
+              json.data.sort((a: any, b: any) => {
+                const va = getNumeric(a, mapping.keyCandidates);
+                const vb = getNumeric(b, mapping.keyCandidates);
+                if (va === null && vb === null) return 0;
+                if (va === null) return 1 * mapping.dir;
+                if (vb === null) return -1 * mapping.dir;
+                return (va - vb) * mapping.dir;
+              });
+            }
+          }
+        } catch (err) {
+          console.warn("Failed to apply server-side sort on proxied data:", err);
+        }
+
         return res.status(wpResponse.status).json(json);
       } catch (e) {
         return res.status(wpResponse.status).send(body);
