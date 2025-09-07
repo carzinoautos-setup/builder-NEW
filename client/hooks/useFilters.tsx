@@ -396,6 +396,26 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           ...(scopedMap.trim ? { trim: scopedMap.trim } : {}),
         } as any;
 
+        // Remove any 'Uncategorized' or empty labels from all filter arrays
+        const sanitize = (map: FilterMap) => {
+          const out: FilterMap = {};
+          for (const [k, arr] of Object.entries(map)) {
+            if (!Array.isArray(arr)) {
+              (out as any)[k] = arr as any;
+              continue;
+            }
+            (out as any)[k] = (arr as any[])
+              .filter((it) => {
+                const name = (it && (it.name || it.value || it.label || it)) || "";
+                return String(name).trim() !== "" && String(name).trim().toLowerCase() !== "uncategorized";
+              })
+              .map((it) => it);
+          }
+          return out;
+        };
+
+        finalMap = sanitize(finalMap);
+
         // Merge maps set immediately so UI isn't blocked by additional count work
         setFilterOptions(finalMap);
 
