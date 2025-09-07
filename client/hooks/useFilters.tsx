@@ -399,6 +399,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         // Remove any 'Uncategorized' or empty labels from all filter arrays
         const sanitize = (map: FilterMap) => {
           const out: FilterMap = {};
+          const blacklist = new Set(["harley-davidson","harley davidson","harley","forest river","fleetwood"]);
           for (const [k, arr] of Object.entries(map)) {
             if (!Array.isArray(arr)) {
               (out as any)[k] = arr as any;
@@ -407,7 +408,11 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             (out as any)[k] = (arr as any[])
               .filter((it) => {
                 const name = (it && (it.name || it.value || it.label || it)) || "";
-                return String(name).trim() !== "" && String(name).trim().toLowerCase() !== "uncategorized";
+                const n = String(name).trim();
+                if (n === "") return false;
+                if (n.toLowerCase() === "uncategorized") return false;
+                if (blacklist.has(n.toLowerCase())) return false;
+                return true;
               })
               .map((it) => it);
           }
