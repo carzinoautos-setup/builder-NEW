@@ -159,15 +159,20 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
         className={`carzino-vehicle-type-name ${isSelected ? "text-red-600 font-semibold" : ""}`}
       >
         <p>
-          {(type || "")
-            .split("/")
-            .map((part) =>
-              part
-                .split(/[-_\s]+/)
-                .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : ""))
-                .join(" "),
-            )
-            .join("/")}
+          {(() => {
+            // Normalize specific verbose types like "regular cab truck" to "truck"
+            const raw = (type || "").toString();
+            const normalized = raw.replace(/regular\s*[-_ ]?\s*cab\s*/i, "").trim();
+            return normalized
+              .split("/")
+              .map((part) =>
+                part
+                  .split(/[-_\s]+/)
+                  .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : ""))
+                  .join(" "),
+              )
+              .join("/");
+          })()}
         </p>
       </div>
       <div className="carzino-vehicle-type-count">({count})</div>
