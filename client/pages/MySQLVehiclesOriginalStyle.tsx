@@ -622,8 +622,11 @@ export default function MySQLVehiclesOriginalStyle() {
 
         const mapped = mapping[sortBy];
         if (mapped && mapped.field) {
-          params.append("sortBy", mapped.field);
-          params.append("sortOrder", mapped.order || "DESC");
+          // Do not append sortBy/sortOrder when using the WordPress plugin proxy (VITE_WP_URL set)
+          if (!import.meta.env.VITE_WP_URL) {
+            params.append("sortBy", mapped.field);
+            params.append("sortOrder", mapped.order || "DESC");
+          }
         }
       }
 
