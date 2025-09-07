@@ -461,6 +461,26 @@ export default function MySQLVehiclesOriginalStyle() {
     8,
   );
 
+  // Fuel type: sort with Gasoline first, compute displayed list with Show More
+  const fuelOptionsRaw = filterOptions?.fuel_type || [];
+  const fuelOptions = [...fuelOptionsRaw].sort((a: any, b: any) => {
+    const an = String(a.name || "").toLowerCase();
+    const bn = String(b.name || "").toLowerCase();
+    if (an === "gasoline" && bn !== "gasoline") return -1;
+    if (bn === "gasoline" && an !== "gasoline") return 1;
+    // secondary sort by count desc then name
+    const ac = Number(a.count || 0);
+    const bc = Number(b.count || 0);
+    if (ac !== bc) return bc - ac;
+    return an.localeCompare(bn);
+  });
+  const displayedFuels = getDisplayed(
+    fuelOptions,
+    appliedFilters.fuelType,
+    showMoreFuel,
+    8,
+  );
+
   // When filterOptions update, prune any applied filters that are no longer valid
   useEffect(() => {
     if (!filterOptions) return;
@@ -470,6 +490,20 @@ export default function MySQLVehiclesOriginalStyle() {
       updateURLFromFilters(pruned as any);
     }
   }, [filterOptions]);
+
+  // Ensure Gasoline is selected by default when fuel options first load and no selection exists
+  useEffect(() => {
+    const fuels = filterOptions?.fuel_type || [];
+    if (fuels.length === 0) return;
+    if (appliedFilters.fuelType && appliedFilters.fuelType.length > 0) return;
+    const hasGas = fuels.some((f: any) => String(f.name).toLowerCase() === "gasoline");
+    if (hasGas) {
+      const newFilters = { ...appliedFilters, fuelType: ["Gasoline"] } as typeof appliedFilters;
+      setAppliedFilters(newFilters);
+      updateURLFromFilters(newFilters);
+      setCurrentPage(1);
+    }
+  }, [filterOptions?.fuel_type]);
 
   // Initialize highway MPG slider defaults when filter options change
   useEffect(() => {
