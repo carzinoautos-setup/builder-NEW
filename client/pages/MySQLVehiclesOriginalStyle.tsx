@@ -3129,8 +3129,22 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Down Payment: $2,000"
-                    value={`Down Payment: ${downPayment}`}
+                    placeholder={`Down Payment: ${formatCurrency(downPayment)}`}
+                    value={isEditingDownPayment ? downPayment : `Down Payment: ${formatCurrency(downPayment)}`}
+                    onFocus={(e) => {
+                      e.stopPropagation();
+                      setPrevDownPayment(downPayment);
+                      setDownPayment("");
+                      setIsEditingDownPayment(true);
+                    }}
+                    onBlur={(e) => {
+                      e.stopPropagation();
+                      setIsEditingDownPayment(false);
+                      // restore previous if left empty
+                      if (!downPayment && prevDownPayment !== null) {
+                        setDownPayment(prevDownPayment);
+                      }
+                    }}
                     onChange={(e) => {
                       const value = e.target.value.replace(/[^\d]/g, "");
                       setDownPayment(value);
