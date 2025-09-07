@@ -3453,79 +3453,73 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </FilterSection>
 
-            {/* Highway MPG */}
+            {/* Fuel Economy (threshold multi-select) */}
             <FilterSection
-              title="Highway MPG"
+              title="Fuel Economy"
               isCollapsed={collapsedFilters.highwayMpg}
               onToggle={() => toggleFilter("highwayMpg")}
             >
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {(() => {
-                  const options = (filterOptions.highway_mpg || []).map((o: any) => Number(o.name)).filter(Boolean);
-                  const minAvailable = options.length ? Math.min(...options) : 0;
-                  const maxAvailable = options.length ? Math.max(...options) : 100;
+                  const options = [
+                    { key: "any", label: "Any", min: 0 },
+                    { key: "10", label: "10+ MPG", min: 10 },
+                    { key: "15", label: "15+ MPG", min: 15 },
+                    { key: "20", label: "20+ MPG", min: 20 },
+                    { key: "30", label: "30+ MPG", min: 30 },
+                    { key: "40", label: "40+ MPG", min: 40 },
+                    { key: "50", label: "50+ MPG", min: 50 },
+                  ];
 
-                  // Initialize local slider state if not set
-                  const localMin = highwayMpgMin ?? minAvailable;
-                  const localMax = highwayMpgMax ?? maxAvailable;
+                  // compute counts by summing available highway_mpg buckets >= min
+                  const buckets = (filterOptions.highway_mpg || []).map((b: any) => ({ n: Number(b.name), count: Number(b.count || 0) })).filter((b: any) => !Number.isNaN(b.n));
 
-                  return (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          min={minAvailable}
-                          max={maxAvailable}
-                          value={localMin}
-                          onChange={(e) => setHighwayMpgMin(Number(e.target.value))}
-                          className="carzino-search-input w-1/2 p-1 border rounded"
-                        />
-                        <span className="text-sm text-gray-500">to</span>
-                        <input
-                          type="number"
-                          min={minAvailable}
-                          max={maxAvailable}
-                          value={localMax}
-                          onChange={(e) => setHighwayMpgMax(Number(e.target.value))}
-                          className="carzino-search-input w-1/2 p-1 border rounded"
-                        />
-                      </div>
+                  const getCount = (min: number) => {
+                    if (min <= 0) return buckets.reduce((s: number, b: any) => s + b.count, 0);
+                    return buckets.filter((b: any) => b.n >= min).reduce((s: number, b: any) => s + b.count, 0);
+                  };
 
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // Apply range to filters as min,max
-                            const min = Number(highwayMpgMin ?? minAvailable);
-                            const max = Number(highwayMpgMax ?? maxAvailable);
-                            if (min > max) return;
-                            const newFilters = { ...appliedFilters, highwayMpg: [String(min), String(max)] } as any;
-                            setAppliedFilters(newFilters);
-                            updateURLFromFilters(newFilters);
-                            setCurrentPage(1);
-                          }}
-                          className="text-red-600 text-sm font-medium"
-                        >
-                          Apply
-                        </button>
-
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setHighwayMpgMin(minAvailable);
-                            setHighwayMpgMax(maxAvailable);
+                  return options.map((opt) => (
+                    <label key={opt.key} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={
+                          opt.key === "any"
+                            ? (appliedFilters.highwayMpg || []).length === 0
+                            : (appliedFilters.highwayMpg || []).includes(String(opt.min))
+                        }
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if (opt.key === "any") {
+                            // clear selection
                             const newFilters = { ...appliedFilters, highwayMpg: [] } as any;
                             setAppliedFilters(newFilters);
                             updateURLFromFilters(newFilters);
                             setCurrentPage(1);
-                          }}
-                          className="text-gray-600 text-sm ml-2"
-                        >
-                          Clear
-                        </button>
-                      </div>
-                    </>
-                  );
+                            return;
+                          }
+
+                          if ((e.target as HTMLInputElement).checked) {
+                            const newFilters = { ...(appliedFilters as any), highwayMpg: [
+                              ...(appliedFilters.highwayMpg || []).filter((v: string) => v !== ""),
+                              String(opt.min),
+                            ] } as any;
+                            setAppliedFilters(newFilters);
+                            updateURLFromFilters(newFilters);
+                            setCurrentPage(1);
+                          } else {
+                            const newFilters = { ...(appliedFilters as any), highwayMpg: (appliedFilters.highwayMpg || []).filter((v: string) => v !== String(opt.min)) } as any;
+                            setAppliedFilters(newFilters);
+                            updateURLFromFilters(newFilters);
+                            setCurrentPage(1);
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{opt.label}</span>
+                      <span className="carzino-filter-count ml-1">({getCount(opt.min)})</span>
+                    </label>
+                  ));
                 })()}
               </div>
             </FilterSection>
