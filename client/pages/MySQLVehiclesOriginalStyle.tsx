@@ -825,7 +825,7 @@ export default function MySQLVehiclesOriginalStyle() {
           const fallbackJson = await fallbackRes.json();
           if (fallbackJson.success && Array.isArray(fallbackJson.data)) {
             // Map to VehicleRecord-like shape where possible
-            const mapped = fallbackJson.data.map((r: any) => ({
+            let mapped = fallbackJson.data.map((r: any) => ({
               id: r.id,
               year: r.year || 2020,
               make: r.make || "",
@@ -854,6 +854,12 @@ export default function MySQLVehiclesOriginalStyle() {
               payments: r.payments || 0,
               featured_image: r.featured_image || null,
             }));
+
+            // Filter out uncategorized
+            mapped = mapped.filter((r: any) => {
+              const body = (r.body_style || "").toString().trim();
+              return body !== "" && body.toLowerCase() !== "uncategorized";
+            });
 
             const transformedVehicles = mapped.map(transformVehicleRecord);
             setVehicles(transformedVehicles);
