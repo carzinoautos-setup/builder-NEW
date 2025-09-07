@@ -378,6 +378,12 @@ export default function MySQLVehiclesOriginalStyle() {
     // NEW: Additional custom field filters
     fuelType: [] as string[],
     certified: [] as string[],
+    // Newly added filters from API
+    doors: [] as string[],
+    transmissionSpeed: [] as string[],
+    highwayMpg: [] as string[],
+    titleStatus: [] as string[],
+    status: [] as string[],
   });
 
   const [collapsedFilters, setCollapsedFilters] = useState({
@@ -398,6 +404,11 @@ export default function MySQLVehiclesOriginalStyle() {
     sellerType: true,
     dealer: true,
     state: true,
+    // new collapsible filters
+    doors: true,
+    highwayMpg: true,
+    titleStatus: true,
+    status: true,
     city: true,
     // NEW: Additional custom field filters
     fuelType: true,
@@ -3246,24 +3257,170 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("transmissionSpeed")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">
-                    4-Speed Automatic
-                  </span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">
-                    6-Speed Automatic
-                  </span>
-                </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="carzino-filter-option">
-                    8-Speed Automatic
-                  </span>
-                </label>
+                {filterOptions.transmission_speed && filterOptions.transmission_speed.length > 0 ? (
+                  filterOptions.transmission_speed.map((t: any) => (
+                    <label
+                      key={t.name}
+                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.transmissionSpeed.includes(t.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              transmissionSpeed: [...prev.transmissionSpeed, t.name],
+                            }));
+                          } else {
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              transmissionSpeed: prev.transmissionSpeed.filter((v) => v !== t.name),
+                            }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{t.name}</span>
+                      <span className="carzino-filter-count ml-1">({t.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No transmission speeds available.</div>
+                )}
+              </div>
+            </FilterSection>
+
+            {/* Doors */}
+            <FilterSection
+              title="Doors"
+              isCollapsed={collapsedFilters.doors}
+              onToggle={() => toggleFilter("doors")}
+            >
+              <div className="space-y-1">
+                {filterOptions.doors && filterOptions.doors.length > 0 ? (
+                  filterOptions.doors.map((d: any) => (
+                    <label key={d.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.doors.includes(d.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({ ...prev, doors: [...prev.doors, d.name] }));
+                          } else {
+                            setAppliedFilters((prev) => ({ ...prev, doors: prev.doors.filter((v) => v !== d.name) }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{d.name}</span>
+                      <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No door options available.</div>
+                )}
+              </div>
+            </FilterSection>
+
+            {/* Highway MPG */}
+            <FilterSection
+              title="Highway MPG"
+              isCollapsed={collapsedFilters.highwayMpg}
+              onToggle={() => toggleFilter("highwayMpg")}
+            >
+              <div className="space-y-1">
+                {filterOptions.highway_mpg && filterOptions.highway_mpg.length > 0 ? (
+                  filterOptions.highway_mpg.map((m: any) => (
+                    <label key={m.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.highwayMpg.includes(m.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({ ...prev, highwayMpg: [...prev.highwayMpg, m.name] }));
+                          } else {
+                            setAppliedFilters((prev) => ({ ...prev, highwayMpg: prev.highwayMpg.filter((v) => v !== m.name) }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{m.name}</span>
+                      <span className="carzino-filter-count ml-1">({m.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No highway MPG options available.</div>
+                )}
+              </div>
+            </FilterSection>
+
+            {/* Title Status */}
+            <FilterSection
+              title="Title Status"
+              isCollapsed={collapsedFilters.titleStatus}
+              onToggle={() => toggleFilter("titleStatus")}
+            >
+              <div className="space-y-1">
+                {filterOptions.title_status && filterOptions.title_status.length > 0 ? (
+                  filterOptions.title_status.map((t: any) => (
+                    <label key={t.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.titleStatus.includes(t.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({ ...prev, titleStatus: [...prev.titleStatus, t.name] }));
+                          } else {
+                            setAppliedFilters((prev) => ({ ...prev, titleStatus: prev.titleStatus.filter((v) => v !== t.name) }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{t.name}</span>
+                      <span className="carzino-filter-count ml-1">({t.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No title status options available.</div>
+                )}
+              </div>
+            </FilterSection>
+
+            {/* Status */}
+            <FilterSection
+              title="Status"
+              isCollapsed={collapsedFilters.status}
+              onToggle={() => toggleFilter("status")}
+            >
+              <div className="space-y-1">
+                {filterOptions.status && filterOptions.status.length > 0 ? (
+                  filterOptions.status.map((s: any) => (
+                    <label key={s.name} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={appliedFilters.status.includes(s.name)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          if ((e.target as HTMLInputElement).checked) {
+                            setAppliedFilters((prev) => ({ ...prev, status: [...prev.status, s.name] }));
+                          } else {
+                            setAppliedFilters((prev) => ({ ...prev, status: prev.status.filter((v) => v !== s.name) }));
+                          }
+                        }}
+                      />
+                      <span className="carzino-filter-option">{s.name}</span>
+                      <span className="carzino-filter-count ml-1">({s.count ?? 0})</span>
+                    </label>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No status options available.</div>
+                )}
               </div>
             </FilterSection>
 
