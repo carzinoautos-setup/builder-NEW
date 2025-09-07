@@ -290,6 +290,20 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       }
       try {
         const json = JSON.parse(body);
+
+        // Remove 'Uncategorized' entries from returned filter lists
+        if (json && json.filters && typeof json.filters === "object") {
+          for (const key of Object.keys(json.filters)) {
+            const arr = json.filters[key];
+            if (Array.isArray(arr)) {
+              json.filters[key] = arr.filter((it: any) => {
+                const name = (it && (it.name || it.value || it.label || it)) || "";
+                return String(name).trim().toLowerCase() !== "uncategorized" && String(name).trim() !== "";
+              });
+            }
+          }
+        }
+
         return res.status(wpResponse.status).json(json);
       } catch (e) {
         return res.status(wpResponse.status).send(body);
