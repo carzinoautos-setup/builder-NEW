@@ -111,7 +111,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // Attempt to use a medium-sized (450x300) variant of the featured image when possible
   const getMediumImage = (url?: string) => {
-    if (!url) return "";
+    // Use local placeholder if no URL provided
+    if (!url) return "/placeholder.svg";
 
     try {
       const u = new URL(url);
