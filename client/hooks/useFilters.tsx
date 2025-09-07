@@ -16,6 +16,8 @@ export type AppliedFilters = {
   interiorColor: string[];
   sellerType: string[];
   dealer: string[];
+  state?: string[];
+  city?: string[];
   priceMin: string;
   priceMax: string;
   paymentMin: string;
