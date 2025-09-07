@@ -3369,41 +3369,71 @@ export default function MySQLVehiclesOriginalStyle() {
               <div className="space-y-1">
                 {filterOptions.drivetrain && filterOptions.drivetrain.length > 0 ? (
                   (() => {
-                    const driveOptions = (filterOptions.drivetrain || []).map((d: any) => {
-                      const raw = String(d.name || "").trim();
-                      let display = raw;
-                      const lower = raw.toLowerCase();
-                      if (lower === "front wheel drive" || lower === "front-wheel drive") display = "FWD";
-                      else if (raw.includes("4MATIC") || raw.includes("4MATIC®") || lower.includes("4matic")) display = "AWD/FWD";
-                      return { ...d, displayName: display };
-                    });
+                    // Normalize and group drivetrain raw values into display groups
+                    const groups = new Map<string, { names: string[]; count: number }>();
+                    const rawList = filterOptions.drivetrain || [];
+
+                    const getDisplay = (raw: string) => {
+                      const r = String(raw || '').trim();
+                      const lower = r.toLowerCase();
+                      if (lower === 'front wheel drive' || lower === 'front-wheel drive' || lower === 'fwd') return 'FWD';
+                      if (r.includes('4MATIC') || r.includes('4MATIC®') || lower.includes('4matic') || lower.includes('4matic®')) return 'AWD/4WD';
+                      if (lower === 'other' || lower === 'other/unknown') return 'Other';
+                      return r;
+                    };
+
+                    for (const d of rawList) {
+                      const raw = String(d.name || '').trim();
+                      if (!raw) continue;
+                      const display = getDisplay(raw);
+                      const key = display;
+                      const entry = groups.get(key) || { names: [], count: 0 };
+                      if (!entry.names.includes(raw)) entry.names.push(raw);
+                      entry.count += Number(d.count || 0);
+                      groups.set(key, entry);
+                    }
+
+                    // Build ordered array: keep 'Other' at the end
+                    const ordered = Array.from(groups.entries()).map(([display, val]) => ({ display, names: val.names, count: val.count }));
+                    ordered.sort((a, b) => b.count - a.count || a.display.localeCompare(b.display));
+                    const otherIdx = ordered.findIndex((o) => o.display === 'Other');
+                    if (otherIdx > -1) {
+                      const [other] = ordered.splice(otherIdx, 1);
+                      ordered.push(other);
+                    }
+
                     return (
                       <>
-                        {driveOptions.map((d: any) => (
-                          <label
-                            key={d.name}
-                            className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              className="mr-2"
-                              checked={appliedFilters.driveType.includes(d.name)}
-                              onChange={(e) => {
-                                e.stopPropagation();
-                                if ((e.target as HTMLInputElement).checked) {
-                                  setAppliedFilters((prev) => ({
-                                    ...prev,
-                                    driveType: [...prev.driveType, d.name],
-                                  }));
-                                } else {
-                                  removeAppliedFilter("driveType", d.name);
-                                }
-                              }}
-                            />
-                            <span className="carzino-filter-option">{d.displayName}</span>
-                            <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
-                          </label>
-                        ))}
+                        {ordered.map((g) => {
+                          const isChecked = g.names.some((n) => appliedFilters.driveType.includes(n));
+                          return (
+                            <label key={g.display} className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                              <input
+                                type="checkbox"
+                                className="mr-2"
+                                checked={isChecked}
+                                onChange={(e) => {
+                                  e.stopPropagation();
+                                  if ((e.target as HTMLInputElement).checked) {
+                                    // add all underlying raw names to appliedFilters
+                                    setAppliedFilters((prev) => ({
+                                      ...prev,
+                                      driveType: Array.from(new Set([...prev.driveType, ...g.names])),
+                                    }));
+                                  } else {
+                                    // remove all underlying names
+                                    setAppliedFilters((prev) => ({
+                                      ...prev,
+                                      driveType: prev.driveType.filter((v) => !g.names.includes(v)),
+                                    }));
+                                  }
+                                }}
+                              />
+                              <span className="carzino-filter-option">{g.display}</span>
+                              <span className="carzino-filter-count ml-1">({g.count ?? 0})</span>
+                            </label>
+                          );
+                        })}
                       </>
                     );
                   })()
