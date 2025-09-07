@@ -119,7 +119,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         const unscopedQs = buildFiltersQuery(unscopedFilters || {});
         const unscopedUrl = `/api/vehicles/filters${unscopedQs ? `?${unscopedQs}` : ""}`;
         console.log("🔍 Fetching unscoped filter options:", unscopedUrl);
-        const unscopedRes = await fetchWithRetry(unscopedUrl, { method: "GET" });
+        const unscopedRes = await fetchWithRetry(unscopedUrl, { method: "GET" }, 1, 8000);
         if (!unscopedRes.ok) throw new Error(`Filters error ${unscopedRes.status}`);
         const unscopedJson = await unscopedRes.json();
 
