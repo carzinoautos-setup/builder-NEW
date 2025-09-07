@@ -766,8 +766,14 @@ export default function MySQLVehiclesOriginalStyle() {
           } as any;
         });
 
+        // Remove any 'Uncategorized' body styles before transforming
+        const filteredRecords = mappedRecords.filter((r: any) => {
+          const body = (r.body_style || r.bodyType || "").toString().trim();
+          return body !== "" && body.toLowerCase() !== "uncategorized";
+        });
+
         // Transform VehicleRecord[] to Vehicle[] for display
-        const transformedVehicles = mappedRecords.map(transformVehicleRecord);
+        const transformedVehicles = filteredRecords.map(transformVehicleRecord);
         setVehicles(transformedVehicles);
 
         // Build meta compatible with VehiclesApiResponse
