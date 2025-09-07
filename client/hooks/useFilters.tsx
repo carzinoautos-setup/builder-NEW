@@ -477,8 +477,13 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               // Launch workers
               await Promise.all(Array.from({ length: concurrency }).map(() => worker()));
 
-              // After computing counts for this category, merge into filterOptions state
-              setFilterOptions((prev) => ({ ...prev, [cat.respKey]: items }));
+              // After computing counts for this category, remove zero-count or blank options
+              const cleaned = (items || []).filter((it: any) => {
+                const name = (it && (it.name || it.value || it.label || it)) || "";
+                const count = Number((it && it.count) || 0);
+                return String(name).trim() !== "" && String(name).trim().toLowerCase() !== "uncategorized" && count > 0;
+              });
+              setFilterOptions((prev) => ({ ...prev, [cat.respKey]: cleaned }));
             }
           } catch (ex) {
             console.warn("Background authoritative counts failed:", ex);
