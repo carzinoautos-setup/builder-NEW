@@ -2670,7 +2670,9 @@ export default function MySQLVehiclesOriginalStyle() {
                   onClick={applyLocationFilters}
                   disabled={!userLocation || isGeocodingLoading}
                   className={`w-full text-white py-2 px-4 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed ${
-                    zipCode && zipCode.trim() !== "" ? "bg-red-600 hover:bg-red-700" : "bg-black hover:bg-gray-800"
+                    zipCode && zipCode.trim() !== ""
+                      ? "bg-red-600 hover:bg-red-700"
+                      : "bg-black hover:bg-gray-800"
                   }`}
                 >
                   Apply Location Filter
@@ -3730,8 +3732,6 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
-
-
 
             {/* NEW: Fuel Type */}
             <FilterSection
