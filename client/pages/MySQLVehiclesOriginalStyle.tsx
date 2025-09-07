@@ -596,6 +596,14 @@ export default function MySQLVehiclesOriginalStyle() {
       if (appliedFilters.dealer.length > 0) {
         params.append("account_name_seller", appliedFilters.dealer.join(","));
       }
+      // State & City filters (map to seller meta keys)
+      if ((appliedFilters as any).state && (appliedFilters as any).state.length > 0) {
+        params.append("state_seller", (appliedFilters as any).state.join(","));
+      }
+      if ((appliedFilters as any).city && (appliedFilters as any).city.length > 0) {
+        params.append("city_seller", (appliedFilters as any).city.join(","));
+      }
+
       if (appliedFilters.priceMin) {
         params.append("min_price", appliedFilters.priceMin);
       }
