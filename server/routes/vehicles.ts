@@ -123,9 +123,18 @@ export const getVehicles: RequestHandler = async (req, res) => {
     // If WP API base is configured and not using mock, proxy the request directly to WordPress plugin API
     if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
       const wpBase = process.env.WP_API_BASE.replace(/\/$/, "");
-      // Preserve original query string exactly as received (avoid modifying array/comma params)
+      // Preserve original query string but if UI requested a 'sort', fetch a larger page so we can sort globally
       const rawQs = (req.originalUrl && req.originalUrl.split("?")[1]) || "";
-      const url = `${wpBase}/vehicles${rawQs ? `?${rawQs}` : ""}`;
+      const incomingParams = new URLSearchParams(rawQs);
+      const uiSort = String(incomingParams.get("sort") || "").trim();
+
+      // If a UI sort is requested, request a large per_page so we can sort across many items and paginate server-side
+      if (uiSort) {
+        incomingParams.set("per_page", "1000");
+        incomingParams.set("page", "1");
+      }
+
+      const url = `${wpBase}/vehicles${incomingParams.toString() ? `?${incomingParams.toString()}` : ""}`;
 
       // Build Authorization header using Basic auth if consumer key/secret are available
       const headers: Record<string, string> = {
@@ -143,6 +152,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
       // Try to parse JSON, otherwise proxy raw
       try {
         const json = JSON.parse(body);
+
+        // If UI sort was requested, we will sort and paginate server-side after fetching an expanded set
+        const requestedSort = uiSort;
 
         // Remove uncategorized vehicles from proxied data responses
         if (Array.isArray(json.data)) {
