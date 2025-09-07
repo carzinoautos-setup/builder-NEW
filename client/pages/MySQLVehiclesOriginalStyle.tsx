@@ -3346,42 +3346,52 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("driveType")}
             >
               <div className="space-y-1">
-                {filterOptions.drivetrain &&
-                filterOptions.drivetrain.length > 0 ? (
-                  filterOptions.drivetrain.map((d: any) => (
-                    <label
-                      key={d.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.driveType.includes(d.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              driveType: [...prev.driveType, d.name],
-                            }));
-                          } else {
-                            removeAppliedFilter("driveType", d.name);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{d.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({d.count ?? 0})
-                      </span>
-                    </label>
-                  ))
+                {filterOptions.drivetrain && filterOptions.drivetrain.length > 0 ? (
+                  (() => {
+                    const driveOptions = (filterOptions.drivetrain || []).map((d: any) => {
+                      const raw = String(d.name || "").trim();
+                      let display = raw;
+                      const lower = raw.toLowerCase();
+                      if (lower === "front wheel drive" || lower === "front-wheel drive") display = "FWD";
+                      else if (raw.includes("4MATIC") || raw.includes("4MATIC®") || lower.includes("4matic")) display = "AWD/FWD";
+                      return { ...d, displayName: display };
+                    });
+                    return (
+                      <>
+                        {driveOptions.map((d: any) => (
+                          <label
+                            key={d.name}
+                            className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              className="mr-2"
+                              checked={appliedFilters.driveType.includes(d.name)}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                if ((e.target as HTMLInputElement).checked) {
+                                  setAppliedFilters((prev) => ({
+                                    ...prev,
+                                    driveType: [...prev.driveType, d.name],
+                                  }));
+                                } else {
+                                  removeAppliedFilter("driveType", d.name);
+                                }
+                              }}
+                            />
+                            <span className="carzino-filter-option">{d.displayName}</span>
+                            <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
+                          </label>
+                        ))}
+                      </>
+                    );
+                  })()
                 ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No drive types available.
-                  </div>
+                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No drive types available.</div>
                 )}
               </div>
             </FilterSection>
+
 
             {/* Transmission */}
             <FilterSection
