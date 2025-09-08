@@ -2339,7 +2339,8 @@ export default function MySQLVehiclesOriginalStyle() {
               appliedFilters.paymentMax ||
               // Show the raw search query when present (only when it won't duplicate make/model/trim chips)
               (searchTerm && searchTerm.trim().length > 0) ||
-              (unifiedSearch && unifiedSearch.trim().length > 0 &&
+              (unifiedSearch &&
+                unifiedSearch.trim().length > 0 &&
                 appliedFilters.make.length === 0 &&
                 appliedFilters.model.length === 0 &&
                 appliedFilters.trim.length === 0) ? (
@@ -2356,7 +2357,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   <div className="flex flex-wrap gap-2">
                     {/* Show free-text search or unified search when appropriate */}
                     {(searchTerm && searchTerm.trim().length > 0) ||
-                    (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                    (unifiedSearch &&
+                      unifiedSearch.trim().length > 0 &&
                       appliedFilters.make.length === 0 &&
                       appliedFilters.model.length === 0 &&
                       appliedFilters.trim.length === 0) ? (
@@ -2496,7 +2498,8 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="flex flex-wrap gap-2">
                   {/* Show free-text search or unified search when appropriate */}
                   {(searchTerm && searchTerm.trim().length > 0) ||
-                  (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                  (unifiedSearch &&
+                    unifiedSearch.trim().length > 0 &&
                     appliedFilters.make.length === 0 &&
                     appliedFilters.model.length === 0 &&
                     appliedFilters.trim.length === 0) ? (
@@ -4445,7 +4448,8 @@ export default function MySQLVehiclesOriginalStyle() {
                 appliedFilters.paymentMax ||
                 // Show free-text search or unified search when appropriate
                 (searchTerm && searchTerm.trim().length > 0) ||
-                (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                (unifiedSearch &&
+                  unifiedSearch.trim().length > 0 &&
                   appliedFilters.make.length === 0 &&
                   appliedFilters.model.length === 0 &&
                   appliedFilters.trim.length === 0)) && (
@@ -4459,7 +4463,8 @@ export default function MySQLVehiclesOriginalStyle() {
                     </button>
                     {/* Show search pill when free-text or unified search should be visible */}
                     {(searchTerm && searchTerm.trim().length > 0) ||
-                    (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                    (unifiedSearch &&
+                      unifiedSearch.trim().length > 0 &&
                       appliedFilters.make.length === 0 &&
                       appliedFilters.model.length === 0 &&
                       appliedFilters.trim.length === 0) ? (
@@ -4745,7 +4750,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   appliedFilters.paymentMin ||
                   appliedFilters.paymentMax ||
                   (searchTerm && searchTerm.trim().length > 0) ||
-                  (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                  (unifiedSearch &&
+                    unifiedSearch.trim().length > 0 &&
                     appliedFilters.make.length === 0 &&
                     appliedFilters.model.length === 0 &&
                     appliedFilters.trim.length === 0)) && (
@@ -4757,7 +4763,8 @@ export default function MySQLVehiclesOriginalStyle() {
                       Clear All
                     </button>
                     {(searchTerm && searchTerm.trim().length > 0) ||
-                    (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                    (unifiedSearch &&
+                      unifiedSearch.trim().length > 0 &&
                       appliedFilters.make.length === 0 &&
                       appliedFilters.model.length === 0 &&
                       appliedFilters.trim.length === 0) ? (
