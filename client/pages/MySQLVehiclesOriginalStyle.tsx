@@ -4726,6 +4726,27 @@ export default function MySQLVehiclesOriginalStyle() {
                     >
                       Clear All
                     </button>
+                    {(searchTerm && searchTerm.trim().length > 0) ||
+                    (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                      appliedFilters.make.length === 0 &&
+                      appliedFilters.model.length === 0 &&
+                      appliedFilters.trim.length === 0) ? (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {searchTerm && searchTerm.trim().length > 0
+                          ? searchTerm
+                          : unifiedSearch}
+                        <button
+                          onClick={() => {
+                            setSearchTerm("");
+                            setUnifiedSearch("");
+                          }}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ) : null}
                     {appliedLocation && appliedRadius !== "nationwide" && (
                       <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
                         <Check className="w-3 h-3 text-red-600" />
