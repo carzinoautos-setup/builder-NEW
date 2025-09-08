@@ -2151,7 +2151,7 @@ export default function MySQLVehiclesOriginalStyle() {
           className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block ${mobileFiltersOpen ? "open" : ""}`}
           style={{ width: "280px" }}
         >
-          <div className="lg:hidden flex justify-between items-center mb-4 pb-4 px-4 pt-4">
+          <div className="hidden">
             <h2 className="text-lg font-semibold">Filters</h2>
             <button
               onClick={() => setMobileFiltersOpen(false)}
