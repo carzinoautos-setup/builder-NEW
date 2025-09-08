@@ -385,11 +385,18 @@ export default function MySQLVehiclesOriginalStyle() {
       const persisted = loadPersistedAppliedFilters();
       if (!persisted) return;
       // detect if current appliedFilters look empty (no user selections)
-      const hasPersisted = Object.values(persisted as any).some((v: any) => Array.isArray(v) ? v.length > 0 : Boolean(v));
-      const currentHasAny = Object.values(appliedFilters as any).some((v: any) => Array.isArray(v) ? v.length > 0 : Boolean(v));
+      const hasPersisted = Object.values(persisted as any).some((v: any) =>
+        Array.isArray(v) ? v.length > 0 : Boolean(v),
+      );
+      const currentHasAny = Object.values(appliedFilters as any).some(
+        (v: any) => (Array.isArray(v) ? v.length > 0 : Boolean(v)),
+      );
       if (hasPersisted && !currentHasAny) {
-        setAppliedFilters((prev) => ({ ...(prev as any), ...(persisted as any) }));
-        console.log('[filters] Rehydrated appliedFilters from sessionStorage');
+        setAppliedFilters((prev) => ({
+          ...(prev as any),
+          ...(persisted as any),
+        }));
+        console.log("[filters] Rehydrated appliedFilters from sessionStorage");
       }
     } catch (e) {
       /* ignore */
@@ -542,7 +549,10 @@ export default function MySQLVehiclesOriginalStyle() {
       // avoid pruning that specific filter value even if filterOptions haven't yet stabilized.
       const prunedSelective: any = { ...pruned };
       try {
-        const q = (searchTerm || unifiedSearch || "").toString().trim().toLowerCase();
+        const q = (searchTerm || unifiedSearch || "")
+          .toString()
+          .trim()
+          .toLowerCase();
         if (q) {
           // Preserve make/model/trim if they match the search term
           if (
@@ -551,7 +561,8 @@ export default function MySQLVehiclesOriginalStyle() {
             (!prunedSelective.make || prunedSelective.make.length === 0)
           ) {
             const m = appliedFilters.make[0].toString().toLowerCase();
-            if (q.includes(m) || m.includes(q)) prunedSelective.make = appliedFilters.make;
+            if (q.includes(m) || m.includes(q))
+              prunedSelective.make = appliedFilters.make;
           }
           if (
             Array.isArray(appliedFilters.model) &&
@@ -559,7 +570,8 @@ export default function MySQLVehiclesOriginalStyle() {
             (!prunedSelective.model || prunedSelective.model.length === 0)
           ) {
             const mo = appliedFilters.model[0].toString().toLowerCase();
-            if (q.includes(mo) || mo.includes(q)) prunedSelective.model = appliedFilters.model;
+            if (q.includes(mo) || mo.includes(q))
+              prunedSelective.model = appliedFilters.model;
           }
           if (
             Array.isArray(appliedFilters.trim) &&
@@ -567,7 +579,8 @@ export default function MySQLVehiclesOriginalStyle() {
             (!prunedSelective.trim || prunedSelective.trim.length === 0)
           ) {
             const tr = appliedFilters.trim[0].toString().toLowerCase();
-            if (q.includes(tr) || tr.includes(q)) prunedSelective.trim = appliedFilters.trim;
+            if (q.includes(tr) || tr.includes(q))
+              prunedSelective.trim = appliedFilters.trim;
           }
         }
       } catch (e) {
@@ -575,7 +588,10 @@ export default function MySQLVehiclesOriginalStyle() {
       }
 
       // Merge pruned values into existing state to preserve any missing keys
-      const newFilters = { ...(appliedFilters as any), ...(prunedSelective as any) };
+      const newFilters = {
+        ...(appliedFilters as any),
+        ...(prunedSelective as any),
+      };
       setAppliedFilters(newFilters);
       updateURLFromFilters(newFilters);
     }
@@ -1725,14 +1741,13 @@ export default function MySQLVehiclesOriginalStyle() {
     setUnifiedSearch(q);
 
     // Only set searchTerm (used as free-text 'search' param) if the parser did not extract explicit filters
-    const hasExplicit = (
+    const hasExplicit =
       (parsedFilters.make && parsedFilters.make.length > 0) ||
       (parsedFilters.model && parsedFilters.model.length > 0) ||
       (parsedFilters.trim && parsedFilters.trim.length > 0) ||
       (parsedFilters.condition && parsedFilters.condition.length > 0) ||
       (parsedFilters.year && parsedFilters.year.length > 0) ||
-      (parsedFilters.bodyStyle && parsedFilters.bodyStyle.length > 0)
-    );
+      (parsedFilters.bodyStyle && parsedFilters.bodyStyle.length > 0);
     if (hasExplicit) {
       // Clear any free-text search to avoid combining search + explicit filters which may return empty from WP
       setSearchTerm("");

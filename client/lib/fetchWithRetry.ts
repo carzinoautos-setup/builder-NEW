@@ -85,10 +85,17 @@ export async function fetchWithRetry(
         // Try a sequence of absolute fallbacks to handle embedded environments (preview iframes, proxies)
         const candidates: string[] = [window.location.origin];
         try {
-          if (typeof import.meta !== "undefined" && (import.meta as any).env && (import.meta as any).env.VITE_WP_URL) {
-            const envBase = String((import.meta as any).env.VITE_WP_URL).replace(/\/$/, "");
+          if (
+            typeof import.meta !== "undefined" &&
+            (import.meta as any).env &&
+            (import.meta as any).env.VITE_WP_URL
+          ) {
+            const envBase = String(
+              (import.meta as any).env.VITE_WP_URL,
+            ).replace(/\/$/, "");
             // Only add if different
-            if (envBase && envBase !== window.location.origin) candidates.push(envBase);
+            if (envBase && envBase !== window.location.origin)
+              candidates.push(envBase);
           }
         } catch (e) {
           /* ignore env read errors */
@@ -105,7 +112,11 @@ export async function fetchWithRetry(
             });
             if (res2) return res2;
           } catch (e) {
-            console.warn("fetchWithRetry: absolute origin retry failed for base", base, e);
+            console.warn(
+              "fetchWithRetry: absolute origin retry failed for base",
+              base,
+              e,
+            );
             // try next candidate
           }
         }
@@ -129,13 +140,20 @@ export async function fetchWithRetry(
         }
 
         // For other network-level errors, return a graceful response object instead of throwing
-        console.warn("fetchWithRetry: final network error", err && err.message ? err.message : err);
+        console.warn(
+          "fetchWithRetry: final network error",
+          err && err.message ? err.message : err,
+        );
         return {
           ok: false,
           status: 0,
           statusText: err && err.message ? err.message : "Network error",
-          json: async () => ({ success: false, message: err && err.message ? err.message : "Network error" }),
-          text: async () => (err && err.message ? String(err.message) : "Network error"),
+          json: async () => ({
+            success: false,
+            message: err && err.message ? err.message : "Network error",
+          }),
+          text: async () =>
+            err && err.message ? String(err.message) : "Network error",
         } as any;
       }
 
@@ -150,7 +168,10 @@ export async function fetchWithRetry(
     ok: false,
     status: 0,
     statusText: "Failed to fetch after retries",
-    json: async () => ({ success: false, message: "Failed to fetch after retries" }),
+    json: async () => ({
+      success: false,
+      message: "Failed to fetch after retries",
+    }),
     text: async () => "Failed to fetch after retries",
   } as any;
 }
