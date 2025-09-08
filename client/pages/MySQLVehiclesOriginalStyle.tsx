@@ -3675,6 +3675,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Search by Vehicle Type */}
+            {((vehicleTypes && vehicleTypes.length>0) || (appliedFilters.vehicleType && appliedFilters.vehicleType.length>0)) && (
             <FilterSection
               title="Search by Vehicle Type"
               isCollapsed={collapsedFilters.vehicleType}
@@ -3746,6 +3747,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 })()}
               </div>
             </FilterSection>
+            )}
 
             {/* Drive Type */}
             <FilterSection
