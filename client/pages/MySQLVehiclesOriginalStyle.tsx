@@ -793,7 +793,7 @@ export default function MySQLVehiclesOriginalStyle() {
       }
 
       const apiUrl = `/api/vehicles?${params.toString()}`;
-      console.log("��� Fetching vehicles from:", apiUrl);
+      console.log("Fetching vehicles from:", apiUrl);
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
       const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
