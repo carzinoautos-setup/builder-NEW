@@ -4041,6 +4041,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Doors */}
+            {((filterOptions && filterOptions.doors && filterOptions.doors.length>0) || (appliedFilters.doors && appliedFilters.doors.length>0)) && (
             <FilterSection
               title="Doors"
               isCollapsed={collapsedFilters.doors}
@@ -4085,6 +4086,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* NEW: Fuel Type */}
             <FilterSection
