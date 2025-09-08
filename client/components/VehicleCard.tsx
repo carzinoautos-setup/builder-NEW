@@ -274,7 +274,13 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               />
             )}
             <span className="text-black font-medium">
-              {vehicle.transmission}
+              {(() => {
+                const t = (vehicle.transmission || "").toString().trim();
+                if (!t) return "";
+                // Normalize common variants to 'Auto'
+                if (/^auto(matic)?$/i.test(t)) return "Auto";
+                return t;
+              })()}
             </span>
           </div>
           <div className="flex items-center gap-1">
