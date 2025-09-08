@@ -4448,6 +4448,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* City */}
+            {((filterOptions && filterOptions.city_seller && filterOptions.city_seller.length>0) || ((appliedFilters as any).city && (appliedFilters as any).city.length>0)) && (
             <FilterSection
               title="City"
               isCollapsed={collapsedFilters.city}
@@ -4500,6 +4501,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* Title Status (moved to bottom) */}
             <FilterSection
