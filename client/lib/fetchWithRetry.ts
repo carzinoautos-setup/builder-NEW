@@ -97,20 +97,32 @@ export async function fetchWithRetry(
         }
       }
 
-      // If last attempt, throw a clearer error for aborts/timeouts
+      // If last attempt, do not throw raw network errors that bubble as unhandled rejections
       if (attempt === retries) {
+        // Normalize abort errors
         if (err && err.name === "AbortError") {
           const abortErr = new Error("Request aborted or timed out");
           abortErr.name = "AbortError";
-          throw abortErr;
+          // Return a graceful response-like object so callers can handle failures
+          console.warn("fetchWithRetry: final abort/timeout", abortErr.message);
+          return {
+            ok: false,
+            status: 0,
+            statusText: abortErr.message,
+            json: async () => ({ success: false, message: abortErr.message }),
+            text: async () => abortErr.message,
+          } as any;
         }
-        // If the thrown error is an AbortError from fetch, normalize its name
-        if (err && err.name === "AbortError") {
-          const abortErr = new Error("Request aborted or timed out");
-          abortErr.name = "AbortError";
-          throw abortErr;
-        }
-        throw err;
+
+        // For other network-level errors, return a graceful response object instead of throwing
+        console.warn("fetchWithRetry: final network error", err && err.message ? err.message : err);
+        return {
+          ok: false,
+          status: 0,
+          statusText: err && err.message ? err.message : "Network error",
+          json: async () => ({ success: false, message: err && err.message ? err.message : "Network error" }),
+          text: async () => (err && err.message ? String(err.message) : "Network error"),
+        } as any;
       }
 
       // Wait with backoff then retry
@@ -119,6 +131,12 @@ export async function fetchWithRetry(
     }
   }
 
-  // Shouldn't get here
-  throw new Error("Failed to fetch after retries");
+  // Shouldn't get here - return a graceful failure
+  return {
+    ok: false,
+    status: 0,
+    statusText: "Failed to fetch after retries",
+    json: async () => ({ success: false, message: "Failed to fetch after retries" }),
+    text: async () => "Failed to fetch after retries",
+  } as any;
 }
