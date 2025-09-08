@@ -17,16 +17,30 @@ export async function fetchWithRetry(
       if (parentSignal.aborted) {
         // Abort the child controller without passing the parent reason to avoid
         // runtime errors in environments that don't support abort reasons.
-        controller.abort();
+        try {
+          controller.abort();
+        } catch (e) {
+          console.warn("fetchWithRetry: controller.abort() threw during immediate abort:", e);
+        }
       } else {
         parentAbortHandler = () => {
-          controller.abort();
+          try {
+            controller.abort();
+          } catch (e) {
+            console.warn("fetchWithRetry: controller.abort() threw in parent handler:", e);
+          }
         };
         parentSignal.addEventListener("abort", parentAbortHandler);
       }
     }
 
-    const id = setTimeout(() => controller.abort(), timeout);
+    const id = setTimeout(() => {
+      try {
+        controller.abort();
+      } catch (e) {
+        console.warn("fetchWithRetry: controller.abort() threw on timeout:", e);
+      }
+    }, timeout);
 
     try {
       const res = await fetch(input, { ...init, signal: controller.signal });
