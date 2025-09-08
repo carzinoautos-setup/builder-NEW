@@ -3888,9 +3888,24 @@ export default function MySQLVehiclesOriginalStyle() {
                       showMoreTransmission,
                       8,
                     );
+
+                    // Deduplicate displayed options by normalized label
+                    const normalizedDisplayed = (() => {
+                      const seen = new Set<string>();
+                      const out: any[] = [];
+                      for (const it of displayed) {
+                        const disp = normalizeTransmission(it.name);
+                        if (!seen.has(disp)) {
+                          seen.add(disp);
+                          out.push({ ...it, displayName: disp });
+                        }
+                      }
+                      return out;
+                    })();
+
                     return (
                       <>
-                        {displayed.map((t: any) => (
+                        {normalizedDisplayed.map((t: any) => (
                           <label
                             key={t.name}
                             className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
@@ -3923,7 +3938,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               }}
                             />
                             <span className="carzino-filter-option">
-                              {normalizeTransmission(t.name)}
+                              {t.displayName || t.name}
                             </span>
                             <span className="carzino-filter-count ml-1">
                               ({t.count ?? 0})
