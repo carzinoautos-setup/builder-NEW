@@ -4491,58 +4491,75 @@ export default function MySQLVehiclesOriginalStyle() {
             {!mobileFiltersOpen && (
               <div className="sticky top-0 z-50">
                   {/* Mobile applied pills - combined in sticky bar */}
-                  <div className="lg:hidden px-3 py-2 overflow-x-auto bg-white flex gap-2 items-center">
-                    <button
-                      onClick={clearAllFilters}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
-                    >
-                      Clear All
-                    </button>
-                    {appliedLocation && appliedRadius !== "nationwide" && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                        <Check className="w-3 h-3 text-red-600" />
-                        <MapPin className="w-3 h-3" />
-                        {appliedRadius} miles
-                        <button
-                          onClick={() => {
-                            setAppliedLocation(null);
-                            setAppliedRadius("200");
-                          }}
-                          className="ml-1 text-white"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    )}
-                    {appliedFilters.condition.map((item) => (
-                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                        <Check className="w-3 h-3 text-red-600" />
-                        {item}
-                        <button onClick={() => removeAppliedFilter("condition", item)} className="ml-1 text-white">×</button>
-                      </span>
-                    ))}
-                    {appliedFilters.make.map((item) => (
-                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                        <Check className="w-3 h-3 text-red-600" />
-                        {item}
-                        <button onClick={() => removeAppliedFilter("make", item)} className="ml-1 text-white">×</button>
-                      </span>
-                    ))}
-                    {appliedFilters.model.map((item) => (
-                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                        <Check className="w-3 h-3 text-red-600" />
-                        {item}
-                        <button onClick={() => removeAppliedFilter("model", item)} className="ml-1 text-white">×</button>
-                      </span>
-                    ))}
-                    {appliedFilters.trim.map((item) => (
-                      <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                        <Check className="w-3 h-3 text-red-600" />
-                        {item}
-                        <button onClick={() => removeAppliedFilter("trim", item)} className="ml-1 text-white">×</button>
-                      </span>
-                    ))}
-                  </div>
+                  {((appliedLocation && appliedRadius !== "nationwide") ||
+                    appliedFilters.condition.length > 0 ||
+                    appliedFilters.make.length > 0 ||
+                    appliedFilters.model.length > 0 ||
+                    appliedFilters.trim.length > 0 ||
+                    appliedFilters.year.length > 0 ||
+                    appliedFilters.bodyStyle.length > 0 ||
+                    appliedFilters.vehicleType.length > 0 ||
+                    appliedFilters.driveType.length > 0 ||
+                    appliedFilters.exteriorColor.length > 0 ||
+                    appliedFilters.sellerType.length > 0 ||
+                    appliedFilters.mileage ||
+                    appliedFilters.priceMin ||
+                    appliedFilters.priceMax ||
+                    appliedFilters.paymentMin ||
+                    appliedFilters.paymentMax) && (
+                    <div className="lg:hidden px-3 py-2 overflow-x-auto bg-white flex gap-2 items-center">
+                      <button
+                        onClick={clearAllFilters}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        Clear All
+                      </button>
+                      {appliedLocation && appliedRadius !== "nationwide" && (
+                        <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                          <Check className="w-3 h-3 text-red-600" />
+                          <MapPin className="w-3 h-3" />
+                          {appliedRadius} miles
+                          <button
+                            onClick={() => {
+                              setAppliedLocation(null);
+                              setAppliedRadius("200");
+                            }}
+                            className="ml-1 text-white"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      )}
+                      {appliedFilters.condition.map((item) => (
+                        <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                          <Check className="w-3 h-3 text-red-600" />
+                          {item}
+                          <button onClick={() => removeAppliedFilter("condition", item)} className="ml-1 text-white">×</button>
+                        </span>
+                      ))}
+                      {appliedFilters.make.map((item) => (
+                        <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                          <Check className="w-3 h-3 text-red-600" />
+                          {item}
+                          <button onClick={() => removeAppliedFilter("make", item)} className="ml-1 text-white">×</button>
+                        </span>
+                      ))}
+                      {appliedFilters.model.map((item) => (
+                        <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                          <Check className="w-3 h-3 text-red-600" />
+                          {item}
+                          <button onClick={() => removeAppliedFilter("model", item)} className="ml-1 text-white">×</button>
+                        </span>
+                      ))}
+                      {appliedFilters.trim.map((item) => (
+                        <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                          <Check className="w-3 h-3 text-red-600" />
+                          {item}
+                          <button onClick={() => removeAppliedFilter("trim", item)} className="ml-1 text-white">×</button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 {/* Filter, Sort, Favorites Bar */}
                 <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md">
                   <button
