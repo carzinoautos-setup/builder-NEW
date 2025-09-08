@@ -4713,7 +4713,12 @@ export default function MySQLVehiclesOriginalStyle() {
                   appliedFilters.priceMin ||
                   appliedFilters.priceMax ||
                   appliedFilters.paymentMin ||
-                  appliedFilters.paymentMax) && (
+                  appliedFilters.paymentMax ||
+                  (searchTerm && searchTerm.trim().length > 0) ||
+                  (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                    appliedFilters.make.length === 0 &&
+                    appliedFilters.model.length === 0 &&
+                    appliedFilters.trim.length === 0)) && (
                   <div className="lg:hidden px-3 py-2 overflow-x-auto bg-white flex gap-2 items-center">
                     <button
                       onClick={clearAllFilters}
