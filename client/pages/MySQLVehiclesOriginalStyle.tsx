@@ -3750,6 +3750,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Drive Type */}
+            {((filterOptions && filterOptions.drivetrain && filterOptions.drivetrain.length>0) || (appliedFilters.driveType && appliedFilters.driveType.length>0)) && (
             <FilterSection
               title="Drive Type"
               isCollapsed={collapsedFilters.driveType}
@@ -3876,6 +3877,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* Transmission */}
             {(appliedFilters.transmission.length > 0 ||
