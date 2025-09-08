@@ -169,18 +169,32 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           return undefined;
         };
 
-        // Fetch unscoped (global) filter options to ensure Make list remains complete
+        // Fetch scoped filter options first (scoped to current appliedFilters)
+        const scopedQs = buildFiltersQuery(filters || {});
+        const scopedUrl = `/api/vehicles/filters${scopedQs ? `?${scopedQs}` : ""}`;
+        console.log(
+          "🔍 Fetching scoped filter options:",
+          scopedUrl,
+          `id=${localId}`,
+        );
+        const scopedRes = await fetchWithRetry(
+          scopedUrl,
+          { method: "GET", signal: controller.signal },
+          2,
+          15000,
+        );
+        if (!scopedRes.ok) throw new Error(`Filters error ${scopedRes.status}`);
+        const scopedJson = await scopedRes.json();
+
+        // Fetch unscoped make list (keep models/trims and other categories scoped).
         const unscopedFilters: any = { ...(filters || {}) };
-        // Keep Make/Model/Trim lists complete by removing their scoping filters
-        delete unscopedFilters.make;
+        // Remove make/model/trim to obtain a complete list of makes (scoped by other filters)
         delete unscopedFilters.model;
         delete unscopedFilters.trim;
-        // Also remove fuelType so the fuel list remains complete even if a default selection exists
-        delete unscopedFilters.fuelType;
         const unscopedQs = buildFiltersQuery(unscopedFilters || {});
         const unscopedUrl = `/api/vehicles/filters${unscopedQs ? `?${unscopedQs}` : ""}`;
         console.log(
-          "🔍 Fetching unscoped filter options:",
+          "🔍 Fetching unscoped make list:",
           unscopedUrl,
           `id=${localId}`,
         );
@@ -190,8 +204,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           2,
           15000,
         );
-        if (!unscopedRes.ok)
-          throw new Error(`Filters error ${unscopedRes.status}`);
+        if (!unscopedRes.ok) throw new Error(`Filters error ${unscopedRes.status}`);
         const unscopedJson = await unscopedRes.json();
 
         // Parse helper to convert WP plugin json.filters or json.data into a FilterMap
