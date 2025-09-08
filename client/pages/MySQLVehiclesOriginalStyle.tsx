@@ -3937,28 +3937,19 @@ export default function MySQLVehiclesOriginalStyle() {
                             <input
                               type="checkbox"
                               className="mr-2"
-                              checked={appliedFilters.transmissionSpeed.includes(
-                                t.name,
-                              )}
+                              checked={appliedFilters.transmissionSpeed.some((v) => normalizeTransmission(v) === (t.displayName || t.name))}
                               onChange={(e) => {
                                 e.stopPropagation();
-                                if ((e.target as HTMLInputElement).checked) {
-                                  setAppliedFilters((prev) => ({
-                                    ...prev,
-                                    transmissionSpeed: [
-                                      ...prev.transmissionSpeed,
-                                      t.name,
-                                    ],
-                                  }));
-                                } else {
-                                  setAppliedFilters((prev) => ({
-                                    ...prev,
-                                    transmissionSpeed:
-                                      prev.transmissionSpeed.filter(
-                                        (v) => v !== t.name,
-                                      ),
-                                  }));
-                                }
+                                const label = t.displayName || t.name;
+                                const checked = (e.target as HTMLInputElement).checked;
+                                setAppliedFilters((prev) => {
+                                  // remove any existing values that normalize to this label
+                                  const filtered = prev.transmissionSpeed.filter((v) => normalizeTransmission(v) !== label);
+                                  const nextArr = checked ? [...filtered, t.name] : filtered;
+                                  const next = { ...prev, transmissionSpeed: nextArr };
+                                  updateURLFromFilters(next);
+                                  return next;
+                                });
                               }}
                             />
                             <span className="carzino-filter-option">
