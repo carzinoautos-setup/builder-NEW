@@ -67,6 +67,21 @@ export async function fetchWithRetry(
         }
       }
 
+      // If this looks like a network-level failure for a relative path, try absolute origin once
+      const isNetworkError = err && (err.message === "Failed to fetch" || err.name === "TypeError");
+      if (isNetworkError && typeof input === "string" && input.startsWith("/") && attempt < retries) {
+        try {
+          const absolute = window.location.origin + input;
+          // small backoff before trying absolute
+          await new Promise((r) => setTimeout(r, 200));
+          const res2 = await fetch(absolute, { ...init, signal: controller.signal });
+          if (res2) return res2;
+        } catch (e) {
+          // fall through to normal retry logic
+          console.warn("fetchWithRetry: absolute origin retry failed", e);
+        }
+      }
+
       // If last attempt, throw a clearer error for aborts/timeouts
       if (attempt === retries) {
         if (err && err.name === "AbortError") {
