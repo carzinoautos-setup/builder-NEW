@@ -4175,7 +4175,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Applied Filters Pills - Outside sticky container, always visible */}
-            {((appliedLocation && appliedRadius !== "nationwide") ||
+            {!mobileFiltersOpen && ((appliedLocation && appliedRadius !== "nationwide") ||
               appliedFilters.condition.length > 0 ||
               appliedFilters.make.length > 0 ||
               appliedFilters.model.length > 0 ||
