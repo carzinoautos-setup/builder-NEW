@@ -1613,10 +1613,11 @@ export default function MySQLVehiclesOriginalStyle() {
   const handleUnifiedSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!unifiedSearch.trim()) return;
+    const q = unifiedSearch.trim();
+    if (!q) return;
 
     // Parse the unified search query
-    const parsedFilters = parseUnifiedSearch(unifiedSearch);
+    const parsedFilters = parseUnifiedSearch(q);
 
     // Generate URL and navigate
     const searchURL = generateURLFromFilters({
@@ -1628,7 +1629,7 @@ export default function MySQLVehiclesOriginalStyle() {
       bodyStyle: parsedFilters.bodyStyle?.[0],
     });
 
-    // Clear any previously applied filters first
+    // Clear any previously applied filters first (but we'll restore the unified search below)
     clearAllFilters();
 
     // Apply only the parsed filters from the unified search (everything else cleared)
@@ -1659,6 +1660,10 @@ export default function MySQLVehiclesOriginalStyle() {
       status: [],
     });
 
+    // Restore unified search input (clearAllFilters cleared it) and set searchTerm
+    setUnifiedSearch(q);
+    setSearchTerm(q);
+
     // Navigate to the generated URL
     navigate(searchURL);
 
@@ -1668,9 +1673,6 @@ export default function MySQLVehiclesOriginalStyle() {
     } catch (err) {
       // ignore if state not available in this scope
     }
-
-    // Preserve the unified search input and set searchTerm used for API queries
-    setSearchTerm(unifiedSearch.trim());
   };
 
   // Geocoding function to convert ZIP to lat/lng using optimized backend
