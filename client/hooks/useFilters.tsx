@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { fetchWithRetry } from "@/lib/fetchWithRetry";
 
 export type AppliedFilters = {
