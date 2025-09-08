@@ -2130,6 +2130,25 @@ export default function MySQLVehiclesOriginalStyle() {
           </div>
 
           <div className="p-4">
+            {/* Mobile Filter Action Buttons (moved to top) */}
+            <div className="lg:hidden p-2 mb-4 border-b border-gray-200">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileFiltersOpen(false);
+                  }}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
             {/* Search Section - Mobile Only */}
             <div className="lg:hidden mb-4 pb-4 border-b border-gray-200">
               <form onSubmit={handleUnifiedSearchSubmit} className="space-y-2">
