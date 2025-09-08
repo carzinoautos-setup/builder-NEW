@@ -545,6 +545,14 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                 { respKey: "make", localKey: "make" },
                 // Ensure condition counts are authoritative
                 { respKey: "condition", localKey: "condition" },
+                // Compute authoritative counts for fuel type and related attributes so counts respect current filters
+                { respKey: "fuel_type", localKey: "fuelType" },
+                { respKey: "transmission", localKey: "transmission" },
+                { respKey: "transmission_speed", localKey: "transmissionSpeed" },
+                { respKey: "drivetrain", localKey: "driveType" },
+                { respKey: "exterior_color", localKey: "exteriorColor" },
+                { respKey: "interior_color", localKey: "interiorColor" },
+                { respKey: "doors", localKey: "doors" },
               ];
 
             for (const cat of categoriesToCompute) {
