@@ -2336,7 +2336,13 @@ export default function MySQLVehiclesOriginalStyle() {
               appliedFilters.priceMin ||
               appliedFilters.priceMax ||
               appliedFilters.paymentMin ||
-              appliedFilters.paymentMax ? (
+              appliedFilters.paymentMax ||
+              // Show the raw search query when present (only when it won't duplicate make/model/trim chips)
+              (searchTerm && searchTerm.trim().length > 0) ||
+              (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                appliedFilters.make.length === 0 &&
+                appliedFilters.model.length === 0 &&
+                appliedFilters.trim.length === 0) ? (
                 <>
                   <div className="pt-2 flex items-center justify-between mb-2">
                     <h3 className="carzino-filter-title">Applied Filters</h3>
