@@ -554,10 +554,14 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         };
 
         // Fire and forget (only run if we have items worth computing)
-        const hasItems = Object.values(finalMap).some((arr) => Array.isArray(arr) && arr.length > 0);
+        const hasItems = Object.values(finalMap).some(
+          (arr) => Array.isArray(arr) && arr.length > 0,
+        );
         if (hasItems) {
           setTimeout(() => {
-            backgroundCompute().catch((ex) => console.warn("backgroundCompute uncaught:", ex));
+            backgroundCompute().catch((ex) =>
+              console.warn("backgroundCompute uncaught:", ex),
+            );
           }, 50);
         }
       } catch (err: any) {

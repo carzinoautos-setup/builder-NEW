@@ -17,14 +17,14 @@ const App = () => {
   // Global handler to avoid unhandled promise rejection noise during background fetches
   useEffect(() => {
     const onUnhandled = (e: PromiseRejectionEvent) => {
-      console.warn('Unhandled promise rejection captured:', e.reason);
+      console.warn("Unhandled promise rejection captured:", e.reason);
       // prevent default devtools noisy logging
       try {
         e.preventDefault();
       } catch {}
     };
-    window.addEventListener('unhandledrejection', onUnhandled);
-    return () => window.removeEventListener('unhandledrejection', onUnhandled);
+    window.addEventListener("unhandledrejection", onUnhandled);
+    return () => window.removeEventListener("unhandledrejection", onUnhandled);
   }, []);
 
   return (

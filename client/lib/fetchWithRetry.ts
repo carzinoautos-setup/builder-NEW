@@ -20,7 +20,10 @@ export async function fetchWithRetry(
           try {
             controller.abort();
           } catch (e) {
-            console.warn("fetchWithRetry: controller.abort() threw during immediate abort:", e);
+            console.warn(
+              "fetchWithRetry: controller.abort() threw during immediate abort:",
+              e,
+            );
           }
         }, 0);
       } else {
@@ -30,7 +33,10 @@ export async function fetchWithRetry(
             try {
               controller.abort();
             } catch (e) {
-              console.warn("fetchWithRetry: controller.abort() threw in parent handler:", e);
+              console.warn(
+                "fetchWithRetry: controller.abort() threw in parent handler:",
+                e,
+              );
             }
           }, 0);
         };
@@ -68,13 +74,22 @@ export async function fetchWithRetry(
       }
 
       // If this looks like a network-level failure for a relative path, try absolute origin once
-      const isNetworkError = err && (err.message === "Failed to fetch" || err.name === "TypeError");
-      if (isNetworkError && typeof input === "string" && input.startsWith("/") && attempt < retries) {
+      const isNetworkError =
+        err && (err.message === "Failed to fetch" || err.name === "TypeError");
+      if (
+        isNetworkError &&
+        typeof input === "string" &&
+        input.startsWith("/") &&
+        attempt < retries
+      ) {
         try {
           const absolute = window.location.origin + input;
           // small backoff before trying absolute
           await new Promise((r) => setTimeout(r, 200));
-          const res2 = await fetch(absolute, { ...init, signal: controller.signal });
+          const res2 = await fetch(absolute, {
+            ...init,
+            signal: controller.signal,
+          });
           if (res2) return res2;
         } catch (e) {
           // fall through to normal retry logic
