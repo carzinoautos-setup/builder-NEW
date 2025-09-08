@@ -2349,7 +2349,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     placeholder="Search Cars For Sale"
                     value={unifiedSearch}
                     onChange={(e) => setUnifiedSearch(e.target.value)}
-                    className="carzino-search-input w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
+                    className="carzino-search-input w-full px-3 py-2 pr-14 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
                   />
                   <button
                     type="submit"
