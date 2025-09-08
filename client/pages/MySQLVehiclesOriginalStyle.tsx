@@ -1317,7 +1317,7 @@ export default function MySQLVehiclesOriginalStyle() {
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
             console.log(
-              "🔁 Merged Builder VehicleTypeCard images into runtime mapping",
+              "��� Merged Builder VehicleTypeCard images into runtime mapping",
               foundImages,
             );
             // Clear persisted local overrides so Builder/editor images take effect immediately
@@ -1696,9 +1696,24 @@ export default function MySQLVehiclesOriginalStyle() {
       status: [],
     });
 
-    // Restore unified search input (clearAllFilters cleared it) and set searchTerm
+    // Restore unified search input (clearAllFilters cleared it)
     setUnifiedSearch(q);
-    setSearchTerm(q);
+
+    // Only set searchTerm (used as free-text 'search' param) if the parser did not extract explicit filters
+    const hasExplicit = (
+      (parsedFilters.make && parsedFilters.make.length > 0) ||
+      (parsedFilters.model && parsedFilters.model.length > 0) ||
+      (parsedFilters.trim && parsedFilters.trim.length > 0) ||
+      (parsedFilters.condition && parsedFilters.condition.length > 0) ||
+      (parsedFilters.year && parsedFilters.year.length > 0) ||
+      (parsedFilters.bodyStyle && parsedFilters.bodyStyle.length > 0)
+    );
+    if (hasExplicit) {
+      // Clear any free-text search to avoid combining search + explicit filters which may return empty from WP
+      setSearchTerm("");
+    } else {
+      setSearchTerm(q);
+    }
 
     // Navigate to the generated URL
     navigate(searchURL);
