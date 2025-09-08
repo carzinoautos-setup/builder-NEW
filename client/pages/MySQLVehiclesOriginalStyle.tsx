@@ -2071,7 +2071,7 @@ export default function MySQLVehiclesOriginalStyle() {
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.5);
-            z-index: 35;
+            z-index: 60;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
