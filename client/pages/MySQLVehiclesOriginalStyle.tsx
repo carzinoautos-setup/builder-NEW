@@ -3268,6 +3268,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Year Filter */}
+            {(appliedFilters.year.length > 0 || (filterOptions && filterOptions.year && filterOptions.year.length > 0)) && (
             <FilterSection
               title="Year"
               isCollapsed={collapsedFilters.year || false}
@@ -3351,6 +3352,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 </div>
               </div>
             </FilterSection>
+            )}
 
             {/* Price Filter */}
             <FilterSection
@@ -4993,7 +4995,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
                         >
-                          ×
+                          ��
                         </button>
                       </span>
                     ))}
