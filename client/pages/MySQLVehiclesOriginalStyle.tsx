@@ -3598,6 +3598,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Certified */}
+            {((appliedFilters.certified && appliedFilters.certified.length>0) || ((appliedFilters.condition && (appliedFilters.condition.includes("Used") || appliedFilters.condition.includes("used"))) && filterOptions && filterOptions.certified && filterOptions.certified.length>0)) && (
             <FilterSection
               title="Certified"
               isCollapsed={collapsedFilters.certified}
@@ -3640,6 +3641,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* Mileage */}
             <FilterSection
