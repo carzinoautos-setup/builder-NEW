@@ -130,8 +130,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         const unscopedRes = await fetchWithRetry(
           unscopedUrl,
           { method: "GET" },
-          1,
-          8000,
+          2,
+          15000,
         );
         if (!unscopedRes.ok)
           throw new Error(`Filters error ${unscopedRes.status}`);
