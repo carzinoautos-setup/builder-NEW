@@ -3550,6 +3550,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Condition */}
+            {((appliedFilters.condition && appliedFilters.condition.length>0) || (filterOptions && filterOptions.condition && filterOptions.condition.length>0)) && (
             <FilterSection
               title="Condition"
               isCollapsed={collapsedFilters.condition}
@@ -3594,6 +3595,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* Certified */}
             <FilterSection
