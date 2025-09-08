@@ -1509,6 +1509,18 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   };
 
+  const removeTransmissionDisplay = (label: string) => {
+    setAppliedFilters((prev) => {
+      const next = {
+        ...prev,
+        transmissionSpeed: prev.transmissionSpeed.filter((v) => normalizeTransmission(v) !== label),
+      };
+      // Update URL when transmissionSpeed changes
+      updateURLFromFilters(next);
+      return next;
+    });
+  };
+
   const clearAllFilters = () => {
     setSearchTerm("");
     setUnifiedSearch("");
