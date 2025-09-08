@@ -2697,6 +2697,22 @@ export default function MySQLVehiclesOriginalStyle() {
                       </button>
                     </span>
                   ))}
+                  {appliedFilters.transmissionSpeed.map((item) => (
+                    <span
+                      key={item}
+                      onClick={() => removeAppliedFilter("transmissionSpeed", item)}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {normalizeTransmission(item)}
+                      <button
+                        onClick={() => removeAppliedFilter("transmissionSpeed", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
                   {appliedFilters.exteriorColor.map((item) => (
                     <span
                       key={item}
@@ -3895,7 +3911,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               }}
                             />
                             <span className="carzino-filter-option">
-                              {t.name}
+                              {normalizeTransmission(t.name)}
                             </span>
                             <span className="carzino-filter-count ml-1">
                               ({t.count ?? 0})
@@ -4642,7 +4658,23 @@ export default function MySQLVehiclesOriginalStyle() {
                         </button>
                       </span>
                     ))}
-                    {appliedFilters.exteriorColor.map((item) => (
+                    {appliedFilters.transmissionSpeed.map((item) => (
+                    <span
+                      key={item}
+                      onClick={() => removeAppliedFilter("transmissionSpeed", item)}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {normalizeTransmission(item)}
+                      <button
+                        onClick={() => removeAppliedFilter("transmissionSpeed", item)}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  {appliedFilters.exteriorColor.map((item) => (
                       <span
                         key={item}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
