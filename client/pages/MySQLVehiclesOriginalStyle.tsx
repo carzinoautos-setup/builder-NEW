@@ -3055,7 +3055,8 @@ export default function MySQLVehiclesOriginalStyle() {
                       updateURLFromFilters(newFilters);
                       setCurrentPage(1);
                     }}
-                    className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none bg-white"
+                    onClick={(e) => e.stopPropagation()}
+                    className="carzino-dropdown-option w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none bg-white"
                   >
                     <option value="">Any</option>
                     {(filterOptions.year && filterOptions.year.length > 0
