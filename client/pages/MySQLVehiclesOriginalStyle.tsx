@@ -4257,6 +4257,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Exterior Color */}
+            {((exteriorColors && exteriorColors.length>0) || (appliedFilters.exteriorColor && appliedFilters.exteriorColor.length>0)) && (
             <FilterSection
               title="Exterior Color"
               isCollapsed={collapsedFilters.exteriorColor}
@@ -4273,8 +4274,10 @@ export default function MySQLVehiclesOriginalStyle() {
                 ))}
               </div>
             </FilterSection>
+            )}
 
             {/* Interior Color */}
+            {((interiorColors && interiorColors.length>0) || (appliedFilters.exteriorColor && appliedFilters.exteriorColor.length>0)) && (
             <FilterSection
               title="Interior Color"
               isCollapsed={collapsedFilters.interiorColor}
@@ -4291,6 +4294,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 ))}
               </div>
             </FilterSection>
+            )}
 
             {/* Seller Type */}
             <FilterSection
