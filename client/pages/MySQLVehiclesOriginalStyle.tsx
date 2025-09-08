@@ -2133,13 +2133,13 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Mobile Filter Action Buttons (moved to top) */}
             <div className="lg:hidden p-2 mb-4 border-b border-gray-200">
               <div className="flex gap-3">
-                <button
+                <button type="button"
                   onClick={() => setMobileFiltersOpen(false)}
                   className="flex-1 px-4 py-3 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
-                <button
+                <button type="button"
                   onClick={() => {
                     setMobileFiltersOpen(false);
                   }}
