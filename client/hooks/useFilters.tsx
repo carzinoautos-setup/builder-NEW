@@ -92,9 +92,9 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
   // Internal refs for fetch tracing and visibility guard
   const FETCH_PERSIST_KEY = "carzino_applied_filters_v2";
-  const latestFetchIdRef = React.useRef(0);
-  const fetchCounterRef = React.useRef(0);
-  const visibilityChangeAtRef = React.useRef(0);
+  const latestFetchIdRef = useRef(0);
+  const fetchCounterRef = useRef(0);
+  const visibilityChangeAtRef = useRef(0);
 
   // Persist incoming appliedFilters into sessionStorage so other contexts (Builder preview)
   // can rehydrate them. We avoid overwriting if sessionStorage is not available.
