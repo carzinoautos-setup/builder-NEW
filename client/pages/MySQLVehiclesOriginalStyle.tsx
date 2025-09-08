@@ -1335,7 +1335,7 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, [filterOptions]);
 
-  // No longer auto-fill missing vehicle types into localStorage — runtime mapping is controlled by imageMapping and Builder/editor overrides.
+  // No longer auto-fill missing vehicle types into localStorage �� runtime mapping is controlled by imageMapping and Builder/editor overrides.
   React.useEffect(() => {
     // keep vehicleImages unchanged here; mapping is set from loadImages()
   }, [vehicleTypes]);
@@ -2645,10 +2645,11 @@ export default function MySQLVehiclesOriginalStyle() {
 
                   <div className="flex-1">
                     <select
-                      value={radius}
-                      onChange={(e) => setRadius(e.target.value)}
-                      className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
-                    >
+  					value={radius}
+  					onChange={(e) => setRadius(e.target.value)}
+  					onClick={(e) => e.stopPropagation()}
+  					className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+  				  >
                       <option value="10">10 Miles</option>
                       <option value="25">25 Miles</option>
                       <option value="50">50 Miles</option>
