@@ -490,8 +490,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                 continue;
               }
 
-              // Small concurrency pool
-              const concurrency = 4;
+              // Small concurrency pool (reduced to limit parallel requests)
+              const concurrency = 2;
               let idx = 0;
 
               const worker = async () => {
@@ -504,7 +504,16 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                     filtersCopy[cat.localKey] = [item.name];
                     const qs = buildFiltersQuery(filtersCopy);
                     const url = `/api/vehicles${qs ? `?${qs}&page=1&per_page=1` : "?page=1&per_page=1"}`;
-                    const res = await fetchWithRetry(url, { method: "GET" });
+                    // Increase retries and timeout for background authoritative counts
+                    const res = await fetchWithRetry(url, { method: "GET" }, 2, 20000).catch((err) => {
+                      // Treat aborted/timeouts as non-fatal for counts
+                      console.warn("Count fetch network error for", url, err && err.message ? err.message : err);
+                      return null as any;
+                    });
+                    if (!res) {
+                      (item as any).count = (item as any).count || 0;
+                      continue;
+                    }
                     if (!res.ok) {
                       console.warn("Count fetch failed for", url, res.status);
                       (item as any).count = (item as any).count || 0;
