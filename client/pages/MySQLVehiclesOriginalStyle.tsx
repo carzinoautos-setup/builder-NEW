@@ -2161,9 +2161,29 @@ export default function MySQLVehiclesOriginalStyle() {
             </button>
           </div>
 
+          {/* Mobile Filter - top sticky action bar (Cancel/Apply moved here) */}
+          <div className="lg:hidden sticky top-0 z-[140] bg-white border-b border-gray-200 px-4 py-3">
+            <div className="flex gap-3">
+              <button type="button"
+                onClick={() => setMobileFiltersOpen(false)}
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button type="button"
+                onClick={() => {
+                  setMobileFiltersOpen(false);
+                }}
+                className="flex-1 px-4 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors"
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+
           <div className="p-4 pt-14">
             {/* Mobile Filter Action Buttons (moved to top) */}
-            <div className="lg:hidden mb-4 sticky top-0 z-[120] bg-white border-b border-gray-200 px-4 py-3">
+            <div className="hidden">
               <div className="flex gap-3 px-0">
                 <button type="button"
                   onClick={() => setMobileFiltersOpen(false)}
