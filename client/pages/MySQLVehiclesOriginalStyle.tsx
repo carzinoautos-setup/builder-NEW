@@ -3392,7 +3392,7 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Search by Vehicle Type */}
             <FilterSection
               title="Search by Vehicle Type"
-              isCollapsed={collapsedFilters.vehicleType}
+              isCollapsed={collapsedFilters.vehicleType || isMobile}
               onToggle={() => toggleFilter("vehicleType")}
             >
               <div className="grid grid-cols-2 gap-2">
