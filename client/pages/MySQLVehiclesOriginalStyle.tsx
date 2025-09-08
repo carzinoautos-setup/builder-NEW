@@ -2494,6 +2494,36 @@ export default function MySQLVehiclesOriginalStyle() {
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  {/* Show free-text search or unified search when appropriate */}
+                  {(searchTerm && searchTerm.trim().length > 0) ||
+                  (unifiedSearch && unifiedSearch.trim().length > 0 &&
+                    appliedFilters.make.length === 0 &&
+                    appliedFilters.model.length === 0 &&
+                    appliedFilters.trim.length === 0) ? (
+                    <span
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      onClick={() => {
+                        setSearchTerm("");
+                        setUnifiedSearch("");
+                      }}
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {searchTerm && searchTerm.trim().length > 0
+                        ? searchTerm
+                        : unifiedSearch}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSearchTerm("");
+                          setUnifiedSearch("");
+                        }}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null}
+
                   {appliedLocation && appliedRadius !== "nationwide" && (
                     <span
                       onClick={() => {
