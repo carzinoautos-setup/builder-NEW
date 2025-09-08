@@ -90,8 +90,50 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchFilters = useCallback(
-    async (filters = appliedFilters) => {
+  // Internal refs for fetch tracing and visibility guard
+  const FETCH_PERSIST_KEY = "carzino_applied_filters_v2";
+  const latestFetchIdRef = React.useRef(0);
+  const fetchCounterRef = React.useRef(0);
+  const visibilityChangeAtRef = React.useRef(0);
+
+  // Persist incoming appliedFilters into sessionStorage so other contexts (Builder preview)
+  // can rehydrate them. We avoid overwriting if sessionStorage is not available.
+  React.useEffect(() => {
+    try {
+      sessionStorage.setItem(FETCH_PERSIST_KEY, JSON.stringify(appliedFilters || {}));
+    } catch (e) {
+      // ignore quota errors
+    }
+  }, [appliedFilters]);
+
+  // Expose a helper to load persisted filters (parent can call this during reducer init)
+  // Note: we keep this as a named export below as loadPersistedAppliedFilters.
+
+  // Visibilitychange listener to mark when tab became visible/hidden - used to guard automatic refetches
+  React.useEffect(() => {
+    const onVis = () => {
+      visibilityChangeAtRef.current = Date.now();
+      console.log("[filters] visibilitychange ->", document.visibilityState, visibilityChangeAtRef.current);
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
+  const fetchFilters = React.useCallback(
+    async (filters = appliedFilters, opts?: { force?: boolean }) => {
+      // Guard: if the tab has just become visible, avoid auto-refetch race that may overwrite
+      // currently visible state. Allow forced fetches (user-initiated) by opts.force.
+      if (!opts?.force && Date.now() - visibilityChangeAtRef.current < 3000 && document.visibilityState === "visible") {
+        console.log("[filters][fetch ignored due to recent visibility change]");
+        return;
+      }
+
+      const localId = ++fetchCounterRef.current;
+      latestFetchIdRef.current = localId;
+      const startTs = Date.now();
+      console.log(`[filters][start] id=${localId} ts=${startTs}`);
+
+      const controller = new AbortController();
       try {
         setLoading(true);
         setError(null);
@@ -126,15 +168,14 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         delete unscopedFilters.fuelType;
         const unscopedQs = buildFiltersQuery(unscopedFilters || {});
         const unscopedUrl = `/api/vehicles/filters${unscopedQs ? `?${unscopedQs}` : ""}`;
-        console.log("🔍 Fetching unscoped filter options:", unscopedUrl);
+        console.log("🔍 Fetching unscoped filter options:", unscopedUrl, `id=${localId}`);
         const unscopedRes = await fetchWithRetry(
           unscopedUrl,
-          { method: "GET" },
+          { method: "GET", signal: controller.signal },
           2,
           15000,
         );
-        if (!unscopedRes.ok)
-          throw new Error(`Filters error ${unscopedRes.status}`);
+        if (!unscopedRes.ok) throw new Error(`Filters error ${unscopedRes.status}`);
         const unscopedJson = await unscopedRes.json();
 
         // Parse helper to convert WP plugin json.filters or json.data into a FilterMap
@@ -145,20 +186,16 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             const f = json.filters as Record<string, any>;
 
             const makes = pickArrayFromFilters(f, "makes", "make");
-            if (makes)
-              normalized.make = makes.map(mapItem).filter(Boolean) as any;
+            if (makes) normalized.make = makes.map(mapItem).filter(Boolean) as any;
 
             const models = pickArrayFromFilters(f, "models", "model");
-            if (models)
-              normalized.model = models.map(mapItem).filter(Boolean) as any;
+            if (models) normalized.model = models.map(mapItem).filter(Boolean) as any;
 
             const trims = pickArrayFromFilters(f, "trims", "trim");
-            if (trims)
-              normalized.trim = trims.map(mapItem).filter(Boolean) as any;
+            if (trims) normalized.trim = trims.map(mapItem).filter(Boolean) as any;
 
             const years = pickArrayFromFilters(f, "years", "year");
-            if (years)
-              normalized.year = years.map(mapItem).filter(Boolean) as any;
+            if (years) normalized.year = years.map(mapItem).filter(Boolean) as any;
 
             const bodyStyles = pickArrayFromFilters(
               f,
@@ -166,116 +203,45 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               "body_styles",
               "bodyStyles",
             );
-            if (bodyStyles)
-              normalized.body_style = bodyStyles
-                .map(mapItem)
-                .filter(Boolean) as any;
+            if (bodyStyles) normalized.body_style = bodyStyles.map(mapItem).filter(Boolean) as any;
 
-            const drivetrains = pickArrayFromFilters(
-              f,
-              "drivetrain",
-              "drivetrains",
-            );
-            if (drivetrains)
-              normalized.drivetrain = drivetrains
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const drivetrains = pickArrayFromFilters(f, "drivetrain", "drivetrains");
+            if (drivetrains) normalized.drivetrain = drivetrains.map(mapItem).filter(Boolean) as any;
 
-            const fuels = pickArrayFromFilters(
-              f,
-              "fuel_type",
-              "fuelTypes",
-              "fuel_types",
-            );
-            if (fuels)
-              normalized.fuel_type = fuels.map(mapItem).filter(Boolean) as any;
+            const fuels = pickArrayFromFilters(f, "fuel_type", "fuelTypes", "fuel_types");
+            if (fuels) normalized.fuel_type = fuels.map(mapItem).filter(Boolean) as any;
 
-            const transmissions = pickArrayFromFilters(
-              f,
-              "transmission",
-              "transmissions",
-            );
-            if (transmissions)
-              normalized.transmission = transmissions
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const transmissions = pickArrayFromFilters(f, "transmission", "transmissions");
+            if (transmissions) normalized.transmission = transmissions.map(mapItem).filter(Boolean) as any;
 
-            // Transmission speed (e.g., 4,6,8)
             const transSpeeds = pickArrayFromFilters(
               f,
               "transmission_speed",
               "transmissionSpeeds",
               "transmission_speed",
             );
-            if (transSpeeds)
-              normalized.transmission_speed = transSpeeds
-                .map(mapItem)
-                .filter(Boolean) as any;
+            if (transSpeeds) normalized.transmission_speed = transSpeeds.map(mapItem).filter(Boolean) as any;
 
-            // Doors
             const doors = pickArrayFromFilters(f, "doors");
-            if (doors)
-              normalized.doors = doors.map(mapItem).filter(Boolean) as any;
+            if (doors) normalized.doors = doors.map(mapItem).filter(Boolean) as any;
 
-            // Highway MPG
-            const highway = pickArrayFromFilters(
-              f,
-              "highway_mpg",
-              "highwayMpg",
-            );
-            if (highway)
-              normalized.highway_mpg = highway
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const highway = pickArrayFromFilters(f, "highway_mpg", "highwayMpg");
+            if (highway) normalized.highway_mpg = highway.map(mapItem).filter(Boolean) as any;
 
-            // Title status
-            const titles = pickArrayFromFilters(
-              f,
-              "title_status",
-              "titleStatus",
-            );
-            if (titles)
-              normalized.title_status = titles
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const titles = pickArrayFromFilters(f, "title_status", "titleStatus");
+            if (titles) normalized.title_status = titles.map(mapItem).filter(Boolean) as any;
 
-            // Generic status
             const statuses = pickArrayFromFilters(f, "status");
-            if (statuses)
-              normalized.status = statuses.map(mapItem).filter(Boolean) as any;
+            if (statuses) normalized.status = statuses.map(mapItem).filter(Boolean) as any;
 
-            const exterior = pickArrayFromFilters(
-              f,
-              "exterior_color",
-              "exterior_colors",
-              "exteriorColor",
-            );
-            if (exterior)
-              normalized.exterior_color = exterior
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const exterior = pickArrayFromFilters(f, "exterior_color", "exterior_colors", "exteriorColor");
+            if (exterior) normalized.exterior_color = exterior.map(mapItem).filter(Boolean) as any;
 
-            const interior = pickArrayFromFilters(
-              f,
-              "interior_color",
-              "interior_colors",
-              "interiorColor",
-            );
-            if (interior)
-              normalized.interior_color = interior
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const interior = pickArrayFromFilters(f, "interior_color", "interior_colors", "interiorColor");
+            if (interior) normalized.interior_color = interior.map(mapItem).filter(Boolean) as any;
 
-            const accountNames = pickArrayFromFilters(
-              f,
-              "account_name_seller",
-              "dealer",
-              "account_names_seller",
-            );
-            if (accountNames)
-              normalized.account_name_seller = accountNames
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const accountNames = pickArrayFromFilters(f, "account_name_seller", "dealer", "account_names_seller");
+            if (accountNames) normalized.account_name_seller = accountNames.map(mapItem).filter(Boolean) as any;
 
             const accountTypes = pickArrayFromFilters(
               f,
@@ -284,107 +250,35 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               "account_types_seller",
               "sellerType",
             );
-            if (accountTypes)
-              normalized.account_type_seller = accountTypes
-                .map(mapItem)
-                .filter(Boolean) as any;
+            if (accountTypes) normalized.account_type_seller = accountTypes.map(mapItem).filter(Boolean) as any;
 
-            const conditions = pickArrayFromFilters(
-              f,
-              "condition",
-              "conditions",
-            );
-            if (conditions)
-              normalized.condition = conditions
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const conditions = pickArrayFromFilters(f, "condition", "conditions");
+            if (conditions) normalized.condition = conditions.map(mapItem).filter(Boolean) as any;
 
-            const certified = pickArrayFromFilters(
-              f,
-              "certified",
-              "is_certified",
-            );
-            if (certified)
-              normalized.certified = certified
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const certified = pickArrayFromFilters(f, "certified", "is_certified");
+            if (certified) normalized.certified = certified.map(mapItem).filter(Boolean) as any;
 
-            const cities = pickArrayFromFilters(
-              f,
-              "city_seller",
-              "cities",
-              "city",
-            );
-            if (cities)
-              normalized.city_seller = cities
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const cities = pickArrayFromFilters(f, "city_seller", "cities", "city");
+            if (cities) normalized.city_seller = cities.map(mapItem).filter(Boolean) as any;
 
-            const states = pickArrayFromFilters(
-              f,
-              "state_seller",
-              "states",
-              "state",
-            );
-            if (states)
-              normalized.state_seller = states
-                .map(mapItem)
-                .filter(Boolean) as any;
+            const states = pickArrayFromFilters(f, "state_seller", "states", "state");
+            if (states) normalized.state_seller = states.map(mapItem).filter(Boolean) as any;
 
             return normalized;
           }
 
           if (json && json.success && json.data) {
             const map: FilterMap = {};
-            if (Array.isArray(json.data.makes))
-              map.make = json.data.makes.map((n: string) => ({
-                name: n,
-                count: 0,
-              }));
-            if (Array.isArray(json.data.models))
-              map.model = json.data.models.map((n: string) => ({
-                name: n,
-                count: 0,
-              }));
-            if (Array.isArray(json.data.trims))
-              map.trim = json.data.trims.map((n: string) => ({
-                name: n,
-                count: 0,
-              }));
-            if (Array.isArray(json.data.years))
-              map.year = json.data.years.map((n: string) => ({
-                name: String(n),
-                count: 0,
-              }));
-            if (Array.isArray(json.data.conditions))
-              map.condition = json.data.conditions.map((n: string) => ({
-                name: n,
-                count: 0,
-              }));
-            if (Array.isArray(json.data.fuelTypes))
-              map.fuel_type = json.data.fuelTypes.map((n: string) => ({
-                name: n,
-                count: 0,
-              }));
-            if (Array.isArray(json.data.transmissions))
-              map.transmission = json.data.transmissions.map((n: string) => ({
-                name: n,
-                count: 0,
-              }));
-            if (Array.isArray(json.data.drivetrains))
-              map.drivetrain = json.data.drivetrains.map((n: string) => ({
-                name: n,
-                count: 0,
-              }));
-            if (Array.isArray(json.data.bodyStyles))
-              map.body_style = json.data.bodyStyles.map((n: string) => ({
-                name: n,
-                count: 0,
-              }));
-            if (Array.isArray(json.data.sellerTypes))
-              map.account_type_seller = json.data.sellerTypes.map(
-                (n: string) => ({ name: n, count: 0 }),
-              );
+            if (Array.isArray(json.data.makes)) map.make = json.data.makes.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.models)) map.model = json.data.models.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.trims)) map.trim = json.data.trims.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.years)) map.year = json.data.years.map((n: string) => ({ name: String(n), count: 0 }));
+            if (Array.isArray(json.data.conditions)) map.condition = json.data.conditions.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.fuelTypes)) map.fuel_type = json.data.fuelTypes.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.transmissions)) map.transmission = json.data.transmissions.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.drivetrains)) map.drivetrain = json.data.drivetrains.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.bodyStyles)) map.body_style = json.data.bodyStyles.map((n: string) => ({ name: n, count: 0 }));
+            if (Array.isArray(json.data.sellerTypes)) map.account_type_seller = json.data.sellerTypes.map((n: string) => ({ name: n, count: 0 }));
             return map;
           }
 
@@ -395,25 +289,12 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
         // If we have selected makes, fetch scoped filters (models/trims) for those makes
         let scopedMap: FilterMap = {};
-        if (
-          filters &&
-          Array.isArray((filters as any).make) &&
-          (filters as any).make.length > 0
-        ) {
+        if (filters && Array.isArray((filters as any).make) && (filters as any).make.length > 0) {
           const scopedQs = buildFiltersQuery({ make: (filters as any).make });
           const scopedUrl = `/api/vehicles/filters${scopedQs ? `?${scopedQs}` : ""}`;
-          console.log(
-            "🔍 Fetching scoped filter options for selected makes:",
-            scopedUrl,
-          );
-          const scopedRes = await fetchWithRetry(
-            scopedUrl,
-            { method: "GET" },
-            1,
-            8000,
-          );
-          if (!scopedRes.ok)
-            throw new Error(`Filters error ${scopedRes.status}`);
+          console.log("🔍 Fetching scoped filter options for selected makes:", scopedUrl, `id=${localId}`);
+          const scopedRes = await fetchWithRetry(scopedUrl, { method: "GET", signal: controller.signal }, 1, 8000);
+          if (!scopedRes.ok) throw new Error(`Filters error ${scopedRes.status}`);
           const scopedJson = await scopedRes.json();
           scopedMap = parseJsonToMap(scopedJson);
         }
@@ -428,13 +309,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         // Remove any 'Uncategorized' or empty labels from all filter arrays
         const sanitize = (map: FilterMap) => {
           const out: FilterMap = {};
-          const blacklist = new Set([
-            "harley-davidson",
-            "harley davidson",
-            "harley",
-            "forest river",
-            "fleetwood",
-          ]);
+          const blacklist = new Set(["harley-davidson", "harley davidson", "harley", "forest river", "fleetwood"]);
           for (const [k, arr] of Object.entries(map)) {
             if (!Array.isArray(arr)) {
               (out as any)[k] = arr as any;
@@ -442,8 +317,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             }
             (out as any)[k] = (arr as any[])
               .filter((it) => {
-                const name =
-                  (it && (it.name || it.value || it.label || it)) || "";
+                const name = (it && (it.name || it.value || it.label || it)) || "";
                 const n = String(name).trim();
                 if (n === "") return false;
                 if (n.toLowerCase() === "uncategorized") return false;
@@ -458,7 +332,14 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         finalMap = sanitize(finalMap);
 
         // Merge maps set immediately so UI isn't blocked by additional count work
+        // Only commit if this fetch is still the latest
+        if (localId !== latestFetchIdRef.current || controller.signal.aborted) {
+          console.log(`[filters][ignore commit] id=${localId} (stale or aborted)`);
+          return;
+        }
+
         setFilterOptions(finalMap);
+        console.log(`[filters][commit] id=${localId} ts=${Date.now()}`);
 
         // For certain filter categories where WP counts may be unreliable (seller/dealer),
         // compute authoritative counts in the background (non-blocking) by querying /api/vehicles
@@ -466,27 +347,25 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         // This runs asynchronously and will update filterOptions when completed.
         const backgroundCompute = async () => {
           try {
-            const categoriesToCompute: { respKey: string; localKey: string }[] =
-              [
-                { respKey: "account_type_seller", localKey: "sellerType" },
-                { respKey: "account_name_seller", localKey: "dealer" },
-                { respKey: "state_seller", localKey: "state" },
-                { respKey: "city_seller", localKey: "city" },
-                // Ensure makes that only exist on uncategorized vehicles are removed
-                { respKey: "make", localKey: "make" },
-                // Ensure condition counts are authoritative
-                { respKey: "condition", localKey: "condition" },
-              ];
+            const categoriesToCompute: { respKey: string; localKey: string }[] = [
+              { respKey: "account_type_seller", localKey: "sellerType" },
+              { respKey: "account_name_seller", localKey: "dealer" },
+              { respKey: "state_seller", localKey: "state" },
+              { respKey: "city_seller", localKey: "city" },
+              // Ensure makes that only exist on uncategorized vehicles are removed
+              { respKey: "make", localKey: "make" },
+              // Ensure condition counts are authoritative
+              { respKey: "condition", localKey: "condition" },
+            ];
 
             for (const cat of categoriesToCompute) {
+              if (controller.signal.aborted) break;
               const items = (finalMap as any)[cat.respKey] as any[] | undefined;
               if (!items || items.length === 0) continue;
 
               // Avoid huge numbers of background requests — skip if list too large
               if (items.length > 60) {
-                console.warn(
-                  `Skipping authoritative counts for ${cat.respKey} (too many items: ${items.length})`,
-                );
+                console.warn(`Skipping authoritative counts for ${cat.respKey} (too many items: ${items.length})`);
                 continue;
               }
 
@@ -496,6 +375,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
               const worker = async () => {
                 while (idx < items.length) {
+                  if (controller.signal.aborted) return;
                   const i = idx++;
                   const item = items[i];
                   try {
@@ -505,7 +385,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                     const qs = buildFiltersQuery(filtersCopy);
                     const url = `/api/vehicles${qs ? `?${qs}&page=1&per_page=1` : "?page=1&per_page=1"}`;
                     // Increase retries and timeout for background authoritative counts
-                    const res = await fetchWithRetry(url, { method: "GET" }, 2, 20000).catch((err) => {
+                    const res = await fetchWithRetry(url, { method: "GET", signal: controller.signal }, 2, 20000).catch((err) => {
                       // Treat aborted/timeouts as non-fatal for counts
                       console.warn("Count fetch network error for", url, err && err.message ? err.message : err);
                       return null as any;
@@ -529,32 +409,27 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                       0;
                     (item as any).count = Number(total) || 0;
                   } catch (e) {
-                    console.warn(
-                      "Failed to compute count for",
-                      cat.respKey,
-                      item.name,
-                      e,
-                    );
+                    console.warn("Failed to compute count for", cat.respKey, item.name, e);
                   }
                 }
               };
 
               // Launch workers
-              await Promise.all(
-                Array.from({ length: concurrency }).map(() => worker()),
-              );
+              await Promise.all(Array.from({ length: concurrency }).map(() => worker()));
 
               // After computing counts for this category, remove zero-count or blank options
               const cleaned = (items || []).filter((it: any) => {
-                const name =
-                  (it && (it.name || it.value || it.label || it)) || "";
+                const name = (it && (it.name || it.value || it.label || it)) || "";
                 const count = Number((it && it.count) || 0);
-                return (
-                  String(name).trim() !== "" &&
-                  String(name).trim().toLowerCase() !== "uncategorized" &&
-                  count > 0
-                );
+                return String(name).trim() !== "" && String(name).trim().toLowerCase() !== "uncategorized" && count > 0;
               });
+
+              // Only commit background updates if this fetch is still the latest and not aborted
+              if (localId !== latestFetchIdRef.current || controller.signal.aborted) {
+                console.log(`[filters][background ignored] id=${localId}`);
+                return;
+              }
+
               setFilterOptions((prev) => ({ ...prev, [cat.respKey]: cleaned }));
             }
           } catch (ex) {
@@ -563,19 +438,16 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         };
 
         // Fire and forget (only run if we have items worth computing)
-        const hasItems = Object.values(finalMap).some(
-          (arr) => Array.isArray(arr) && arr.length > 0,
-        );
+        const hasItems = Object.values(finalMap).some((arr) => Array.isArray(arr) && arr.length > 0);
         if (hasItems) {
           setTimeout(() => {
-            backgroundCompute().catch((ex) =>
-              console.warn("backgroundCompute uncaught:", ex),
-            );
+            backgroundCompute().catch((ex) => console.warn("backgroundCompute uncaught:", ex));
           }, 50);
         }
       } catch (err: any) {
         setError(err?.message || "Failed to fetch filters");
-        setFilterOptions({});
+        console.warn(`[filters][error] id=${localId} err=${err && err.message ? err.message : err}`);
+        // Do not wipe existing filterOptions on transient errors — keep last known good state
       } finally {
         setLoading(false);
       }
@@ -583,9 +455,11 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
     [appliedFilters],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchFilters();
-  }, [fetchFilters]);
+    // We intentionally do not include fetchFilters in deps to avoid double-calls; rely on appliedFilters changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appliedFilters]);
 
   // Prune invalid applied filters against current options
   const pruneInvalid = useCallback(
