@@ -2162,7 +2162,7 @@ export default function MySQLVehiclesOriginalStyle() {
           </div>
 
           {/* Mobile Filter - top sticky action bar (Cancel/Apply moved here) */}
-          <div className="lg:hidden sticky top-0 z-[140] bg-white border-b border-gray-200 px-4 py-3">
+          <div className="lg:hidden sticky top-0 z-[140] bg-white border-b border-gray-200 px-4 pt-4 pb-3 lg:pt-3">
             <div className="flex gap-3">
               <button type="button"
                 onClick={() => setMobileFiltersOpen(false)}
