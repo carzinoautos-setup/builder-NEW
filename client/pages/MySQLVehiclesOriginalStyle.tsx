@@ -789,11 +789,20 @@ export default function MySQLVehiclesOriginalStyle() {
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
       const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
-      // Watchdog to avoid long loading spinners if backend is slow
+
+      // Create a controller so we can abort the fetch if watchdog triggers
+      const controller = new AbortController();
+
+      // Watchdog to avoid long loading spinners if backend is slow — abort the request
       const watchdog = setTimeout(() => {
-        console.warn(
-          "Fetch vehicles watchdog triggered — aborting loading state",
-        );
+        try {
+          console.warn(
+            "Fetch vehicles watchdog triggered — aborting request and loading state",
+          );
+          controller.abort();
+        } catch (e) {
+          console.warn("Failed to abort controller in watchdog:", e);
+        }
         setLoading(false);
         setError("Request timed out. Please try again.");
       }, 12000); // 12s
@@ -804,6 +813,7 @@ export default function MySQLVehiclesOriginalStyle() {
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
         },
         1,
         8000,
