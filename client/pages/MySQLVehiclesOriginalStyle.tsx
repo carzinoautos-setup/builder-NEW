@@ -4751,7 +4751,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Mobile Product Grid */}
-            <div className="p-4 bg-white min-h-screen pt-28 lg:pt-4">
+            <div className="p-4 bg-white min-h-screen pt-4 lg:pt-28">
               {loading && vehicles.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-lg">Loading vehicles...</div>
