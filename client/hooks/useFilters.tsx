@@ -477,8 +477,12 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           ...(scopedMap.model ? { model: scopedMap.model } : {}),
           ...(scopedMap.trim ? { trim: scopedMap.trim } : {}),
           // When scoped filters are available (eg. after selecting Make), prefer scoped transmission lists
-          ...(scopedMap.transmission ? { transmission: scopedMap.transmission } : {}),
-          ...(scopedMap.transmission_speed ? { transmission_speed: scopedMap.transmission_speed } : {}),
+          ...(scopedMap.transmission
+            ? { transmission: scopedMap.transmission }
+            : {}),
+          ...(scopedMap.transmission_speed
+            ? { transmission_speed: scopedMap.transmission_speed }
+            : {}),
         } as any;
 
         // Remove any 'Uncategorized' or empty labels from all filter arrays

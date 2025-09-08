@@ -1513,7 +1513,9 @@ export default function MySQLVehiclesOriginalStyle() {
     setAppliedFilters((prev) => {
       const next = {
         ...prev,
-        transmissionSpeed: prev.transmissionSpeed.filter((v) => normalizeTransmission(v) !== label),
+        transmissionSpeed: prev.transmissionSpeed.filter(
+          (v) => normalizeTransmission(v) !== label,
+        ),
       };
       // Update URL when transmissionSpeed changes
       updateURLFromFilters(next);
@@ -2711,7 +2713,11 @@ export default function MySQLVehiclesOriginalStyle() {
                   ))}
                   {(() => {
                     const unique = Array.from(
-                      new Set(appliedFilters.transmissionSpeed.map((v) => normalizeTransmission(v))),
+                      new Set(
+                        appliedFilters.transmissionSpeed.map((v) =>
+                          normalizeTransmission(v),
+                        ),
+                      ),
                     );
                     return unique.map((label) => (
                       <span
@@ -2720,7 +2726,9 @@ export default function MySQLVehiclesOriginalStyle() {
                           setAppliedFilters((prev) => {
                             const next = {
                               ...prev,
-                              transmissionSpeed: prev.transmissionSpeed.filter((v) => normalizeTransmission(v) !== label),
+                              transmissionSpeed: prev.transmissionSpeed.filter(
+                                (v) => normalizeTransmission(v) !== label,
+                              ),
                             };
                             updateURLFromFilters(next);
                             return next;
@@ -2736,7 +2744,10 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAppliedFilters((prev) => {
                               const next = {
                                 ...prev,
-                                transmissionSpeed: prev.transmissionSpeed.filter((v) => normalizeTransmission(v) !== label),
+                                transmissionSpeed:
+                                  prev.transmissionSpeed.filter(
+                                    (v) => normalizeTransmission(v) !== label,
+                                  ),
                               };
                               updateURLFromFilters(next);
                               return next;
@@ -3853,140 +3864,164 @@ export default function MySQLVehiclesOriginalStyle() {
             </FilterSection>
 
             {/* Transmission */}
-            {(appliedFilters.transmission.length > 0 || (filterOptions && filterOptions.transmission && filterOptions.transmission.length > 0)) && (
-            <FilterSection
-              title="Transmission"
-              isCollapsed={collapsedFilters.transmission}
-              onToggle={() => toggleFilter("transmission")}
-            >
-              <div className="space-y-1">
-                {filterOptions.transmission &&
-                filterOptions.transmission.length > 0 ? (
-                  filterOptions.transmission.map((t: any) => (
-                    <label
-                      key={t.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.transmission.includes(t.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              transmission: [...prev.transmission, t.name],
-                            }));
-                          } else {
-                            removeAppliedFilter("transmission", t.name);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{t.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({t.count ?? 0})
-                      </span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No transmissions available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+            {(appliedFilters.transmission.length > 0 ||
+              (filterOptions &&
+                filterOptions.transmission &&
+                filterOptions.transmission.length > 0)) && (
+              <FilterSection
+                title="Transmission"
+                isCollapsed={collapsedFilters.transmission}
+                onToggle={() => toggleFilter("transmission")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.transmission &&
+                  filterOptions.transmission.length > 0 ? (
+                    filterOptions.transmission.map((t: any) => (
+                      <label
+                        key={t.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={appliedFilters.transmission.includes(t.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                transmission: [...prev.transmission, t.name],
+                              }));
+                            } else {
+                              removeAppliedFilter("transmission", t.name);
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{t.name}</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({t.count ?? 0})
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No transmissions available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
             )}
 
             {/* Transmission Speed */}
-            {(appliedFilters.transmissionSpeed.length > 0 || (filterOptions && filterOptions.transmission_speed && filterOptions.transmission_speed.length > 0)) && (
-            <FilterSection
-              title="Transmission Speed"
-              isCollapsed={collapsedFilters.transmissionSpeed}
-              onToggle={() => toggleFilter("transmissionSpeed")}
-            >
-              <div className="space-y-1">
-                {filterOptions.transmission_speed &&
-                filterOptions.transmission_speed.length > 0 ? (
-                  (() => {
-                    const displayed = getDisplayed(
-                      filterOptions.transmission_speed,
-                      appliedFilters.transmissionSpeed,
-                      showMoreTransmission,
-                      8,
-                    );
+            {(appliedFilters.transmissionSpeed.length > 0 ||
+              (filterOptions &&
+                filterOptions.transmission_speed &&
+                filterOptions.transmission_speed.length > 0)) && (
+              <FilterSection
+                title="Transmission Speed"
+                isCollapsed={collapsedFilters.transmissionSpeed}
+                onToggle={() => toggleFilter("transmissionSpeed")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.transmission_speed &&
+                  filterOptions.transmission_speed.length > 0 ? (
+                    (() => {
+                      const displayed = getDisplayed(
+                        filterOptions.transmission_speed,
+                        appliedFilters.transmissionSpeed,
+                        showMoreTransmission,
+                        8,
+                      );
 
-                    // Deduplicate displayed options by normalized label
-                    const normalizedDisplayed = (() => {
-                      const seen = new Set<string>();
-                      const out: any[] = [];
-                      for (const it of displayed) {
-                        const disp = normalizeTransmission(it.name);
-                        if (!seen.has(disp)) {
-                          seen.add(disp);
-                          out.push({ ...it, displayName: disp });
+                      // Deduplicate displayed options by normalized label
+                      const normalizedDisplayed = (() => {
+                        const seen = new Set<string>();
+                        const out: any[] = [];
+                        for (const it of displayed) {
+                          const disp = normalizeTransmission(it.name);
+                          if (!seen.has(disp)) {
+                            seen.add(disp);
+                            out.push({ ...it, displayName: disp });
+                          }
                         }
-                      }
-                      return out;
-                    })();
+                        return out;
+                      })();
 
-                    return (
-                      <>
-                        {normalizedDisplayed.map((t: any) => (
-                          <label
-                            key={t.name}
-                            className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              className="mr-2"
-                              checked={appliedFilters.transmissionSpeed.some((v) => normalizeTransmission(v) === (t.displayName || t.name))}
-                              onChange={(e) => {
-                                e.stopPropagation();
-                                const label = t.displayName || t.name;
-                                const checked = (e.target as HTMLInputElement).checked;
-                                setAppliedFilters((prev) => {
-                                  // remove any existing values that normalize to this label
-                                  const filtered = prev.transmissionSpeed.filter((v) => normalizeTransmission(v) !== label);
-                                  const nextArr = checked ? [...filtered, t.name] : filtered;
-                                  const next = { ...prev, transmissionSpeed: nextArr };
-                                  updateURLFromFilters(next);
-                                  return next;
-                                });
-                              }}
-                            />
-                            <span className="carzino-filter-option">
-                              {t.displayName || t.name}
-                            </span>
-                            <span className="carzino-filter-count ml-1">
-                              ({t.count ?? 0})
-                            </span>
-                          </label>
-                        ))}
-
-                        {filterOptions.transmission_speed.length > 8 && (
-                          <div className="pt-1">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setShowMoreTransmission(!showMoreTransmission);
-                              }}
-                              className="text-red-600 text-sm font-medium"
+                      return (
+                        <>
+                          {normalizedDisplayed.map((t: any) => (
+                            <label
+                              key={t.name}
+                              className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                             >
-                              {showMoreTransmission ? "Show Less" : "Show More"}
-                            </button>
-                          </div>
-                        )}
-                      </>
-                    );
-                  })()
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No transmission speeds available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+                              <input
+                                type="checkbox"
+                                className="mr-2"
+                                checked={appliedFilters.transmissionSpeed.some(
+                                  (v) =>
+                                    normalizeTransmission(v) ===
+                                    (t.displayName || t.name),
+                                )}
+                                onChange={(e) => {
+                                  e.stopPropagation();
+                                  const label = t.displayName || t.name;
+                                  const checked = (e.target as HTMLInputElement)
+                                    .checked;
+                                  setAppliedFilters((prev) => {
+                                    // remove any existing values that normalize to this label
+                                    const filtered =
+                                      prev.transmissionSpeed.filter(
+                                        (v) =>
+                                          normalizeTransmission(v) !== label,
+                                      );
+                                    const nextArr = checked
+                                      ? [...filtered, t.name]
+                                      : filtered;
+                                    const next = {
+                                      ...prev,
+                                      transmissionSpeed: nextArr,
+                                    };
+                                    updateURLFromFilters(next);
+                                    return next;
+                                  });
+                                }}
+                              />
+                              <span className="carzino-filter-option">
+                                {t.displayName || t.name}
+                              </span>
+                              <span className="carzino-filter-count ml-1">
+                                ({t.count ?? 0})
+                              </span>
+                            </label>
+                          ))}
+
+                          {filterOptions.transmission_speed.length > 8 && (
+                            <div className="pt-1">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowMoreTransmission(
+                                    !showMoreTransmission,
+                                  );
+                                }}
+                                className="text-red-600 text-sm font-medium"
+                              >
+                                {showMoreTransmission
+                                  ? "Show Less"
+                                  : "Show More"}
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No transmission speeds available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
             )}
 
             {/* Doors */}
@@ -4705,46 +4740,56 @@ export default function MySQLVehiclesOriginalStyle() {
                       </span>
                     ))}
                     {(() => {
-                    const unique = Array.from(
-                      new Set(appliedFilters.transmissionSpeed.map((v) => normalizeTransmission(v))),
-                    );
-                    return unique.map((label) => (
-                      <span
-                        key={label}
-                        onClick={() => {
-                          setAppliedFilters((prev) => {
-                            const next = {
-                              ...prev,
-                              transmissionSpeed: prev.transmissionSpeed.filter((v) => normalizeTransmission(v) !== label),
-                            };
-                            updateURLFromFilters(next);
-                            return next;
-                          });
-                        }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
-                      >
-                        <Check className="w-3 h-3 text-red-600" />
-                        {label}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
+                      const unique = Array.from(
+                        new Set(
+                          appliedFilters.transmissionSpeed.map((v) =>
+                            normalizeTransmission(v),
+                          ),
+                        ),
+                      );
+                      return unique.map((label) => (
+                        <span
+                          key={label}
+                          onClick={() => {
                             setAppliedFilters((prev) => {
                               const next = {
                                 ...prev,
-                                transmissionSpeed: prev.transmissionSpeed.filter((v) => normalizeTransmission(v) !== label),
+                                transmissionSpeed:
+                                  prev.transmissionSpeed.filter(
+                                    (v) => normalizeTransmission(v) !== label,
+                                  ),
                               };
                               updateURLFromFilters(next);
                               return next;
                             });
                           }}
-                          className="ml-1 text-white hover:text-gray-300"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                         >
-                          ×
-                        </button>
-                      </span>
-                    ));
-                  })()}
-                  {appliedFilters.exteriorColor.map((item) => (
+                          <Check className="w-3 h-3 text-red-600" />
+                          {label}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAppliedFilters((prev) => {
+                                const next = {
+                                  ...prev,
+                                  transmissionSpeed:
+                                    prev.transmissionSpeed.filter(
+                                      (v) => normalizeTransmission(v) !== label,
+                                    ),
+                                };
+                                updateURLFromFilters(next);
+                                return next;
+                              });
+                            }}
+                            className="ml-1 text-white hover:text-gray-300"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ));
+                    })()}
+                    {appliedFilters.exteriorColor.map((item) => (
                       <span
                         key={item}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
