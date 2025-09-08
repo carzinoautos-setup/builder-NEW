@@ -3395,7 +3395,7 @@ export default function MySQLVehiclesOriginalStyle() {
             >
               <div className="space-y-1">
                 <select
-                  className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none bg-white"
+                  className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md h-10 focus:outline-none bg-white appearance-none"
                   value={appliedFilters.mileage}
                   onClick={(e) => e.stopPropagation()}
                   onChange={(e) =>
