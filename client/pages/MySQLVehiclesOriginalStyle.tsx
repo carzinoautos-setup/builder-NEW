@@ -4644,45 +4644,6 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             )}
 
-            {!mobileFiltersOpen && (
-            <div className="lg:hidden sticky top-12 z-10 px-3 py-2 bg-white overflow-x-auto flex gap-2 items-center">
-              {((appliedLocation && appliedRadius !== "nationwide") ||
-                appliedFilters.condition.length > 0 ||
-                appliedFilters.make.length > 0 ||
-                appliedFilters.model.length > 0 ||
-                appliedFilters.trim.length > 0 ||
-                appliedFilters.year.length > 0 ||
-                appliedFilters.bodyStyle.length > 0 ||
-                appliedFilters.vehicleType.length > 0 ||
-                appliedFilters.mileage ||
-                appliedFilters.exteriorColor.length > 0 ||
-                appliedFilters.sellerType.length > 0 ||
-                appliedFilters.priceMin ||
-                appliedFilters.priceMax ||
-                appliedFilters.paymentMin ||
-                appliedFilters.paymentMax) && (
-                <>
-                  <button onClick={clearAllFilters} className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                    Clear All
-                  </button>
-                  {appliedFilters.make.map((item)=>(
-                    <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button onClick={()=>removeAppliedFilter("make",item)} className="ml-1 text-white">×</button>
-                    </span>
-                  ))}
-                  {appliedFilters.model.map((item)=>(
-                    <span key={item} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button onClick={()=>removeAppliedFilter("model",item)} className="ml-1 text-white">×</button>
-                    </span>
-                  ))}
-                </>
-              )}
-            </div>
-            )}
 
             {/* Connection Status & Results Count - NOT in sticky */}
             <div className="px-3 py-2 bg-gray-50 text-sm">
