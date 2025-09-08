@@ -146,8 +146,24 @@ export const getVehicles: RequestHandler = async (req, res) => {
         headers["Authorization"] = `Basic ${encoded}`;
       }
 
-      const wpResponse = await fetch(url, { method: "GET", headers });
-      const body = await wpResponse.text();
+      let wpResponse;
+      let body;
+      try {
+        wpResponse = await fetch(url, { method: "GET", headers });
+        body = await wpResponse.text();
+      } catch (fetchErr) {
+        console.error('[WP_PROXY_ERROR] Failed to fetch from WP API:', url, fetchErr);
+        return res.status(502).json({ success: false, message: 'Bad gateway: WordPress API unreachable' });
+      }
+
+      // Log proxied response for debugging (trim large output)
+      try {
+        console.log('[WP_PROXY_REQUEST] url:', url, 'hasAuth:', !!headers['Authorization']);
+        const trimmed = body && body.length > 5000 ? body.substring(0, 5000) + '...(truncated)' : body;
+        console.log('[WP_PROXY_RESPONSE] /vehicles -> status:', wpResponse.status, 'body:', trimmed);
+      } catch (e) {
+        console.log('[WP_PROXY_RESPONSE] /vehicles -> (unable to log body)');
+      }
 
       // Try to parse JSON, otherwise proxy raw
       try {
