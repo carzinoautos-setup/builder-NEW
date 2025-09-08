@@ -2203,6 +2203,69 @@ export default function MySQLVehiclesOriginalStyle() {
 
             </div>
 
+            {/* Mobile Applied Filters */}
+            <div className="lg:hidden mb-4">
+              {(appliedLocation && appliedRadius !== "nationwide") ||
+              appliedFilters.condition.length > 0 ||
+              appliedFilters.make.length > 0 ||
+              appliedFilters.model.length > 0 ||
+              appliedFilters.trim.length > 0 ||
+              appliedFilters.year.length > 0 ||
+              appliedFilters.bodyStyle.length > 0 ||
+              appliedFilters.vehicleType.length > 0 ||
+              appliedFilters.driveType.length > 0 ||
+              appliedFilters.exteriorColor.length > 0 ||
+              appliedFilters.sellerType.length > 0 ||
+              appliedFilters.mileage ||
+              appliedFilters.priceMin ||
+              appliedFilters.priceMax ||
+              appliedFilters.paymentMin ||
+              appliedFilters.paymentMax ? (
+                <>
+                  <div className="pt-2 flex items-center justify-between mb-2">
+                    <h3 className="carzino-filter-title">Applied Filters</h3>
+                    <button
+                      onClick={clearAllFilters}
+                      className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium hover:bg-red-700"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {appliedLocation && appliedRadius !== "nationwide" && (
+                      <span onClick={() => { setAppliedLocation(null); setAppliedRadius("200"); }} className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800">
+                        <Check className="w-3 h-3 text-red-600" />
+                        <MapPin className="w-3 h-3" />
+                        {appliedRadius} miles
+                        <button onClick={() => { setAppliedLocation(null); setAppliedRadius("200"); }} className="ml-1 text-white hover:text-gray-300">×</button>
+                      </span>
+                    )}
+                    {appliedFilters.condition.map((item) => (
+                      <span key={item} onClick={() => removeAppliedFilter("condition", item)} className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button onClick={() => removeAppliedFilter("condition", item)} className="ml-1 text-white hover:text-gray-300">×</button>
+                      </span>
+                    ))}
+                    {appliedFilters.make.map((item) => (
+                      <span key={item} onClick={() => removeAppliedFilter("make", item)} className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button onClick={() => removeAppliedFilter("make", item)} className="ml-1 text-white hover:text-gray-300">×</button>
+                      </span>
+                    ))}
+                    {appliedFilters.model.map((item) => (
+                      <span key={item} onClick={() => removeAppliedFilter("model", item)} className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button onClick={() => removeAppliedFilter("model", item)} className="ml-1 text-white hover:text-gray-300">×</button>
+                      </span>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </div>
+
             {/* Desktop Search Section */}
             <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200 sticky top-16 z-40 bg-white">
               <form onSubmit={handleUnifiedSearchSubmit}>
