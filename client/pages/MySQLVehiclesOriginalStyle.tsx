@@ -4297,6 +4297,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Seller Type */}
+            {((filterOptions && filterOptions.account_type_seller && filterOptions.account_type_seller.length>0) || (appliedFilters.sellerType && appliedFilters.sellerType.length>0)) && (
             <FilterSection
               title="Seller Type"
               isCollapsed={collapsedFilters.sellerType}
@@ -4339,8 +4340,10 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* Dealer */}
+            {( (availableDealers && availableDealers.length>0) || (appliedFilters.dealer && appliedFilters.dealer.length>0) ) && (
             <FilterSection
               title="Dealer"
               isCollapsed={collapsedFilters.dealer}
@@ -4386,6 +4389,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* State */}
             <FilterSection
