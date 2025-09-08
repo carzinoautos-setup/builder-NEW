@@ -649,8 +649,12 @@ export default function MySQLVehiclesOriginalStyle() {
         per_page: resultsPerPage.toString(),
       });
 
-      // Add search term
-      if (searchTerm.trim()) {
+      // Add search term -- but DO NOT send free-text search when explicit make/model/trim are present
+      const hasExplicitFilter =
+        appliedFilters.make.length > 0 ||
+        appliedFilters.model.length > 0 ||
+        appliedFilters.trim.length > 0;
+      if (searchTerm.trim() && !hasExplicitFilter) {
         params.append("search", searchTerm.trim());
       }
 
