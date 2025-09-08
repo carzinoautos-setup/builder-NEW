@@ -204,7 +204,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           2,
           15000,
         );
-        if (!unscopedRes.ok) throw new Error(`Filters error ${unscopedRes.status}`);
+        if (!unscopedRes.ok)
+          throw new Error(`Filters error ${unscopedRes.status}`);
         const unscopedJson = await unscopedRes.json();
 
         // Parse helper to convert WP plugin json.filters or json.data into a FilterMap
@@ -467,8 +468,12 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           ...scopedMap,
           ...(unscopedMap.make ? { make: unscopedMap.make } : {}),
           // Ensure transmission lists reflect scoped data when available
-          ...(scopedMap.transmission ? { transmission: scopedMap.transmission } : {}),
-          ...(scopedMap.transmission_speed ? { transmission_speed: scopedMap.transmission_speed } : {}),
+          ...(scopedMap.transmission
+            ? { transmission: scopedMap.transmission }
+            : {}),
+          ...(scopedMap.transmission_speed
+            ? { transmission_speed: scopedMap.transmission_speed }
+            : {}),
         } as any;
 
         // Remove any 'Uncategorized' or empty labels from all filter arrays
@@ -534,7 +539,10 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                 // Compute authoritative counts for fuel type and related attributes so counts respect current filters
                 { respKey: "fuel_type", localKey: "fuelType" },
                 { respKey: "transmission", localKey: "transmission" },
-                { respKey: "transmission_speed", localKey: "transmissionSpeed" },
+                {
+                  respKey: "transmission_speed",
+                  localKey: "transmissionSpeed",
+                },
                 { respKey: "drivetrain", localKey: "driveType" },
                 { respKey: "exterior_color", localKey: "exteriorColor" },
                 { respKey: "interior_color", localKey: "interiorColor" },

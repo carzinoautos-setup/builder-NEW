@@ -3268,615 +3268,661 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Year Filter */}
-            {(appliedFilters.year.length > 0 || (filterOptions && filterOptions.year && filterOptions.year.length > 0)) && (
-            <FilterSection
-              title="Year"
-              isCollapsed={collapsedFilters.year || false}
-              onToggle={() => toggleFilter("year")}
-            >
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <label className="block text-sm carzino-location-label mb-1">
-                    From
-                  </label>
-                  <select
-                    value={yearFrom}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setYearFrom(val);
-                      const years = [val, yearTo].filter(Boolean);
-                      const newFilters = { ...appliedFilters, year: years };
-                      setAppliedFilters(newFilters);
-                      updateURLFromFilters(newFilters);
-                      setCurrentPage(1);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="carzino-dropdown-option w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none bg-white"
-                  >
-                    <option value="">Any</option>
-                    {(filterOptions.year && filterOptions.year.length > 0
-                      ? filterOptions.year
-                      : Array.from({ length: 10 }, (_, i) =>
-                          String(new Date().getFullYear() - i),
-                        )
-                    ).map((y: any) => {
-                      const name =
-                        typeof y === "string" || typeof y === "number"
-                          ? String(y)
-                          : y.name;
-                      return (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
+            {(appliedFilters.year.length > 0 ||
+              (filterOptions &&
+                filterOptions.year &&
+                filterOptions.year.length > 0)) && (
+              <FilterSection
+                title="Year"
+                isCollapsed={collapsedFilters.year || false}
+                onToggle={() => toggleFilter("year")}
+              >
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <label className="block text-sm carzino-location-label mb-1">
+                      From
+                    </label>
+                    <select
+                      value={yearFrom}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setYearFrom(val);
+                        const years = [val, yearTo].filter(Boolean);
+                        const newFilters = { ...appliedFilters, year: years };
+                        setAppliedFilters(newFilters);
+                        updateURLFromFilters(newFilters);
+                        setCurrentPage(1);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="carzino-dropdown-option w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none bg-white"
+                    >
+                      <option value="">Any</option>
+                      {(filterOptions.year && filterOptions.year.length > 0
+                        ? filterOptions.year
+                        : Array.from({ length: 10 }, (_, i) =>
+                            String(new Date().getFullYear() - i),
+                          )
+                      ).map((y: any) => {
+                        const name =
+                          typeof y === "string" || typeof y === "number"
+                            ? String(y)
+                            : y.name;
+                        return (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
 
-                <div className="flex-1">
-                  <label className="block text-sm carzino-location-label mb-1">
-                    To
-                  </label>
-                  <select
-                    value={yearTo}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setYearTo(val);
-                      const years = [yearFrom, val].filter(Boolean);
-                      const newFilters = { ...appliedFilters, year: years };
-                      setAppliedFilters(newFilters);
-                      updateURLFromFilters(newFilters);
-                      setCurrentPage(1);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="carzino-dropdown-option w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none bg-white"
-                  >
-                    <option value="">Any</option>
-                    {(filterOptions.year && filterOptions.year.length > 0
-                      ? filterOptions.year
-                      : Array.from({ length: 10 }, (_, i) =>
-                          String(new Date().getFullYear() - i),
-                        )
-                    ).map((y: any) => {
-                      const name =
-                        typeof y === "string" || typeof y === "number"
-                          ? String(y)
-                          : y.name;
-                      return (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  <div className="flex-1">
+                    <label className="block text-sm carzino-location-label mb-1">
+                      To
+                    </label>
+                    <select
+                      value={yearTo}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setYearTo(val);
+                        const years = [yearFrom, val].filter(Boolean);
+                        const newFilters = { ...appliedFilters, year: years };
+                        setAppliedFilters(newFilters);
+                        updateURLFromFilters(newFilters);
+                        setCurrentPage(1);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="carzino-dropdown-option w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none bg-white"
+                    >
+                      <option value="">Any</option>
+                      {(filterOptions.year && filterOptions.year.length > 0
+                        ? filterOptions.year
+                        : Array.from({ length: 10 }, (_, i) =>
+                            String(new Date().getFullYear() - i),
+                          )
+                      ).map((y: any) => {
+                        const name =
+                          typeof y === "string" || typeof y === "number"
+                            ? String(y)
+                            : y.name;
+                        return (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
                 </div>
-              </div>
-            </FilterSection>
+              </FilterSection>
             )}
 
             {/* Price Filter */}
-            {((appliedFilters.priceMin && appliedFilters.priceMin.length>0) || (appliedFilters.priceMax && appliedFilters.priceMax.length>0) || vehicles.length > 0) && (
-            <FilterSection
-              title="Price"
-              isCollapsed={collapsedFilters.price}
-              onToggle={() => toggleFilter("price")}
-            >
-              <div className="space-y-3">
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                      $
-                    </span>
-                    <input
-                      type="text"
-                      placeholder="1,000"
-                      value={formatPrice(priceMin)}
-                      onChange={(e) => {
-                        const unformattedValue = unformatPrice(e.target.value);
-                        setPriceMin(unformattedValue);
-                      }}
-                      onBlur={(e) => {
-                        const unformattedValue = unformatPrice(e.target.value);
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          priceMin: unformattedValue,
-                        }));
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="carzino-search-input w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none"
-                    />
-                  </div>
-                  <div className="relative flex-1">
-                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                      $
-                    </span>
-                    <input
-                      type="text"
-                      placeholder="50,000"
-                      value={formatPrice(priceMax)}
-                      onChange={(e) => {
-                        const unformattedValue = unformatPrice(e.target.value);
-                        setPriceMax(unformattedValue);
-                      }}
-                      onBlur={(e) => {
-                        const unformattedValue = unformatPrice(e.target.value);
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          priceMax: unformattedValue,
-                        }));
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="carzino-search-input w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none"
-                    />
+            {((appliedFilters.priceMin && appliedFilters.priceMin.length > 0) ||
+              (appliedFilters.priceMax && appliedFilters.priceMax.length > 0) ||
+              vehicles.length > 0) && (
+              <FilterSection
+                title="Price"
+                isCollapsed={collapsedFilters.price}
+                onToggle={() => toggleFilter("price")}
+              >
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        $
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="1,000"
+                        value={formatPrice(priceMin)}
+                        onChange={(e) => {
+                          const unformattedValue = unformatPrice(
+                            e.target.value,
+                          );
+                          setPriceMin(unformattedValue);
+                        }}
+                        onBlur={(e) => {
+                          const unformattedValue = unformatPrice(
+                            e.target.value,
+                          );
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            priceMin: unformattedValue,
+                          }));
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="carzino-search-input w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none"
+                      />
+                    </div>
+                    <div className="relative flex-1">
+                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        $
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="50,000"
+                        value={formatPrice(priceMax)}
+                        onChange={(e) => {
+                          const unformattedValue = unformatPrice(
+                            e.target.value,
+                          );
+                          setPriceMax(unformattedValue);
+                        }}
+                        onBlur={(e) => {
+                          const unformattedValue = unformatPrice(
+                            e.target.value,
+                          );
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            priceMax: unformattedValue,
+                          }));
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="carzino-search-input w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </FilterSection>
+              </FilterSection>
             )}
 
             {/* Payment Filter */}
-            {((appliedFilters.paymentMin && appliedFilters.paymentMin.length>0) || (appliedFilters.paymentMax && appliedFilters.paymentMax.length>0) || vehicles.length > 0) && (
-            <FilterSection
-              title="Payment"
-              isCollapsed={collapsedFilters.payment}
-              onToggle={() => toggleFilter("payment")}
-            >
-              <div className="space-y-3">
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                      $
-                    </span>
-                    <input
-                      type="text"
-                      placeholder="100"
-                      value={paymentMin}
+            {((appliedFilters.paymentMin &&
+              appliedFilters.paymentMin.length > 0) ||
+              (appliedFilters.paymentMax &&
+                appliedFilters.paymentMax.length > 0) ||
+              vehicles.length > 0) && (
+              <FilterSection
+                title="Payment"
+                isCollapsed={collapsedFilters.payment}
+                onToggle={() => toggleFilter("payment")}
+              >
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        $
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="100"
+                        value={paymentMin}
+                        onChange={(e) => {
+                          setPaymentMin(e.target.value);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
+                      />
+                      <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
+                        /mo
+                      </span>
+                    </div>
+                    <div className="relative flex-1">
+                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        $
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="2,000"
+                        value={paymentMax}
+                        onChange={(e) => {
+                          setPaymentMax(e.target.value);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
+                      />
+                      <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
+                        /mo
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Term Length and Interest Rate */}
+                  <div className="flex gap-2">
+                    <select
+                      value={termLength}
                       onChange={(e) => {
-                        setPaymentMin(e.target.value);
+                        setTermLength(e.target.value);
                       }}
                       onClick={(e) => e.stopPropagation()}
-                      className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
-                    />
-                    <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
-                      /mo
-                    </span>
-                  </div>
-                  <div className="relative flex-1">
-                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                      $
-                    </span>
-                    <input
-                      type="text"
-                      placeholder="2,000"
-                      value={paymentMax}
+                      className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                    >
+                      <option value="24">24 Months</option>
+                      <option value="36">36 Months</option>
+                      <option value="48">48 Months</option>
+                      <option value="60">60 Months</option>
+                      <option value="72">72 Months</option>
+                      <option value="84">84 Months</option>
+                    </select>
+                    <select
+                      value={interestRate}
                       onChange={(e) => {
-                        setPaymentMax(e.target.value);
+                        setInterestRate(e.target.value);
                       }}
                       onClick={(e) => e.stopPropagation()}
-                      className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
-                    />
-                    <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
-                      /mo
-                    </span>
+                      className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                    >
+                      <option value="0">0% APR</option>
+                      <option value="3">3% APR</option>
+                      <option value="4">4% APR</option>
+                      <option value="5">5% APR</option>
+                      <option value="6">6% APR</option>
+                      <option value="7">7% APR</option>
+                      <option value="8">8% APR</option>
+                      <option value="9">9% APR</option>
+                      <option value="10">10% APR</option>
+                      <option value="12">12% APR</option>
+                      <option value="16">16% APR</option>
+                    </select>
                   </div>
-                </div>
 
-                {/* Term Length and Interest Rate */}
-                <div className="flex gap-2">
-                  <select
-                    value={termLength}
-                    onChange={(e) => {
-                      setTermLength(e.target.value);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                  >
-                    <option value="24">24 Months</option>
-                    <option value="36">36 Months</option>
-                    <option value="48">48 Months</option>
-                    <option value="60">60 Months</option>
-                    <option value="72">72 Months</option>
-                    <option value="84">84 Months</option>
-                  </select>
-                  <select
-                    value={interestRate}
-                    onChange={(e) => {
-                      setInterestRate(e.target.value);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                  >
-                    <option value="0">0% APR</option>
-                    <option value="3">3% APR</option>
-                    <option value="4">4% APR</option>
-                    <option value="5">5% APR</option>
-                    <option value="6">6% APR</option>
-                    <option value="7">7% APR</option>
-                    <option value="8">8% APR</option>
-                    <option value="9">9% APR</option>
-                    <option value="10">10% APR</option>
-                    <option value="12">12% APR</option>
-                    <option value="16">16% APR</option>
-                  </select>
-                </div>
-
-                {/* Down Payment */}
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder={`Down Payment: ${formatCurrency(downPayment)}`}
-                    value={
-                      isEditingDownPayment
-                        ? downPayment
-                        : `Down Payment: ${formatCurrency(downPayment)}`
-                    }
-                    onFocus={(e) => {
-                      e.stopPropagation();
-                      setPrevDownPayment(downPayment);
-                      setDownPayment("");
-                      setIsEditingDownPayment(true);
-                    }}
-                    onBlur={(e) => {
-                      e.stopPropagation();
-                      setIsEditingDownPayment(false);
-                      // restore previous if left empty
-                      if (!downPayment && prevDownPayment !== null) {
-                        setDownPayment(prevDownPayment);
+                  {/* Down Payment */}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder={`Down Payment: ${formatCurrency(downPayment)}`}
+                      value={
+                        isEditingDownPayment
+                          ? downPayment
+                          : `Down Payment: ${formatCurrency(downPayment)}`
                       }
-                    }}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/[^\d]/g, "");
-                      setDownPayment(value);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="carzino-search-input w-full px-2 py-1.5 border border-gray-300 rounded focus:outline-none text-gray-500"
-                  />
-                </div>
+                      onFocus={(e) => {
+                        e.stopPropagation();
+                        setPrevDownPayment(downPayment);
+                        setDownPayment("");
+                        setIsEditingDownPayment(true);
+                      }}
+                      onBlur={(e) => {
+                        e.stopPropagation();
+                        setIsEditingDownPayment(false);
+                        // restore previous if left empty
+                        if (!downPayment && prevDownPayment !== null) {
+                          setDownPayment(prevDownPayment);
+                        }
+                      }}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^\d]/g, "");
+                        setDownPayment(value);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="carzino-search-input w-full px-2 py-1.5 border border-gray-300 rounded focus:outline-none text-gray-500"
+                    />
+                  </div>
 
-                {/* Apply Button */}
-                <div className="mt-3 pt-3 border-t border-gray-200">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      applyPaymentFilters();
-                    }}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                  >
-                    Apply Payment Filters
-                  </button>
+                  {/* Apply Button */}
+                  <div className="mt-3 pt-3 border-t border-gray-200">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        applyPaymentFilters();
+                      }}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    >
+                      Apply Payment Filters
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </FilterSection>
+              </FilterSection>
             )}
 
             {/* Condition */}
-            {((appliedFilters.condition && appliedFilters.condition.length>0) || (filterOptions && filterOptions.condition && filterOptions.condition.length>0)) && (
-            <FilterSection
-              title="Condition"
-              isCollapsed={collapsedFilters.condition}
-              onToggle={() => toggleFilter("condition")}
-            >
-              <div className="space-y-1">
-                {filterOptions.condition &&
-                filterOptions.condition.length > 0 ? (
-                  filterOptions.condition.map((c: any) => (
-                    <label
-                      key={c.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.condition.includes(c.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            const newFilters = {
-                              ...appliedFilters,
-                              condition: [...appliedFilters.condition, c.name],
-                            };
-                            setAppliedFilters(newFilters);
-                            updateURLFromFilters(newFilters);
-                          } else {
-                            removeAppliedFilter("condition", c.name);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{c.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({c.count ?? 0})
-                      </span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No conditions available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+            {((appliedFilters.condition &&
+              appliedFilters.condition.length > 0) ||
+              (filterOptions &&
+                filterOptions.condition &&
+                filterOptions.condition.length > 0)) && (
+              <FilterSection
+                title="Condition"
+                isCollapsed={collapsedFilters.condition}
+                onToggle={() => toggleFilter("condition")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.condition &&
+                  filterOptions.condition.length > 0 ? (
+                    filterOptions.condition.map((c: any) => (
+                      <label
+                        key={c.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={appliedFilters.condition.includes(c.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              const newFilters = {
+                                ...appliedFilters,
+                                condition: [
+                                  ...appliedFilters.condition,
+                                  c.name,
+                                ],
+                              };
+                              setAppliedFilters(newFilters);
+                              updateURLFromFilters(newFilters);
+                            } else {
+                              removeAppliedFilter("condition", c.name);
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{c.name}</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({c.count ?? 0})
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No conditions available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
             )}
 
             {/* Certified */}
-            {((appliedFilters.certified && appliedFilters.certified.length>0) || ((appliedFilters.condition && (appliedFilters.condition.includes("Used") || appliedFilters.condition.includes("used"))) && filterOptions && filterOptions.certified && filterOptions.certified.length>0)) && (
-            <FilterSection
-              title="Certified"
-              isCollapsed={collapsedFilters.certified}
-              onToggle={() => toggleFilter("certified")}
-            >
-              <div className="space-y-1">
-                {filterOptions.certified &&
-                filterOptions.certified.length > 0 ? (
-                  filterOptions.certified.map((c: any) => (
-                    <label
-                      key={c.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.certified.includes(c.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              certified: [...prev.certified, c.name],
-                            }));
-                          } else {
-                            removeAppliedFilter("certified", c.name);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{c.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({c.count ?? 0})
-                      </span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No certification options available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+            {((appliedFilters.certified &&
+              appliedFilters.certified.length > 0) ||
+              (appliedFilters.condition &&
+                (appliedFilters.condition.includes("Used") ||
+                  appliedFilters.condition.includes("used")) &&
+                filterOptions &&
+                filterOptions.certified &&
+                filterOptions.certified.length > 0)) && (
+              <FilterSection
+                title="Certified"
+                isCollapsed={collapsedFilters.certified}
+                onToggle={() => toggleFilter("certified")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.certified &&
+                  filterOptions.certified.length > 0 ? (
+                    filterOptions.certified.map((c: any) => (
+                      <label
+                        key={c.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={appliedFilters.certified.includes(c.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                certified: [...prev.certified, c.name],
+                              }));
+                            } else {
+                              removeAppliedFilter("certified", c.name);
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{c.name}</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({c.count ?? 0})
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No certification options available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
             )}
 
             {/* Mileage */}
-            {((appliedFilters.mileage && appliedFilters.mileage.length>0) || (appliedFilters.condition && (appliedFilters.condition.includes("Used") || appliedFilters.condition.includes("used")))) && (
-            <FilterSection
-              title="Mileage"
-              isCollapsed={collapsedFilters.mileage}
-              onToggle={() => toggleFilter("mileage")}
-            >
-              <div className="space-y-1">
-                <select
-                  className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md h-10 focus:outline-none bg-white appearance-none"
-                  value={appliedFilters.mileage}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) =>
-                    setAppliedFilters((prev) => ({
-                      ...prev,
-                      mileage: e.target.value,
-                    }))
-                  }
-                >
-                  <option value="">All Miles (default)</option>
-                  <option value="25000">Under 25,000 Miles</option>
-                  <option value="25000-50000">25,000–50,000 Miles</option>
-                  <option value="50000-75000">50,000–75,000 Miles</option>
-                  <option value="75000-100000">75,000–100,000 Miles</option>
-                  <option value="100000-150000">100,000–150,000 Miles</option>
-                  <option value="150000+">150,000+ Miles</option>
-                </select>
-              </div>
-            </FilterSection>
+            {((appliedFilters.mileage && appliedFilters.mileage.length > 0) ||
+              (appliedFilters.condition &&
+                (appliedFilters.condition.includes("Used") ||
+                  appliedFilters.condition.includes("used")))) && (
+              <FilterSection
+                title="Mileage"
+                isCollapsed={collapsedFilters.mileage}
+                onToggle={() => toggleFilter("mileage")}
+              >
+                <div className="space-y-1">
+                  <select
+                    className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md h-10 focus:outline-none bg-white appearance-none"
+                    value={appliedFilters.mileage}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) =>
+                      setAppliedFilters((prev) => ({
+                        ...prev,
+                        mileage: e.target.value,
+                      }))
+                    }
+                  >
+                    <option value="">All Miles (default)</option>
+                    <option value="25000">Under 25,000 Miles</option>
+                    <option value="25000-50000">25,000–50,000 Miles</option>
+                    <option value="50000-75000">50,000–75,000 Miles</option>
+                    <option value="75000-100000">75,000–100,000 Miles</option>
+                    <option value="100000-150000">100,000–150,000 Miles</option>
+                    <option value="150000+">150,000+ Miles</option>
+                  </select>
+                </div>
+              </FilterSection>
             )}
 
             {/* Search by Vehicle Type */}
-            {((vehicleTypes && vehicleTypes.length>0) || (appliedFilters.vehicleType && appliedFilters.vehicleType.length>0)) && (
-            <FilterSection
-              title="Search by Vehicle Type"
-              isCollapsed={collapsedFilters.vehicleType}
-              onToggle={() => toggleFilter("vehicleType")}
-            >
-              <div className="grid grid-cols-2 gap-2">
-                {(() => {
-                  const normalize = (s: string) =>
-                    s
-                      .toLowerCase()
-                      .replace(/[\s\/]+/g, "-")
-                      .replace(/[^a-z0-9\-]/g, "");
+            {((vehicleTypes && vehicleTypes.length > 0) ||
+              (appliedFilters.vehicleType &&
+                appliedFilters.vehicleType.length > 0)) && (
+              <FilterSection
+                title="Search by Vehicle Type"
+                isCollapsed={collapsedFilters.vehicleType}
+                onToggle={() => toggleFilter("vehicleType")}
+              >
+                <div className="grid grid-cols-2 gap-2">
+                  {(() => {
+                    const normalize = (s: string) =>
+                      s
+                        .toLowerCase()
+                        .replace(/[\s\/]+/g, "-")
+                        .replace(/[^a-z0-9\-]/g, "");
 
-                  const bottomKeys = new Set([
-                    "crew-cab",
-                    "regular-cab-truck",
-                    "truck",
-                    "extended-cab",
-                  ]);
+                    const bottomKeys = new Set([
+                      "crew-cab",
+                      "regular-cab-truck",
+                      "truck",
+                      "extended-cab",
+                    ]);
 
-                  const top: any[] = [];
-                  const bottom: any[] = [];
+                    const top: any[] = [];
+                    const bottom: any[] = [];
 
-                  for (const t of vehicleTypes) {
-                    const key = normalize(t.name || "");
-                    if (key === "uncategorized" || key === "") {
-                      // skip Uncategorized or empty labels entirely
-                      continue;
+                    for (const t of vehicleTypes) {
+                      const key = normalize(t.name || "");
+                      if (key === "uncategorized" || key === "") {
+                        // skip Uncategorized or empty labels entirely
+                        continue;
+                      }
+                      if (bottomKeys.has(key)) {
+                        bottom.push(t);
+                      } else {
+                        top.push(t);
+                      }
                     }
-                    if (bottomKeys.has(key)) {
-                      bottom.push(t);
-                    } else {
-                      top.push(t);
-                    }
-                  }
 
-                  const ordered = [...top, ...bottom];
+                    const ordered = [...top, ...bottom];
 
-                  return ordered.length > 0 ? (
-                    ordered.map((type, index) => (
-                      <VehicleTypeCard
-                        key={index}
-                        type={type.name}
-                        count={type.count}
-                        vehicleImages={vehicleImages}
-                        isSelected={appliedFilters.vehicleType.includes(
-                          type.name,
-                        )}
-                        onToggle={() => {
-                          setAppliedFilters((prev) => ({
-                            ...prev,
-                            vehicleType: prev.vehicleType.includes(type.name)
-                              ? prev.vehicleType.filter(
-                                  (item) => item !== type.name,
-                                )
-                              : [...prev.vehicleType, type.name],
-                          }));
-                        }}
-                        onImageUpload={(t, file) =>
-                          handleVehicleTypeImageUpload(t, file)
-                        }
-                      />
-                    ))
-                  ) : (
-                    <div className="text-gray-500 text-sm p-2 col-span-2 text-center">
-                      Loading vehicle types...
-                    </div>
-                  );
-                })()}
-              </div>
-            </FilterSection>
+                    return ordered.length > 0 ? (
+                      ordered.map((type, index) => (
+                        <VehicleTypeCard
+                          key={index}
+                          type={type.name}
+                          count={type.count}
+                          vehicleImages={vehicleImages}
+                          isSelected={appliedFilters.vehicleType.includes(
+                            type.name,
+                          )}
+                          onToggle={() => {
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              vehicleType: prev.vehicleType.includes(type.name)
+                                ? prev.vehicleType.filter(
+                                    (item) => item !== type.name,
+                                  )
+                                : [...prev.vehicleType, type.name],
+                            }));
+                          }}
+                          onImageUpload={(t, file) =>
+                            handleVehicleTypeImageUpload(t, file)
+                          }
+                        />
+                      ))
+                    ) : (
+                      <div className="text-gray-500 text-sm p-2 col-span-2 text-center">
+                        Loading vehicle types...
+                      </div>
+                    );
+                  })()}
+                </div>
+              </FilterSection>
             )}
 
             {/* Drive Type */}
-            {((filterOptions && filterOptions.drivetrain && filterOptions.drivetrain.length>0) || (appliedFilters.driveType && appliedFilters.driveType.length>0)) && (
-            <FilterSection
-              title="Drive Type"
-              isCollapsed={collapsedFilters.driveType}
-              onToggle={() => toggleFilter("driveType")}
-            >
-              <div className="space-y-1">
-                {filterOptions.drivetrain &&
-                filterOptions.drivetrain.length > 0 ? (
-                  (() => {
-                    // Normalize and group drivetrain raw values into display groups
-                    const groups = new Map<
-                      string,
-                      { names: string[]; count: number }
-                    >();
-                    const rawList = filterOptions.drivetrain || [];
+            {((filterOptions &&
+              filterOptions.drivetrain &&
+              filterOptions.drivetrain.length > 0) ||
+              (appliedFilters.driveType &&
+                appliedFilters.driveType.length > 0)) && (
+              <FilterSection
+                title="Drive Type"
+                isCollapsed={collapsedFilters.driveType}
+                onToggle={() => toggleFilter("driveType")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.drivetrain &&
+                  filterOptions.drivetrain.length > 0 ? (
+                    (() => {
+                      // Normalize and group drivetrain raw values into display groups
+                      const groups = new Map<
+                        string,
+                        { names: string[]; count: number }
+                      >();
+                      const rawList = filterOptions.drivetrain || [];
 
-                    const getDisplay = (raw: string) => {
-                      const r = String(raw || "").trim();
-                      const lower = r.toLowerCase();
-                      if (
-                        lower === "front wheel drive" ||
-                        lower === "front-wheel drive" ||
-                        lower === "fwd"
-                      )
-                        return "FWD";
-                      if (
-                        r.includes("4MATIC") ||
-                        r.includes("4MATIC®") ||
-                        lower.includes("4matic") ||
-                        lower.includes("4matic®")
-                      )
-                        return "AWD/4WD";
-                      if (lower === "other" || lower === "other/unknown")
-                        return "Other";
-                      return r;
-                    };
+                      const getDisplay = (raw: string) => {
+                        const r = String(raw || "").trim();
+                        const lower = r.toLowerCase();
+                        if (
+                          lower === "front wheel drive" ||
+                          lower === "front-wheel drive" ||
+                          lower === "fwd"
+                        )
+                          return "FWD";
+                        if (
+                          r.includes("4MATIC") ||
+                          r.includes("4MATIC®") ||
+                          lower.includes("4matic") ||
+                          lower.includes("4matic®")
+                        )
+                          return "AWD/4WD";
+                        if (lower === "other" || lower === "other/unknown")
+                          return "Other";
+                        return r;
+                      };
 
-                    for (const d of rawList) {
-                      const raw = String(d.name || "").trim();
-                      if (!raw) continue;
-                      const display = getDisplay(raw);
-                      const key = display;
-                      const entry = groups.get(key) || { names: [], count: 0 };
-                      if (!entry.names.includes(raw)) entry.names.push(raw);
-                      entry.count += Number(d.count || 0);
-                      groups.set(key, entry);
-                    }
+                      for (const d of rawList) {
+                        const raw = String(d.name || "").trim();
+                        if (!raw) continue;
+                        const display = getDisplay(raw);
+                        const key = display;
+                        const entry = groups.get(key) || {
+                          names: [],
+                          count: 0,
+                        };
+                        if (!entry.names.includes(raw)) entry.names.push(raw);
+                        entry.count += Number(d.count || 0);
+                        groups.set(key, entry);
+                      }
 
-                    // Build ordered array: keep 'Other' at the end
-                    const ordered = Array.from(groups.entries()).map(
-                      ([display, val]) => ({
-                        display,
-                        names: val.names,
-                        count: val.count,
-                      }),
-                    );
-                    ordered.sort(
-                      (a, b) =>
-                        b.count - a.count || a.display.localeCompare(b.display),
-                    );
-                    const otherIdx = ordered.findIndex(
-                      (o) => o.display === "Other",
-                    );
-                    if (otherIdx > -1) {
-                      const [other] = ordered.splice(otherIdx, 1);
-                      ordered.push(other);
-                    }
+                      // Build ordered array: keep 'Other' at the end
+                      const ordered = Array.from(groups.entries()).map(
+                        ([display, val]) => ({
+                          display,
+                          names: val.names,
+                          count: val.count,
+                        }),
+                      );
+                      ordered.sort(
+                        (a, b) =>
+                          b.count - a.count ||
+                          a.display.localeCompare(b.display),
+                      );
+                      const otherIdx = ordered.findIndex(
+                        (o) => o.display === "Other",
+                      );
+                      if (otherIdx > -1) {
+                        const [other] = ordered.splice(otherIdx, 1);
+                        ordered.push(other);
+                      }
 
-                    return (
-                      <>
-                        {ordered.map((g) => {
-                          const isChecked = g.names.some((n) =>
-                            appliedFilters.driveType.includes(n),
-                          );
-                          return (
-                            <label
-                              key={g.display}
-                              className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                            >
-                              <input
-                                type="checkbox"
-                                className="mr-2"
-                                checked={isChecked}
-                                onChange={(e) => {
-                                  e.stopPropagation();
-                                  if ((e.target as HTMLInputElement).checked) {
-                                    // add all underlying raw names to appliedFilters
-                                    setAppliedFilters((prev) => ({
-                                      ...prev,
-                                      driveType: Array.from(
-                                        new Set([
-                                          ...prev.driveType,
-                                          ...g.names,
-                                        ]),
-                                      ),
-                                    }));
-                                  } else {
-                                    // remove all underlying names
-                                    setAppliedFilters((prev) => ({
-                                      ...prev,
-                                      driveType: prev.driveType.filter(
-                                        (v) => !g.names.includes(v),
-                                      ),
-                                    }));
-                                  }
-                                }}
-                              />
-                              <span className="carzino-filter-option">
-                                {g.display}
-                              </span>
-                              <span className="carzino-filter-count ml-1">
-                                ({g.count ?? 0})
-                              </span>
-                            </label>
-                          );
-                        })}
-                      </>
-                    );
-                  })()
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No drive types available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+                      return (
+                        <>
+                          {ordered.map((g) => {
+                            const isChecked = g.names.some((n) =>
+                              appliedFilters.driveType.includes(n),
+                            );
+                            return (
+                              <label
+                                key={g.display}
+                                className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                              >
+                                <input
+                                  type="checkbox"
+                                  className="mr-2"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    e.stopPropagation();
+                                    if (
+                                      (e.target as HTMLInputElement).checked
+                                    ) {
+                                      // add all underlying raw names to appliedFilters
+                                      setAppliedFilters((prev) => ({
+                                        ...prev,
+                                        driveType: Array.from(
+                                          new Set([
+                                            ...prev.driveType,
+                                            ...g.names,
+                                          ]),
+                                        ),
+                                      }));
+                                    } else {
+                                      // remove all underlying names
+                                      setAppliedFilters((prev) => ({
+                                        ...prev,
+                                        driveType: prev.driveType.filter(
+                                          (v) => !g.names.includes(v),
+                                        ),
+                                      }));
+                                    }
+                                  }}
+                                />
+                                <span className="carzino-filter-option">
+                                  {g.display}
+                                </span>
+                                <span className="carzino-filter-count ml-1">
+                                  ({g.count ?? 0})
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </>
+                      );
+                    })()
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No drive types available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
             )}
 
             {/* Transmission */}
@@ -4041,517 +4087,554 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Doors */}
-            {((filterOptions && filterOptions.doors && filterOptions.doors.length>0) || (appliedFilters.doors && appliedFilters.doors.length>0)) && (
-            <FilterSection
-              title="Doors"
-              isCollapsed={collapsedFilters.doors}
-              onToggle={() => toggleFilter("doors")}
-            >
-              <div className="space-y-1">
-                {filterOptions.doors && filterOptions.doors.length > 0 ? (
-                  filterOptions.doors.map((d: any) => (
-                    <label
-                      key={d.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.doors.includes(d.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              doors: [...prev.doors, d.name],
-                            }));
-                          } else {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              doors: prev.doors.filter((v) => v !== d.name),
-                            }));
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{d.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({d.count ?? 0})
-                      </span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No door options available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
-            )}
-
-            {/* NEW: Fuel Type */}
-            {((fuelOptions && fuelOptions.length>0) || (appliedFilters.fuelType && appliedFilters.fuelType.length>0)) && (
-            <FilterSection
-              title="Fuel Type"
-              isCollapsed={collapsedFilters.fuelType}
-              onToggle={() => toggleFilter("fuelType")}
-            >
-              <div className="space-y-1">
-                {fuelOptions && fuelOptions.length > 0 ? (
-                  <>
-                    {displayedFuels.map((f: any) => (
+            {((filterOptions &&
+              filterOptions.doors &&
+              filterOptions.doors.length > 0) ||
+              (appliedFilters.doors && appliedFilters.doors.length > 0)) && (
+              <FilterSection
+                title="Doors"
+                isCollapsed={collapsedFilters.doors}
+                onToggle={() => toggleFilter("doors")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.doors && filterOptions.doors.length > 0 ? (
+                    filterOptions.doors.map((d: any) => (
                       <label
-                        key={f.name}
+                        key={d.name}
                         className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
                           className="mr-2"
-                          checked={appliedFilters.fuelType.includes(f.name)}
+                          checked={appliedFilters.doors.includes(d.name)}
                           onChange={(e) => {
                             e.stopPropagation();
                             if ((e.target as HTMLInputElement).checked) {
                               setAppliedFilters((prev) => ({
                                 ...prev,
-                                fuelType: [...prev.fuelType, f.name],
+                                doors: [...prev.doors, d.name],
                               }));
                             } else {
-                              removeAppliedFilter("fuelType", f.name);
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                doors: prev.doors.filter((v) => v !== d.name),
+                              }));
                             }
                           }}
                         />
-                        <span className="carzino-filter-option">{f.name}</span>
+                        <span className="carzino-filter-option">{d.name}</span>
                         <span className="carzino-filter-count ml-1">
-                          ({f.count ?? 0})
+                          ({d.count ?? 0})
                         </span>
                       </label>
-                    ))}
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No door options available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
 
-                    {fuelOptions.length > 8 && (
-                      <div className="p-1">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowMoreFuel((v) => !v);
-                          }}
-                          className="text-sm text-blue-600 hover:underline px-2 py-1 rounded"
+            {/* NEW: Fuel Type */}
+            {((fuelOptions && fuelOptions.length > 0) ||
+              (appliedFilters.fuelType &&
+                appliedFilters.fuelType.length > 0)) && (
+              <FilterSection
+                title="Fuel Type"
+                isCollapsed={collapsedFilters.fuelType}
+                onToggle={() => toggleFilter("fuelType")}
+              >
+                <div className="space-y-1">
+                  {fuelOptions && fuelOptions.length > 0 ? (
+                    <>
+                      {displayedFuels.map((f: any) => (
+                        <label
+                          key={f.name}
+                          className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                         >
-                          {showMoreFuel
-                            ? "Show Less"
-                            : `Show More (${fuelOptions.length - 8})`}
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No fuel types available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+                          <input
+                            type="checkbox"
+                            className="mr-2"
+                            checked={appliedFilters.fuelType.includes(f.name)}
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              if ((e.target as HTMLInputElement).checked) {
+                                setAppliedFilters((prev) => ({
+                                  ...prev,
+                                  fuelType: [...prev.fuelType, f.name],
+                                }));
+                              } else {
+                                removeAppliedFilter("fuelType", f.name);
+                              }
+                            }}
+                          />
+                          <span className="carzino-filter-option">
+                            {f.name}
+                          </span>
+                          <span className="carzino-filter-count ml-1">
+                            ({f.count ?? 0})
+                          </span>
+                        </label>
+                      ))}
+
+                      {fuelOptions.length > 8 && (
+                        <div className="p-1">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowMoreFuel((v) => !v);
+                            }}
+                            className="text-sm text-blue-600 hover:underline px-2 py-1 rounded"
+                          >
+                            {showMoreFuel
+                              ? "Show Less"
+                              : `Show More (${fuelOptions.length - 8})`}
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No fuel types available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
             )}
 
             {/* NEW: Fuel Economy (moved under Fuel Type) */}
-            {((appliedFilters.fuelType && appliedFilters.fuelType.length>0) || (appliedFilters.highwayMpg && (appliedFilters.highwayMpg as any).length>0) || (filterOptions && filterOptions.highway_mpg && filterOptions.highway_mpg.length>0)) && (
-            <FilterSection
-              title="Fuel Economy"
-              isCollapsed={collapsedFilters.highwayMpg}
-              onToggle={() => toggleFilter("highwayMpg")}
-            >
-              <div className="space-y-1">
-                {(() => {
-                  const options = [
-                    { key: "any", label: "Any", min: 0 },
-                    { key: "10", label: "10+ MPG", min: 10 },
-                    { key: "15", label: "15+ MPG", min: 15 },
-                    { key: "20", label: "20+ MPG", min: 20 },
-                    { key: "30", label: "30+ MPG", min: 30 },
-                    { key: "40", label: "40+ MPG", min: 40 },
-                    { key: "50", label: "50+ MPG", min: 50 },
-                  ];
+            {((appliedFilters.fuelType && appliedFilters.fuelType.length > 0) ||
+              (appliedFilters.highwayMpg &&
+                (appliedFilters.highwayMpg as any).length > 0) ||
+              (filterOptions &&
+                filterOptions.highway_mpg &&
+                filterOptions.highway_mpg.length > 0)) && (
+              <FilterSection
+                title="Fuel Economy"
+                isCollapsed={collapsedFilters.highwayMpg}
+                onToggle={() => toggleFilter("highwayMpg")}
+              >
+                <div className="space-y-1">
+                  {(() => {
+                    const options = [
+                      { key: "any", label: "Any", min: 0 },
+                      { key: "10", label: "10+ MPG", min: 10 },
+                      { key: "15", label: "15+ MPG", min: 15 },
+                      { key: "20", label: "20+ MPG", min: 20 },
+                      { key: "30", label: "30+ MPG", min: 30 },
+                      { key: "40", label: "40+ MPG", min: 40 },
+                      { key: "50", label: "50+ MPG", min: 50 },
+                    ];
 
-                  // compute counts by summing available highway_mpg buckets >= min
-                  const buckets = (filterOptions.highway_mpg || [])
-                    .map((b: any) => ({
-                      n: Number(b.name),
-                      count: Number(b.count || 0),
-                    }))
-                    .filter((b: any) => !Number.isNaN(b.n));
+                    // compute counts by summing available highway_mpg buckets >= min
+                    const buckets = (filterOptions.highway_mpg || [])
+                      .map((b: any) => ({
+                        n: Number(b.name),
+                        count: Number(b.count || 0),
+                      }))
+                      .filter((b: any) => !Number.isNaN(b.n));
 
-                  const getCount = (min: number) => {
-                    if (min <= 0)
-                      return buckets.reduce(
-                        (s: number, b: any) => s + b.count,
-                        0,
-                      );
-                    return buckets
-                      .filter((b: any) => b.n >= min)
-                      .reduce((s: number, b: any) => s + b.count, 0);
-                  };
+                    const getCount = (min: number) => {
+                      if (min <= 0)
+                        return buckets.reduce(
+                          (s: number, b: any) => s + b.count,
+                          0,
+                        );
+                      return buckets
+                        .filter((b: any) => b.n >= min)
+                        .reduce((s: number, b: any) => s + b.count, 0);
+                    };
 
-                  return options.map((opt) => (
-                    <label
-                      key={opt.key}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={
-                          opt.key === "any"
-                            ? (appliedFilters.highwayMpg || []).length === 0
-                            : (appliedFilters.highwayMpg || []).includes(
-                                String(opt.min),
-                              )
-                        }
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if (opt.key === "any") {
-                            // clear selection
-                            const newFilters = {
-                              ...appliedFilters,
-                              highwayMpg: [],
-                            } as any;
-                            setAppliedFilters(newFilters);
-                            updateURLFromFilters(newFilters);
-                            setCurrentPage(1);
-                            return;
+                    return options.map((opt) => (
+                      <label
+                        key={opt.key}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={
+                            opt.key === "any"
+                              ? (appliedFilters.highwayMpg || []).length === 0
+                              : (appliedFilters.highwayMpg || []).includes(
+                                  String(opt.min),
+                                )
                           }
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if (opt.key === "any") {
+                              // clear selection
+                              const newFilters = {
+                                ...appliedFilters,
+                                highwayMpg: [],
+                              } as any;
+                              setAppliedFilters(newFilters);
+                              updateURLFromFilters(newFilters);
+                              setCurrentPage(1);
+                              return;
+                            }
 
-                          if ((e.target as HTMLInputElement).checked) {
-                            const newFilters = {
-                              ...(appliedFilters as any),
-                              highwayMpg: [
-                                ...(appliedFilters.highwayMpg || []).filter(
-                                  (v: string) => v !== "",
-                                ),
-                                String(opt.min),
-                              ],
-                            } as any;
-                            setAppliedFilters(newFilters);
-                            updateURLFromFilters(newFilters);
-                            setCurrentPage(1);
-                          } else {
-                            const newFilters = {
-                              ...(appliedFilters as any),
-                              highwayMpg: (
-                                appliedFilters.highwayMpg || []
-                              ).filter((v: string) => v !== String(opt.min)),
-                            } as any;
-                            setAppliedFilters(newFilters);
-                            updateURLFromFilters(newFilters);
-                            setCurrentPage(1);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{opt.label}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({getCount(opt.min)})
-                      </span>
-                    </label>
-                  ));
-                })()}
-              </div>
-            </FilterSection>
+                            if ((e.target as HTMLInputElement).checked) {
+                              const newFilters = {
+                                ...(appliedFilters as any),
+                                highwayMpg: [
+                                  ...(appliedFilters.highwayMpg || []).filter(
+                                    (v: string) => v !== "",
+                                  ),
+                                  String(opt.min),
+                                ],
+                              } as any;
+                              setAppliedFilters(newFilters);
+                              updateURLFromFilters(newFilters);
+                              setCurrentPage(1);
+                            } else {
+                              const newFilters = {
+                                ...(appliedFilters as any),
+                                highwayMpg: (
+                                  appliedFilters.highwayMpg || []
+                                ).filter((v: string) => v !== String(opt.min)),
+                              } as any;
+                              setAppliedFilters(newFilters);
+                              updateURLFromFilters(newFilters);
+                              setCurrentPage(1);
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">
+                          {opt.label}
+                        </span>
+                        <span className="carzino-filter-count ml-1">
+                          ({getCount(opt.min)})
+                        </span>
+                      </label>
+                    ));
+                  })()}
+                </div>
+              </FilterSection>
             )}
 
             {/* Exterior Color */}
-            {((exteriorColors && exteriorColors.length>0) || (appliedFilters.exteriorColor && appliedFilters.exteriorColor.length>0)) && (
-            <FilterSection
-              title="Exterior Color"
-              isCollapsed={collapsedFilters.exteriorColor}
-              onToggle={() => toggleFilter("exteriorColor")}
-            >
-              <div className="space-y-1">
-                {exteriorColors.map((color, index) => (
-                  <ColorSwatch
-                    key={index}
-                    color={color.color}
-                    name={color.name}
-                    count={color.count}
-                  />
-                ))}
-              </div>
-            </FilterSection>
+            {((exteriorColors && exteriorColors.length > 0) ||
+              (appliedFilters.exteriorColor &&
+                appliedFilters.exteriorColor.length > 0)) && (
+              <FilterSection
+                title="Exterior Color"
+                isCollapsed={collapsedFilters.exteriorColor}
+                onToggle={() => toggleFilter("exteriorColor")}
+              >
+                <div className="space-y-1">
+                  {exteriorColors.map((color, index) => (
+                    <ColorSwatch
+                      key={index}
+                      color={color.color}
+                      name={color.name}
+                      count={color.count}
+                    />
+                  ))}
+                </div>
+              </FilterSection>
             )}
 
             {/* Interior Color */}
-            {((interiorColors && interiorColors.length>0) || (appliedFilters.exteriorColor && appliedFilters.exteriorColor.length>0)) && (
-            <FilterSection
-              title="Interior Color"
-              isCollapsed={collapsedFilters.interiorColor}
-              onToggle={() => toggleFilter("interiorColor")}
-            >
-              <div className="space-y-1">
-                {interiorColors.map((color, index) => (
-                  <ColorSwatch
-                    key={index}
-                    color={color.color}
-                    name={color.name}
-                    count={color.count}
-                  />
-                ))}
-              </div>
-            </FilterSection>
+            {((interiorColors && interiorColors.length > 0) ||
+              (appliedFilters.exteriorColor &&
+                appliedFilters.exteriorColor.length > 0)) && (
+              <FilterSection
+                title="Interior Color"
+                isCollapsed={collapsedFilters.interiorColor}
+                onToggle={() => toggleFilter("interiorColor")}
+              >
+                <div className="space-y-1">
+                  {interiorColors.map((color, index) => (
+                    <ColorSwatch
+                      key={index}
+                      color={color.color}
+                      name={color.name}
+                      count={color.count}
+                    />
+                  ))}
+                </div>
+              </FilterSection>
             )}
 
             {/* Seller Type */}
-            {((filterOptions && filterOptions.account_type_seller && filterOptions.account_type_seller.length>0) || (appliedFilters.sellerType && appliedFilters.sellerType.length>0)) && (
-            <FilterSection
-              title="Seller Type"
-              isCollapsed={collapsedFilters.sellerType}
-              onToggle={() => toggleFilter("sellerType")}
-            >
-              <div className="space-y-1">
-                {filterOptions.account_type_seller &&
-                filterOptions.account_type_seller.length > 0 ? (
-                  filterOptions.account_type_seller.map((s: any) => (
-                    <label
-                      key={s.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.sellerType.includes(s.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              sellerType: [...prev.sellerType, s.name],
-                            }));
-                          } else {
-                            removeAppliedFilter("sellerType", s.name);
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{s.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({s.count ?? 0})
-                      </span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-gray-500 text-sm p-2">
-                    Loading seller types...
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+            {((filterOptions &&
+              filterOptions.account_type_seller &&
+              filterOptions.account_type_seller.length > 0) ||
+              (appliedFilters.sellerType &&
+                appliedFilters.sellerType.length > 0)) && (
+              <FilterSection
+                title="Seller Type"
+                isCollapsed={collapsedFilters.sellerType}
+                onToggle={() => toggleFilter("sellerType")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.account_type_seller &&
+                  filterOptions.account_type_seller.length > 0 ? (
+                    filterOptions.account_type_seller.map((s: any) => (
+                      <label
+                        key={s.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={appliedFilters.sellerType.includes(s.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                sellerType: [...prev.sellerType, s.name],
+                              }));
+                            } else {
+                              removeAppliedFilter("sellerType", s.name);
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{s.name}</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({s.count ?? 0})
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-gray-500 text-sm p-2">
+                      Loading seller types...
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
             )}
 
             {/* Dealer */}
-            {( (availableDealers && availableDealers.length>0) || (appliedFilters.dealer && appliedFilters.dealer.length>0) ) && (
-            <FilterSection
-              title="Dealer"
-              isCollapsed={collapsedFilters.dealer}
-              onToggle={() => toggleFilter("dealer")}
-            >
-              <div className="space-y-1">
-                {availableDealers.map((dealer, index) => (
-                  <label
-                    key={index}
-                    className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      checked={appliedFilters.dealer.includes(dealer.name)}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        if (e.target.checked) {
-                          setAppliedFilters((prev) => ({
-                            ...prev,
-                            dealer: [...prev.dealer, dealer.name],
-                          }));
-                        } else {
-                          setAppliedFilters((prev) => ({
-                            ...prev,
-                            dealer: prev.dealer.filter(
-                              (item) => item !== dealer.name,
-                            ),
-                          }));
-                        }
-                      }}
-                    />
-                    <span className="carzino-filter-option">{dealer.name}</span>
-                    <span className="carzino-filter-count ml-1">
-                      ({dealer.count})
-                    </span>
-                  </label>
-                ))}
-                {availableDealers.length === 0 && (
-                  <div className="text-gray-500 text-sm p-2">
-                    Loading dealers...
-                  </div>
-                )}
-              </div>
-            </FilterSection>
-            )}
-
-            {/* State */}
-            {((filterOptions && filterOptions.state_seller && filterOptions.state_seller.length>0) || ((appliedFilters as any).state && (appliedFilters as any).state.length>0)) && (
-            <FilterSection
-              title="State"
-              isCollapsed={collapsedFilters.state}
-              onToggle={() => toggleFilter("state")}
-            >
-              <div className="space-y-1">
-                {filterOptions.state_seller &&
-                filterOptions.state_seller.length > 0 ? (
-                  filterOptions.state_seller.map((s: any) => (
+            {((availableDealers && availableDealers.length > 0) ||
+              (appliedFilters.dealer && appliedFilters.dealer.length > 0)) && (
+              <FilterSection
+                title="Dealer"
+                isCollapsed={collapsedFilters.dealer}
+                onToggle={() => toggleFilter("dealer")}
+              >
+                <div className="space-y-1">
+                  {availableDealers.map((dealer, index) => (
                     <label
-                      key={s.name}
+                      key={index}
                       className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
                     >
                       <input
                         type="checkbox"
                         className="mr-2"
-                        checked={((appliedFilters as any).state || []).includes(
-                          s.name,
-                        )}
+                        checked={appliedFilters.dealer.includes(dealer.name)}
                         onChange={(e) => {
                           e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
+                          if (e.target.checked) {
                             setAppliedFilters((prev) => ({
                               ...prev,
-                              /* @ts-ignore */ state: [
-                                ...((prev as any).state || []),
-                                s.name,
-                              ],
+                              dealer: [...prev.dealer, dealer.name],
                             }));
                           } else {
                             setAppliedFilters((prev) => ({
                               ...prev,
-                              /* @ts-ignore */ state: (
-                                (prev as any).state || []
-                              ).filter((v: string) => v !== s.name),
-                            }));
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{s.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({s.count ?? 0})
-                      </span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No states available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
-            )}
-
-            {/* City */}
-            {((filterOptions && filterOptions.city_seller && filterOptions.city_seller.length>0) || ((appliedFilters as any).city && (appliedFilters as any).city.length>0)) && (
-            <FilterSection
-              title="City"
-              isCollapsed={collapsedFilters.city}
-              onToggle={() => toggleFilter("city")}
-            >
-              <div className="space-y-1">
-                {filterOptions.city_seller &&
-                filterOptions.city_seller.length > 0 ? (
-                  filterOptions.city_seller.map((c: any) => (
-                    <label
-                      key={c.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={((appliedFilters as any).city || []).includes(
-                          c.name,
-                        )}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              /* @ts-ignore */ city: [
-                                ...((prev as any).city || []),
-                                c.name,
-                              ],
-                            }));
-                          } else {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              /* @ts-ignore */ city: (
-                                (prev as any).city || []
-                              ).filter((v: string) => v !== c.name),
-                            }));
-                          }
-                        }}
-                      />
-                      <span className="carzino-filter-option">{c.name}</span>
-                      <span className="carzino-filter-count ml-1">
-                        ({c.count ?? 0})
-                      </span>
-                    </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No cities available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
-            )}
-
-            {/* Title Status (moved to bottom) */}
-            {((filterOptions && filterOptions.title_status && filterOptions.title_status.length>0) || (appliedFilters.titleStatus && appliedFilters.titleStatus.length>0)) && (
-            <FilterSection
-              title="Title Status"
-              isCollapsed={collapsedFilters.titleStatus}
-              onToggle={() => toggleFilter("titleStatus")}
-            >
-              <div className="space-y-1">
-                {filterOptions.title_status &&
-                filterOptions.title_status.length > 0 ? (
-                  filterOptions.title_status.map((t: any) => (
-                    <label
-                      key={t.name}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={appliedFilters.titleStatus.includes(t.name)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          if ((e.target as HTMLInputElement).checked) {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              titleStatus: [...prev.titleStatus, t.name],
-                            }));
-                          } else {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              titleStatus: prev.titleStatus.filter(
-                                (v) => v !== t.name,
+                              dealer: prev.dealer.filter(
+                                (item) => item !== dealer.name,
                               ),
                             }));
                           }
                         }}
                       />
-                      <span className="carzino-filter-option">{t.name}</span>
+                      <span className="carzino-filter-option">
+                        {dealer.name}
+                      </span>
                       <span className="carzino-filter-count ml-1">
-                        ({t.count ?? 0})
+                        ({dealer.count})
                       </span>
                     </label>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
-                    No title status options available.
-                  </div>
-                )}
-              </div>
-            </FilterSection>
+                  ))}
+                  {availableDealers.length === 0 && (
+                    <div className="text-gray-500 text-sm p-2">
+                      Loading dealers...
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
+
+            {/* State */}
+            {((filterOptions &&
+              filterOptions.state_seller &&
+              filterOptions.state_seller.length > 0) ||
+              ((appliedFilters as any).state &&
+                (appliedFilters as any).state.length > 0)) && (
+              <FilterSection
+                title="State"
+                isCollapsed={collapsedFilters.state}
+                onToggle={() => toggleFilter("state")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.state_seller &&
+                  filterOptions.state_seller.length > 0 ? (
+                    filterOptions.state_seller.map((s: any) => (
+                      <label
+                        key={s.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={(
+                            (appliedFilters as any).state || []
+                          ).includes(s.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                /* @ts-ignore */ state: [
+                                  ...((prev as any).state || []),
+                                  s.name,
+                                ],
+                              }));
+                            } else {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                /* @ts-ignore */ state: (
+                                  (prev as any).state || []
+                                ).filter((v: string) => v !== s.name),
+                              }));
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{s.name}</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({s.count ?? 0})
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No states available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
+
+            {/* City */}
+            {((filterOptions &&
+              filterOptions.city_seller &&
+              filterOptions.city_seller.length > 0) ||
+              ((appliedFilters as any).city &&
+                (appliedFilters as any).city.length > 0)) && (
+              <FilterSection
+                title="City"
+                isCollapsed={collapsedFilters.city}
+                onToggle={() => toggleFilter("city")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.city_seller &&
+                  filterOptions.city_seller.length > 0 ? (
+                    filterOptions.city_seller.map((c: any) => (
+                      <label
+                        key={c.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={(
+                            (appliedFilters as any).city || []
+                          ).includes(c.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                /* @ts-ignore */ city: [
+                                  ...((prev as any).city || []),
+                                  c.name,
+                                ],
+                              }));
+                            } else {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                /* @ts-ignore */ city: (
+                                  (prev as any).city || []
+                                ).filter((v: string) => v !== c.name),
+                              }));
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{c.name}</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({c.count ?? 0})
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No cities available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
+
+            {/* Title Status (moved to bottom) */}
+            {((filterOptions &&
+              filterOptions.title_status &&
+              filterOptions.title_status.length > 0) ||
+              (appliedFilters.titleStatus &&
+                appliedFilters.titleStatus.length > 0)) && (
+              <FilterSection
+                title="Title Status"
+                isCollapsed={collapsedFilters.titleStatus}
+                onToggle={() => toggleFilter("titleStatus")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.title_status &&
+                  filterOptions.title_status.length > 0 ? (
+                    filterOptions.title_status.map((t: any) => (
+                      <label
+                        key={t.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={appliedFilters.titleStatus.includes(t.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                titleStatus: [...prev.titleStatus, t.name],
+                              }));
+                            } else {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                titleStatus: prev.titleStatus.filter(
+                                  (v) => v !== t.name,
+                                ),
+                              }));
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{t.name}</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({t.count ?? 0})
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No title status options available.
+                    </div>
+                  )}
+                </div>
+              </FilterSection>
             )}
           </div>
         </div>
