@@ -2029,6 +2029,39 @@ export default function MySQLVehiclesOriginalStyle() {
       style={{ fontFamily: "Albert Sans, sans-serif" }}
     >
       <NavigationHeader />
+      {/* Debug: temporary filter/URL preview toggle */}
+      <div style={{ position: "fixed", top: 12, right: 12, zIndex: 9999 }}>
+        <button
+          onClick={() => setShowFilterDebug((v) => !v)}
+          className="px-3 py-1 rounded bg-black text-white text-sm"
+        >
+          {showFilterDebug ? "Hide filter preview" : "Show filter preview"}
+        </button>
+      </div>
+      {showFilterDebug && (
+        <div style={{ position: "fixed", top: 52, right: 12, zIndex: 9999, width: 420, maxHeight: '60vh', overflow: 'auto', background: 'white', border: '1px solid #e5e7eb', padding: 12, borderRadius: 8 }}>
+          <h4 style={{ margin: 0, marginBottom: 8, fontWeight: 600 }}>Applied Filters (runtime)</h4>
+          <pre style={{ maxHeight: 220, overflow: 'auto', background: '#f9fafb', padding: 8, borderRadius: 6 }}>{JSON.stringify(appliedFilters, null, 2)}</pre>
+          <h4 style={{ marginTop: 10, marginBottom: 8, fontWeight: 600 }}>Preview URL</h4>
+          <div style={{ background: '#f9fafb', padding: 8, borderRadius: 6 }}>
+            {(() => {
+              try {
+                const url = generateURLFromFilters({
+                  make: appliedFilters.make,
+                  model: appliedFilters.model,
+                  trim: appliedFilters.trim,
+                  condition: appliedFilters.condition,
+                  year: appliedFilters.year.length > 0 ? appliedFilters.year[0] : undefined,
+                  bodyStyle: appliedFilters.bodyStyle.length > 0 ? appliedFilters.bodyStyle[0] : undefined,
+                });
+                return <code>{url}</code>;
+              } catch (e) {
+                return <code>/cars-for-sale/</code>;
+              }
+            })()}
+          </div>
+        </div>
+      )}
       <style>{`
         :root {
           --carzino-featured-badge: 12px;
@@ -2597,7 +2630,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ��
+                        ×
                       </button>
                     </span>
                   ))}
