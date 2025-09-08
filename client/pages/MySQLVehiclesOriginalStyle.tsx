@@ -543,6 +543,14 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, [filterOptions?.fuel_type]);
 
+  // When mobile filter panel opens, ensure Vehicle Type section is collapsed by default
+  useEffect(() => {
+    if (mobileFiltersOpen && isMobile) {
+      setCollapsedFilters((prev) => ({ ...prev, vehicleType: true }));
+    }
+    // Do not automatically expand when panel closes; let user state persist
+  }, [mobileFiltersOpen, isMobile]);
+
   // Initialize highway MPG slider defaults when filter options change
   useEffect(() => {
     if (
