@@ -518,7 +518,8 @@ export default function MySQLVehiclesOriginalStyle() {
     if (!filterOptions) return;
     const { pruned, changed } = pruneInvalid(appliedFilters as any);
     if (changed) {
-      setAppliedFilters(pruned as any);
+      // Merge pruned values into existing state to preserve any missing keys
+      setAppliedFilters((prev) => ({ ...(prev as any), ...(pruned as any) }));
       updateURLFromFilters(pruned as any);
     }
   }, [filterOptions]);
