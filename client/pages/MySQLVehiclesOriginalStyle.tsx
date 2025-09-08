@@ -1669,8 +1669,8 @@ export default function MySQLVehiclesOriginalStyle() {
       // ignore if state not available in this scope
     }
 
-    // Clear the search input
-    setUnifiedSearch("");
+    // Preserve the unified search input and set searchTerm used for API queries
+    setSearchTerm(unifiedSearch.trim());
   };
 
   // Geocoding function to convert ZIP to lat/lng using optimized backend
