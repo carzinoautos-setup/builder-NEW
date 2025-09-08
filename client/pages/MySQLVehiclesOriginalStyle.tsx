@@ -4089,6 +4089,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* NEW: Fuel Type */}
+            {((fuelOptions && fuelOptions.length>0) || (appliedFilters.fuelType && appliedFilters.fuelType.length>0)) && (
             <FilterSection
               title="Fuel Type"
               isCollapsed={collapsedFilters.fuelType}
@@ -4149,6 +4150,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* NEW: Fuel Economy (moved under Fuel Type) */}
             <FilterSection
