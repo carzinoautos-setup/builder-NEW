@@ -1282,7 +1282,7 @@ export default function MySQLVehiclesOriginalStyle() {
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
             console.log(
-              "🔁 Merged Builder VehicleTypeCard images into runtime mapping",
+              "��� Merged Builder VehicleTypeCard images into runtime mapping",
               foundImages,
             );
             // Clear persisted local overrides so Builder/editor images take effect immediately
@@ -2131,7 +2131,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
           <div className="p-4">
             {/* Mobile Filter Action Buttons (moved to top) */}
-            <div className="lg:hidden p-2 mb-4 border-b border-gray-200">
+            <div className="lg:hidden p-2 mb-4">
               <div className="flex gap-3">
                 <button type="button"
                   onClick={() => setMobileFiltersOpen(false)}
