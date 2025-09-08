@@ -3415,6 +3415,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Payment Filter */}
+            {((appliedFilters.paymentMin && appliedFilters.paymentMin.length>0) || (appliedFilters.paymentMax && appliedFilters.paymentMax.length>0) || vehicles.length > 0) && (
             <FilterSection
               title="Payment"
               isCollapsed={collapsedFilters.payment}
@@ -3546,6 +3547,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 </div>
               </div>
             </FilterSection>
+            )}
 
             {/* Condition */}
             <FilterSection
