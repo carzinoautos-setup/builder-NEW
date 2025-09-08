@@ -2482,7 +2482,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Desktop Applied Filters */}
-            {false && (
+            {true && (
               <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200 sticky top-16 z-40 bg-white">
                 <div className="pt-6 flex items-center justify-between mb-2">
                   <h3 className="carzino-filter-title">Applied Filters</h3>
