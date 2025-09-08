@@ -542,7 +542,7 @@ export default function MySQLVehiclesOriginalStyle() {
       // avoid pruning that specific filter value even if filterOptions haven't yet stabilized.
       const prunedSelective: any = { ...pruned };
       try {
-        const q = (searchTerm || "").toString().trim().toLowerCase();
+        const q = (searchTerm || unifiedSearch || "").toString().trim().toLowerCase();
         if (q) {
           // Preserve make/model/trim if they match the search term
           if (
