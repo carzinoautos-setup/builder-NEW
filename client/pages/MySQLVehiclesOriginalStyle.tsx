@@ -2500,7 +2500,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         if (!m) return null;
                         if (m.includes("-")) {
                           const [min, max] = m.split("-");
-                          return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                          return `${Number(min).toLocaleString()}���${Number(max).toLocaleString()} Miles`;
                         }
                         if (m.endsWith("+")) {
                           return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
@@ -4219,7 +4219,7 @@ export default function MySQLVehiclesOriginalStyle() {
               appliedFilters.priceMax ||
               appliedFilters.paymentMin ||
               appliedFilters.paymentMax) && (
-              <div className="lg:hidden sticky top-16 z-60 px-3 pt-3 bg-white">
+              <div className="hidden lg:block px-3 pt-3 bg-white">
                 <div className="flex gap-2 overflow-x-auto pb-3">
                   <button
                     onClick={clearAllFilters}
