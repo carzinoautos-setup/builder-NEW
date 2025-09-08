@@ -3644,6 +3644,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Mileage */}
+            {((appliedFilters.mileage && appliedFilters.mileage.length>0) || (appliedFilters.condition && (appliedFilters.condition.includes("Used") || appliedFilters.condition.includes("used")))) && (
             <FilterSection
               title="Mileage"
               isCollapsed={collapsedFilters.mileage}
@@ -3671,6 +3672,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 </select>
               </div>
             </FilterSection>
+            )}
 
             {/* Search by Vehicle Type */}
             <FilterSection
