@@ -461,18 +461,14 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         // Use scopedJson (full appliedFilters) as the authoritative source for scoped categories
         const scopedMap: FilterMap = parseJsonToMap(scopedJson);
 
-        // Merge maps: use global makes from unscopedMap, and use scoped models/trims and transmission options when available
+        // Merge maps: use scopedMap (authoritative counts for current appliedFilters)
+        // but preserve the make list from unscopedMap (so user still sees all make options)
         let finalMap: FilterMap = {
-          ...unscopedMap,
-          ...(scopedMap.model ? { model: scopedMap.model } : {}),
-          ...(scopedMap.trim ? { trim: scopedMap.trim } : {}),
-          // When scoped filters are available (eg. after selecting Make), prefer scoped transmission lists
-          ...(scopedMap.transmission
-            ? { transmission: scopedMap.transmission }
-            : {}),
-          ...(scopedMap.transmission_speed
-            ? { transmission_speed: scopedMap.transmission_speed }
-            : {}),
+          ...scopedMap,
+          ...(unscopedMap.make ? { make: unscopedMap.make } : {}),
+          // Ensure transmission lists reflect scoped data when available
+          ...(scopedMap.transmission ? { transmission: scopedMap.transmission } : {}),
+          ...(scopedMap.transmission_speed ? { transmission_speed: scopedMap.transmission_speed } : {}),
         } as any;
 
         // Remove any 'Uncategorized' or empty labels from all filter arrays
