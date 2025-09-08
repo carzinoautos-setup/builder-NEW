@@ -511,3 +511,13 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
     pruneInvalid,
   };
 }
+
+export function loadPersistedAppliedFilters() {
+  try {
+    const v = sessionStorage.getItem("carzino_applied_filters_v2");
+    if (!v) return null;
+    return JSON.parse(v) as Partial<AppliedFilters>;
+  } catch (e) {
+    return null;
+  }
+}
