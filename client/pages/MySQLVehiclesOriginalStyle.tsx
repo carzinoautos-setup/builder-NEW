@@ -804,13 +804,10 @@ export default function MySQLVehiclesOriginalStyle() {
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
         },
         1,
         8000,
       );
-
-      clearTimeout(watchdog);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} ${response.statusText}`);
@@ -2003,7 +2000,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
 
         input[type="checkbox"]:checked::after {
-          content: '✓';
+          content: '���';
           position: absolute;
           color: white;
           font-size: 12px;
