@@ -1441,6 +1441,12 @@ export default function MySQLVehiclesOriginalStyle() {
       // NEW: Additional custom field filters
       fuelType: [],
       certified: [],
+      // Newly added/advanced filters
+      doors: [],
+      transmissionSpeed: [],
+      highwayMpg: [],
+      titleStatus: [],
+      status: [],
     });
     setPriceMin("1000");
     setPriceMax("50000");
