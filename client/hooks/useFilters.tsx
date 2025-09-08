@@ -458,31 +458,8 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
         const unscopedMap = parseJsonToMap(unscopedJson);
 
-        // If we have selected makes, fetch scoped filters (models/trims) for those makes
-        let scopedMap: FilterMap = {};
-        if (
-          filters &&
-          Array.isArray((filters as any).make) &&
-          (filters as any).make.length > 0
-        ) {
-          const scopedQs = buildFiltersQuery({ make: (filters as any).make });
-          const scopedUrl = `/api/vehicles/filters${scopedQs ? `?${scopedQs}` : ""}`;
-          console.log(
-            "🔍 Fetching scoped filter options for selected makes:",
-            scopedUrl,
-            `id=${localId}`,
-          );
-          const scopedRes = await fetchWithRetry(
-            scopedUrl,
-            { method: "GET", signal: controller.signal },
-            1,
-            8000,
-          );
-          if (!scopedRes.ok)
-            throw new Error(`Filters error ${scopedRes.status}`);
-          const scopedJson = await scopedRes.json();
-          scopedMap = parseJsonToMap(scopedJson);
-        }
+        // Use scopedJson (full appliedFilters) as the authoritative source for scoped categories
+        const scopedMap: FilterMap = parseJsonToMap(scopedJson);
 
         // Merge maps: use global makes from unscopedMap, and use scoped models/trims and transmission options when available
         let finalMap: FilterMap = {
