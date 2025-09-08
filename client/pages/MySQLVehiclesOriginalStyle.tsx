@@ -320,6 +320,8 @@ export default function MySQLVehiclesOriginalStyle() {
   };
   const [sortBy, setSortBy] = useState("relevance");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  // Debug: show current applied filters and preview URL
+  const [showFilterDebug, setShowFilterDebug] = useState(false);
 
   // API state
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -2595,7 +2597,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   ))}
