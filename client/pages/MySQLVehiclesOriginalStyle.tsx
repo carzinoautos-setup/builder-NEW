@@ -3853,6 +3853,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </FilterSection>
 
             {/* Transmission */}
+            {(appliedFilters.transmission.length > 0 || (filterOptions && filterOptions.transmission && filterOptions.transmission.length > 0)) && (
             <FilterSection
               title="Transmission"
               isCollapsed={collapsedFilters.transmission}
@@ -3895,8 +3896,10 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* Transmission Speed */}
+            {(appliedFilters.transmissionSpeed.length > 0 || (filterOptions && filterOptions.transmission_speed && filterOptions.transmission_speed.length > 0)) && (
             <FilterSection
               title="Transmission Speed"
               isCollapsed={collapsedFilters.transmissionSpeed}
@@ -3984,6 +3987,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* Doors */}
             <FilterSection
