@@ -595,7 +595,7 @@ export default function MySQLVehiclesOriginalStyle() {
       setAppliedFilters(newFilters);
       updateURLFromFilters(newFilters);
     }
-  }, [filterOptions, searchTerm]);
+  }, [filterOptions, searchTerm, unifiedSearch]);
 
   // Ensure Gasoline is selected by default when fuel options first load and no selection exists
   useEffect(() => {
