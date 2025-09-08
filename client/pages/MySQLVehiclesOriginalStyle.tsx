@@ -1648,16 +1648,36 @@ export default function MySQLVehiclesOriginalStyle() {
       bodyStyle: parsedFilters.bodyStyle?.[0],
     });
 
-    // Update applied filters to match the search
-    setAppliedFilters((prev) => ({
-      ...prev,
+    // Clear any previously applied filters first
+    clearAllFilters();
+
+    // Apply only the parsed filters from the unified search (everything else cleared)
+    setAppliedFilters({
+      condition: parsedFilters.condition || [],
       make: parsedFilters.make || [],
       model: parsedFilters.model || [],
       trim: parsedFilters.trim || [],
-      condition: parsedFilters.condition || [],
       year: parsedFilters.year || [],
       bodyStyle: parsedFilters.bodyStyle || [],
-    }));
+      vehicleType: [],
+      driveType: [],
+      transmission: [],
+      mileage: "",
+      exteriorColor: [],
+      sellerType: [],
+      dealer: [],
+      priceMin: "",
+      priceMax: "",
+      paymentMin: "",
+      paymentMax: "",
+      fuelType: [],
+      certified: [],
+      doors: [],
+      transmissionSpeed: [],
+      highwayMpg: [],
+      titleStatus: [],
+      status: [],
+    });
 
     // Navigate to the generated URL
     navigate(searchURL);
