@@ -2225,22 +2225,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Desktop Applied Filters */}
-            {((appliedLocation && appliedRadius !== "nationwide") ||
-              appliedFilters.condition.length > 0 ||
-              appliedFilters.make.length > 0 ||
-              appliedFilters.model.length > 0 ||
-              appliedFilters.trim.length > 0 ||
-              appliedFilters.year.length > 0 ||
-              appliedFilters.bodyStyle.length > 0 ||
-              appliedFilters.driveType.length > 0 ||
-              appliedFilters.vehicleType.length > 0 ||
-              appliedFilters.mileage ||
-              appliedFilters.exteriorColor.length > 0 ||
-              appliedFilters.sellerType.length > 0 ||
-              appliedFilters.priceMin ||
-              appliedFilters.priceMax ||
-              appliedFilters.paymentMin ||
-              appliedFilters.paymentMax) && (
+            {false && (
               <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200 sticky top-16 z-40 bg-white">
                 <div className="pt-6 flex items-center justify-between mb-2">
                   <h3 className="carzino-filter-title">Applied Filters</h3>
