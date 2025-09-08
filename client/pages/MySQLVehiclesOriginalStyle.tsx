@@ -4153,6 +4153,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* NEW: Fuel Economy (moved under Fuel Type) */}
+            {((appliedFilters.fuelType && appliedFilters.fuelType.length>0) || (appliedFilters.highwayMpg && (appliedFilters.highwayMpg as any).length>0) || (filterOptions && filterOptions.highway_mpg && filterOptions.highway_mpg.length>0)) && (
             <FilterSection
               title="Fuel Economy"
               isCollapsed={collapsedFilters.highwayMpg}
@@ -4253,6 +4254,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 })()}
               </div>
             </FilterSection>
+            )}
 
             {/* Exterior Color */}
             <FilterSection
