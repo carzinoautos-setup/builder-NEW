@@ -82,18 +82,32 @@ export async function fetchWithRetry(
         input.startsWith("/") &&
         attempt < retries
       ) {
+        // Try a sequence of absolute fallbacks to handle embedded environments (preview iframes, proxies)
+        const candidates: string[] = [window.location.origin];
         try {
-          const absolute = window.location.origin + input;
-          // small backoff before trying absolute
-          await new Promise((r) => setTimeout(r, 200));
-          const res2 = await fetch(absolute, {
-            ...init,
-            signal: controller.signal,
-          });
-          if (res2) return res2;
+          if (typeof import.meta !== "undefined" && (import.meta as any).env && (import.meta as any).env.VITE_WP_URL) {
+            const envBase = String((import.meta as any).env.VITE_WP_URL).replace(/\/$/, "");
+            // Only add if different
+            if (envBase && envBase !== window.location.origin) candidates.push(envBase);
+          }
         } catch (e) {
-          // fall through to normal retry logic
-          console.warn("fetchWithRetry: absolute origin retry failed", e);
+          /* ignore env read errors */
+        }
+
+        for (const base of candidates) {
+          try {
+            const absolute = base + input;
+            // small backoff before trying absolute
+            await new Promise((r) => setTimeout(r, 200));
+            const res2 = await fetch(absolute, {
+              ...init,
+              signal: controller.signal,
+            });
+            if (res2) return res2;
+          } catch (e) {
+            console.warn("fetchWithRetry: absolute origin retry failed for base", base, e);
+            // try next candidate
+          }
         }
       }
 
