@@ -4219,7 +4219,7 @@ export default function MySQLVehiclesOriginalStyle() {
               appliedFilters.priceMax ||
               appliedFilters.paymentMin ||
               appliedFilters.paymentMax) && (
-              <div className="lg:hidden sticky top-16 z-40 px-3 pt-3 bg-white">
+              <div className="lg:hidden sticky top-16 z-60 px-3 pt-3 bg-white">
                 <div className="flex gap-2 overflow-x-auto pb-3">
                   <button
                     onClick={clearAllFilters}
