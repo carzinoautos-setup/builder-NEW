@@ -4616,7 +4616,7 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             )}
 
-            {/* Mobile Applied Filters Top Row */}
+            {!mobileFiltersOpen && (
             <div className="lg:hidden sticky top-12 z-40 px-3 py-2 bg-white overflow-x-auto flex gap-2 items-center">
               {((appliedLocation && appliedRadius !== "nationwide") ||
                 appliedFilters.condition.length > 0 ||
@@ -4654,6 +4654,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 </>
               )}
             </div>
+            )}
 
             {/* Connection Status & Results Count - NOT in sticky */}
             <div className="px-3 py-2 bg-gray-50 text-sm">
