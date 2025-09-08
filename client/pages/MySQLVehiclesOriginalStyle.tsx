@@ -378,6 +378,26 @@ export default function MySQLVehiclesOriginalStyle() {
     status: [] as string[],
   });
 
+  // Rehydrate appliedFilters from sessionStorage when available (one-time). This helps Builder.io preview
+  // and other contexts where we expect persisted state to be restored.
+  useEffect(() => {
+    try {
+      const persisted = loadPersistedAppliedFilters();
+      if (!persisted) return;
+      // detect if current appliedFilters look empty (no user selections)
+      const hasPersisted = Object.values(persisted as any).some((v: any) => Array.isArray(v) ? v.length > 0 : Boolean(v));
+      const currentHasAny = Object.values(appliedFilters as any).some((v: any) => Array.isArray(v) ? v.length > 0 : Boolean(v));
+      if (hasPersisted && !currentHasAny) {
+        setAppliedFilters((prev) => ({ ...(prev as any), ...(persisted as any) }));
+        console.log('[filters] Rehydrated appliedFilters from sessionStorage');
+      }
+    } catch (e) {
+      /* ignore */
+    }
+    // run only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [collapsedFilters, setCollapsedFilters] = useState({
     vehicleType: false,
     condition: true,
