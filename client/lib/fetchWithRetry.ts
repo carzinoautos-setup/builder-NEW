@@ -15,18 +15,12 @@ export async function fetchWithRetry(
     if (init && (init as any).signal) {
       const parentSignal = (init as any).signal as AbortSignal;
       if (parentSignal.aborted) {
-        try {
-          controller.abort((parentSignal as any).reason);
-        } catch (e) {
-          controller.abort();
-        }
+        // Abort the child controller without passing the parent reason to avoid
+        // runtime errors in environments that don't support abort reasons.
+        controller.abort();
       } else {
         parentAbortHandler = () => {
-          try {
-            controller.abort((parentSignal as any).reason);
-          } catch (e) {
-            controller.abort();
-          }
+          controller.abort();
         };
         parentSignal.addEventListener("abort", parentAbortHandler);
       }
