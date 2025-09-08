@@ -4504,6 +4504,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Title Status (moved to bottom) */}
+            {((filterOptions && filterOptions.title_status && filterOptions.title_status.length>0) || (appliedFilters.titleStatus && appliedFilters.titleStatus.length>0)) && (
             <FilterSection
               title="Title Status"
               isCollapsed={collapsedFilters.titleStatus}
@@ -4551,6 +4552,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
           </div>
         </div>
 
