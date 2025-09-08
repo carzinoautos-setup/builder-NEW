@@ -66,7 +66,15 @@ export async function fetchWithRetry(
       // If last attempt, throw a clearer error for aborts/timeouts
       if (attempt === retries) {
         if (err && err.name === "AbortError") {
-          throw new Error("Request aborted or timed out");
+          const abortErr = new Error("Request aborted or timed out");
+          abortErr.name = "AbortError";
+          throw abortErr;
+        }
+        // If the thrown error is an AbortError from fetch, normalize its name
+        if (err && err.name === "AbortError") {
+          const abortErr = new Error("Request aborted or timed out");
+          abortErr.name = "AbortError";
+          throw abortErr;
         }
         throw err;
       }
