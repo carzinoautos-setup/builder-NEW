@@ -518,11 +518,47 @@ export default function MySQLVehiclesOriginalStyle() {
     if (!filterOptions) return;
     const { pruned, changed } = pruneInvalid(appliedFilters as any);
     if (changed) {
+      // If the user has a unified search term that matches a filter (e.g., 'Ford'),
+      // avoid pruning that specific filter value even if filterOptions haven't yet stabilized.
+      const prunedSelective: any = { ...pruned };
+      try {
+        const q = (searchTerm || "").toString().trim().toLowerCase();
+        if (q) {
+          // Preserve make/model/trim if they match the search term
+          if (
+            Array.isArray(appliedFilters.make) &&
+            appliedFilters.make.length > 0 &&
+            (!prunedSelective.make || prunedSelective.make.length === 0)
+          ) {
+            const m = appliedFilters.make[0].toString().toLowerCase();
+            if (q.includes(m) || m.includes(q)) prunedSelective.make = appliedFilters.make;
+          }
+          if (
+            Array.isArray(appliedFilters.model) &&
+            appliedFilters.model.length > 0 &&
+            (!prunedSelective.model || prunedSelective.model.length === 0)
+          ) {
+            const mo = appliedFilters.model[0].toString().toLowerCase();
+            if (q.includes(mo) || mo.includes(q)) prunedSelective.model = appliedFilters.model;
+          }
+          if (
+            Array.isArray(appliedFilters.trim) &&
+            appliedFilters.trim.length > 0 &&
+            (!prunedSelective.trim || prunedSelective.trim.length === 0)
+          ) {
+            const tr = appliedFilters.trim[0].toString().toLowerCase();
+            if (q.includes(tr) || tr.includes(q)) prunedSelective.trim = appliedFilters.trim;
+          }
+        }
+      } catch (e) {
+        // ignore comparison errors
+      }
+
       // Merge pruned values into existing state to preserve any missing keys
-      setAppliedFilters((prev) => ({ ...(prev as any), ...(pruned as any) }));
-      updateURLFromFilters(pruned as any);
+      setAppliedFilters((prev) => ({ ...(prev as any), ...(prunedSelective as any) }));
+      updateURLFromFilters(prunedSelective as any);
     }
-  }, [filterOptions]);
+  }, [filterOptions, searchTerm]);
 
   // Ensure Gasoline is selected by default when fuel options first load and no selection exists
   useEffect(() => {
