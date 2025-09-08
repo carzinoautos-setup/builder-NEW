@@ -2667,7 +2667,7 @@ export default function MySQLVehiclesOriginalStyle() {
   					value={radius}
   					onChange={(e) => setRadius(e.target.value)}
   					onClick={(e) => e.stopPropagation()}
-  					className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+  					className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md h-10 focus:outline-none appearance-none"
   				  >
                       <option value="10">10 Miles</option>
                       <option value="25">25 Miles</option>
