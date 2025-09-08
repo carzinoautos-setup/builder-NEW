@@ -2000,12 +2000,12 @@ export default function MySQLVehiclesOriginalStyle() {
         }
 
         input[type="checkbox"]:checked::after {
-          content: '���';
+          content: '\u2713';
           position: absolute;
           color: white;
           font-size: 12px;
-          top: -2px;
-          left: 2px;
+          top: 0;
+          left: 3px;
         }
 
         @media (max-width: 639px) {
