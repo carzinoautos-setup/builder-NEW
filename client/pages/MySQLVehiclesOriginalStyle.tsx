@@ -4617,7 +4617,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {!mobileFiltersOpen && (
-            <div className="lg:hidden sticky top-12 z-40 px-3 py-2 bg-white overflow-x-auto flex gap-2 items-center">
+            <div className="lg:hidden sticky top-12 z-10 px-3 py-2 bg-white overflow-x-auto flex gap-2 items-center">
               {((appliedLocation && appliedRadius !== "nationwide") ||
                 appliedFilters.condition.length > 0 ||
                 appliedFilters.make.length > 0 ||
