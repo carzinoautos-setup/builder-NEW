@@ -2182,7 +2182,7 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </div>
             {/* Search Section - Mobile Only */}
-            <div className="lg:hidden mb-4">
+            <div className="lg:hidden mb-4 sticky top-16 z-40 pb-4 border-b border-gray-200 bg-white">
               <form onSubmit={handleUnifiedSearchSubmit} className="space-y-2">
                 <div className="relative">
                   <input
