@@ -162,6 +162,26 @@ const normalizeFilterValue = (value: string) => {
     .join(" ");
 };
 
+// Normalize transmission speed values for consistent display
+const normalizeTransmission = (value: string) => {
+  if (!value) return "";
+  const str = value.trim();
+  // Auto/CVT
+  if (/cvt/i.test(str)) return "Auto/CVT";
+  // Manual
+  if (/manual/i.test(str)) {
+    const match = str.match(/(\d+)\s*[-]?\s*speed/i);
+    return match ? `${match[1]}-Speed Manual` : "Manual";
+  }
+  // Automatic
+  if (/automatic/i.test(str)) {
+    const match = str.match(/(\d+)\s*[-]?\s*speed/i);
+    return match ? `${match[1]}-Speed Automatic` : "Automatic";
+  }
+  // Fallback
+  return str;
+};
+
 // Transform VehicleRecord from API to Vehicle for display
 const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
   // Generate vehicle title from components
