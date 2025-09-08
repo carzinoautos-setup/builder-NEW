@@ -1,5 +1,6 @@
 import "./global.css";
 
+import React, { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
 import { Toaster as Sonner } from "@/components/ui/sonner";
