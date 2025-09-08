@@ -4392,6 +4392,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* State */}
+            {((filterOptions && filterOptions.state_seller && filterOptions.state_seller.length>0) || ((appliedFilters as any).state && (appliedFilters as any).state.length>0)) && (
             <FilterSection
               title="State"
               isCollapsed={collapsedFilters.state}
@@ -4444,6 +4445,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 )}
               </div>
             </FilterSection>
+            )}
 
             {/* City */}
             <FilterSection
