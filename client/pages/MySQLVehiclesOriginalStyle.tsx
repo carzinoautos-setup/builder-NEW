@@ -2161,7 +2161,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </button>
           </div>
 
-          <div className="p-4">
+          <div className="p-4 pt-14">
             {/* Mobile Filter Action Buttons (moved to top) */}
             <div className="lg:hidden mb-4 sticky top-0 z-[120] bg-white border-b border-gray-200 px-4 py-3">
               <div className="flex gap-3 px-0">
