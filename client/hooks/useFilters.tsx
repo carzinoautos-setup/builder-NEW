@@ -119,7 +119,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  const fetchFilters = React.useCallback(
+  const fetchFilters = useCallback(
     async (filters = appliedFilters, opts?: { force?: boolean }) => {
       // Guard: if the tab has just become visible, avoid auto-refetch race that may overwrite
       // currently visible state. Allow forced fetches (user-initiated) by opts.force.
