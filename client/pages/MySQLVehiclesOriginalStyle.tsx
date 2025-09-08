@@ -407,6 +407,9 @@ export default function MySQLVehiclesOriginalStyle() {
     certified: true,
   });
 
+  // Mobile detection (used to collapse certain filters on small screens)
+  const isMobile = useIsMobile();
+
   // Price and payment filter states
   const [priceMin, setPriceMin] = useState("1000");
   const [priceMax, setPriceMax] = useState("50000");
