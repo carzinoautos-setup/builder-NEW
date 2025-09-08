@@ -1869,7 +1869,7 @@ export default function MySQLVehiclesOriginalStyle() {
         (error.message.includes("Failed to fetch") ||
           error.message.includes("NetworkError"))
       ) {
-        console.log("🔄 Using fallback coordinates due to network error");
+        console.log("���� Using fallback coordinates due to network error");
         const zipCoordinates: {
           [key: string]: {
             lat: number;
@@ -3355,6 +3355,7 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Price Filter */}
+            {((appliedFilters.priceMin && appliedFilters.priceMin.length>0) || (appliedFilters.priceMax && appliedFilters.priceMax.length>0) || vehicles.length > 0) && (
             <FilterSection
               title="Price"
               isCollapsed={collapsedFilters.price}
@@ -3411,6 +3412,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 </div>
               </div>
             </FilterSection>
+            )}
 
             {/* Payment Filter */}
             <FilterSection
@@ -4995,7 +4997,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
                         >
-                          ��
+                          ×
                         </button>
                       </span>
                     ))}
