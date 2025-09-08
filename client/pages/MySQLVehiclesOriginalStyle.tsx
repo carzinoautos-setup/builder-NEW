@@ -1637,6 +1637,13 @@ export default function MySQLVehiclesOriginalStyle() {
     // Navigate to the generated URL
     navigate(searchURL);
 
+    // Close mobile filter panel (if open)
+    try {
+      setMobileFiltersOpen(false);
+    } catch (err) {
+      // ignore if state not available in this scope
+    }
+
     // Clear the search input
     setUnifiedSearch("");
   };
