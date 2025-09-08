@@ -98,7 +98,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
   // Persist incoming appliedFilters into sessionStorage so other contexts (Builder preview)
   // can rehydrate them. We avoid overwriting if sessionStorage is not available.
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       sessionStorage.setItem(FETCH_PERSIST_KEY, JSON.stringify(appliedFilters || {}));
     } catch (e) {
@@ -110,7 +110,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
   // Note: we keep this as a named export below as loadPersistedAppliedFilters.
 
   // Visibilitychange listener to mark when tab became visible/hidden - used to guard automatic refetches
-  React.useEffect(() => {
+  useEffect(() => {
     const onVis = () => {
       visibilityChangeAtRef.current = Date.now();
       console.log("[filters] visibilitychange ->", document.visibilityState, visibilityChangeAtRef.current);
@@ -455,7 +455,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
     [appliedFilters],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchFilters();
     // We intentionally do not include fetchFilters in deps to avoid double-calls; rely on appliedFilters changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
