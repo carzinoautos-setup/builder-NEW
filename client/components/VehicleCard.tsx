@@ -390,8 +390,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                   ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
                   : (fallbackLocation || "")
               }
-              className="flex-1 min-w-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate"
-              style={{ minWidth: 0, backgroundColor: "transparent" }}
+              className="flex-1 min-w-0 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate"
+              style={{ minWidth: 0, backgroundColor: "transparent", border: "none" }}
             />
 
             {/* Right: Account Type (account_type_seller) */}
@@ -399,8 +399,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               readOnly
               value={accountTypeSeller || ""}
               title={accountTypeSeller || ""}
-              className="w-28 flex-shrink-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate"
-              style={{ minWidth: 0, backgroundColor: "transparent" }}
+              className="w-28 flex-shrink-0 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate"
+              style={{ minWidth: 0, backgroundColor: "transparent", border: "none" }}
             />
 
             {/* Hidden relationship field (not shown to users) */}
