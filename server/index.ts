@@ -35,6 +35,7 @@ import {
   clearCache as clearPaymentCache,
 } from "./routes/payments.js";
 import woocommerceRoutes from "./routes/woocommerce.js";
+import { getSellerByAccount } from "./routes/sellers.js";
 import WordPressSync from "./scripts/syncWordPressUpdates.js";
 
 // Track WordPress sync status
