@@ -358,7 +358,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             </div>
             {vehicle.seller_account_number && (
               <div
-                className="text-xs text-gray-500 mt-1 truncate hidden"
+                className="text-xs text-gray-500 mt-1 truncate"
                 style={{ fontSize: "10px" }}
               >
                 {vehicle.seller_account_number}
