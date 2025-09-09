@@ -4868,23 +4868,98 @@ export default function MySQLVehiclesOriginalStyle() {
                         </button>
                       </span>
                     ))}
-                    {appliedFilters.vehicleType.map((item) => (
-                      <span
-                        key={item}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
-                      >
-                        <Check className="w-3 h-3 text-red-600" />
-                        {normalizeFilterValue(item)}
-                        <button
-                          onClick={() =>
-                            removeAppliedFilter("vehicleType", item)
-                          }
-                          className="ml-1 text-white"
+                    {(() => {
+                      // Render vehicleType chips compressing into parent labels when all children selected
+                      const CAR_CHILD_SLUGS = [
+                        "sedan",
+                        "coupe",
+                        "hatchback",
+                        "wagon",
+                        "convertible",
+                        "crossover-suv",
+                        "van-minivan",
+                      ];
+                      const TRUCK_CHILD_SLUGS = ["crew-cab", "extended-cab", "regular-cab-truck"];
+
+                      const selected = new Set(appliedFilters.vehicleType || []);
+
+                      const carAll = CAR_CHILD_SLUGS.every((s) => selected.has(s));
+                      const truckAll = TRUCK_CHILD_SLUGS.every((s) => selected.has(s));
+
+                      const chips: string[] = [];
+
+                      if (carAll) chips.push("car");
+                      else CAR_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+
+                      if (truckAll) chips.push("truck");
+                      else TRUCK_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+
+                      // include any other selected slugs not in the above lists
+                      for (const s of Array.from(selected)) {
+                        if (
+                          !CAR_CHILD_SLUGS.includes(s) &&
+                          !TRUCK_CHILD_SLUGS.includes(s) &&
+                          s !== "car" &&
+                          s !== "truck"
+                        ) {
+                          chips.push(s);
+                        }
+                      }
+
+                      return chips.map((item) => (
+                        <span
+                          key={item}
+                          onClick={() => {
+                            // remove chip: if parent, remove all children; otherwise remove single child
+                            setAppliedFilters((prev) => {
+                              const nextSet = new Set(prev.vehicleType || []);
+                              if (item === "car") {
+                                CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                              } else if (item === "truck") {
+                                TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                              } else {
+                                nextSet.delete(item);
+                              }
+                              const next = {
+                                ...prev,
+                                vehicleType: Array.from(nextSet),
+                              };
+                              updateURLFromFilters(next);
+                              return next;
+                            });
+                          }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                         >
-                          ×
-                        </button>
-                      </span>
-                    ))}
+                          <Check className="w-3 h-3 text-red-600" />
+                          {item === "car" ? "All Cars" : item === "truck" ? "All Trucks" : normalizeFilterValue(item)}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // same remove logic
+                              setAppliedFilters((prev) => {
+                                const nextSet = new Set(prev.vehicleType || []);
+                                if (item === "car") {
+                                  CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                } else if (item === "truck") {
+                                  TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                } else {
+                                  nextSet.delete(item);
+                                }
+                                const next = {
+                                  ...prev,
+                                  vehicleType: Array.from(nextSet),
+                                };
+                                updateURLFromFilters(next);
+                                return next;
+                              });
+                            }}
+                            className="ml-1 text-white"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ));
+                    })()}
                     {appliedFilters.driveType.map((item) => (
                       <span
                         key={item}
