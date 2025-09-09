@@ -325,6 +325,23 @@ export default function MySQLVehiclesOriginalStyle() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Ensure vehicles without price are moved to the end when sorting by price
+  useEffect(() => {
+    if (!vehicles || vehicles.length === 0) return;
+    if (sortBy !== "price-low" && sortBy !== "price-high") return;
+    setVehicles((prev) => {
+      const comp = (a: number | undefined | null, b: number | undefined | null) => {
+        const aValid = a !== undefined && a !== null && Number(a) !== 0;
+        const bValid = b !== undefined && b !== null && Number(b) !== 0;
+        if (aValid && bValid) return sortBy === "price-low" ? Number(a) - Number(b) : Number(b) - Number(a);
+        if (aValid && !bValid) return -1;
+        if (!aValid && bValid) return 1;
+        return 0;
+      };
+      return prev.slice().sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
+    });
+  }, [sortBy]);
   const [apiResponse, setApiResponse] = useState<VehiclesApiResponse | null>(
     null,
   );
