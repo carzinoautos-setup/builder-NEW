@@ -337,10 +337,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           {hasValidSalePrice() ? (
             <>
               <div className="text-center">
-                <div className="carzino-price-label text-gray-500 mb-0">
+                <div className="carzino-price-label text-gray-500 mb-0" style={{ fontSize: "12px" }}>
                   Sale Price
                 </div>
-                <div className="carzino-price-value text-gray-900">
+                <div className="carzino-price-value text-gray-900" style={{ fontSize: "12px" }}>
                   {vehicle.salePrice}
                 </div>
               </div>
