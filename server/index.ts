@@ -99,6 +99,9 @@ export function createServer() {
   // WooCommerce API routes (for production)
   app.use("/api/woocommerce", woocommerceRoutes);
 
+  // Sellers endpoint (lookup by account number)
+  app.get("/api/sellers/:account", getSellerByAccount);
+
   // WordPress sync status endpoint
   app.get("/api/wordpress/sync-status", (_req, res) => {
     res.json({
