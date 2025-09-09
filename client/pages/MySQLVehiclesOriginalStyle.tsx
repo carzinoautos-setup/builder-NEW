@@ -3769,15 +3769,29 @@ export default function MySQLVehiclesOriginalStyle() {
                                   <input
                                     type="checkbox"
                                     className="mr-2"
-                                    checked={appliedFilters.vehicleType.includes(parentKey)}
+                                    ref={(el) => {
+                                      if (!el) return;
+                                      const childSlugs = parent.children.map((c) => c.slug);
+                                      const allSelected = childSlugs.every((s) => appliedFilters.vehicleType.includes(s));
+                                      const someSelected = childSlugs.some((s) => appliedFilters.vehicleType.includes(s));
+                                      el.indeterminate = !allSelected && someSelected;
+                                    }}
+                                    checked={parent.children.length > 0 && parent.children.every((c) => appliedFilters.vehicleType.includes(c.slug))}
                                     onChange={() => {
+                                      const childSlugs = parent.children.map((c) => c.slug);
                                       setAppliedFilters((prev) => {
-                                        const has = prev.vehicleType.includes(parentKey);
+                                        const current = new Set(prev.vehicleType || []);
+                                        const allSelected = childSlugs.every((s) => current.has(s));
+                                        if (allSelected) {
+                                          // deselect all children
+                                          childSlugs.forEach((s) => current.delete(s));
+                                        } else {
+                                          // select all children
+                                          childSlugs.forEach((s) => current.add(s));
+                                        }
                                         const next = {
                                           ...prev,
-                                          vehicleType: has
-                                            ? prev.vehicleType.filter((v) => v !== parentKey)
-                                            : [...prev.vehicleType, parentKey],
+                                          vehicleType: Array.from(current),
                                         };
                                         updateURLFromFilters(next);
                                         return next;
