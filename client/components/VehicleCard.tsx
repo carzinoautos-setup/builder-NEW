@@ -150,6 +150,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
+  const citySeller = (vehicle as any).city_seller || (vehicle as any).city || "";
+  const stateSeller = (vehicle as any).state_seller || (vehicle as any).state || "";
+  const locationDisplay = citySeller || stateSeller ? `${citySeller}${citySeller && stateSeller ? ', ' : ''}${stateSeller}` : vehicle.location || "";
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
       <div className="relative">
@@ -276,7 +280,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className="flex-1 min-w-0 truncate" style={{ display: "flex", alignItems: "center" }}>
-              <div className="text-gray-900 font-medium truncate" style={{ fontSize: "13px", fontWeight: 500, lineHeight: "19.5px" }} title={vehicle.location}>{vehicle.location}</div>
+              <div className="text-gray-900 font-medium truncate" style={{ fontSize: "13px", fontWeight: 500, lineHeight: "19.5px" }} title={locationDisplay}>{locationDisplay}</div>
               {vehicle.seller_account_number && (
                 <div className="text-xs text-gray-500 ml-3 truncate" style={{ fontSize: "11px", lineHeight: "16px", minWidth: "40px" }} title={vehicle.seller_account_number}>{vehicle.seller_account_number}</div>
               )}
