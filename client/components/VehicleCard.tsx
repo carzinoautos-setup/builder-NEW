@@ -154,46 +154,33 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
-  const citySeller =
-    (vehicle as any).city_seller || (vehicle as any).city || "";
-  const stateSeller =
-    (vehicle as any).state_seller || (vehicle as any).state || "";
+  const citySeller = (vehicle as any).city_seller || (vehicle as any).city || "";
+  const stateSeller = (vehicle as any).state_seller || (vehicle as any).state || "";
   const fallbackLocation = vehicle.location || "";
-  const locationDisplay =
-    citySeller || stateSeller
-      ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
-      : fallbackLocation;
+  const locationDisplay = citySeller || stateSeller ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}` : fallbackLocation;
+
   const [sellerInfo, setSellerInfo] = React.useState<any>(null);
-  const accountTypeSellerFallback =
-    (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
+  const accountTypeField = (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
 
   React.useEffect(() => {
     let mounted = true;
-    const acct =
-      (vehicle as any).seller_account_number ||
-      (vehicle as any).account_number_seller ||
-      null;
+    const acct = (vehicle as any).seller_account_number || (vehicle as any).account_number_seller || null;
     if (!acct) return;
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
 
-    // Fetch seller info by account number (absolute URL, resilient)
     (async () => {
       try {
         const url = `${window.location.origin}/api/sellers/${encodeURIComponent(acct)}`;
-        const resp = await fetch(url, { signal: controller.signal }).catch((err) => {
-          // fetch failed (network/aborted)
-          return null;
-        });
-        if (!resp) return;
-        if (!resp.ok) return;
+        const resp = await fetch(url, { signal: controller.signal }).catch(() => null);
+        if (!resp || !resp.ok) return;
         const json = await resp.json().catch(() => null);
         if (mounted && json && json.success && json.data) {
           setSellerInfo(json.data);
         }
       } catch (e) {
-        // ignore safely
+        // ignore
       } finally {
         clearTimeout(timeout);
       }
@@ -206,9 +193,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     };
   }, [vehicle.seller_account_number]);
 
-  const accountTypeSeller = sellerInfo
-    ? sellerInfo.accountType || accountTypeSellerFallback
-    : accountTypeSellerFallback;
+  // Final account type to display: prefer vehicle custom field, then sellerInfo, then seller_type
+  const accountTypeSeller = accountTypeField || (sellerInfo && sellerInfo.accountType) || (vehicle as any).seller_type || "";
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
