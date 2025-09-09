@@ -381,13 +381,13 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             <input
               readOnly
               value={
-                citySeller || stateSeller
-                  ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
+                displayedCity || displayedState
+                  ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
                   : (fallbackLocation || "")
               }
               title={
-                citySeller || stateSeller
-                  ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
+                displayedCity || displayedState
+                  ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
                   : (fallbackLocation || "")
               }
               className="flex-1 min-w-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate"
