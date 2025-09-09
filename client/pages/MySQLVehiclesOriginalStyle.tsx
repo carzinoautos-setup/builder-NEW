@@ -350,7 +350,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Vehicle types state
   const [vehicleTypes, setVehicleTypes] = useState<
-    { name: string; count: number }[]
+    { name: string; slug?: string; count: number }[]
   >([]);
   const [userLocation, setUserLocation] = useState<{
     lat: number;
