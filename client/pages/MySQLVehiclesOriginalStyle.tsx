@@ -970,7 +970,22 @@ export default function MySQLVehiclesOriginalStyle() {
 
         // Transform VehicleRecord[] to Vehicle[] for display
         const transformedVehicles = filteredRecords.map(transformVehicleRecord);
-        setVehicles(transformedVehicles);
+        // If sorting by price, ensure vehicles without a price are placed at the end
+        const reorderForPrice = (arr: Vehicle[]) => {
+          if (sortBy !== "price-low" && sortBy !== "price-high") return arr;
+          // Determine comparator for numeric prices
+          const comp = (a: number | undefined | null, b: number | undefined | null) => {
+            const aValid = a !== undefined && a !== null && Number(a) !== 0;
+            const bValid = b !== undefined && b !== null && Number(b) !== 0;
+            if (aValid && bValid) return sortBy === "price-low" ? Number(a) - Number(b) : Number(b) - Number(a);
+            if (aValid && !bValid) return -1;
+            if (!aValid && bValid) return 1;
+            return 0; // both invalid -> keep original order
+          };
+          // Stable sort while preserving relative order for equal values
+          return arr.slice().sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
+        };
+        setVehicles(reorderForPrice(transformedVehicles));
 
         // Build meta compatible with VehiclesApiResponse
         const pagination = data.pagination || data.meta || {};
