@@ -204,24 +204,22 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     };
   }, [vehicle.seller_account_number]);
 
-  // Determine displayed city/state preferring sellerInfo
-  const displayedCity =
-    (sellerInfo && (sellerInfo.city || sellerInfo.city_seller)) ||
-    citySellerRaw;
-  const displayedState =
-    (sellerInfo && (sellerInfo.state || sellerInfo.state_seller)) ||
-    stateSellerRaw;
+  // Determine displayed city/state preferring sellerInfo (sanitize 'Unknown')
+  const displayedCity = sanitize(
+    (sellerInfo && (sellerInfo.city || sellerInfo.city_seller)) || citySellerRaw,
+  );
+  const displayedState = sanitize(
+    (sellerInfo && (sellerInfo.state || sellerInfo.state_seller)) || stateSellerRaw,
+  );
   const locationDisplay =
     displayedCity || displayedState
       ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
-      : fallbackLocation;
+      : fallbackLocation || "";
 
   // Final account type to display: prefer sellerInfo, then vehicle custom field, then seller_type
-  const accountTypeSeller =
-    (sellerInfo && (sellerInfo.accountType || sellerInfo.type)) ||
-    accountTypeField ||
-    (vehicle as any).seller_type ||
-    "";
+  const accountTypeSeller = sanitize(
+    (sellerInfo && (sellerInfo.accountType || sellerInfo.type)) || accountTypeField || (vehicle as any).seller_type || "",
+  );
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
