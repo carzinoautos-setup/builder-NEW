@@ -372,24 +372,22 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         style={{ backgroundColor: "#f9fafb" }}
       >
         <div className="flex items-center justify-between">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3">
-              <input
-                defaultValue={locationDisplay}
-                title={locationDisplay}
-                className="flex-1 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate focus:outline-none"
-                style={{ minWidth: 0, backgroundColor: "transparent" }}
-                tabIndex={0}
-              />
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <input
+              defaultValue={locationDisplay}
+              title={locationDisplay}
+              className="flex-1 min-w-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate focus:outline-none"
+              style={{ minWidth: 0, backgroundColor: "transparent" }}
+              tabIndex={0}
+            />
 
-              <input
-                defaultValue={accountTypeSeller}
-                title={accountTypeSeller}
-                className="w-28 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate focus:outline-none"
-                style={{ minWidth: 0, backgroundColor: "transparent" }}
-                tabIndex={0}
-              />
-            </div>
+            <input
+              defaultValue={accountTypeSeller}
+              title={accountTypeSeller}
+              className="w-28 flex-shrink-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate focus:outline-none"
+              style={{ minWidth: 0, backgroundColor: "transparent" }}
+              tabIndex={0}
+            />
           </div>
 
           <div className="flex-shrink-0 text-right hidden">
@@ -409,7 +407,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         {/* Show city, state in the block below the inputs */}
         <div
           className="mt-2 text-sm text-gray-700 truncate"
-          style={{ fontSize: "12px" }}
+          style={{ fontSize: "12px", overflow: "hidden" }}
           title={locationDisplay}
         >
           {locationDisplay}
@@ -419,12 +417,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         {vehicle.seller_account_number && (
           <div
             className="mt-1 text-xs text-gray-500 truncate"
-            style={{ fontSize: "11px" }}
+            style={{ fontSize: "11px", overflow: "hidden" }}
             title={vehicle.seller_account_number}
           >
             <a
               href={`/sellers/${encodeURIComponent(vehicle.seller_account_number)}`}
-              className="text-xs text-gray-500 hover:underline"
+              className="text-xs text-gray-500 hover:underline block truncate"
               target="_blank"
               rel="noopener noreferrer"
               data-seller-account={vehicle.seller_account_number}
