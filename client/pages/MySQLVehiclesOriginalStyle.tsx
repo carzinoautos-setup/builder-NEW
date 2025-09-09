@@ -2693,7 +2693,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                     >
                       <Check className="w-3 h-3 text-red-600" />
-                      {item}
+                      {normalizeFilterValue(item)}
                       <button
                         onClick={() => removeAppliedFilter("vehicleType", item)}
                         className="ml-1 text-white hover:text-gray-300"
