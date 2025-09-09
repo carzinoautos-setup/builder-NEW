@@ -404,15 +404,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           </div>
         </div>
 
-        {/* Show city, state in the block below the inputs */}
-        <div
-          className="mt-2 text-sm text-gray-700 truncate"
-          style={{ fontSize: "12px", overflow: "hidden" }}
-          title={locationDisplay}
-        >
-          {locationDisplay}
-        </div>
-
         {/* Seller account number (relationship) shown beneath as small link if present */}
         {vehicle.seller_account_number && (
           <div
