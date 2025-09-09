@@ -3791,7 +3791,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           })}
                         </div>
 
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 gap-2">
                           {parents.car.children.concat(parents.truck.children).map((child) => (
                             <div key={child.slug} className="p-1">
                               <VehicleTypeCard
