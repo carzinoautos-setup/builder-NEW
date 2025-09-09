@@ -274,18 +274,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
       <div className="border-t border-gray-100 px-3 py-2 mt-auto" style={{ backgroundColor: "#f9fafb" }}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="text-gray-900 font-medium truncate" style={{ fontSize: "13px", maxWidth: "160px" }} title={vehicle.location}>{vehicle.location}</div>
-
+          <div className="flex-1 min-w-0">
+            <div className="text-gray-900 font-medium truncate" style={{ fontSize: "13px", fontWeight: 500, lineHeight: "19.5px", whiteSpace: "nowrap" }}>{vehicle.location}</div>
             {vehicle.seller_account_number && (
-              <div className="text-xs text-gray-600 bg-white px-2 py-0.5 rounded-md border border-gray-200 flex-shrink-0 truncate" style={{ fontSize: "11px", minWidth: "40px" }} title={vehicle.seller_account_number}>
-                {vehicle.seller_account_number}
-              </div>
+              <div className="text-xs text-gray-500 mt-0.5 truncate hidden" style={{ fontSize: "11px", lineHeight: "16px" }}>{vehicle.seller_account_number}</div>
             )}
           </div>
 
-          <div className="flex-shrink-0 text-right ml-3">
-            <div className="text-gray-600" style={{ fontSize: "13px", textTransform: "lowercase" }}>{vehicle.seller_type}</div>
+          <div className="flex-shrink-0 text-right">
+            <div className="text-gray-600" style={{ fontSize: "13px", lineHeight: "19.5px", textTransform: "lowercase" }}>{vehicle.seller_type}</div>
           </div>
         </div>
       </div>
