@@ -4874,7 +4874,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {normalizeFilterValue(item)}
                         <button
                           onClick={() =>
                             removeAppliedFilter("vehicleType", item)
