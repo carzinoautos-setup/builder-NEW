@@ -156,6 +156,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const locationDisplay = citySeller || stateSeller
     ? `${citySeller}${citySeller && stateSeller ? ', ' : ''}${stateSeller}`
     : fallbackLocation;
+  const accountTypeSeller = (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
@@ -292,8 +293,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               />
 
               <input
-                defaultValue={vehicle.seller_type || ""}
-                title={vehicle.seller_type || ""}
+                defaultValue={accountTypeSeller}
+                title={accountTypeSeller}
                 className="w-28 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate focus:outline-none"
                 style={{ minWidth: 0, backgroundColor: 'transparent' }}
                 tabIndex={0}
