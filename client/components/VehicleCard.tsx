@@ -150,9 +150,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
-  const citySeller = (vehicle as any).city_seller || (vehicle as any).city || "";
-  const stateSeller = (vehicle as any).state_seller || (vehicle as any).state || "";
-  const locationDisplay = citySeller || stateSeller ? `${citySeller}${citySeller && stateSeller ? ', ' : ''}${stateSeller}` : vehicle.location || "";
+  const citySeller = (vehicle as any).city_seller || "";
+  const stateSeller = (vehicle as any).state_seller || "";
+  const locationDisplay = citySeller || stateSeller ? `${citySeller}${citySeller && stateSeller ? ', ' : ''}${stateSeller}` : "";
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
