@@ -1419,10 +1419,17 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Load available vehicle types from normalized filterOptions (prefer WP ACF data)
   useEffect(() => {
+    const normalize = (s: string) =>
+      s
+        .toLowerCase()
+        .replace(/[\s\/]+/g, "-")
+        .replace(/[^a-z0-9\-]/g, "");
+
     if (filterOptions && Array.isArray(filterOptions.body_style)) {
       setVehicleTypes(
         filterOptions.body_style.map((v: any) => ({
           name: v.name,
+          slug: normalize(String(v.name || "")),
           count: v.count,
         })),
       );
