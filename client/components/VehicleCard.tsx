@@ -350,23 +350,26 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       >
         <div className="flex justify-between items-start">
           <div className="flex-1 min-w-0">
-            {/* Primary: City, State */}
-            <div className="text-black font-medium truncate" style={{ fontSize: "12px" }}>
+            <div
+              className="text-black font-medium truncate"
+              style={{ fontSize: "12px" }}
+            >
               {vehicle.location}
             </div>
-
-            {/* Secondary: Dealer (if present) and Account (relationship id) */}
-            <div className="text-xs text-gray-600 mt-1 truncate" style={{ fontSize: "10px" }}>
-              {vehicle.dealer && <span className="mr-2">{vehicle.dealer}</span>}
-              {vehicle.seller_account_number && (
-                <span>Account: {vehicle.seller_account_number}</span>
-              )}
-            </div>
+            {vehicle.seller_account_number && (
+              <div
+                className="text-xs text-gray-500 mt-1 truncate hidden"
+                style={{ fontSize: "10px" }}
+              >
+                {vehicle.seller_account_number}
+              </div>
+            )}
           </div>
-
           <div className="text-right flex-shrink-0">
-            {/* Seller Type on the right */}
-            <div className="text-black hover:text-gray-600 cursor-pointer" style={{ fontSize: "12px", fontWeight: 500 }}>
+            <div
+              className="text-black hover:text-gray-600 cursor-pointer"
+              style={{ fontSize: "12px", fontWeight: 500 }}
+            >
               {vehicle.seller_type}
             </div>
           </div>
