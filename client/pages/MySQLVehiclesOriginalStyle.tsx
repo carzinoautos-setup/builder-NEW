@@ -350,15 +350,23 @@ export default function MySQLVehiclesOriginalStyle() {
     if (!needsReorder(vehicles)) return;
 
     setVehicles((prev) => {
-      const comp = (a: number | undefined | null, b: number | undefined | null) => {
+      const comp = (
+        a: number | undefined | null,
+        b: number | undefined | null,
+      ) => {
         const aValid = a !== undefined && a !== null && Number(a) !== 0;
         const bValid = b !== undefined && b !== null && Number(b) !== 0;
-        if (aValid && bValid) return sortBy === "price-low" ? Number(a) - Number(b) : Number(b) - Number(a);
+        if (aValid && bValid)
+          return sortBy === "price-low"
+            ? Number(a) - Number(b)
+            : Number(b) - Number(a);
         if (aValid && !bValid) return -1;
         if (!aValid && bValid) return 1;
         return 0;
       };
-      return prev.slice().sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
+      return prev
+        .slice()
+        .sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
     });
   }, [sortBy, vehicles]);
   const [apiResponse, setApiResponse] = useState<VehiclesApiResponse | null>(
@@ -1010,16 +1018,24 @@ export default function MySQLVehiclesOriginalStyle() {
         const reorderForPrice = (arr: Vehicle[]) => {
           if (sortBy !== "price-low" && sortBy !== "price-high") return arr;
           // Determine comparator for numeric prices
-          const comp = (a: number | undefined | null, b: number | undefined | null) => {
+          const comp = (
+            a: number | undefined | null,
+            b: number | undefined | null,
+          ) => {
             const aValid = a !== undefined && a !== null && Number(a) !== 0;
             const bValid = b !== undefined && b !== null && Number(b) !== 0;
-            if (aValid && bValid) return sortBy === "price-low" ? Number(a) - Number(b) : Number(b) - Number(a);
+            if (aValid && bValid)
+              return sortBy === "price-low"
+                ? Number(a) - Number(b)
+                : Number(b) - Number(a);
             if (aValid && !bValid) return -1;
             if (!aValid && bValid) return 1;
             return 0; // both invalid -> keep original order
           };
           // Stable sort while preserving relative order for equal values
-          return arr.slice().sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
+          return arr
+            .slice()
+            .sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
         };
         setVehicles(reorderForPrice(transformedVehicles));
 
@@ -1116,15 +1132,23 @@ export default function MySQLVehiclesOriginalStyle() {
             const transformedVehicles = mapped.map(transformVehicleRecord);
             const reorderForPrice = (arr: Vehicle[]) => {
               if (sortBy !== "price-low" && sortBy !== "price-high") return arr;
-              const comp = (a: number | undefined | null, b: number | undefined | null) => {
+              const comp = (
+                a: number | undefined | null,
+                b: number | undefined | null,
+              ) => {
                 const aValid = a !== undefined && a !== null && Number(a) !== 0;
                 const bValid = b !== undefined && b !== null && Number(b) !== 0;
-                if (aValid && bValid) return sortBy === "price-low" ? Number(a) - Number(b) : Number(b) - Number(a);
+                if (aValid && bValid)
+                  return sortBy === "price-low"
+                    ? Number(a) - Number(b)
+                    : Number(b) - Number(a);
                 if (aValid && !bValid) return -1;
                 if (!aValid && bValid) return 1;
                 return 0;
               };
-              return arr.slice().sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
+              return arr
+                .slice()
+                .sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
             };
             setVehicles(reorderForPrice(transformedVehicles));
             setApiResponse({
@@ -3797,21 +3821,41 @@ export default function MySQLVehiclesOriginalStyle() {
 
                     const parents: Record<
                       string,
-                      { label: string; count: number; children: { name: string; slug: string; count: number }[] }
+                      {
+                        label: string;
+                        count: number;
+                        children: {
+                          name: string;
+                          slug: string;
+                          count: number;
+                        }[];
+                      }
                     > = {
                       car: { label: "All Cars", count: 0, children: [] },
                       truck: { label: "All Trucks", count: 0, children: [] },
                     };
 
                     for (const t of vehicleTypes) {
-                      const slug = (t as any).slug || String(t.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+                      const slug =
+                        (t as any).slug ||
+                        String(t.name || "")
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-");
                       if (!slug || slug === "uncategorized") continue;
-                      const target = isTruck(slug) ? parents.truck : parents.car;
-                      target.children.push({ name: t.name, slug, count: t.count });
+                      const target = isTruck(slug)
+                        ? parents.truck
+                        : parents.car;
+                      target.children.push({
+                        name: t.name,
+                        slug,
+                        count: t.count,
+                      });
                       target.count += Number(t.count || 0);
                     }
 
-                    const hasAny = parents.car.children.length > 0 || parents.truck.children.length > 0;
+                    const hasAny =
+                      parents.car.children.length > 0 ||
+                      parents.truck.children.length > 0;
 
                     if (!hasAny) {
                       return (
@@ -3827,7 +3871,11 @@ export default function MySQLVehiclesOriginalStyle() {
                         <div className="grid grid-cols-2 gap-2 mb-2">
                           {(["car", "truck"] as const).map((parentKey) => {
                             const parent = parents[parentKey];
-                            const allSelected = parent.children.length > 0 && parent.children.every((c) => appliedFilters.vehicleType.includes(c.slug));
+                            const allSelected =
+                              parent.children.length > 0 &&
+                              parent.children.every((c) =>
+                                appliedFilters.vehicleType.includes(c.slug),
+                              );
 
                             return (
                               <div key={parentKey} className="p-1">
@@ -3837,13 +3885,28 @@ export default function MySQLVehiclesOriginalStyle() {
                                   vehicleImages={vehicleImages}
                                   isSelected={allSelected}
                                   onToggle={() => {
-                                    const childSlugs = parent.children.map((c) => c.slug);
+                                    const childSlugs = parent.children.map(
+                                      (c) => c.slug,
+                                    );
                                     setAppliedFilters((prev) => {
-                                      const current = new Set(prev.vehicleType || []);
-                                      const allSel = childSlugs.every((s) => current.has(s));
-                                      if (allSel) childSlugs.forEach((s) => current.delete(s));
-                                      else childSlugs.forEach((s) => current.add(s));
-                                      const next = { ...prev, vehicleType: Array.from(current) };
+                                      const current = new Set(
+                                        prev.vehicleType || [],
+                                      );
+                                      const allSel = childSlugs.every((s) =>
+                                        current.has(s),
+                                      );
+                                      if (allSel)
+                                        childSlugs.forEach((s) =>
+                                          current.delete(s),
+                                        );
+                                      else
+                                        childSlugs.forEach((s) =>
+                                          current.add(s),
+                                        );
+                                      const next = {
+                                        ...prev,
+                                        vehicleType: Array.from(current),
+                                      };
                                       updateURLFromFilters(next);
                                       return next;
                                     });
@@ -3855,26 +3918,36 @@ export default function MySQLVehiclesOriginalStyle() {
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
-                          {parents.car.children.concat(parents.truck.children).map((child) => (
-                            <div key={child.slug} className="p-1">
-                              <VehicleTypeCard
-                                type={child.name}
-                                count={child.count}
-                                vehicleImages={vehicleImages}
-                                isSelected={appliedFilters.vehicleType.includes(child.slug)}
-                                onToggle={() => {
-                                  setAppliedFilters((prev) => {
-                                    const current = new Set(prev.vehicleType || []);
-                                    if (current.has(child.slug)) current.delete(child.slug);
-                                    else current.add(child.slug);
-                                    const next = { ...prev, vehicleType: Array.from(current) };
-                                    updateURLFromFilters(next);
-                                    return next;
-                                  });
-                                }}
-                              />
-                            </div>
-                          ))}
+                          {parents.car.children
+                            .concat(parents.truck.children)
+                            .map((child) => (
+                              <div key={child.slug} className="p-1">
+                                <VehicleTypeCard
+                                  type={child.name}
+                                  count={child.count}
+                                  vehicleImages={vehicleImages}
+                                  isSelected={appliedFilters.vehicleType.includes(
+                                    child.slug,
+                                  )}
+                                  onToggle={() => {
+                                    setAppliedFilters((prev) => {
+                                      const current = new Set(
+                                        prev.vehicleType || [],
+                                      );
+                                      if (current.has(child.slug))
+                                        current.delete(child.slug);
+                                      else current.add(child.slug);
+                                      const next = {
+                                        ...prev,
+                                        vehicleType: Array.from(current),
+                                      };
+                                      updateURLFromFilters(next);
+                                      return next;
+                                    });
+                                  }}
+                                />
+                              </div>
+                            ))}
                         </div>
                       </div>
                     );
@@ -4935,20 +5008,36 @@ export default function MySQLVehiclesOriginalStyle() {
                         "crossover-suv",
                         "van-minivan",
                       ];
-                      const TRUCK_CHILD_SLUGS = ["crew-cab", "extended-cab", "regular-cab-truck"];
+                      const TRUCK_CHILD_SLUGS = [
+                        "crew-cab",
+                        "extended-cab",
+                        "regular-cab-truck",
+                      ];
 
-                      const selected = new Set(appliedFilters.vehicleType || []);
+                      const selected = new Set(
+                        appliedFilters.vehicleType || [],
+                      );
 
-                      const carAll = CAR_CHILD_SLUGS.every((s) => selected.has(s));
-                      const truckAll = TRUCK_CHILD_SLUGS.every((s) => selected.has(s));
+                      const carAll = CAR_CHILD_SLUGS.every((s) =>
+                        selected.has(s),
+                      );
+                      const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                        selected.has(s),
+                      );
 
                       const chips: string[] = [];
 
                       if (carAll) chips.push("car");
-                      else CAR_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                      else
+                        CAR_CHILD_SLUGS.forEach(
+                          (s) => selected.has(s) && chips.push(s),
+                        );
 
                       if (truckAll) chips.push("truck");
-                      else TRUCK_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                      else
+                        TRUCK_CHILD_SLUGS.forEach(
+                          (s) => selected.has(s) && chips.push(s),
+                        );
 
                       // include any other selected slugs not in the above lists
                       for (const s of Array.from(selected)) {
@@ -4970,9 +5059,13 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAppliedFilters((prev) => {
                               const nextSet = new Set(prev.vehicleType || []);
                               if (item === "car") {
-                                CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                CAR_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else if (item === "truck") {
-                                TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                TRUCK_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else {
                                 nextSet.delete(item);
                               }
@@ -4987,7 +5080,11 @@ export default function MySQLVehiclesOriginalStyle() {
                           className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                         >
                           <Check className="w-3 h-3 text-red-600" />
-                          {item === "car" ? "All Cars" : item === "truck" ? "All Trucks" : normalizeFilterValue(item)}
+                          {item === "car"
+                            ? "All Cars"
+                            : item === "truck"
+                              ? "All Trucks"
+                              : normalizeFilterValue(item)}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -4995,9 +5092,13 @@ export default function MySQLVehiclesOriginalStyle() {
                               setAppliedFilters((prev) => {
                                 const nextSet = new Set(prev.vehicleType || []);
                                 if (item === "car") {
-                                  CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                  CAR_CHILD_SLUGS.forEach((s) =>
+                                    nextSet.delete(s),
+                                  );
                                 } else if (item === "truck") {
-                                  TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                  TRUCK_CHILD_SLUGS.forEach((s) =>
+                                    nextSet.delete(s),
+                                  );
                                 } else {
                                   nextSet.delete(item);
                                 }
