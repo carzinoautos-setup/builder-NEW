@@ -309,7 +309,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
         {vehicle.seller_account_number && (
           <div className="mt-2 text-xs text-gray-500 truncate" style={{ fontSize: "11px" }} title={vehicle.seller_account_number}>
-            {vehicle.seller_account_number}
+            <a
+              href={`/sellers/${encodeURIComponent(vehicle.seller_account_number)}`}
+              className="text-xs text-gray-500 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-seller-account={vehicle.seller_account_number}
+            >
+              {vehicle.seller_account_number}
+            </a>
           </div>
         )}
       </div>
