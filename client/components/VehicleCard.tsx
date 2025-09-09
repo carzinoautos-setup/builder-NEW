@@ -389,28 +389,28 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           <div className="flex items-center gap-3 flex-1 min-w-0">
             {/* Left: City, State (city_seller, state_seller) */}
             <input
+              readOnly
               defaultValue={
                 citySeller || stateSeller
                   ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
-                  : ""
+                  : (fallbackLocation || "")
               }
               title={
                 citySeller || stateSeller
                   ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
-                  : ""
+                  : (fallbackLocation || "")
               }
-              className="flex-1 min-w-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate focus:outline-none"
+              className="flex-1 min-w-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate"
               style={{ minWidth: 0, backgroundColor: "transparent" }}
-              tabIndex={0}
             />
 
             {/* Right: Account Type (account_type_seller) */}
             <input
+              readOnly
               defaultValue={accountTypeSeller || ""}
               title={accountTypeSeller || ""}
-              className="w-28 flex-shrink-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate focus:outline-none"
+              className="w-28 flex-shrink-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate"
               style={{ minWidth: 0, backgroundColor: "transparent" }}
-              tabIndex={0}
             />
 
             {/* Hidden relationship field (not shown to users) */}
