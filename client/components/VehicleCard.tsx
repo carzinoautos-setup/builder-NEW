@@ -156,7 +156,32 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const locationDisplay = citySeller || stateSeller
     ? `${citySeller}${citySeller && stateSeller ? ', ' : ''}${stateSeller}`
     : fallbackLocation;
-  const accountTypeSeller = (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
+  const [sellerInfo, setSellerInfo] = React.useState<any>(null);
+  const accountTypeSellerFallback = (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
+
+  React.useEffect(() => {
+    let mounted = true;
+    const acct = (vehicle as any).seller_account_number || (vehicle as any).account_number_seller || null;
+    if (!acct) return;
+    // Fetch seller info by account number
+    (async () => {
+      try {
+        const resp = await fetch(`/api/sellers/${encodeURIComponent(acct)}`);
+        if (!resp.ok) return;
+        const json = await resp.json();
+        if (mounted && json && json.success && json.data) {
+          setSellerInfo(json.data);
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [vehicle.seller_account_number]);
+
+  const accountTypeSeller = sellerInfo ? sellerInfo.accountType || accountTypeSellerFallback : accountTypeSellerFallback;
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
