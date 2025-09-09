@@ -123,8 +123,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         return u.toString();
       }
 
-      if (u.hostname.includes("images.unsplash.com") || u.hostname.includes("cdn.")) {
-        const s = u.origin + u.pathname + `?w=450&h=300&fit=crop&auto=format&q=80`;
+      if (
+        u.hostname.includes("images.unsplash.com") ||
+        u.hostname.includes("cdn.")
+      ) {
+        const s =
+          u.origin + u.pathname + `?w=450&h=300&fit=crop&auto=format&q=80`;
         return s;
       }
 
@@ -150,18 +154,25 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
-  const citySeller = (vehicle as any).city_seller || (vehicle as any).city || "";
-  const stateSeller = (vehicle as any).state_seller || (vehicle as any).state || "";
+  const citySeller =
+    (vehicle as any).city_seller || (vehicle as any).city || "";
+  const stateSeller =
+    (vehicle as any).state_seller || (vehicle as any).state || "";
   const fallbackLocation = vehicle.location || "";
-  const locationDisplay = citySeller || stateSeller
-    ? `${citySeller}${citySeller && stateSeller ? ', ' : ''}${stateSeller}`
-    : fallbackLocation;
+  const locationDisplay =
+    citySeller || stateSeller
+      ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
+      : fallbackLocation;
   const [sellerInfo, setSellerInfo] = React.useState<any>(null);
-  const accountTypeSellerFallback = (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
+  const accountTypeSellerFallback =
+    (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
 
   React.useEffect(() => {
     let mounted = true;
-    const acct = (vehicle as any).seller_account_number || (vehicle as any).account_number_seller || null;
+    const acct =
+      (vehicle as any).seller_account_number ||
+      (vehicle as any).account_number_seller ||
+      null;
     if (!acct) return;
     // Fetch seller info by account number
     (async () => {
@@ -181,7 +192,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     };
   }, [vehicle.seller_account_number]);
 
-  const accountTypeSeller = sellerInfo ? sellerInfo.accountType || accountTypeSellerFallback : accountTypeSellerFallback;
+  const accountTypeSeller = sellerInfo
+    ? sellerInfo.accountType || accountTypeSellerFallback
+    : accountTypeSellerFallback;
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
@@ -225,7 +238,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                   color: "rgb(21, 41, 109)",
                 }}
               >
-                Viewed <Check className="w-3 h-3 ml-0.5" style={{ color: "rgb(21, 41, 109)" }} />
+                Viewed{" "}
+                <Check
+                  className="w-3 h-3 ml-0.5"
+                  style={{ color: "rgb(21, 41, 109)" }}
+                />
               </span>
             )}
             <Heart
@@ -237,7 +254,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               onClick={() => onToggleFavorite(vehicle)}
             />
             {keeperMessage === vehicle.id && (
-              <span className="text-xs text-gray-600 ml-1 animate-pulse">That's a Keeper!</span>
+              <span className="text-xs text-gray-600 ml-1 animate-pulse">
+                That's a Keeper!
+              </span>
             )}
           </div>
         </div>
@@ -249,34 +268,64 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         <div className="flex items-center justify-start mb-3 pb-2 border-b border-gray-200 carzino-vehicle-details">
           <div className="flex items-center gap-1 mr-4">
             {vehicle.mileageIcon ? (
-              <img src={vehicle.mileageIcon} alt="Mileage icon" className="w-4 h-4 object-contain" />
+              <img
+                src={vehicle.mileageIcon}
+                alt="Mileage icon"
+                className="w-4 h-4 object-contain"
+              />
             ) : (
-              <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2b268dcc254a4017a2ef9d9e1c9b3acb?format=webp&width=800" alt="Speedometer" className="w-4 h-4 object-contain" />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2b268dcc254a4017a2ef9d9e1c9b3acb?format=webp&width=800"
+                alt="Speedometer"
+                className="w-4 h-4 object-contain"
+              />
             )}
-            <span className="text-black font-medium">{vehicle.mileage} Mi.</span>
+            <span className="text-black font-medium">
+              {vehicle.mileage} Mi.
+            </span>
           </div>
           <div className="flex items-center gap-1 mr-4">
             {vehicle.transmissionIcon ? (
-              <img src={vehicle.transmissionIcon} alt="Transmission icon" className="w-4 h-4 object-contain" />
+              <img
+                src={vehicle.transmissionIcon}
+                alt="Transmission icon"
+                className="w-4 h-4 object-contain"
+              />
             ) : (
-              <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F209b197e983f494e94b04a7d87b79174?format=webp&width=800" alt="Car parts" className="w-4 h-4 object-contain" />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F209b197e983f494e94b04a7d87b79174?format=webp&width=800"
+                alt="Car parts"
+                className="w-4 h-4 object-contain"
+              />
             )}
-            <span className="text-black font-medium">{(() => {
-              const t = (vehicle.transmission || "").toString().trim();
-              if (!t) return "";
-              if (/^auto(matic)?$/i.test(t)) return "Auto";
-              return t;
-            })()}</span>
+            <span className="text-black font-medium">
+              {(() => {
+                const t = (vehicle.transmission || "").toString().trim();
+                if (!t) return "";
+                if (/^auto(matic)?$/i.test(t)) return "Auto";
+                return t;
+              })()}
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-4 h-4 text-gray-600 flex items-center justify-center">
               {vehicle.doorIcon ? (
-                <img src={vehicle.doorIcon} alt="Door icon" className="w-4 h-4 object-contain" />
+                <img
+                  src={vehicle.doorIcon}
+                  alt="Door icon"
+                  className="w-4 h-4 object-contain"
+                />
               ) : (
-                <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff5793a859e2548bc9bc984fcae57131c?format=webp&width=800" alt="Car door" className="w-4 h-4 object-contain" />
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff5793a859e2548bc9bc984fcae57131c?format=webp&width=800"
+                  alt="Car door"
+                  className="w-4 h-4 object-contain"
+                />
               )}
             </div>
-            <span className="text-black font-medium">{vehicle.doors.replace(/doors/g, "Doors")}</span>
+            <span className="text-black font-medium">
+              {vehicle.doors.replace(/doors/g, "Doors")}
+            </span>
           </div>
         </div>
 
@@ -284,28 +333,44 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           {hasValidSalePrice() ? (
             <>
               <div className="text-center">
-                <div className="carzino-price-label text-gray-500 mb-0">Sale Price</div>
-                <div className="carzino-price-value text-gray-900">{vehicle.salePrice}</div>
+                <div className="carzino-price-label text-gray-500 mb-0">
+                  Sale Price
+                </div>
+                <div className="carzino-price-value text-gray-900">
+                  {vehicle.salePrice}
+                </div>
               </div>
 
               <>
                 <div className="w-px h-12 bg-gray-200"></div>
                 <div className="text-center">
-                  <div className="carzino-price-label text-gray-500 mb-0">Payments</div>
-                  <div className="carzino-price-value text-red-600">{getDisplayPayment()}<span className="text-xs text-black font-normal">/mo*</span></div>
+                  <div className="carzino-price-label text-gray-500 mb-0">
+                    Payments
+                  </div>
+                  <div className="carzino-price-value text-red-600">
+                    {getDisplayPayment()}
+                    <span className="text-xs text-black font-normal">/mo*</span>
+                  </div>
                 </div>
               </>
             </>
           ) : (
             <div className="text-center">
-              <div className="carzino-price-label text-gray-500 mb-0">No Sale Price Listed</div>
-              <div className="carzino-price-value text-gray-900">Call for Price</div>
+              <div className="carzino-price-label text-gray-500 mb-0">
+                No Sale Price Listed
+              </div>
+              <div className="carzino-price-value text-gray-900">
+                Call for Price
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      <div className="border-t border-gray-100 px-3 py-2 mt-auto" style={{ backgroundColor: "#f9fafb" }}>
+      <div
+        className="border-t border-gray-100 px-3 py-2 mt-auto"
+        style={{ backgroundColor: "#f9fafb" }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3">
@@ -313,7 +378,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 defaultValue={locationDisplay}
                 title={locationDisplay}
                 className="flex-1 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate focus:outline-none"
-                style={{ minWidth: 0, backgroundColor: 'transparent' }}
+                style={{ minWidth: 0, backgroundColor: "transparent" }}
                 tabIndex={0}
               />
 
@@ -321,25 +386,42 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 defaultValue={accountTypeSeller}
                 title={accountTypeSeller}
                 className="w-28 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate focus:outline-none"
-                style={{ minWidth: 0, backgroundColor: 'transparent' }}
+                style={{ minWidth: 0, backgroundColor: "transparent" }}
                 tabIndex={0}
               />
             </div>
           </div>
 
           <div className="flex-shrink-0 text-right hidden">
-            <div className="text-gray-600" style={{ fontSize: "13px", lineHeight: "19.5px", textTransform: "lowercase" }}>{vehicle.seller_type}</div>
+            <div
+              className="text-gray-600"
+              style={{
+                fontSize: "13px",
+                lineHeight: "19.5px",
+                textTransform: "lowercase",
+              }}
+            >
+              {vehicle.seller_type}
+            </div>
           </div>
         </div>
 
         {/* Show city, state in the block below the inputs */}
-        <div className="mt-2 text-sm text-gray-700 truncate" style={{ fontSize: "12px" }} title={locationDisplay}>
+        <div
+          className="mt-2 text-sm text-gray-700 truncate"
+          style={{ fontSize: "12px" }}
+          title={locationDisplay}
+        >
           {locationDisplay}
         </div>
 
         {/* Seller account number (relationship) shown beneath as small link if present */}
         {vehicle.seller_account_number && (
-          <div className="mt-1 text-xs text-gray-500 truncate" style={{ fontSize: "11px" }} title={vehicle.seller_account_number}>
+          <div
+            className="mt-1 text-xs text-gray-500 truncate"
+            style={{ fontSize: "11px" }}
+            title={vehicle.seller_account_number}
+          >
             <a
               href={`/sellers/${encodeURIComponent(vehicle.seller_account_number)}`}
               className="text-xs text-gray-500 hover:underline"
@@ -356,9 +438,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   );
 };
 
-export function VehicleCardSkeleton({ className = "" }: { className?: string }) {
+export function VehicleCardSkeleton({
+  className = "",
+}: {
+  className?: string;
+}) {
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg overflow-hidden animate-pulse ${className}`}>
+    <div
+      className={`bg-white border border-gray-200 rounded-lg overflow-hidden animate-pulse ${className}`}
+    >
       <div className="aspect-[4/3] bg-gray-200"></div>
       <div className="p-4">
         <div className="h-6 bg-gray-200 rounded mb-2"></div>

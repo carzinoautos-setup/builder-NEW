@@ -4,7 +4,8 @@ import { getDatabase } from "../db/connection.js";
 
 export const getSellerByAccount: RequestHandler = async (req, res) => {
   const account = req.params.account;
-  if (!account) return res.status(400).json({ success: false, message: "Missing account" });
+  if (!account)
+    return res.status(400).json({ success: false, message: "Missing account" });
   try {
     const db = getDatabase();
     const [rows] = await db.execute(
@@ -12,7 +13,8 @@ export const getSellerByAccount: RequestHandler = async (req, res) => {
       [account],
     );
     const result: any = (rows as any[])[0] || null;
-    if (!result) return res.status(404).json({ success: false, message: "Not found" });
+    if (!result)
+      return res.status(404).json({ success: false, message: "Not found" });
     return res.json({ success: true, data: result });
   } catch (err) {
     console.error("/api/sellers/:account error", err);

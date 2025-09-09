@@ -343,7 +343,11 @@ export function VehiclesList() {
 
                 const hasPhoto = (v: any) => {
                   if (v?.featured_image || v?.featuredImage) return true;
-                  if (v?.images && Array.isArray(v.images) && v.images.length > 0)
+                  if (
+                    v?.images &&
+                    Array.isArray(v.images) &&
+                    v.images.length > 0
+                  )
                     return true;
                   return false;
                 };
