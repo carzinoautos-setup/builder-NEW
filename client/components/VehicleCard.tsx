@@ -433,7 +433,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 backgroundColor: "transparent",
                 border: "none",
                 fontSize: "12px",
-                lineHeight: "12px",
+                lineHeight: "11px",
                 padding: "0 8px",
               }}
             />
@@ -445,13 +445,19 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               title={accountTypeSeller || ""}
               className="w-28 flex-shrink-0 bg-transparent rounded-md text-sm text-gray-600 lowercase truncate"
               style={{
-                minWidth: 0,
-                backgroundColor: "transparent",
-                border: "none",
-                fontSize: "12px",
-                lineHeight: "12px",
-                padding: "0 8px",
+                borderRadius: "6px",
+                display: "block",
+                fontWeight: "400",
                 width: "112px",
+                whiteSpace: "nowrap",
+                textWrap: "nowrap",
+                textTransform: "lowercase",
+                textOverflow: "ellipsis",
+                lineHeight: "11px",
+                color: "rgb(75, 85, 99)",
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                fontSize: "11px",
+                padding: "0 8px",
               }}
             />
 
@@ -464,6 +470,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 ""
               }
               data-seller-account-hidden
+              style={{
+                display: "flex",
+                appearance: "none",
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                fontWeight: "400",
+              }}
             />
           </div>
 
