@@ -174,21 +174,35 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       (vehicle as any).account_number_seller ||
       null;
     if (!acct) return;
-    // Fetch seller info by account number
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    // Fetch seller info by account number (absolute URL, resilient)
     (async () => {
       try {
-        const resp = await fetch(`/api/sellers/${encodeURIComponent(acct)}`);
+        const url = `${window.location.origin}/api/sellers/${encodeURIComponent(acct)}`;
+        const resp = await fetch(url, { signal: controller.signal }).catch((err) => {
+          // fetch failed (network/aborted)
+          return null;
+        });
+        if (!resp) return;
         if (!resp.ok) return;
-        const json = await resp.json();
+        const json = await resp.json().catch(() => null);
         if (mounted && json && json.success && json.data) {
           setSellerInfo(json.data);
         }
       } catch (e) {
-        // ignore
+        // ignore safely
+      } finally {
+        clearTimeout(timeout);
       }
     })();
+
     return () => {
       mounted = false;
+      clearTimeout(timeout);
+      controller.abort();
     };
   }, [vehicle.seller_account_number]);
 
