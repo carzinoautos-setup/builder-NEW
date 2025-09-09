@@ -330,6 +330,25 @@ export default function MySQLVehiclesOriginalStyle() {
   useEffect(() => {
     if (!vehicles || vehicles.length === 0) return;
     if (sortBy !== "price-low" && sortBy !== "price-high") return;
+
+    const needsReorder = (arr: Vehicle[]) => {
+      // If any item with missing/zero price appears before an item with valid price, we need to reorder
+      let seenInvalid = false;
+      for (const v of arr) {
+        const p = (v as any).rawPrice;
+        const valid = p !== undefined && p !== null && Number(p) !== 0;
+        if (!valid) {
+          seenInvalid = true;
+        } else if (seenInvalid && valid) {
+          // we saw an invalid earlier and now a valid, so reorder needed
+          return true;
+        }
+      }
+      return false;
+    };
+
+    if (!needsReorder(vehicles)) return;
+
     setVehicles((prev) => {
       const comp = (a: number | undefined | null, b: number | undefined | null) => {
         const aValid = a !== undefined && a !== null && Number(a) !== 0;
@@ -341,7 +360,7 @@ export default function MySQLVehiclesOriginalStyle() {
       };
       return prev.slice().sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
     });
-  }, [sortBy]);
+  }, [sortBy, vehicles]);
   const [apiResponse, setApiResponse] = useState<VehiclesApiResponse | null>(
     null,
   );
