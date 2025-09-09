@@ -154,16 +154,22 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
-  const citySellerRaw = (vehicle as any).city_seller || (vehicle as any).city || "";
-  const stateSellerRaw = (vehicle as any).state_seller || (vehicle as any).state || "";
+  const citySellerRaw =
+    (vehicle as any).city_seller || (vehicle as any).city || "";
+  const stateSellerRaw =
+    (vehicle as any).state_seller || (vehicle as any).state || "";
   const fallbackLocation = vehicle.location || "";
 
   const [sellerInfo, setSellerInfo] = React.useState<any>(null);
-  const accountTypeField = (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
+  const accountTypeField =
+    (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
 
   React.useEffect(() => {
     let mounted = true;
-    const acct = (vehicle as any).seller_account_number || (vehicle as any).account_number_seller || null;
+    const acct =
+      (vehicle as any).seller_account_number ||
+      (vehicle as any).account_number_seller ||
+      null;
     if (!acct) return;
 
     const controller = new AbortController();
@@ -172,7 +178,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     (async () => {
       try {
         const url = `${window.location.origin}/api/sellers/${encodeURIComponent(acct)}`;
-        const resp = await fetch(url, { signal: controller.signal }).catch(() => null);
+        const resp = await fetch(url, { signal: controller.signal }).catch(
+          () => null,
+        );
         if (!resp || !resp.ok) return;
         const json = await resp.json().catch(() => null);
         if (mounted && json && json.success && json.data) {
@@ -193,12 +201,23 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   }, [vehicle.seller_account_number]);
 
   // Determine displayed city/state preferring sellerInfo
-  const displayedCity = (sellerInfo && (sellerInfo.city || sellerInfo.city_seller)) || citySellerRaw;
-  const displayedState = (sellerInfo && (sellerInfo.state || sellerInfo.state_seller)) || stateSellerRaw;
-  const locationDisplay = displayedCity || displayedState ? `${displayedCity}${displayedCity && displayedState ? ', ' : ''}${displayedState}` : fallbackLocation;
+  const displayedCity =
+    (sellerInfo && (sellerInfo.city || sellerInfo.city_seller)) ||
+    citySellerRaw;
+  const displayedState =
+    (sellerInfo && (sellerInfo.state || sellerInfo.state_seller)) ||
+    stateSellerRaw;
+  const locationDisplay =
+    displayedCity || displayedState
+      ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
+      : fallbackLocation;
 
   // Final account type to display: prefer sellerInfo, then vehicle custom field, then seller_type
-  const accountTypeSeller = (sellerInfo && (sellerInfo.accountType || sellerInfo.type)) || accountTypeField || (vehicle as any).seller_type || "";
+  const accountTypeSeller =
+    (sellerInfo && (sellerInfo.accountType || sellerInfo.type)) ||
+    accountTypeField ||
+    (vehicle as any).seller_type ||
+    "";
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
@@ -337,10 +356,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           {hasValidSalePrice() ? (
             <>
               <div className="text-center">
-                <div className="carzino-price-label text-gray-500 mb-0" style={{ fontSize: "12px" }}>
+                <div
+                  className="carzino-price-label text-gray-500 mb-0"
+                  style={{ fontSize: "12px" }}
+                >
                   Sale Price
                 </div>
-                <div className="carzino-price-value text-gray-900" style={{ fontSize: "12px" }}>
+                <div
+                  className="carzino-price-value text-gray-900"
+                  style={{ fontSize: "12px" }}
+                >
                   {vehicle.salePrice}
                 </div>
               </div>
@@ -348,10 +373,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               <>
                 <div className="w-px h-12 bg-gray-200"></div>
                 <div className="text-center">
-                  <div className="carzino-price-label text-gray-500 mb-0" style={{ fontSize: "12px" }}>
+                  <div
+                    className="carzino-price-label text-gray-500 mb-0"
+                    style={{ fontSize: "12px" }}
+                  >
                     Payments
                   </div>
-                  <div className="carzino-price-value text-red-600" style={{ fontSize: "12px" }}>
+                  <div
+                    className="carzino-price-value text-red-600"
+                    style={{ fontSize: "12px" }}
+                  >
                     {getDisplayPayment()}
                     <span className="text-xs text-black font-normal">/mo*</span>
                   </div>
@@ -360,10 +391,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             </>
           ) : (
             <div className="text-center">
-              <div className="carzino-price-label text-gray-500 mb-0" style={{ fontSize: "12px" }}>
+              <div
+                className="carzino-price-label text-gray-500 mb-0"
+                style={{ fontSize: "12px" }}
+              >
                 No Sale Price Listed
               </div>
-              <div className="carzino-price-value text-gray-900" style={{ fontSize: "12px" }}>
+              <div
+                className="carzino-price-value text-gray-900"
+                style={{ fontSize: "12px" }}
+              >
                 Call for Price
               </div>
             </div>
@@ -383,15 +420,22 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               value={
                 displayedCity || displayedState
                   ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
-                  : (fallbackLocation || "")
+                  : fallbackLocation || ""
               }
               title={
                 displayedCity || displayedState
                   ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
-                  : (fallbackLocation || "")
+                  : fallbackLocation || ""
               }
               className="flex-1 min-w-0 bg-transparent rounded-md px-2 text-sm text-gray-900 truncate"
-              style={{ minWidth: 0, backgroundColor: "transparent", border: "none", fontSize: "12px", lineHeight: "12px", padding: "0 8px" }}
+              style={{
+                minWidth: 0,
+                backgroundColor: "transparent",
+                border: "none",
+                fontSize: "12px",
+                lineHeight: "12px",
+                padding: "0 8px",
+              }}
             />
 
             {/* Right: Account Type (account_type_seller) */}
@@ -400,7 +444,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               value={accountTypeSeller || ""}
               title={accountTypeSeller || ""}
               className="w-28 flex-shrink-0 bg-transparent rounded-md text-sm text-gray-600 lowercase truncate"
-              style={{ minWidth: 0, backgroundColor: "transparent", border: "none", fontSize: "12px", lineHeight: "12px", padding: "0 8px", width: "112px" }}
+              style={{
+                minWidth: 0,
+                backgroundColor: "transparent",
+                border: "none",
+                fontSize: "12px",
+                lineHeight: "12px",
+                padding: "0 8px",
+                width: "112px",
+              }}
             />
 
             {/* Hidden relationship field (not shown to users) */}
