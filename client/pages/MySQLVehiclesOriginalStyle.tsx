@@ -331,7 +331,7 @@ export default function MySQLVehiclesOriginalStyle() {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = apiResponse?.meta?.totalPages || 1;
   const totalResults = apiResponse?.meta?.totalRecords || 0;
-  const resultsPerPage = 20;
+  const resultsPerPage = 27;
 
   // Filter states - exactly like original
   const [searchTerm, setSearchTerm] = useState("");
