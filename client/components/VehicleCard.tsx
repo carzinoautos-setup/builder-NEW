@@ -376,7 +376,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             {/* Left: City, State (city_seller, state_seller) */}
             <input
               readOnly
-              defaultValue={
+              value={
                 citySeller || stateSeller
                   ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
                   : (fallbackLocation || "")
@@ -393,7 +393,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             {/* Right: Account Type (account_type_seller) */}
             <input
               readOnly
-              defaultValue={accountTypeSeller || ""}
+              value={accountTypeSeller || ""}
               title={accountTypeSeller || ""}
               className="w-28 flex-shrink-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate"
               style={{ minWidth: 0, backgroundColor: "transparent" }}
