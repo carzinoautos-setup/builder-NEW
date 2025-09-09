@@ -307,8 +307,14 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           </div>
         </div>
 
+        {/* Show city, state in the block below the inputs */}
+        <div className="mt-2 text-sm text-gray-700 truncate" style={{ fontSize: "12px" }} title={locationDisplay}>
+          {locationDisplay}
+        </div>
+
+        {/* Seller account number (relationship) shown beneath as small link if present */}
         {vehicle.seller_account_number && (
-          <div className="mt-2 text-xs text-gray-500 truncate" style={{ fontSize: "11px" }} title={vehicle.seller_account_number}>
+          <div className="mt-1 text-xs text-gray-500 truncate" style={{ fontSize: "11px" }} title={vehicle.seller_account_number}>
             <a
               href={`/sellers/${encodeURIComponent(vehicle.seller_account_number)}`}
               className="text-xs text-gray-500 hover:underline"
