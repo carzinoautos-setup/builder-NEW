@@ -279,10 +279,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       <div className="border-t border-gray-100 px-3 py-2 mt-auto" style={{ backgroundColor: "#f9fafb" }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="flex-1 min-w-0 truncate" style={{ display: "flex", alignItems: "center" }}>
-              <div className="text-gray-900 font-medium truncate" style={{ fontSize: "13px", fontWeight: 500, lineHeight: "19.5px" }} title={locationDisplay}>{locationDisplay}</div>
+            <div className="flex-1 min-w-0 truncate" style={{ display: "flex", alignItems: "center", width: "100%", overflow: "hidden" }}>
+              <div className="text-gray-900 font-medium truncate" style={{ fontSize: "13px", fontWeight: 500, lineHeight: "19.5px" }} title={citySeller}>{citySeller}</div>
+              <div className="text-gray-600 truncate ml-3" style={{ fontSize: "13px", lineHeight: "19.5px", minWidth: "40px" }} title={stateSeller}>{stateSeller}</div>
               {vehicle.seller_account_number && (
-                <div className="text-xs text-gray-500 ml-3 truncate" style={{ fontSize: "11px", lineHeight: "16px", minWidth: "40px" }} title={vehicle.seller_account_number}>{vehicle.seller_account_number}</div>
+                <div className="text-xs text-gray-500 ml-3 truncate hidden" style={{ fontSize: "11px", lineHeight: "16px", minWidth: "40px" }} title={vehicle.seller_account_number}>{vehicle.seller_account_number}</div>
               )}
             </div>
           </div>
