@@ -3726,65 +3726,100 @@ export default function MySQLVehiclesOriginalStyle() {
               >
                 <div className="grid grid-cols-2 gap-2">
                   {(() => {
-                    const normalize = (s: string) =>
-                      s
-                        .toLowerCase()
-                        .replace(/[\s\/]+/g, "-")
-                        .replace(/[^a-z0-9\-]/g, "");
+                    // Group vehicle types into parent categories 'car' and 'truck' using slugs
+                    const isTruck = (slug: string) => {
+                      if (!slug) return false;
+                      return /truck|pickup|cab|van/.test(slug);
+                    };
 
-                    const bottomKeys = new Set([
-                      "crew-cab",
-                      "regular-cab-truck",
-                      "truck",
-                      "extended-cab",
-                    ]);
-
-                    const top: any[] = [];
-                    const bottom: any[] = [];
+                    const parents: Record<
+                      string,
+                      { label: string; count: number; children: { name: string; slug: string; count: number }[] }
+                    > = {
+                      car: { label: "Car", count: 0, children: [] },
+                      truck: { label: "Truck", count: 0, children: [] },
+                    };
 
                     for (const t of vehicleTypes) {
-                      const key = normalize(t.name || "");
-                      if (key === "uncategorized" || key === "") {
-                        // skip Uncategorized or empty labels entirely
-                        continue;
-                      }
-                      if (bottomKeys.has(key)) {
-                        bottom.push(t);
-                      } else {
-                        top.push(t);
-                      }
+                      const slug = (t as any).slug || String(t.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+                      if (!slug || slug === "uncategorized") continue;
+                      const target = isTruck(slug) ? parents.truck : parents.car;
+                      target.children.push({ name: t.name, slug, count: t.count });
+                      target.count += Number(t.count || 0);
                     }
 
-                    const ordered = [...top, ...bottom];
+                    const hasAny = parents.car.children.length > 0 || parents.truck.children.length > 0;
 
-                    return ordered.length > 0 ? (
-                      ordered.map((type, index) => (
-                        <VehicleTypeCard
-                          key={index}
-                          type={type.name}
-                          count={type.count}
-                          vehicleImages={vehicleImages}
-                          isSelected={appliedFilters.vehicleType.includes(
-                            type.name,
-                          )}
-                          onToggle={() => {
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              vehicleType: prev.vehicleType.includes(type.name)
-                                ? prev.vehicleType.filter(
-                                    (item) => item !== type.name,
-                                  )
-                                : [...prev.vehicleType, type.name],
-                            }));
-                          }}
-                          onImageUpload={(t, file) =>
-                            handleVehicleTypeImageUpload(t, file)
-                          }
-                        />
-                      ))
-                    ) : (
-                      <div className="text-gray-500 text-sm p-2 col-span-2 text-center">
-                        Loading vehicle types...
+                    if (!hasAny) {
+                      return (
+                        <div className="text-gray-500 text-sm p-2 col-span-2 text-center">
+                          Loading vehicle types...
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="col-span-2">
+                        {(["car", "truck"] as const).map((parentKey) => {
+                          const parent = parents[parentKey];
+                          return (
+                            <div key={parentKey} className="mb-2">
+                              <label className="flex items-center justify-between w-full p-1 rounded hover:bg-gray-50">
+                                <div className="flex items-center">
+                                  <input
+                                    type="checkbox"
+                                    className="mr-2"
+                                    checked={appliedFilters.vehicleType.includes(parentKey)}
+                                    onChange={() => {
+                                      setAppliedFilters((prev) => {
+                                        const has = prev.vehicleType.includes(parentKey);
+                                        const next = {
+                                          ...prev,
+                                          vehicleType: has
+                                            ? prev.vehicleType.filter((v) => v !== parentKey)
+                                            : [...prev.vehicleType, parentKey],
+                                        };
+                                        updateURLFromFilters(next);
+                                        return next;
+                                      });
+                                    }}
+                                  />
+                                  <span className="font-medium">{parent.label} ({parent.count})</span>
+                                </div>
+                              </label>
+
+                              <div className="mt-2 pl-4 grid grid-cols-1 gap-1">
+                                {parent.children.map((child) => (
+                                  <div className="flex items-center hover:bg-gray-50 p-1 rounded" key={child.slug}>
+                                    <input
+                                      id={`vt-${child.slug}`}
+                                      type="checkbox"
+                                      className="mr-2"
+                                      checked={appliedFilters.vehicleType.includes(child.slug)}
+                                      onChange={() => {
+                                        setAppliedFilters((prev) => {
+                                          const has = prev.vehicleType.includes(child.slug);
+                                          const next = {
+                                            ...prev,
+                                            vehicleType: has
+                                              ? prev.vehicleType.filter((v) => v !== child.slug)
+                                              : [...prev.vehicleType, child.slug],
+                                          };
+                                          updateURLFromFilters(next);
+                                          return next;
+                                        });
+                                      }}
+                                    />
+                                    <label htmlFor={`vt-${child.slug}`} className="flex-1 cursor-pointer">
+                                      <span className="carzino-filter-option">{child.name}</span>
+                                    </label>
+                                    <span className="carzino-filter-count ml-1">({child.count})</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     );
                   })()}
@@ -4928,7 +4963,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          ×
+                          ��
                         </button>
                       </span>
                     ))}
