@@ -481,17 +481,18 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             />
           </div>
 
-          <div className="flex-shrink-0 text-right hidden">
+          <div className="flex-shrink-0 text-right">
             <div
-            className="text-gray-600"
-            style={{
-              fontSize: "12px",
-              lineHeight: "12px",
-              textTransform: "lowercase",
-            }}
-          >
-            {vehicle.seller_type}
-          </div>
+              className="text-gray-900"
+              style={{
+                fontSize: "12px",
+                lineHeight: "12px",
+                fontWeight: "400",
+                color: "rgb(17, 24, 39)",
+              }}
+            >
+              {vehicle.seller_type}
+            </div>
           </div>
         </div>
       </div>
