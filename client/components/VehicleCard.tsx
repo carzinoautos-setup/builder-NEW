@@ -438,7 +438,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               }}
             />
 
-
             {/* Hidden relationship field (not shown to users) */}
             <input
               type="hidden"
