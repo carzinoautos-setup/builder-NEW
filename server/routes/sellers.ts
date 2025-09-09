@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { RequestHandler } from "express";
 import { getDatabase } from "../db/connection.js";
 
 export const getSellerByAccount: RequestHandler = async (req, res) => {
