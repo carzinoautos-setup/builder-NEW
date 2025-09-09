@@ -2904,7 +2904,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   <div className="relative flex-1">
                     <input
                       type="text"
-                      placeholder="Enter your zip code"
+                      placeholder="Enter Zip Code"
                       value={zipCode}
                       onChange={(e) => setZipCode(e.target.value)}
                       className={`carzino-search-input w-full px-3 py-2 border rounded-md h-10 focus:outline-none ${
