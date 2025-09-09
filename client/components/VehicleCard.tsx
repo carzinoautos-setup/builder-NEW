@@ -419,16 +419,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             {/* Left: City, State (city_seller, state_seller) */}
             <input
               readOnly
-              value={
-                displayedCity || displayedState
-                  ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
-                  : fallbackLocation || ""
-              }
-              title={
-                displayedCity || displayedState
-                  ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
-                  : fallbackLocation || ""
-              }
+              value={locationDisplay}
+              title={locationDisplay}
               className="flex-1 min-w-0 bg-transparent rounded-md px-2 text-sm text-gray-900 truncate"
               style={{
                 minWidth: 0,
