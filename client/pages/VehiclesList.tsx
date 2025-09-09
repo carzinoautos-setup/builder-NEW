@@ -322,14 +322,79 @@ export function VehiclesList() {
         {vehicles.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-              {vehicles.map((vehicle) => (
-                <MySQLVehicleCard
-                  key={vehicle.id}
-                  vehicle={vehicle}
-                  onFavoriteToggle={handleFavoriteToggle}
-                  isFavorite={favorites.has(vehicle.id)}
-                />
-              ))}
+              {/**
+               * Distribute vehicles so items without photos are spread across results
+               * without changing the grid. We detect vehicles that have explicit images
+               * (featured_image or images array) and interleave image-less vehicles
+               * evenly among them.
+               */}
+              {(() => {
+                // Determine number of columns based on viewport width
+                const getColumns = () => {
+                  if (typeof window === "undefined") return 3; // default
+                  const w = window.innerWidth;
+                  if (w >= 1280) return 4; // xl
+                  if (w >= 1024) return 3; // lg
+                  if (w >= 768) return 2; // md
+                  return 1;
+                };
+
+                const columns = getColumns();
+
+                const hasPhoto = (v: any) => {
+                  if (v?.featured_image || v?.featuredImage) return true;
+                  if (v?.images && Array.isArray(v.images) && v.images.length > 0)
+                    return true;
+                  return false;
+                };
+
+                const withPhoto = vehicles.filter((v) => hasPhoto(v));
+                const withoutPhoto = vehicles.filter((v) => !hasPhoto(v));
+
+                if (withoutPhoto.length === 0) {
+                  return vehicles.map((vehicle) => (
+                    <MySQLVehicleCard
+                      key={vehicle.id}
+                      vehicle={vehicle}
+                      onFavoriteToggle={handleFavoriteToggle}
+                      isFavorite={favorites.has(vehicle.id)}
+                    />
+                  ));
+                }
+
+                // Split withPhoto into (withoutPhoto.length + 1) chunks, then insert one withoutPhoto between chunks
+                const parts = Math.max(1, withoutPhoto.length + 1);
+                const chunkSize = Math.ceil(withPhoto.length / parts) || 0;
+                const result: any[] = [];
+
+                for (let i = 0; i < parts; i++) {
+                  const start = i * chunkSize;
+                  const chunk = withPhoto.slice(start, start + chunkSize);
+                  for (const c of chunk) result.push(c);
+                  if (i < withoutPhoto.length) result.push(withoutPhoto[i]);
+                }
+
+                // If any remaining withoutPhoto items, append them spaced by columns
+                if (withoutPhoto.length > withPhoto.length) {
+                  // append remaining placeholders but try to space by inserting after every `columns` items
+                  const remaining = withoutPhoto.slice(withPhoto.length);
+                  let insertIdx = columns; // start after first row
+                  for (const rem of remaining) {
+                    if (insertIdx >= result.length) result.push(rem);
+                    else result.splice(insertIdx, 0, rem);
+                    insertIdx += columns + 1; // move forward
+                  }
+                }
+
+                return result.map((vehicle) => (
+                  <MySQLVehicleCard
+                    key={vehicle.id}
+                    vehicle={vehicle}
+                    onFavoriteToggle={handleFavoriteToggle}
+                    isFavorite={favorites.has(vehicle.id)}
+                  />
+                ));
+              })()}
             </div>
 
             {/* Pagination */}
