@@ -1078,7 +1078,19 @@ export default function MySQLVehiclesOriginalStyle() {
             });
 
             const transformedVehicles = mapped.map(transformVehicleRecord);
-            setVehicles(transformedVehicles);
+            const reorderForPrice = (arr: Vehicle[]) => {
+              if (sortBy !== "price-low" && sortBy !== "price-high") return arr;
+              const comp = (a: number | undefined | null, b: number | undefined | null) => {
+                const aValid = a !== undefined && a !== null && Number(a) !== 0;
+                const bValid = b !== undefined && b !== null && Number(b) !== 0;
+                if (aValid && bValid) return sortBy === "price-low" ? Number(a) - Number(b) : Number(b) - Number(a);
+                if (aValid && !bValid) return -1;
+                if (!aValid && bValid) return 1;
+                return 0;
+              };
+              return arr.slice().sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
+            };
+            setVehicles(reorderForPrice(transformedVehicles));
             setApiResponse({
               success: true,
               data: transformedVehicles,
