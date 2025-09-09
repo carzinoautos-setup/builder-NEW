@@ -433,7 +433,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 backgroundColor: "transparent",
                 border: "none",
                 fontSize: "12px",
-                lineHeight: "11px",
+                lineHeight: "12px",
                 padding: "0 8px",
               }}
             />
@@ -453,10 +453,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 textWrap: "nowrap",
                 textTransform: "lowercase",
                 textOverflow: "ellipsis",
-                lineHeight: "11px",
+                lineHeight: "12px",
                 color: "rgb(75, 85, 99)",
                 backgroundColor: "rgba(0, 0, 0, 0)",
-                fontSize: "11px",
+                fontSize: "12px",
                 padding: "0 8px",
               }}
             />
@@ -475,21 +475,23 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 appearance: "none",
                 backgroundColor: "rgba(0, 0, 0, 0)",
                 fontWeight: "400",
+                fontSize: "12px",
+                lineHeight: "12px",
               }}
             />
           </div>
 
           <div className="flex-shrink-0 text-right hidden">
             <div
-              className="text-gray-600"
-              style={{
-                fontSize: "13px",
-                lineHeight: "19.5px",
-                textTransform: "lowercase",
-              }}
-            >
-              {vehicle.seller_type}
-            </div>
+            className="text-gray-600"
+            style={{
+              fontSize: "12px",
+              lineHeight: "12px",
+              textTransform: "lowercase",
+            }}
+          >
+            {vehicle.seller_type}
+          </div>
           </div>
         </div>
       </div>
