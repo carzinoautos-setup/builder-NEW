@@ -438,28 +438,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               }}
             />
 
-            {/* Right: Account Type (account_type_seller) */}
-            <input
-              readOnly
-              value={accountTypeSeller || ""}
-              title={accountTypeSeller || ""}
-              className="w-28 flex-shrink-0 bg-transparent rounded-md text-sm text-gray-600 lowercase truncate"
-              style={{
-                borderRadius: "6px",
-                display: "block",
-                fontWeight: "400",
-                width: "112px",
-                whiteSpace: "nowrap",
-                textWrap: "nowrap",
-                textTransform: "lowercase",
-                textOverflow: "ellipsis",
-                lineHeight: "12px",
-                color: "rgb(75, 85, 99)",
-                backgroundColor: "rgba(0, 0, 0, 0)",
-                fontSize: "12px",
-                padding: "0 8px",
-              }}
-            />
 
             {/* Hidden relationship field (not shown to users) */}
             <input
