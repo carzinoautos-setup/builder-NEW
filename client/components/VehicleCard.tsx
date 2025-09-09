@@ -350,26 +350,35 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       >
         <div className="flex justify-between items-start">
           <div className="flex-1 min-w-0">
-            <div
-              className="text-black font-medium truncate"
-              style={{ fontSize: "12px" }}
-            >
-              {vehicle.location}
-            </div>
+            {/* Dealer / Account name (relationship field) if available */}
+            {vehicle.dealer ? (
+              <div className="text-black font-medium truncate" style={{ fontSize: "12px" }}>
+                {vehicle.dealer}
+              </div>
+            ) : (
+              <div className="text-black font-medium truncate" style={{ fontSize: "12px" }}>
+                {vehicle.location}
+              </div>
+            )}
+
+            {/* City, State (location) */}
+            {vehicle.location && (
+              <div className="text-xs text-gray-600 mt-1 truncate" style={{ fontSize: "10px" }}>
+                {vehicle.location}
+              </div>
+            )}
+
+            {/* Seller account identifier for traceability */}
             {vehicle.seller_account_number && (
-              <div
-                className="text-xs text-gray-500 mt-1 truncate"
-                style={{ fontSize: "10px" }}
-              >
-                {vehicle.seller_account_number}
+              <div className="text-xs text-gray-500 mt-1 truncate" style={{ fontSize: "10px" }}>
+                Account: {vehicle.seller_account_number}
               </div>
             )}
           </div>
+
           <div className="text-right flex-shrink-0">
-            <div
-              className="text-black hover:text-gray-600 cursor-pointer"
-              style={{ fontSize: "12px", fontWeight: 500 }}
-            >
+            {/* Seller Type (Dealer / Private) */}
+            <div className="text-black hover:text-gray-600 cursor-pointer" style={{ fontSize: "12px", fontWeight: 500 }}>
               {vehicle.seller_type}
             </div>
           </div>
