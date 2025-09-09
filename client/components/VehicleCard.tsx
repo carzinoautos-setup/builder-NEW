@@ -154,10 +154,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
-  const citySeller = (vehicle as any).city_seller || (vehicle as any).city || "";
-  const stateSeller = (vehicle as any).state_seller || (vehicle as any).state || "";
+  const citySellerRaw = (vehicle as any).city_seller || (vehicle as any).city || "";
+  const stateSellerRaw = (vehicle as any).state_seller || (vehicle as any).state || "";
   const fallbackLocation = vehicle.location || "";
-  const locationDisplay = citySeller || stateSeller ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}` : fallbackLocation;
 
   const [sellerInfo, setSellerInfo] = React.useState<any>(null);
   const accountTypeField = (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
@@ -193,8 +192,13 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     };
   }, [vehicle.seller_account_number]);
 
-  // Final account type to display: prefer vehicle custom field, then sellerInfo, then seller_type
-  const accountTypeSeller = accountTypeField || (sellerInfo && sellerInfo.accountType) || (vehicle as any).seller_type || "";
+  // Determine displayed city/state preferring sellerInfo
+  const displayedCity = (sellerInfo && (sellerInfo.city || sellerInfo.city_seller)) || citySellerRaw;
+  const displayedState = (sellerInfo && (sellerInfo.state || sellerInfo.state_seller)) || stateSellerRaw;
+  const locationDisplay = displayedCity || displayedState ? `${displayedCity}${displayedCity && displayedState ? ', ' : ''}${displayedState}` : fallbackLocation;
+
+  // Final account type to display: prefer sellerInfo, then vehicle custom field, then seller_type
+  const accountTypeSeller = (sellerInfo && (sellerInfo.accountType || sellerInfo.type)) || accountTypeField || (vehicle as any).seller_type || "";
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
