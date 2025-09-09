@@ -373,20 +373,41 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 flex-1 min-w-0">
+            {/* Left: City, State (city_seller, state_seller) */}
             <input
-              defaultValue={locationDisplay}
-              title={locationDisplay}
+              defaultValue={
+                citySeller || stateSeller
+                  ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
+                  : ""
+              }
+              title={
+                citySeller || stateSeller
+                  ? `${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`
+                  : ""
+              }
               className="flex-1 min-w-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate focus:outline-none"
               style={{ minWidth: 0, backgroundColor: "transparent" }}
               tabIndex={0}
             />
 
+            {/* Right: Account Type (account_type_seller) */}
             <input
-              defaultValue={accountTypeSeller}
-              title={accountTypeSeller}
+              defaultValue={accountTypeSeller || ""}
+              title={accountTypeSeller || ""}
               className="w-28 flex-shrink-0 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate focus:outline-none"
               style={{ minWidth: 0, backgroundColor: "transparent" }}
               tabIndex={0}
+            />
+
+            {/* Hidden relationship field (not shown to users) */}
+            <input
+              type="hidden"
+              value={
+                (vehicle as any).seller_account_number ||
+                (vehicle as any).account_number_seller ||
+                ""
+              }
+              data-seller-account-hidden
             />
           </div>
 
@@ -403,25 +424,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             </div>
           </div>
         </div>
-
-        {/* Seller account number (relationship) shown beneath as small link if present */}
-        {vehicle.seller_account_number && (
-          <div
-            className="mt-1 text-xs text-gray-500 truncate"
-            style={{ fontSize: "11px", overflow: "hidden" }}
-            title={vehicle.seller_account_number}
-          >
-            <a
-              href={`/sellers/${encodeURIComponent(vehicle.seller_account_number)}`}
-              className="text-xs text-gray-500 hover:underline block truncate"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-seller-account={vehicle.seller_account_number}
-            >
-              {vehicle.seller_account_number}
-            </a>
-          </div>
-        )}
       </div>
     </div>
   );
