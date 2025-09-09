@@ -350,30 +350,21 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       >
         <div className="flex justify-between items-start">
           <div className="flex-1 min-w-0">
-            {/* Dealer / Account name (relationship field) if available */}
-            {vehicle.dealer ? (
-              <div className="text-black font-medium truncate" style={{ fontSize: "12px" }}>
-                {vehicle.dealer}
-              </div>
-            ) : (
-              <div className="text-black font-medium truncate" style={{ fontSize: "12px" }}>
-                {vehicle.location}
-              </div>
-            )}
+            {/* Dealer (relationship) displayed first when available */}
+            <div className="text-black font-medium truncate" style={{ fontSize: "12px" }}>
+              {vehicle.dealer || vehicle.location}
+            </div>
 
-            {/* City, State (location) */}
-            {vehicle.location && (
-              <div className="text-xs text-gray-600 mt-1 truncate" style={{ fontSize: "10px" }}>
-                {vehicle.location}
-              </div>
-            )}
-
-            {/* Seller account identifier for traceability */}
-            {vehicle.seller_account_number && (
-              <div className="text-xs text-gray-500 mt-1 truncate" style={{ fontSize: "10px" }}>
-                Account: {vehicle.seller_account_number}
-              </div>
-            )}
+            {/* Secondary line: City, State • Seller Type • Account */}
+            <div className="text-xs text-gray-600 mt-1 truncate flex items-center gap-2" style={{ fontSize: "10px" }}>
+              <span className="truncate">{vehicle.location}</span>
+              {vehicle.seller_type && (
+                <span className="text-sm text-gray-500">• {vehicle.seller_type}</span>
+              )}
+              {vehicle.seller_account_number && (
+                <span className="text-xs text-gray-500">• {vehicle.seller_account_number}</span>
+              )}
+            </div>
           </div>
 
           <div className="text-right flex-shrink-0">
