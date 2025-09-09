@@ -348,10 +348,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               <>
                 <div className="w-px h-12 bg-gray-200"></div>
                 <div className="text-center">
-                  <div className="carzino-price-label text-gray-500 mb-0">
+                  <div className="carzino-price-label text-gray-500 mb-0" style={{ fontSize: "12px" }}>
                     Payments
                   </div>
-                  <div className="carzino-price-value text-red-600">
+                  <div className="carzino-price-value text-red-600" style={{ fontSize: "12px" }}>
                     {getDisplayPayment()}
                     <span className="text-xs text-black font-normal">/mo*</span>
                   </div>
