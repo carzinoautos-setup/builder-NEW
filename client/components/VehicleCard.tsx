@@ -150,9 +150,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
-  const citySeller = (vehicle as any).city_seller || "";
-  const stateSeller = (vehicle as any).state_seller || "";
-  const locationDisplay = citySeller || stateSeller ? `${citySeller}${citySeller && stateSeller ? ', ' : ''}${stateSeller}` : "";
+  const citySeller = (vehicle as any).city_seller || (vehicle as any).city || "";
+  const stateSeller = (vehicle as any).state_seller || (vehicle as any).state || "";
+  const fallbackLocation = vehicle.location || "";
+  const locationDisplay = citySeller || stateSeller
+    ? `${citySeller}${citySeller && stateSeller ? ', ' : ''}${stateSeller}`
+    : fallbackLocation;
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
@@ -281,8 +284,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3">
               <input
-                defaultValue={`${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`}
-                title={`${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`}
+                defaultValue={locationDisplay}
+                title={locationDisplay}
                 className="flex-1 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate focus:outline-none"
                 style={{ minWidth: 0, backgroundColor: 'transparent' }}
                 tabIndex={0}
