@@ -281,19 +281,19 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3">
               <input
-                readOnly
-                value={`${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`}
+                defaultValue={`${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`}
                 title={`${citySeller}${citySeller && stateSeller ? ", " : ""}${stateSeller}`}
                 className="flex-1 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-900 truncate focus:outline-none"
                 style={{ minWidth: 0, backgroundColor: 'transparent' }}
+                tabIndex={0}
               />
 
               <input
-                readOnly
-                value={vehicle.seller_type || ""}
+                defaultValue={vehicle.seller_type || ""}
                 title={vehicle.seller_type || ""}
                 className="w-28 border border-gray-200 bg-transparent rounded-md px-2 py-1 text-sm text-gray-600 lowercase truncate focus:outline-none"
                 style={{ minWidth: 0, backgroundColor: 'transparent' }}
+                tabIndex={0}
               />
             </div>
           </div>
