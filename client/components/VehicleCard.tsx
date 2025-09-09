@@ -154,15 +154,19 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
-  const citySellerRaw =
-    (vehicle as any).city_seller || (vehicle as any).city || "";
-  const stateSellerRaw =
-    (vehicle as any).state_seller || (vehicle as any).state || "";
-  const fallbackLocation = vehicle.location || "";
+  const sanitize = (v: any) => {
+    if (v === undefined || v === null) return "";
+    const s = String(v).trim();
+    if (/^unknown$/i.test(s)) return "";
+    return s;
+  };
+
+  const citySellerRaw = sanitize((vehicle as any).city_seller || (vehicle as any).city || "");
+  const stateSellerRaw = sanitize((vehicle as any).state_seller || (vehicle as any).state || "");
+  const fallbackLocation = sanitize(vehicle.location || "");
 
   const [sellerInfo, setSellerInfo] = React.useState<any>(null);
-  const accountTypeField =
-    (vehicle as any).account_type_seller || (vehicle as any).seller_type || "";
+  const accountTypeField = sanitize((vehicle as any).account_type_seller || (vehicle as any).seller_type || "");
 
   React.useEffect(() => {
     let mounted = true;
