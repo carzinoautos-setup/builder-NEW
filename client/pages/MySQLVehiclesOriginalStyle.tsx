@@ -3726,7 +3726,7 @@ export default function MySQLVehiclesOriginalStyle() {
               >
                 <div className="grid grid-cols-2 gap-2">
                   {(() => {
-                    // Group vehicle types into parent categories 'car' and 'truck' using slugs
+                    // Build parents and children as before
                     const isTruck = (slug: string) => {
                       if (!slug) return false;
                       return /truck|pickup|cab|van/.test(slug);
@@ -3736,8 +3736,8 @@ export default function MySQLVehiclesOriginalStyle() {
                       string,
                       { label: string; count: number; children: { name: string; slug: string; count: number }[] }
                     > = {
-                      car: { label: "Car", count: 0, children: [] },
-                      truck: { label: "Truck", count: 0, children: [] },
+                      car: { label: "All Cars", count: 0, children: [] },
+                      truck: { label: "All Trucks", count: 0, children: [] },
                     };
 
                     for (const t of vehicleTypes) {
@@ -3758,82 +3758,61 @@ export default function MySQLVehiclesOriginalStyle() {
                       );
                     }
 
+                    // Image-based grid: parents as large cards, children shown as smaller image cards
                     return (
                       <div className="col-span-2">
-                        {(["car", "truck"] as const).map((parentKey) => {
-                          const parent = parents[parentKey];
-                          return (
-                            <div key={parentKey} className="mb-2">
-                              <label className="flex items-center justify-between w-full p-1 rounded hover:bg-gray-50">
-                                <div className="flex items-center">
-                                  <input
-                                    type="checkbox"
-                                    className="mr-2"
-                                    ref={(el) => {
-                                      if (!el) return;
-                                      const childSlugs = parent.children.map((c) => c.slug);
-                                      const allSelected = childSlugs.every((s) => appliedFilters.vehicleType.includes(s));
-                                      const someSelected = childSlugs.some((s) => appliedFilters.vehicleType.includes(s));
-                                      el.indeterminate = !allSelected && someSelected;
-                                    }}
-                                    checked={parent.children.length > 0 && parent.children.every((c) => appliedFilters.vehicleType.includes(c.slug))}
-                                    onChange={() => {
-                                      const childSlugs = parent.children.map((c) => c.slug);
-                                      setAppliedFilters((prev) => {
-                                        const current = new Set(prev.vehicleType || []);
-                                        const allSelected = childSlugs.every((s) => current.has(s));
-                                        if (allSelected) {
-                                          // deselect all children
-                                          childSlugs.forEach((s) => current.delete(s));
-                                        } else {
-                                          // select all children
-                                          childSlugs.forEach((s) => current.add(s));
-                                        }
-                                        const next = {
-                                          ...prev,
-                                          vehicleType: Array.from(current),
-                                        };
-                                        updateURLFromFilters(next);
-                                        return next;
-                                      });
-                                    }}
-                                  />
-                                  <span className="font-medium">{parent.label} ({parent.count})</span>
-                                </div>
-                              </label>
+                        <div className="grid grid-cols-2 gap-2 mb-2">
+                          {(["car", "truck"] as const).map((parentKey) => {
+                            const parent = parents[parentKey];
+                            const allSelected = parent.children.length > 0 && parent.children.every((c) => appliedFilters.vehicleType.includes(c.slug));
 
-                              <div className="mt-2 pl-4 grid grid-cols-1 gap-1">
-                                {parent.children.map((child) => (
-                                  <div className="flex items-center hover:bg-gray-50 p-1 rounded" key={child.slug}>
-                                    <input
-                                      id={`vt-${child.slug}`}
-                                      type="checkbox"
-                                      className="mr-2"
-                                      checked={appliedFilters.vehicleType.includes(child.slug)}
-                                      onChange={() => {
-                                        setAppliedFilters((prev) => {
-                                          const has = prev.vehicleType.includes(child.slug);
-                                          const next = {
-                                            ...prev,
-                                            vehicleType: has
-                                              ? prev.vehicleType.filter((v) => v !== child.slug)
-                                              : [...prev.vehicleType, child.slug],
-                                          };
-                                          updateURLFromFilters(next);
-                                          return next;
-                                        });
-                                      }}
-                                    />
-                                    <label htmlFor={`vt-${child.slug}`} className="flex-1 cursor-pointer">
-                                      <span className="carzino-filter-option">{child.name}</span>
-                                    </label>
-                                    <span className="carzino-filter-count ml-1">({child.count})</span>
-                                  </div>
-                                ))}
+                            return (
+                              <div key={parentKey} className="p-1">
+                                <VehicleTypeCard
+                                  type={parent.label}
+                                  count={parent.count}
+                                  vehicleImages={vehicleImages}
+                                  isSelected={allSelected}
+                                  onToggle={() => {
+                                    const childSlugs = parent.children.map((c) => c.slug);
+                                    setAppliedFilters((prev) => {
+                                      const current = new Set(prev.vehicleType || []);
+                                      const allSel = childSlugs.every((s) => current.has(s));
+                                      if (allSel) childSlugs.forEach((s) => current.delete(s));
+                                      else childSlugs.forEach((s) => current.add(s));
+                                      const next = { ...prev, vehicleType: Array.from(current) };
+                                      updateURLFromFilters(next);
+                                      return next;
+                                    });
+                                  }}
+                                />
                               </div>
+                            );
+                          })}
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2">
+                          {parents.car.children.concat(parents.truck.children).map((child) => (
+                            <div key={child.slug} className="p-1">
+                              <VehicleTypeCard
+                                type={child.name}
+                                count={child.count}
+                                vehicleImages={vehicleImages}
+                                isSelected={appliedFilters.vehicleType.includes(child.slug)}
+                                onToggle={() => {
+                                  setAppliedFilters((prev) => {
+                                    const current = new Set(prev.vehicleType || []);
+                                    if (current.has(child.slug)) current.delete(child.slug);
+                                    else current.add(child.slug);
+                                    const next = { ...prev, vehicleType: Array.from(current) };
+                                    updateURLFromFilters(next);
+                                    return next;
+                                  });
+                                }}
+                              />
                             </div>
-                          );
-                        })}
+                          ))}
+                        </div>
                       </div>
                     );
                   })()}
