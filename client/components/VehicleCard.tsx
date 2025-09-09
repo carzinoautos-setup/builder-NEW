@@ -273,15 +273,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       </div>
 
       <div className="border-t border-gray-100 px-3 py-2 mt-auto" style={{ backgroundColor: "#f9fafb" }}>
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-center">
           <div className="flex-1 min-w-0">
-            <div className="text-black font-medium truncate" style={{ fontSize: "12px" }}>{vehicle.location}</div>
+            <div className="text-gray-900 font-medium truncate" style={{ fontSize: "13px" }}>{vehicle.location}</div>
             {vehicle.seller_account_number && (
-              <div className="text-xs text-gray-500 mt-1 truncate hidden" style={{ fontSize: "10px" }}>{vehicle.seller_account_number}</div>
+              <div className="text-xs text-gray-500 mt-0.5 truncate" style={{ fontSize: "11px" }}>{vehicle.seller_account_number}</div>
             )}
           </div>
           <div className="text-right flex-shrink-0">
-            <div className="text-black hover:text-gray-600 cursor-pointer" style={{ fontSize: "12px", fontWeight: 500 }}>{vehicle.seller_type}</div>
+            <div className="text-gray-600 cursor-default" style={{ fontSize: "13px", textTransform: "lowercase" }}>{vehicle.seller_type}</div>
           </div>
         </div>
       </div>
