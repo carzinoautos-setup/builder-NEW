@@ -1,380 +1,243 @@
-import React, { useState } from "react";
-import { Gauge, Settings, ChevronDown, Heart, Check } from "lucide-react";
+import React from "react";
+import { Heart, MapPin } from "lucide-react";
+import {
+  VehicleRecord,
+  formatPrice,
+  formatMileage,
+  getVehicleTitle,
+  getVehicleImageUrl,
+} from "../lib/vehicleApi";
+import { calculateMonthlyPayment } from "../lib/paymentCalculator";
 
-interface Vehicle {
-  id: number;
-  featured: boolean;
-  viewed: boolean;
-  images: string[];
-  badges: string[];
-  title: string;
-  mileage: string;
-  transmission: string;
-  doors: string;
-  doorIcon?: string; // Optional custom door icon URL
-  mileageIcon?: string; // Optional custom mileage icon URL
-  transmissionIcon?: string; // Optional custom transmission icon URL
-  salePrice: string | null;
-  payment: string | null;
-  dealer: string;
-  location: string;
-  phone: string;
-  seller_type: string;
-  seller_account_number: string;
+interface MySQLVehicleCardProps {
+  vehicle: VehicleRecord;
+  onFavoriteToggle?: (vehicleId: number) => void;
+  isFavorite?: boolean;
+  className?: string;
 }
 
-interface VehicleCardProps {
-  vehicle: Vehicle;
-  favorites: { [key: number]: Vehicle };
-  onToggleFavorite: (vehicle: Vehicle) => void;
-  keeperMessage: number | null;
-  // Payment calculation parameters
-  termLength?: string;
-  interestRate?: string;
-  downPayment?: string;
-}
-
-export const VehicleCard: React.FC<VehicleCardProps> = ({
+export function MySQLVehicleCard({
   vehicle,
-  favorites,
-  onToggleFavorite,
-  keeperMessage,
-  termLength = "60",
-  interestRate = "5",
-  downPayment = "2000",
-}) => {
-  // Helper to determine if a formatted price string represents a positive price
-  const parseFormattedPrice = (priceStr?: string | null): number | null => {
-    if (!priceStr) return null;
-    const num = parseFloat(String(priceStr).replace(/[^0-9.-]+/g, ""));
-    if (isNaN(num)) return null;
-    return num;
+  onFavoriteToggle,
+  isFavorite = false,
+  className = "",
+}: MySQLVehicleCardProps) {
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onFavoriteToggle?.(vehicle.id);
   };
 
-  const hasValidSalePrice = (): boolean => {
-    const n = parseFormattedPrice(vehicle.salePrice);
-    return n !== null && n > 0;
-  };
-
-  const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
-
-  // Calculate monthly payment based on sale price and loan terms
-  const calculateMonthlyPayment = (
-    salePrice: string,
-    termMonths: string,
-    apr: string,
-    down: string,
-  ): string => {
-    // Parse sale price - remove $ and commas
-    const price = parseFloat(salePrice.replace(/[$,]/g, ""));
-    const downAmt = parseFloat(down) || 0;
-    const principal = price - downAmt;
-    const months = parseInt(termMonths) || 60;
-    const rate = parseFloat(apr) / 100 / 12; // Convert APR to monthly rate
-
-    if (isNaN(price) || price <= 0 || principal <= 0) {
-      return vehicle.payment || "Call for Price";
+  const getConditionBadgeColor = (condition: string) => {
+    switch (condition?.toLowerCase()) {
+      case "new":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "certified":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "used":
+        return "bg-gray-100 text-gray-800 border-gray-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-
-    if (rate === 0) {
-      // 0% APR - simple division
-      const payment = principal / months;
-      return `$${Math.round(payment).toLocaleString()}`;
-    }
-
-    // Standard loan payment formula
-    const payment =
-      (principal * rate * Math.pow(1 + rate, months)) /
-      (Math.pow(1 + rate, months) - 1);
-    return `$${Math.round(payment).toLocaleString()}`;
   };
 
-  // Get the payment to display - either calculated or original
-  const getDisplayPayment = (): string => {
-    if (hasValidSalePrice()) {
-      try {
-        // Always calculate a payment when a sale price exists, using current parameters
-        return calculateMonthlyPayment(
-          vehicle.salePrice,
-          termLength,
-          interestRate,
-          downPayment,
-        );
-      } catch (e) {
-        // Fallback to provided payment or call for price
-        return vehicle.payment || "Call for Price";
-      }
-    }
-
-    return vehicle.payment || "Call for Price";
-  };
-
-  // Attempt to use a medium-sized (450x300) variant of the featured image when possible
-  const getMediumImage = (url?: string) => {
-    // Use placeholder from env or public assets if no URL provided
-    if (!url)
-      return (
-        import.meta.env.VITE_PLACEHOLDER_IMAGE ||
-        "/assets/fallback-image-450.webp" ||
-        "/placeholder.svg"
-      );
-
-    try {
-      const u = new URL(url);
-
-      // If the URL already has width/height query params, adjust them
-      if (
-        u.searchParams.has("w") ||
-        u.searchParams.has("width") ||
-        u.searchParams.has("h") ||
-        u.searchParams.has("height")
-      ) {
-        if (u.searchParams.has("w")) u.searchParams.set("w", "450");
-        if (u.searchParams.has("width")) u.searchParams.set("width", "450");
-        if (u.searchParams.has("h")) u.searchParams.set("h", "300");
-        if (u.searchParams.has("height")) u.searchParams.set("height", "300");
-        return u.toString();
-      }
-
-      // If it's a common image CDN that supports width via query (e.g., images.unsplash.com), append params
-      if (
-        u.hostname.includes("images.unsplash.com") ||
-        u.hostname.includes("cdn.")
-      ) {
-        // Preserve any existing query but enforce w/h
-        const s =
-          u.origin + u.pathname + `?w=450&h=300&fit=crop&auto=format&q=80`;
-        return s;
-      }
-
-      // Try WordPress-style size suffix insertion before file extension (image.jpg -> image-450x300.jpg)
-      const pathname = u.pathname;
-      const lastDot = pathname.lastIndexOf(".");
-      if (lastDot > 0) {
-        const prefix = pathname.substring(0, lastDot);
-        const ext = pathname.substring(lastDot);
-        const sized = `${prefix}-450x300${ext}`;
-        return u.origin + sized;
-      }
-
-      return url;
-    } catch (e) {
-      // If URL parsing fails, fallback to simple transformation heuristics
-      if (url.includes("?")) {
-        return url + "&w=450&h=300";
-      }
-      const dot = url.lastIndexOf(".");
-      if (dot > 0) {
-        return url.substring(0, dot) + "-450x300" + url.substring(dot);
-      }
-      return url;
+  const getDrivetrainIcon = (drivetrain: string) => {
+    switch (drivetrain?.toLowerCase()) {
+      case "awd":
+      case "4wd":
+        return "4WD";
+      case "fwd":
+        return "FWD";
+      case "rwd":
+        return "RWD";
+      default:
+        return drivetrain;
     }
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
-      <div className="relative">
+    <div
+      className={`bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 flex flex-col h-full ${className}`}
+    >
+      {/* Image Container */}
+      <div className="relative aspect-[4/3] overflow-hidden">
         <img
-          src={getMediumImage(vehicle.images ? vehicle.images[0] : "")}
-          alt={vehicle.title}
-          className="w-full object-cover"
-          style={{ height: "200px" }}
+          src={getVehicleImageUrl(vehicle)}
+          alt={getVehicleTitle(vehicle)}
+          className="w-full h-full object-cover"
+          loading="lazy"
         />
-        {vehicle.featured && (
-          <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1.5 rounded-full carzino-featured-badge font-medium">
-            Featured!
+
+        {/* Favorite Button */}
+        <button
+          onClick={handleFavoriteClick}
+          className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-200 ${
+            isFavorite
+              ? "bg-red-600 text-white hover:bg-red-700"
+              : "bg-white/80 text-gray-600 hover:bg-white hover:text-red-600"
+          }`}
+          title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          <Heart className={`w-4 h-4 ${isFavorite ? "fill-current" : ""}`} />
+        </button>
+
+        {/* Condition Badge */}
+        <div className="absolute top-3 left-3">
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium border ${getConditionBadgeColor(vehicle.condition)}`}
+          >
+            {vehicle.condition}
+          </span>
+        </div>
+
+        {/* Certified Badge */}
+        {vehicle.certified && (
+          <div className="absolute bottom-3 left-3">
+            <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-600 text-white">
+              Certified
+            </span>
           </div>
         )}
       </div>
 
-      <div className="p-3 flex-1 flex flex-col">
-        <div className="flex gap-2 mb-2 items-center justify-between">
-          <div className="flex gap-2 items-center">
-            {vehicle.badges.map((badge, index) => (
-              <span
-                key={index}
-                className="carzino-badge-label px-2 py-1 rounded font-medium"
-                style={{
-                  borderRadius: "7px",
-                  backgroundColor: "#f9fafb",
-                  color: "rgb(21, 41, 109)",
-                }}
-              >
-                {badge}
-              </span>
-            ))}
-            {vehicle.viewed && (
-              <span
-                className="carzino-badge-label px-2 py-1 rounded font-medium inline-flex items-center"
-                style={{
-                  borderRadius: "7px",
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
-                  color: "rgb(21, 41, 109)",
-                }}
-              >
-                Viewed{" "}
-                <Check
-                  className="w-3 h-3 ml-0.5"
-                  style={{ color: "rgb(21, 41, 109)" }}
-                />
-              </span>
-            )}
-            <Heart
-              className={`w-4 h-4 cursor-pointer transition-colors ml-1 ${
-                isFavorited(vehicle.id)
-                  ? "text-red-600 fill-red-600"
-                  : "text-red-600 stroke-red-600 fill-white"
-              }`}
-              onClick={() => onToggleFavorite(vehicle)}
-            />
-            {keeperMessage === vehicle.id && (
-              <span className="text-xs text-gray-600 ml-1 animate-pulse">
-                That's a Keeper!
-              </span>
-            )}
-          </div>
-        </div>
-
-        <h3 className="carzino-vehicle-title text-gray-900 mb-2 leading-tight overflow-hidden whitespace-nowrap text-ellipsis">
-          {vehicle.title}
+      {/* Content */}
+      <div className="p-4 flex-1 flex flex-col">
+        {/* Title */}
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+          {getVehicleTitle(vehicle)}
         </h3>
 
-        <div className="flex items-center justify-start mb-3 pb-2 border-b border-gray-200 carzino-vehicle-details">
-          <div className="flex items-center gap-1 mr-4">
-            {vehicle.mileageIcon ? (
-              <img
-                src={vehicle.mileageIcon}
-                alt="Mileage icon"
-                className="w-4 h-4 object-contain"
-              />
-            ) : (
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2b268dcc254a4017a2ef9d9e1c9b3acb?format=webp&width=800"
-                alt="Speedometer"
-                className="w-4 h-4 object-contain"
-              />
-            )}
-            <span className="text-black font-medium">
-              {vehicle.mileage} Mi.
+        {/* Key Details */}
+        <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+          <span>{formatMileage(vehicle.mileage)} miles</span>
+          <span>•</span>
+          <span>{getDrivetrainIcon(vehicle.drivetrain)}</span>
+          <span>•</span>
+          <span>{vehicle.fuel_type}</span>
+        </div>
+
+        {/* Additional Details */}
+        <div className="text-sm text-gray-600 mb-3 space-y-1">
+          <div className="flex justify-between">
+            <span>Engine:</span>
+            <span>
+              {vehicle.engine_cylinders}L {vehicle.transmission}
             </span>
           </div>
-          <div className="flex items-center gap-1 mr-4">
-            {vehicle.transmissionIcon ? (
-              <img
-                src={vehicle.transmissionIcon}
-                alt="Transmission icon"
-                className="w-4 h-4 object-contain"
-              />
-            ) : (
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F209b197e983f494e94b04a7d87b79174?format=webp&width=800"
-                alt="Car parts"
-                className="w-4 h-4 object-contain"
-              />
-            )}
-            <span className="text-black font-medium">
-              {(() => {
-                const t = (vehicle.transmission || "").toString().trim();
-                if (!t) return "";
-                // Normalize common variants to 'Auto'
-                if (/^auto(matic)?$/i.test(t)) return "Auto";
-                return t;
-              })()}
-            </span>
+          <div className="flex justify-between">
+            <span>Exterior:</span>
+            <span>{vehicle.exterior_color_generic}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="w-4 h-4 text-gray-600 flex items-center justify-center">
-              {vehicle.doorIcon ? (
-                <img
-                  src={vehicle.doorIcon}
-                  alt="Door icon"
-                  className="w-4 h-4 object-contain"
-                />
-              ) : (
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff5793a859e2548bc9bc984fcae57131c?format=webp&width=800"
-                  alt="Car door"
-                  className="w-4 h-4 object-contain"
-                />
-              )}
-            </div>
-            <span className="text-black font-medium">
-              {vehicle.doors.replace(/doors/g, "Doors")}
-            </span>
+          <div className="flex justify-between">
+            <span>MPG:</span>
+            <span>{vehicle.highway_mpg} highway</span>
           </div>
         </div>
 
-        <div className="flex justify-center items-start gap-6 mb-1 flex-1">
-          {hasValidSalePrice() ? (
-            <>
-              <div className="text-center">
-                <div className="carzino-price-label text-gray-500 mb-0">
-                  Sale Price
-                </div>
-                <div className="carzino-price-value text-gray-900">
-                  {vehicle.salePrice}
-                </div>
-              </div>
+        {/* Seller Info */}
+        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+          <MapPin className="w-4 h-4" />
+          <span>{vehicle.seller_type}</span>
+        </div>
 
-              {/* Payments shown only when a valid sale price exists. */}
-              <>
-                <div className="w-px h-12 bg-gray-200"></div>
-                <div className="text-center">
-                  <div className="carzino-price-label text-gray-500 mb-0">
-                    Payments
-                  </div>
-                  <div className="carzino-price-value text-red-600">
-                    {getDisplayPayment()}
-                    <span className="text-xs text-black font-normal">/mo*</span>
-                  </div>
-                </div>
-              </>
-            </>
+        {/* Spacer */}
+        <div className="flex-1"></div>
+
+        {/* Price and Payment Info */}
+        <div className="border-t pt-3 mt-auto">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-2xl font-bold text-gray-900">
+              {vehicle.price && vehicle.price > 0 ? formatPrice(vehicle.price) : "No Sale Price Listed"}
+            </div>
+            {vehicle.title_status !== "Clean" && (
+              <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
+                {vehicle.title_status} Title
+              </span>
+            )}
+          </div>
+
+          {/* Payment Details */}
+          {vehicle.price && vehicle.price > 0 ? (
+            <div className="text-sm text-gray-600">
+              <div className="flex justify-between items-center">
+                <span>Est. Payment:</span>
+                <span className="font-medium">
+                  {vehicle.payments && vehicle.payments > 0
+                    ? formatPrice(vehicle.payments) + "/mo"
+                    : (() => {
+                        try {
+                          const params = {
+                            salePrice: vehicle.price,
+                            downPayment: vehicle.down_payment || 0,
+                            interestRate: vehicle.interest_rate || 5,
+                            loanTermMonths: vehicle.loan_term || 60,
+                          };
+                          const res = calculateMonthlyPayment(params as any);
+                          return `$${Math.round(res.monthlyPayment).toLocaleString()}/mo`;
+                        } catch (e) {
+                          return "Call for Price";
+                        }
+                      })()
+                  }
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span>
+                  {vehicle.interest_rate}% APR • {vehicle.loan_term} months
+                </span>
+                <span>Down: {formatPrice(vehicle.down_payment)}</span>
+              </div>
+            </div>
           ) : (
-            <div className="text-center">
-              <div className="carzino-price-label text-gray-500 mb-0">
-                No Sale Price Listed
-              </div>
-              <div className="carzino-price-value text-gray-900">
-                Call for Price
-              </div>
+            <div className="text-sm text-gray-600">
+              <div className="carzino-price-value text-gray-900">Call for Price</div>
             </div>
           )}
         </div>
-      </div>
 
-      <div
-        className="border-t border-gray-100 px-3 py-2 mt-auto"
-        style={{ backgroundColor: "#f9fafb" }}
-      >
-        <div className="flex justify-between items-start">
-          <div className="flex-1 min-w-0">
-            <div
-              className="text-black font-medium truncate"
-              style={{ fontSize: "12px" }}
-            >
-              {vehicle.location}
-            </div>
-            {vehicle.seller_account_number && (
-              <div
-                className="text-xs text-gray-500 mt-1 truncate hidden"
-                style={{ fontSize: "10px" }}
-              >
-                {vehicle.seller_account_number}
-              </div>
-            )}
-          </div>
-          <div className="text-right flex-shrink-0">
-            <div
-              className="text-black hover:text-gray-600 cursor-pointer"
-              style={{ fontSize: "12px", fontWeight: 500 }}
-            >
-              {vehicle.seller_type}
-            </div>
+        {/* Action Buttons */}
+        <div className="flex gap-2 mt-4">
+          <button className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors duration-200 text-sm font-medium">
+            View Details
+          </button>
+          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200 text-sm font-medium">
+            Contact
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Loading skeleton component
+export function VehicleCardSkeleton({
+  className = "",
+}: {
+  className?: string;
+}) {
+  return (
+    <div
+      className={`bg-white border border-gray-200 rounded-lg overflow-hidden animate-pulse ${className}`}
+    >
+      <div className="aspect-[4/3] bg-gray-200"></div>
+      <div className="p-4">
+        <div className="h-6 bg-gray-200 rounded mb-2"></div>
+        <div className="h-4 bg-gray-200 rounded mb-3 w-3/4"></div>
+        <div className="space-y-2 mb-3">
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded"></div>
+        </div>
+        <div className="h-4 bg-gray-200 rounded mb-3 w-1/2"></div>
+        <div className="border-t pt-3">
+          <div className="h-8 bg-gray-200 rounded mb-2 w-1/3"></div>
+          <div className="h-4 bg-gray-200 rounded mb-4"></div>
+          <div className="flex gap-2">
+            <div className="flex-1 h-10 bg-gray-200 rounded"></div>
+            <div className="h-10 w-20 bg-gray-200 rounded"></div>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
