@@ -462,7 +462,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 color: "rgb(17, 24, 39)",
               }}
             >
-              {vehicle.seller_type}
+              {accountTypeSeller || vehicle.seller_type}
             </div>
           </div>
         </div>
