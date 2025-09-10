@@ -65,6 +65,7 @@ export default function Header({ topTemplate }: HeaderProps) {
               alignItems: "center",
               flexBasis: "0%",
               flexGrow: 1,
+              minWidth: 0,
               fontWeight: 400,
               gap: 23,
               justifyContent: "center",
