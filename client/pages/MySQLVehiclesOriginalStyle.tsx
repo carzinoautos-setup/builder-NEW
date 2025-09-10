@@ -1950,7 +1950,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
       } else {
         console.error(
-          `❌ Geocoding API error: ${response.status} ${response.statusText}`,
+          `��� Geocoding API error: ${response.status} ${response.statusText}`,
         );
       }
 
@@ -2121,7 +2121,15 @@ export default function MySQLVehiclesOriginalStyle() {
       className="min-h-screen bg-white main-container"
       style={{ fontFamily: "Albert Sans, sans-serif" }}
     >
-      <NavigationHeader />
+      <NavigationHeader topTemplate={
+        <div className="max-w-[1325px] w-full mx-auto px-4 md:px-6 lg:px-10">
+          {/* Top troubleshooting header content - constrained to 1325px */}
+          <div className="flex items-center justify-between h-[60px]">
+            <div className="text-sm font-medium">Top Header (Debug)</div>
+            <div className="text-sm">Extra</div>
+          </div>
+        </div>
+      } />
       <style>{`
         :root {
           --carzino-featured-badge: 12px;
