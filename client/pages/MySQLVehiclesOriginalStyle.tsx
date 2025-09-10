@@ -18,7 +18,6 @@ import { FilterSection } from "@/components/FilterSection";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
   VehicleRecord,
