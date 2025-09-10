@@ -2625,16 +2625,17 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Desktop Applied Filters */}
             {true && (
               <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200 sticky top-16 z-40 bg-white">
-                <div className="pt-6 flex items-center justify-between mb-2">
-                  <h3 className="carzino-filter-title">Applied Filters</h3>
-                  <button
-                    onClick={clearAllFilters}
-                    className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium hover:bg-red-700"
-                  >
-                    Clear All
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="rounded-lg border border-gray-300 bg-white p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="carzino-filter-title">Applied Filters</h3>
+                    <button
+                      onClick={clearAllFilters}
+                      className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium hover:bg-red-700"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
                   {/* Show free-text search or unified search when appropriate */}
                   {(searchTerm && searchTerm.trim().length > 0) ||
                   (unifiedSearch &&
@@ -3092,6 +3093,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   )}
                 </div>
               </div>
+            </div>
             )}
 
             {/* Distance */}
