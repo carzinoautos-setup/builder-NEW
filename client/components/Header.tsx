@@ -60,8 +60,8 @@ export default function Header({ topTemplate }: HeaderProps) {
       ) : null}
 
       <header className="w-full bg-white shadow-sm relative" style={{ left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw', width: '100vw', boxShadow: '1px 1px 12px 5px rgba(205,200,200,1)', zIndex: 40 }}>
-        {/* Red top bar: 10px on mobile, 20px on desktop */}
-        <div className="w-full bg-red-600 h-2.5 md:h-5" />
+        {/* Red top bar: 5px on mobile, 10px on desktop */}
+        <div className="w-full bg-red-600 h-[5px] md:h-[10px]" />
         <div className="mx-auto w-full max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
           <div className="flex items-center justify-between h-[70px] md:h-[98px]">
             <div className="flex items-center gap-[48px]">
