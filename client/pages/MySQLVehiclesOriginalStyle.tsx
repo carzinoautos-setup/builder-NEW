@@ -2309,7 +2309,8 @@ export default function MySQLVehiclesOriginalStyle() {
           /* Hide mobile filters when header mobile menu is open */
           .header-menu-open .mobile-filter-overlay,
           .header-menu-open .mobile-filter-sidebar,
-          .header-menu-open .mobile-filter-bar {
+          .header-menu-open .mobile-filter-bar,
+          .header-menu-open .mobile-pills {
             display: none !important;
             visibility: hidden !important;
           }
