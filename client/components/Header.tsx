@@ -28,7 +28,7 @@ export default function Header({ topTemplate }: HeaderProps) {
 
   // mobile panel class with reduced height
   const mobilePanelClass =
-    "md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-[220] max-h-[50vh] overflow-auto transition-all duration-150 origin-top " +
+    "md:hidden fixed left-0 right-0 bg-white shadow-md z-[220] max-h-[50vh] overflow-auto transition-all duration-150 origin-top " +
     (mobileOpen ? "block" : "hidden");
 
 
