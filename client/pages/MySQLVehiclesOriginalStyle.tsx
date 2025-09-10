@@ -2305,6 +2305,13 @@ export default function MySQLVehiclesOriginalStyle() {
             transform: translateX(0);
           }
 
+          /* Hide mobile filters when header mobile menu is open */
+          .header-menu-open .mobile-filter-overlay,
+          .header-menu-open .mobile-filter-sidebar {
+            display: none !important;
+            visibility: hidden !important;
+          }
+
           .mobile-chevron {
             width: 22px !important;
             height: 22px !important;
