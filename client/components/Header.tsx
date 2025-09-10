@@ -25,7 +25,7 @@ export default function Header({ topTemplate }: HeaderProps) {
   }, [mobileOpen]);
 
   const mobilePanelClass =
-    "md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-[220] max-h-[calc(100vh-98px)] overflow-auto transition-all duration-150 origin-top " +
+    "md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-[220] max-h-[75vh] overflow-auto transition-all duration-150 origin-top " +
     (mobileOpen ? "block" : "hidden");
 
   useEffect(() => {
