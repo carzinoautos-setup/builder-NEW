@@ -2290,7 +2290,7 @@ export default function MySQLVehiclesOriginalStyle() {
             left: 0;
             bottom: 0;
             background: white;
-            z-index: 70;
+            z-index: 20;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
             width: 100% !important;
