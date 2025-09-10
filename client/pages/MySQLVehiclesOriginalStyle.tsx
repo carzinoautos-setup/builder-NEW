@@ -2295,6 +2295,7 @@ export default function MySQLVehiclesOriginalStyle() {
             transition: transform 0.3s ease;
             width: 100% !important;
             max-width: 100% !important;
+            max-height: 75vh;
             overflow-y: auto !important;
             overflow-x: hidden;
             display: block !important;
@@ -3898,7 +3899,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     <option value="25000">Under 25,000 Miles</option>
                     <option value="25000-50000">25,000–50,000 Miles</option>
                     <option value="50000-75000">50,000–75,000 Miles</option>
-                    <option value="75000-100000">75,000���100,000 Miles</option>
+                    <option value="75000-100000">75,000–100,000 Miles</option>
                     <option value="100000-150000">100,000–150,000 Miles</option>
                     <option value="150000+">150,000+ Miles</option>
                   </select>
