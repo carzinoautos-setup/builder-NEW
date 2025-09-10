@@ -18,6 +18,7 @@ import { FilterSection } from "@/components/FilterSection";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
   VehicleRecord,
@@ -2121,15 +2122,8 @@ export default function MySQLVehiclesOriginalStyle() {
       className="min-h-screen bg-white main-container"
       style={{ fontFamily: "Albert Sans, sans-serif" }}
     >
-      <NavigationHeader topTemplate={
-        <div className="max-w-[1325px] w-full mx-auto px-4 md:px-6 lg:px-10">
-          {/* Top troubleshooting header content - constrained to 1325px */}
-          <div className="flex items-center justify-between h-[60px]">
-            <div className="text-sm font-medium">Top Header (Debug)</div>
-            <div className="text-sm">Extra</div>
-          </div>
-        </div>
-      } />
+      <Header />
+      <NavigationHeader />
       <style>{`
         :root {
           --carzino-featured-badge: 12px;
@@ -5299,7 +5293,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          ��
+                          ����
                         </button>
                       </span>
                     ))}
