@@ -126,7 +126,7 @@ export default function Header({ topTemplate }: HeaderProps) {
           </div>
         </div>
 
-        <div ref={panelRef} className={mobilePanelClass}>
+        <div ref={panelRef} className={mobilePanelClass} style={{ zIndex: 99999 }}>
           <div className="mx-auto max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
             <div className="flex flex-col py-4">
               <a href="#" className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
