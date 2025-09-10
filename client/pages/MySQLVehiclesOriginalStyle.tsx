@@ -18,7 +18,6 @@ import { FilterSection } from "@/components/FilterSection";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
-import Footer from "@/components/Footer";
 import {
   VehicleRecord,
   VehiclesApiResponse,
@@ -5875,7 +5874,12 @@ export default function MySQLVehiclesOriginalStyle() {
         </div>
       </div>
 
-      <Footer />
+      {/* Full-width footer placeholder for custom footer design */}
+      <div id="footer-row" className="w-full bg-white border-t border-gray-200" style={{ minHeight: 240 }}>
+        <div className="max-w-[1325px] mx-auto p-6">
+          {/* Place your footer content here (this area spans full width with centered max width container) */}
+        </div>
+      </div>
 
     </div>
   );
