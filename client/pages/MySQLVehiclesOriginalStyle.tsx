@@ -5420,7 +5420,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     appliedFilters.make.length === 0 &&
                     appliedFilters.model.length === 0 &&
                     appliedFilters.trim.length === 0)) && (
-                  <div className="lg:hidden px-3 py-2 overflow-x-auto bg-white flex gap-2 items-center">
+                  <div className="lg:hidden px-3 py-2 overflow-x-auto bg-white flex gap-2 items-center mobile-pills">
                     <button
                       onClick={clearAllFilters}
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
