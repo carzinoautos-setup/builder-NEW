@@ -31,9 +31,6 @@ export default function Header({ topTemplate }: HeaderProps) {
     "md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-[220] max-h-[50vh] overflow-auto transition-all duration-150 origin-top " +
     (mobileOpen ? "block" : "hidden");
 
-  const mobilePanelClass =
-    "md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-[220] max-h-[75vh] overflow-auto transition-all duration-150 origin-top " +
-    (mobileOpen ? "block" : "hidden");
 
   useEffect(() => {
     // add class to body to allow other components to hide when header menu is open
