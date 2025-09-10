@@ -5875,7 +5875,7 @@ export default function MySQLVehiclesOriginalStyle() {
       </div>
 
       {/* Full-width footer placeholder for custom footer design */}
-      <div id="footer-row" className="w-full bg-white border-t border-gray-200" style={{ minHeight: 240 }}>
+      <div id="footer-row" className="bg-white border-t border-gray-200" style={{ minHeight: 240, width: '100vw', marginLeft: 'calc(50% - 50vw)', position: 'relative', zIndex: 10 }}>
         <div className="max-w-[1325px] mx-auto p-6">
           {/* Place your footer content here (this area spans full width with centered max width container) */}
         </div>
