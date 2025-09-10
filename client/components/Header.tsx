@@ -53,19 +53,19 @@ export default function Header({ topTemplate }: HeaderProps) {
             </div>
 
             <nav className="hidden lg:flex flex-1 items-center justify-center min-w-0 gap-[23px]" aria-label="Primary">
-              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors" href="#">
                 Cars For Sale
               </a>
-              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors" href="#">
                 Trade in your car
               </a>
-              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors" href="#">
                 Sell your car
               </a>
-              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors" href="#">
                 Dealers
               </a>
-              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors" href="#">
                 Contact
               </a>
             </nav>
