@@ -40,6 +40,7 @@ export default function Header({ topTemplate }: HeaderProps) {
             justifyContent: "space-between",
             maxWidth: 1325,
             width: "100%",
+            boxShadow: "1px 1px 12px 8px rgba(0, 0, 0, 1)",
             margin: "0 auto",
             padding: "0 40px",
           }}
