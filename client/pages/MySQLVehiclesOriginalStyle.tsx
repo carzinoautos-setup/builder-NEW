@@ -5875,9 +5875,19 @@ export default function MySQLVehiclesOriginalStyle() {
       </div>
 
       {/* Full-width footer placeholder for custom footer design */}
-      <div id="footer-row" className="bg-white border-t border-gray-200" style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', position: 'relative', zIndex: 10, paddingTop: '2.5rem', paddingBottom: '2.5rem' }}>
+      <div id="footer-row" className="w-full bg-black text-white border-t border-gray-200">
         <div className="max-w-[1325px] mx-auto p-6">
-          {/* Place your footer content here (this area spans full width with centered max width container) */}
+          <div className="flex items-start gap-6">
+            <img src="/placeholder.svg" alt="Logo" className="w-28 h-auto" />
+            <div>
+              <h4 className="text-lg font-semibold">Links</h4>
+              <ul className="mt-2 text-sm">
+                <li>Inventory</li>
+                <li>Financing</li>
+                <li>Contact</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 
