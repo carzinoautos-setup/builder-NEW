@@ -70,6 +70,7 @@ export default function Header({ topTemplate }: HeaderProps) {
 
             {/* Right / Actions */}
             <div className="flex items-center gap-3">
+              {/* Desktop actions */}
               <div className="hidden md:flex items-center gap-3 max-w-[360px]">
                 <button aria-label="search" className="p-[6px] rounded-[8px] bg-transparent border-0 transition-colors duration-150 hover:bg-gray-100">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
@@ -87,27 +88,60 @@ export default function Header({ topTemplate }: HeaderProps) {
 
                 <div className="h-4 w-px bg-gray-300 opacity-50" />
 
-                <a
-                  href="#"
-                  className="flex items-center gap-2 px-2 py-1 rounded-[8px] hover:bg-gray-50 text-red-600 font-medium"
-                >
+                <a href="#" className="flex items-center gap-2 px-2 py-1 rounded-[8px] hover:bg-gray-50 text-red-600 font-medium">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
                     <path d="M21.6484 19.875C20.2206 17.4065 18.0203 15.6365 15.4525 14.7975C16.7226 14.0414 17.7094 12.8892 18.2614 11.5179C18.8134 10.1467 18.8999 8.63211 18.5078 7.20688C18.1157 5.78165 17.2666 4.52454 16.0909 3.6286C14.9151 2.73266 13.4778 2.24744 11.9996 2.24744C10.5215 2.24744 9.08414 2.73266 7.90842 3.6286C6.73269 4.52454 5.88358 5.78165 5.49146 7.20688C5.09935 8.63211 5.18592 10.1467 5.73788 11.5179C6.28984 12.8892 7.27668 14.0414 8.54683 14.7975C5.97902 15.6356 3.77871 17.4056 2.35089 19.875C2.29853 19.9604 2.2638 20.0554 2.24875 20.1544 2.2337 20.2534 2.23863 20.3544 2.26326 20.4515" fill="#24272C" />
                   </svg>
                   <span className="text-red-600 font-medium">Sign up</span>
                 </a>
-              </div>
+                </div>
 
-            {/* Menu button (mobile only) */}
-            <button
-              aria-label="menu"
-              className="flex items-center border border-red-600 rounded-[14px] border-[0.888889px] justify-center px-3 py-2 md:hidden text-red-600"
-              onClick={() => setMobileOpen((s) => !s)}
-              aria-expanded={mobileOpen}
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
-                <path d="M13.125 14.375V17.1875C13.125 17.705 12.705 18.125 12.1875 18.125H4.0625C3.81386 18.125 3.5754 18.0262 3.39959 17.8504C3.22377 17.6746 3.125 17.4361 3.125 17.1875V6.5625C3.125 6.045 3.545 5.625 4.0625 5.625H5.625C6.04381 5.62472 6.46192 5.65928 6.875 5.72834M13.125 14.375H15.9375C16.455 14.375 16.875 13.955 16.875 13.4375V9.375C16.875 5.65834 14.1725 2.57417 10.625 1.97834C10.2119 1.90928 9.79381 1.87472 9.375 1.875H7.8125C7.295 1.875 6.875 2.295 6.875 2.8125V5.72834M13.125 14.375H7.8125C7.56386 14.375 7.3254 14.2762 7.14959 14.1004C6.97377 13.9246 6.875 13.6861 6.875 13.4375V5.72834M16.875 11.25V9.6875C16.875 8.94158 16.5787 8.22621 16.0512 7.69876C15.5238 7.17132 14.8084 6.875 14.0625 6.875H12.8125C12.5639 6.875 12.3254 6.77623 12.1496 6.60041C11.9738 6.4246 11.875 6.18614 11.875 5.9375V4.6875C11.875 4.31816 11.8023 3.95243 11.6609 3.6112C11.5196 3.26998 11.3124 2.95993 11.0512 2.69876C10.7901 2.4376 10.48 2.23043 10.1388 2.08909C9.79757 1.94775 9.43184 1.875 9.0625 1.875H8.125" stroke="#E82121" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+              {/* Menu button (mobile only) */}
+              <button
+                aria-label="menu"
+                className="flex items-center border border-red-600 rounded-[14px] border-[0.888889px] justify-center px-3 py-2 md:hidden text-red-600"
+                onClick={() => setMobileOpen((s) => !s)}
+                aria-expanded={mobileOpen}
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+                  <path d="M13.125 14.375V17.1875C13.125 17.705 12.705 18.125 12.1875 18.125H4.0625C3.81386 18.125 3.5754 18.0262 3.39959 17.8504C3.22377 17.6746 3.125 17.4361 3.125 17.1875V6.5625C3.125 6.045 3.545 5.625 4.0625 5.625H5.625C6.04381 5.62472 6.46192 5.65928 6.875 5.72834M13.125 14.375H15.9375C16.455 14.375 16.875 13.955 16.875 13.4375V9.375C16.875 5.65834 14.1725 2.57417 10.625 1.97834C10.2119 1.90928 9.79381 1.87472 9.375 1.875H7.8125C7.295 1.875 6.875 2.295 6.875 2.8125V5.72834M13.125 14.375H7.8125C7.56386 14.375 7.3254 14.2762 7.14959 14.1004C6.97377 13.9246 6.875 13.6861 6.875 13.4375V5.72834M16.875 11.25V9.6875C16.875 8.94158 16.5787 8.22621 16.0512 7.69876C15.5238 7.17132 14.8084 6.875 14.0625 6.875H12.8125C12.5639 6.875 12.3254 6.77623 12.1496 6.60041C11.9738 6.4246 11.875 6.18614 11.875 5.9375V4.6875C11.875 4.31816 11.8023 3.95243 11.6609 3.6112C11.5196 3.26998 11.3124 2.95993 11.0512 2.69876C10.7901 2.4376 10.48 2.23043 10.1388 2.08909C9.79757 1.94775 9.43184 1.875 9.0625 1.875H8.125" stroke="#E82121" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+          </div>
+        </div>
 
-We need to add mobile panel and finish tags. The current file ends before closing some tags. Let's append remaining content to close divs and add mobile menu panel. I'll write the rest of file now. (This is internal note.)
+        {/* Mobile dropdown panel */}
+        <div
+          ref={panelRef}
+          className={`md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-50 transition-all duration-150 origin-top ${
+            mobileOpen ? "block" : "hidden"
+          }`}
+        >
+          <div className="mx-auto max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
+            <div className="flex flex-col py-4">
+              <a href="#" className="py-2 text-gray-800 font-medium">
+                Cars For Sale
+              </a>
+              <a href="#" className="py-2 text-gray-800 font-medium">
+                Trade in your car
+              </a>
+              <a href="#" className="py-2 text-gray-800 font-medium">
+                Sell your car
+              </a>
+              <a href="#" className="py-2 text-gray-800 font-medium">
+                Dealers
+              </a>
+              <a href="#" className="py-2 text-gray-800 font-medium">
+                Contact
+              </a>
+              <div className="border-t border-gray-100 my-2" />
+              <a href="#" className="py-2 text-red-600 font-medium">
+                Sign up
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
