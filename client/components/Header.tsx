@@ -98,7 +98,7 @@ export default function Header({ topTemplate }: HeaderProps) {
 
               <button
                 aria-label="menu"
-                className="flex items-center border border-red-600 rounded-[14px] border-[0.888889px] justify-center px-3 py-2 md:hidden text-red-600"
+                className="flex items-center justify-center md:hidden p-2"
                 onClick={() => setMobileOpen((s) => !s)}
                 aria-expanded={mobileOpen}
               >
