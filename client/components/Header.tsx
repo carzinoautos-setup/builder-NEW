@@ -42,7 +42,8 @@ export default function Header({ topTemplate }: HeaderProps) {
             width: "100%",
             boxShadow: "0 6px 12px rgba(0,0,0,0.04)",
             margin: "0 auto",
-            padding: "0 40px",
+            padding: "0 16px",
+            boxSizing: "border-box",
           }}
         >
           <div
