@@ -137,7 +137,7 @@ export default function Header({ topTemplate }: HeaderProps) {
         <div
           ref={panelRef}
           className={mobilePanelClass}
-          style={{ zIndex: 99999, maxHeight: '60vh', height: '60vh' }}
+          style={{ zIndex: 99999, maxHeight: '50vh', height: '50vh' }}
           onClick={(e) => {
             // if clicking on the panel background (not the inner content), close menu
             if (e.target === panelRef.current) {
