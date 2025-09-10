@@ -2361,7 +2361,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
       `}</style>
 
-      <div className="flex flex-col lg:flex-row min-h-screen max-w-[1325px] mx-auto">
+      <div className="flex flex-col lg:flex-row min-h-screen max-w-[1325px] mx-auto pb-40">
         <div
           className={`mobile-filter-overlay lg:hidden ${mobileFiltersOpen ? "open" : ""}`}
           onClick={() => setMobileFiltersOpen(false)}
