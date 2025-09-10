@@ -123,7 +123,7 @@ export default function Header({ topTemplate }: HeaderProps) {
                 aria-label="menu"
                 className="flex items-center justify-center md:hidden p-2"
                 onMouseDown={(e) => e.stopPropagation()}
-                onClick={() => setMobileOpen((s) => !s)}
+                onClick={(e) => { e.stopPropagation(); setMobileOpen((s) => !s); }}
                 aria-expanded={mobileOpen}
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
