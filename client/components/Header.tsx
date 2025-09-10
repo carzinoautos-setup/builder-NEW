@@ -24,6 +24,10 @@ export default function Header({ topTemplate }: HeaderProps) {
     };
   }, [mobileOpen]);
 
+  const mobilePanelClass =
+    "md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-50 transition-all duration-150 origin-top " +
+    (mobileOpen ? "block" : "hidden");
+
   return (
     <>
       {topTemplate ? (
@@ -38,7 +42,6 @@ export default function Header({ topTemplate }: HeaderProps) {
       <header className="w-full bg-white shadow-sm relative">
         <div className="mx-auto w-full max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
           <div className="flex items-center justify-between h-[98px]">
-            {/* Left / Logo */}
             <div className="flex items-center gap-[48px]">
               <a href="/" className="inline-block" aria-label="Home">
                 <img
@@ -49,8 +52,7 @@ export default function Header({ topTemplate }: HeaderProps) {
               </a>
             </div>
 
-            {/* Center / Nav */}
-            <nav className="flex items-center flex-1 justify-center min-w-0 gap-[23px] hidden lg:flex" aria-label="Primary">
+            <nav className="hidden lg:flex flex-1 items-center justify-center min-w-0 gap-[23px]" aria-label="Primary">
               <a className="text-gray-800 font-medium whitespace-nowrap" href="#">
                 Cars For Sale
               </a>
@@ -68,11 +70,9 @@ export default function Header({ topTemplate }: HeaderProps) {
               </a>
             </nav>
 
-            {/* Right / Actions */}
             <div className="flex items-center gap-3">
-              {/* Desktop actions */}
               <div className="hidden md:flex items-center gap-3 max-w-[360px]">
-                <button aria-label="search" className="p-[6px] rounded-[8px] bg-transparent border-0 transition-colors duration-150 hover:bg-gray-100">
+                <button aria-label="search" className="p-[6px] rounded-[8px] hover:bg-gray-100">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
                     <path d="M21.5306 20.4693L16.8365 15.7762C18.1971 14.1428 18.8755 12.0478 18.7307 9.92691C18.5859 7.80604 17.629 5.82265 16.0591 4.38932C14.4892 2.95599 12.4271 2.18308 10.3019 2.23138C8.17663 2.27968 6.15181 3.14547 4.64864 4.64864C3.14547 6.15181 2.27968 8.17663 2.23138 10.3019C2.18308 12.4271 2.95599 14.4892 4.38932 16.0591C5.82265 17.629 7.80604 18.5859 9.92691 18.7307C12.0478 18.8755 14.1428 18.1971 15.7762 16.8365L20.4693 21.5306C20.539 21.6003 20.6218 21.6556 20.7128 21.6933C20.8038 21.731 20.9014 21.7504 21 21.7504C21.0985 21.7504 21.1961 21.731 21.2871 21.6933C21.3782 21.6556 21.4609 21.6003 21.5306 21.5306C21.6003 21.4609 21.6556 21.3782 21.6933 21.2871C21.731 21.1961 21.7504 21.0985 21.7504 21C21.7504 20.9014 21.731 20.8038 21.6933 20.7128C21.6556 20.6218 21.6003 20.539 21.5306 20.4693ZM3.74997 10.5C3.74997 9.16495 4.14585 7.8599 4.88755 6.74987C5.62925 5.63984 6.68346 4.77467 7.91686 4.26378C9.15026 3.75289 10.5075 3.61922 11.8168 3.87967C13.1262 4.14012 14.3289 4.78299 15.2729 5.727C16.2169 6.671 16.8598 7.87374 17.1203 9.18311C17.3807 10.4925 17.2471 11.8497 16.7362 13.0831C16.2253 14.3165 15.3601 15.3707 14.2501 16.1124C13.14 16.8541 11.835 17.25 10.5 17.25C8.71037 17.248 6.99463 16.5362 5.72919 15.2708C4.46375 14.0053 3.75196 12.2896 3.74997 10.5Z" fill="#24272C" />
                   </svg>
@@ -80,7 +80,7 @@ export default function Header({ topTemplate }: HeaderProps) {
 
                 <div className="h-4 w-px bg-gray-300 opacity-50" />
 
-                <button aria-label="notifications" className="p-[6px] rounded-[8px] bg-transparent border-0 transition-colors duration-150 hover:bg-gray-100">
+                <button aria-label="notifications" className="p-[6px] rounded-[8px] hover:bg-gray-100">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
                     <path d="M16.6875 3C14.7516 3 13.0566 3.8325 12 5.23969C10.9434 3.8325 9.24844 3 7.3125 3C5.77146 3.00174 4.29404 3.61468 3.20436 4.70436C2.11468 5.79404 1.50174 7.27146 1.5 8.8125C1.5 15.375 11.2303 20.6869 11.6447 20.9062C11.7539 20.965 11.876 20.9958 12 20.9958C12.124 20.9958 12.2461 20.965 12.3553 20.9062C12.7697 20.6869 22.5 15.375 22.5 8.8125C22.4983 7.27146 21.8853 5.79404 20.7956 4.70436C19.706 3.61468 18.2285 3.00174 16.6875 3ZM12 19.3875C10.2881 18.39 3 13.8459 3 8.8125C3.00149 7.66921 3.45632 6.57317 4.26475 5.76475C5.07317 4.95632 6.16921 4.50149 7.3125 4.5C9.13594 4.5 10.6669 5.47125 11.3062 7.03125C11.3628 7.16881 11.4589 7.28646 11.5824 7.36926C11.7059 7.45207 11.8513 7.49627 12 7.49627C12.1487 7.49627 12.2941 7.45207 12.4176 7.36926C12.5411 7.28646 12.6372 7.16881 12.6937 7.03125C13.3331 5.46844 14.8641 4.5 16.6875 4.5C17.8308 4.50149 18.9268 4.95632 19.7353 5.76475C20.5437 6.57317 20.9985 7.66921 21 8.8125C21 13.8384 13.71 18.3891 12 19.3875Z" fill="#24272C" />
                   </svg>
@@ -94,9 +94,8 @@ export default function Header({ topTemplate }: HeaderProps) {
                   </svg>
                   <span className="text-red-600 font-medium">Sign up</span>
                 </a>
-                </div>
+              </div>
 
-              {/* Menu button (mobile only) */}
               <button
                 aria-label="menu"
                 className="flex items-center border border-red-600 rounded-[14px] border-[0.888889px] justify-center px-3 py-2 md:hidden text-red-600"
@@ -107,16 +106,11 @@ export default function Header({ topTemplate }: HeaderProps) {
                   <path d="M13.125 14.375V17.1875C13.125 17.705 12.705 18.125 12.1875 18.125H4.0625C3.81386 18.125 3.5754 18.0262 3.39959 17.8504C3.22377 17.6746 3.125 17.4361 3.125 17.1875V6.5625C3.125 6.045 3.545 5.625 4.0625 5.625H5.625C6.04381 5.62472 6.46192 5.65928 6.875 5.72834M13.125 14.375H15.9375C16.455 14.375 16.875 13.955 16.875 13.4375V9.375C16.875 5.65834 14.1725 2.57417 10.625 1.97834C10.2119 1.90928 9.79381 1.87472 9.375 1.875H7.8125C7.295 1.875 6.875 2.295 6.875 2.8125V5.72834M13.125 14.375H7.8125C7.56386 14.375 7.3254 14.2762 7.14959 14.1004C6.97377 13.9246 6.875 13.6861 6.875 13.4375V5.72834M16.875 11.25V9.6875C16.875 8.94158 16.5787 8.22621 16.0512 7.69876C15.5238 7.17132 14.8084 6.875 14.0625 6.875H12.8125C12.5639 6.875 12.3254 6.77623 12.1496 6.60041C11.9738 6.4246 11.875 6.18614 11.875 5.9375V4.6875C11.875 4.31816 11.8023 3.95243 11.6609 3.6112C11.5196 3.26998 11.3124 2.95993 11.0512 2.69876C10.7901 2.4376 10.48 2.23043 10.1388 2.08909C9.79757 1.94775 9.43184 1.875 9.0625 1.875H8.125" stroke="#E82121" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
+            </div>
           </div>
         </div>
 
-        {/* Mobile dropdown panel */}
-        <div
-          ref={panelRef}
-          className={`md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-50 transition-all duration-150 origin-top ${
-            mobileOpen ? "block" : "hidden"
-          }`}
-        >
+        <div ref={panelRef} className={mobilePanelClass}>
           <div className="mx-auto max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
             <div className="flex flex-col py-4">
               <a href="#" className="py-2 text-gray-800 font-medium">
