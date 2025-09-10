@@ -18,6 +18,7 @@ import { FilterSection } from "@/components/FilterSection";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
+import Footer from "@/components/Footer";
 import {
   VehicleRecord,
   VehiclesApiResponse,
@@ -5903,27 +5904,7 @@ export default function MySQLVehiclesOriginalStyle() {
         </div>
       </div>
 
-      {/* Full-width footer placeholder for custom footer design */}
-      <div
-        id="footer-row"
-        className="w-full bg-white border-t border-gray-200"
-        style={{
-          width: "100vw",
-          marginLeft: "calc(50% - 50vw)",
-          position: "relative",
-          zIndex: 10,
-          minHeight: "800px",
-        }}
-      >
-        <div className="max-w-[1325px] mx-auto p-6">
-          <div id="footer_v1_container" className="w-full">
-              <div className="bg-gray-900 text-white p-8 rounded-md">
-                <h3 className="text-xl font-semibold">Footer area (footer_v1)</h3>
-                <p className="mt-2 text-sm">Your Builder template should be rendered here. If you still don't see your footer, paste the footer_v1 HTML/JSX here and I'll insert it directly.</p>
-              </div>
-            </div>
-        </div>
-      </div>
+      <Footer />
     </div>
   );
 }
