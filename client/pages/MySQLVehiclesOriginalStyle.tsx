@@ -5406,7 +5406,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          ×
+                          ��
                         </button>
                       </span>
                     ) : null}
@@ -5873,6 +5873,14 @@ export default function MySQLVehiclesOriginalStyle() {
           </div>
         </div>
       </div>
+
+      {/* Full-width footer placeholder for custom footer design */}
+      <div id="footer-row" className="w-full bg-white border-t border-gray-200" style={{ minHeight: 240 }}>
+        <div className="max-w-[1325px] mx-auto p-6">
+          {/* Place your footer content here (this area spans full width with centered max width container) */}
+        </div>
+      </div>
+
     </div>
   );
 }
