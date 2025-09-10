@@ -103,7 +103,7 @@ export default function Header({ topTemplate }: HeaderProps) {
                 aria-expanded={mobileOpen}
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
-                  <path d="M3 6h14M3 12h14M3 18h14" stroke="#E82121" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M3 6h14M3 12h14M3 18h14" stroke="#24272C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             </div>
