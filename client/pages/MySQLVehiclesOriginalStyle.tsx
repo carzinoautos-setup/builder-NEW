@@ -2122,7 +2122,6 @@ export default function MySQLVehiclesOriginalStyle() {
       className="min-h-screen bg-white main-container"
       style={{ fontFamily: "Albert Sans, sans-serif" }}
     >
-      <Header />
       <NavigationHeader />
       <style>{`
         :root {
