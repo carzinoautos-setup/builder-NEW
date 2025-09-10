@@ -177,21 +177,32 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     if (!acct) return;
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout = setTimeout(() => {
+      try {
+        controller.abort();
+      } catch (err) {
+        /* ignore */
+      }
+    }, 5000);
 
     (async () => {
       try {
         const url = `${window.location.origin}/api/sellers/${encodeURIComponent(acct)}`;
-        const resp = await fetch(url, { signal: controller.signal }).catch(
-          () => null,
-        );
+        const resp = await fetch(url, { signal: controller.signal });
         if (!resp || !resp.ok) return;
+        // If the request was aborted before json parsing, avoid parsing
+        if (controller.signal.aborted) return;
         const json = await resp.json().catch(() => null);
         if (mounted && json && json.success && json.data) {
           setSellerInfo(json.data);
         }
-      } catch (e) {
-        // ignore
+      } catch (e: any) {
+        // Ignore AbortError silently, log others
+        if (e && e.name === "AbortError") {
+          // request was aborted (timeout or unmount) - no-op
+        } else {
+          console.warn("VehicleCard: seller fetch error:", e);
+        }
       } finally {
         clearTimeout(timeout);
       }
@@ -200,7 +211,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     return () => {
       mounted = false;
       clearTimeout(timeout);
-      controller.abort();
+      try {
+        if (!controller.signal.aborted) controller.abort();
+      } catch (err) {
+        /* ignore */
+      }
     };
   }, [vehicle.seller_account_number]);
 
