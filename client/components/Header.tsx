@@ -126,26 +126,36 @@ export default function Header({ topTemplate }: HeaderProps) {
           </div>
         </div>
 
-        <div ref={panelRef} className={mobilePanelClass} style={{ zIndex: 99999 }}>
+        <div
+          ref={panelRef}
+          className={mobilePanelClass}
+          style={{ zIndex: 99999 }}
+          onClick={(e) => {
+            // if clicking on the panel background (not the inner content), close menu
+            if (e.target === panelRef.current) {
+              setMobileOpen(false);
+            }
+          }}
+        >
           <div className="mx-auto max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
             <div className="flex flex-col py-4">
-              <a href="#" className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
+              <a href="#" onClick={() => setMobileOpen(false)} className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
                 Cars For Sale
               </a>
-              <a href="#" className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
+              <a href="#" onClick={() => setMobileOpen(false)} className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
                 Trade in your car
               </a>
-              <a href="#" className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
+              <a href="#" onClick={() => setMobileOpen(false)} className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
                 Sell your car
               </a>
-              <a href="#" className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
+              <a href="#" onClick={() => setMobileOpen(false)} className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
                 Dealers
               </a>
-              <a href="#" className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
+              <a href="#" onClick={() => setMobileOpen(false)} className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors">
                 Contact
               </a>
               <div className="border-t border-gray-100 my-2" />
-              <a href="#" className="py-2 text-red-600 font-bold">
+              <a href="#" onClick={() => setMobileOpen(false)} className="py-2 text-red-600 font-bold">
                 Sign up
               </a>
             </div>
