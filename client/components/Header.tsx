@@ -14,15 +14,22 @@ export default function Header({ topTemplate }: HeaderProps) {
     }
     function onDocClick(e: MouseEvent) {
       if (!panelRef.current) return;
+      // if click target is outside the panel, close
       if (mobileOpen && !panelRef.current.contains(e.target as Node)) setMobileOpen(false);
     }
     document.addEventListener("keydown", onKey);
-    document.addEventListener("mousedown", onDocClick);
+    // use click instead of mousedown to avoid ordering issues with button handlers
+    document.addEventListener("click", onDocClick);
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("click", onDocClick);
     };
   }, [mobileOpen]);
+
+  // mobile panel class with reduced height
+  const mobilePanelClass =
+    "md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-[220] max-h-[50vh] overflow-auto transition-all duration-150 origin-top " +
+    (mobileOpen ? "block" : "hidden");
 
   const mobilePanelClass =
     "md:hidden absolute left-0 right-0 top-full bg-white shadow-md z-[220] max-h-[75vh] overflow-auto transition-all duration-150 origin-top " +
