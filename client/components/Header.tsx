@@ -53,19 +53,19 @@ export default function Header({ topTemplate }: HeaderProps) {
             </div>
 
             <nav className="hidden lg:flex flex-1 items-center justify-center min-w-0 gap-[23px]" aria-label="Primary">
-              <a className="text-gray-800 font-medium whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
                 Cars For Sale
               </a>
-              <a className="text-gray-800 font-medium whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
                 Trade in your car
               </a>
-              <a className="text-gray-800 font-medium whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
                 Sell your car
               </a>
-              <a className="text-gray-800 font-medium whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
                 Dealers
               </a>
-              <a className="text-gray-800 font-medium whitespace-nowrap" href="#">
+              <a className="text-gray-800 font-bold whitespace-nowrap" href="#">
                 Contact
               </a>
             </nav>
@@ -113,19 +113,19 @@ export default function Header({ topTemplate }: HeaderProps) {
         <div ref={panelRef} className={mobilePanelClass}>
           <div className="mx-auto max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
             <div className="flex flex-col py-4">
-              <a href="#" className="py-2 text-gray-800 font-medium">
+              <a href="#" className="py-2 text-gray-800 font-bold">
                 Cars For Sale
               </a>
-              <a href="#" className="py-2 text-gray-800 font-medium">
+              <a href="#" className="py-2 text-gray-800 font-bold">
                 Trade in your car
               </a>
-              <a href="#" className="py-2 text-gray-800 font-medium">
+              <a href="#" className="py-2 text-gray-800 font-bold">
                 Sell your car
               </a>
-              <a href="#" className="py-2 text-gray-800 font-medium">
+              <a href="#" className="py-2 text-gray-800 font-bold">
                 Dealers
               </a>
-              <a href="#" className="py-2 text-gray-800 font-medium">
+              <a href="#" className="py-2 text-gray-800 font-bold">
                 Contact
               </a>
               <div className="border-t border-gray-100 my-2" />
