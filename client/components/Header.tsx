@@ -61,7 +61,7 @@ export default function Header({ topTemplate }: HeaderProps) {
 
       <header className="w-full bg-white shadow-sm relative" style={{ left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw', width: '100vw', boxShadow: '1px 1px 12px 5px rgba(205,200,200,1)', zIndex: 40 }}>
         <div className="mx-auto w-full max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
-          <div className="flex items-center justify-between h-[98px]">
+          <div className="flex items-center justify-between h-[70px] md:h-[98px]">
             <div className="flex items-center gap-[48px]">
               <a href="/" className="inline-block" aria-label="Home">
                 <img
