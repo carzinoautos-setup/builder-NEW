@@ -3,8 +3,13 @@ import React from "react";
 export default function Footer() {
   return (
     <footer
-      className="w-full"
       style={{
+        position: "relative",
+        left: "50%",
+        right: "50%",
+        marginLeft: "-50vw",
+        marginRight: "-50vw",
+        width: "100vw",
         backgroundColor: "rgb(36, 39, 44)",
         color: "rgb(255, 255, 255)",
         padding: "40px 64px",
