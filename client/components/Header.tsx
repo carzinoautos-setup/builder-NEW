@@ -115,6 +115,7 @@ export default function Header({ topTemplate }: HeaderProps) {
               <button
                 aria-label="menu"
                 className="flex items-center justify-center md:hidden p-2"
+                onMouseDown={(e) => e.stopPropagation()}
                 onClick={() => setMobileOpen((s) => !s)}
                 aria-expanded={mobileOpen}
               >
