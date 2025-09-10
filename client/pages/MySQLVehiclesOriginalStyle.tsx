@@ -5916,7 +5916,12 @@ export default function MySQLVehiclesOriginalStyle() {
         }}
       >
         <div className="max-w-[1325px] mx-auto p-6">
-          <div id="footer_v1_container" className="w-full"></div>
+          <div id="footer_v1_container" className="w-full">
+              <div className="bg-gray-900 text-white p-8 rounded-md">
+                <h3 className="text-xl font-semibold">Footer area (footer_v1)</h3>
+                <p className="mt-2 text-sm">Your Builder template should be rendered here. If you still don't see your footer, paste the footer_v1 HTML/JSX here and I'll insert it directly.</p>
+              </div>
+            </div>
         </div>
       </div>
     </div>
