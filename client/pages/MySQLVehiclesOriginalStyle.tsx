@@ -5678,7 +5678,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Mobile Product Grid */}
-            <div className="p-4 bg-white min-h-screen pt-4 lg:pt-28">
+            <div className="p-4 bg-white pt-4 lg:pt-28">
               {loading && vehicles.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-lg">Loading vehicles...</div>
@@ -5811,7 +5811,7 @@ export default function MySQLVehiclesOriginalStyle() {
           </div>
 
           {/* Desktop Product Grid */}
-          <div className="hidden md:block p-4 lg:p-4 bg-white min-h-screen">
+          <div className="hidden md:block p-4 lg:p-4 bg-white">
             {viewMode === "favorites" && favoritesCount === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg">
                 <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
