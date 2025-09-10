@@ -61,14 +61,6 @@ export default function Footer() {
   return (
     <footer className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#24272C] text-white py-10 px-4 sm:px-6 lg:px-16">
       <div className="max-w-[1280px] mx-auto">
-        <div className="mb-10">
-          <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/e421d674e9adf980588eb4900a3d949d9f0e742c?width=536"
-            alt="Carzino Logo"
-            className="block h-16"
-          />
-        </div>
-
         <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-8">
           {sections.map((s, idx) => (
             <div key={s.title}>
