@@ -502,6 +502,29 @@ export default function MySQLVehiclesOriginalStyle() {
   // Mobile detection (used to collapse certain filters on small screens)
   const isMobile = useIsMobile();
 
+  const hasAppliedFilters =
+    (appliedLocation && appliedRadius !== "nationwide") ||
+    appliedFilters.condition.length > 0 ||
+    appliedFilters.make.length > 0 ||
+    appliedFilters.model.length > 0 ||
+    appliedFilters.trim.length > 0 ||
+    appliedFilters.year.length > 0 ||
+    appliedFilters.bodyStyle.length > 0 ||
+    appliedFilters.vehicleType.length > 0 ||
+    appliedFilters.driveType.length > 0 ||
+    appliedFilters.exteriorColor.length > 0 ||
+    appliedFilters.sellerType.length > 0 ||
+    Boolean(appliedFilters.mileage) ||
+    Boolean(appliedFilters.priceMin) ||
+    Boolean(appliedFilters.priceMax) ||
+    Boolean(appliedFilters.paymentMin) ||
+    Boolean(appliedFilters.paymentMax) ||
+    (searchTerm && searchTerm.trim().length > 0) ||
+    (unifiedSearch && unifiedSearch.trim().length > 0 &&
+      appliedFilters.make.length === 0 &&
+      appliedFilters.model.length === 0 &&
+      appliedFilters.trim.length === 0);
+
   // Price and payment filter states
   const [priceMin, setPriceMin] = useState("1000");
   const [priceMax, setPriceMax] = useState("50000");
@@ -2624,7 +2647,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
             {/* Desktop Applied Filters */}
             {true && (
-              <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200 sticky top-16 z-40 bg-white">
+              <div className={`hidden lg:block mb-4 pb-4 border-b border-gray-200 bg-white ${hasAppliedFilters ? 'sticky top-16 z-40' : ''}`}>
                 <div className="rounded-lg border border-gray-300 bg-white p-3">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="carzino-filter-title">Applied Filters</h3>
