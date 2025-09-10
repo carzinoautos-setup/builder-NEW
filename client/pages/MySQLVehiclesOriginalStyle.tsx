@@ -2307,7 +2307,8 @@ export default function MySQLVehiclesOriginalStyle() {
 
           /* Hide mobile filters when header mobile menu is open */
           .header-menu-open .mobile-filter-overlay,
-          .header-menu-open .mobile-filter-sidebar {
+          .header-menu-open .mobile-filter-sidebar,
+          .header-menu-open .mobile-filter-bar {
             display: none !important;
             visibility: hidden !important;
           }
@@ -3897,7 +3898,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     <option value="25000">Under 25,000 Miles</option>
                     <option value="25000-50000">25,000–50,000 Miles</option>
                     <option value="50000-75000">50,000–75,000 Miles</option>
-                    <option value="75000-100000">75,000–100,000 Miles</option>
+                    <option value="75000-100000">75,000���100,000 Miles</option>
                     <option value="100000-150000">100,000–150,000 Miles</option>
                     <option value="150000+">150,000+ Miles</option>
                   </select>
