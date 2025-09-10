@@ -55,7 +55,10 @@ export default function Header() {
           >
             Sell your car
           </a>
-          <div data-loc="client/components/Header.tsx:32:13" style={{ color: "#24272C" }}>
+          <div
+            data-loc="client/components/Header.tsx:32:13"
+            style={{ color: "#24272C" }}
+          >
             Dealers
           </div>
           <a
@@ -81,7 +84,13 @@ export default function Header() {
               border: "none",
             }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden
+            >
               <path
                 d="M21 21l-4.35-4.35"
                 stroke="#24272C"
@@ -104,7 +113,13 @@ export default function Header() {
               color: "#e82121",
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 20 20"
+              fill="none"
+              aria-hidden
+            >
               <path
                 d="M3 6h14M3 10h14M3 14h14"
                 stroke="#E82121"

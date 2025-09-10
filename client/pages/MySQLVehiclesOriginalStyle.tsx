@@ -2773,7 +2773,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       </button>
                     </span>
                   ))}
-                {(() => {
+                  {(() => {
                     const CAR_CHILD_SLUGS = [
                       "sedan",
                       "coupe",
@@ -2783,21 +2783,40 @@ export default function MySQLVehiclesOriginalStyle() {
                       "crossover-suv",
                       "van-minivan",
                     ];
-                    const TRUCK_CHILD_SLUGS = ["crew-cab", "extended-cab", "regular-cab-truck"];
+                    const TRUCK_CHILD_SLUGS = [
+                      "crew-cab",
+                      "extended-cab",
+                      "regular-cab-truck",
+                    ];
                     const selected = new Set(appliedFilters.vehicleType || []);
 
-                    const carAll = CAR_CHILD_SLUGS.every((s) => selected.has(s));
-                    const truckAll = TRUCK_CHILD_SLUGS.every((s) => selected.has(s));
+                    const carAll = CAR_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
+                    const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
 
                     const chips: string[] = [];
                     if (carAll) chips.push("car");
-                    else CAR_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                    else
+                      CAR_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
                     if (truckAll) chips.push("truck");
-                    else TRUCK_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                    else
+                      TRUCK_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
 
                     // include any other selected slugs not in the above lists
                     for (const s of Array.from(selected)) {
-                      if (!CAR_CHILD_SLUGS.includes(s) && !TRUCK_CHILD_SLUGS.includes(s) && s !== "car" && s !== "truck") {
+                      if (
+                        !CAR_CHILD_SLUGS.includes(s) &&
+                        !TRUCK_CHILD_SLUGS.includes(s) &&
+                        s !== "car" &&
+                        s !== "truck"
+                      ) {
                         chips.push(s);
                       }
                     }
@@ -2812,7 +2831,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             if (item === "car") {
                               CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
                             } else if (item === "truck") {
-                              TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                              TRUCK_CHILD_SLUGS.forEach((s) =>
+                                nextSet.delete(s),
+                              );
                             } else {
                               nextSet.delete(item);
                             }
@@ -2827,16 +2848,24 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item === "car" ? "All Cars" : item === "truck" ? "All Trucks" : normalizeFilterValue(item)}
+                        {item === "car"
+                          ? "All Cars"
+                          : item === "truck"
+                            ? "All Trucks"
+                            : normalizeFilterValue(item)}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setAppliedFilters((prev) => {
                               const nextSet = new Set(prev.vehicleType || []);
                               if (item === "car") {
-                                CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                CAR_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else if (item === "truck") {
-                                TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                TRUCK_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else {
                                 nextSet.delete(item);
                               }
@@ -5875,12 +5904,21 @@ export default function MySQLVehiclesOriginalStyle() {
       </div>
 
       {/* Full-width footer placeholder for custom footer design */}
-      <div id="footer-row" className="w-full bg-white border-t border-gray-200" style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', position: 'relative', zIndex: 10, minHeight: '800px' }}>
+      <div
+        id="footer-row"
+        className="w-full bg-white border-t border-gray-200"
+        style={{
+          width: "100vw",
+          marginLeft: "calc(50% - 50vw)",
+          position: "relative",
+          zIndex: 10,
+          minHeight: "800px",
+        }}
+      >
         <div className="max-w-[1325px] mx-auto p-6">
           <div id="footer_v1_container" className="w-full"></div>
         </div>
       </div>
-
     </div>
   );
 }
