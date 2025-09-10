@@ -129,7 +129,7 @@ export default function Header({ topTemplate }: HeaderProps) {
                 Contact
               </a>
               <div className="border-t border-gray-100 my-2" />
-              <a href="#" className="py-2 text-red-600 font-medium">
+              <a href="#" className="py-2 text-red-600 font-semibold">
                 Sign up
               </a>
             </div>
