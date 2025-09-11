@@ -289,7 +289,7 @@ export default function Footer() {
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
-                                  navigate(href, { replace: false });
+                                  window.dispatchEvent(new CustomEvent('carzino:navigate-with-reset', { detail: { href } }));
                                 }
                               }}
                             >
@@ -311,7 +311,7 @@ export default function Footer() {
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
-                                  navigate(href, { replace: false });
+                                  window.dispatchEvent(new CustomEvent('carzino:navigate-with-reset', { detail: { href } }));
                                 }
                               }}
                             >
