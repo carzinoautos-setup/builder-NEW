@@ -5165,33 +5165,36 @@ export default function MySQLVehiclesOriginalStyle() {
                           .replace(/[^a-z0-9]+/g, "-")
                           .replace(/^-+|-+$/g, "");
 
-                      // Build a map from normalized slug -> original values in appliedFilters
-                      const originalMap = new Map<string, string[]>();
-                      (appliedFilters.vehicleType || []).forEach((val) => {
-                        const n = normalizeSlug(val);
-                        const arr = originalMap.get(n) || [];
-                        arr.push(val);
-                        originalMap.set(n, arr);
-                      });
+                      // Derive child slugs from available vehicleTypes to ensure exact match
+                      const isTruckSlug = (s: string) => /truck|pickup|cab|van/.test(s);
+                      const carChildSlugs = (vehicleTypes || [])
+                        .map((t) => String((t && (t as any).slug) || ""))
+                        .filter((s) => s && !isTruckSlug(s));
+                      const truckChildSlugs = (vehicleTypes || [])
+                        .map((t) => String((t && (t as any).slug) || ""))
+                        .filter((s) => s && isTruckSlug(s));
 
-                      const selectedNorm = new Set(Array.from(originalMap.keys()));
+                      // Build a set of normalized selected slugs from appliedFilters
+                      const selectedNorm = new Set(
+                        (appliedFilters.vehicleType || []).map((v) => normalizeSlug(v)),
+                      );
 
-                      const carAll = CAR_CHILD_SLUGS.every((s) => selectedNorm.has(s));
-                      const truckAll = TRUCK_CHILD_SLUGS.every((s) => selectedNorm.has(s));
+                      const carAll = carChildSlugs.length > 0 && carChildSlugs.every((s) => selectedNorm.has(s));
+                      const truckAll = truckChildSlugs.length > 0 && truckChildSlugs.every((s) => selectedNorm.has(s));
 
                       const chips: string[] = [];
 
                       if (carAll) chips.push("car");
-                      else CAR_CHILD_SLUGS.forEach((s) => selectedNorm.has(s) && chips.push(s));
+                      else carChildSlugs.forEach((s) => selectedNorm.has(s) && chips.push(s));
 
                       if (truckAll) chips.push("truck");
-                      else TRUCK_CHILD_SLUGS.forEach((s) => selectedNorm.has(s) && chips.push(s));
+                      else truckChildSlugs.forEach((s) => selectedNorm.has(s) && chips.push(s));
 
                       // include any other selected normalized slugs not in the above lists
                       for (const s of Array.from(selectedNorm)) {
                         if (
-                          !CAR_CHILD_SLUGS.includes(s) &&
-                          !TRUCK_CHILD_SLUGS.includes(s) &&
+                          !carChildSlugs.includes(s) &&
+                          !truckChildSlugs.includes(s) &&
                           s !== "car" &&
                           s !== "truck"
                         ) {
