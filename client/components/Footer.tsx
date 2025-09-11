@@ -240,11 +240,15 @@ export default function Footer() {
                       </nav>
                     ) : (
                       <nav className="mt-0 opacity-80 flex flex-col gap-3">
-                        {s.links.map((l) => (
-                          <a key={l} className="block" href="#">
-                            {l}
-                          </a>
-                        ))}
+                        {s.links.map((item) => {
+                          const label = typeof item === "string" ? item : item.label;
+                          const href = typeof item === "string" ? "#" : item.url;
+                          return (
+                            <a key={label} href={href} className="block">
+                              {label}
+                            </a>
+                          );
+                        })}
                       </nav>
                     )
                   ) : (
