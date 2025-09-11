@@ -107,4 +107,15 @@
     @apply bg-background text-foreground;
     overflow-x: hidden;
   }
+
+  /* Enforce footer promo font sizing so Builder content and fallback match */
+  .footer-promo {
+    font-size: 0.875rem !important; /* text-sm */
+    line-height: 1.25 !important;
+  }
+  .footer-promo, .footer-promo * {
+    color: inherit;
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
 }
