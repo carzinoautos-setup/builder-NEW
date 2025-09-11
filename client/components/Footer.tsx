@@ -197,7 +197,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
           {sections.map((s, idx) => (
             <div key={s.title}>
               {/* Mobile: accordion button */}
-              <div className="lg:hidden">
+              <div className="lg:hidden pl-5 lg:pl-0">
                 <button
                   type="button"
                   aria-expanded={openIdx === idx}
