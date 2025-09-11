@@ -2627,7 +2627,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Desktop Search Section */}
-            <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200 bg-white">
+            <div className="hidden lg:block mb-4 pb-4 bg-white">
               <form onSubmit={handleUnifiedSearchSubmit}>
                 <div className="relative">
                   <input
