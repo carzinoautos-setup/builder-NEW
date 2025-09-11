@@ -254,8 +254,17 @@ export default function Footer() {
                               onClick={(e) => {
                                 if (isInternal) {
                                   e.preventDefault();
-                                  // Ask the page to clear filters first, then navigate
-                                  window.dispatchEvent(new CustomEvent('carzino:navigate-with-reset', { detail: { href } }));
+                                  try {
+                                    if ((window as any).carzinoClearAllFilters) {
+                                      (window as any).carzinoClearAllFilters();
+                                      // ensure filters flush then navigate
+                                      setTimeout(() => navigate(href, { replace: false }), 0);
+                                    } else {
+                                      navigate(href, { replace: false });
+                                    }
+                                  } catch (err) {
+                                    navigate(href, { replace: false });
+                                  }
                                 }
                               }}
                             >
