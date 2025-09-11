@@ -5296,6 +5296,94 @@ export default function MySQLVehiclesOriginalStyle() {
               </FilterSection>
             )}
 
+            {/* Engine Cylinders */}
+            {((filterOptions && filterOptions.engine_cylinders && filterOptions.engine_cylinders.length > 0) || (appliedFilters.engineCylinders && appliedFilters.engineCylinders.length > 0)) && (
+              <FilterSection
+                title="Engine Cylinders"
+                isCollapsed={collapsedFilters.engineCylinders}
+                onToggle={() => toggleFilter("engineCylinders")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.engine_cylinders && filterOptions.engine_cylinders.length > 0 ? (
+                    filterOptions.engine_cylinders.map((d: any) => (
+                      <label
+                        key={d.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={(appliedFilters.engineCylinders || []).includes(d.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                engineCylinders: [...(prev as any).engineCylinders, d.name],
+                              }));
+                            } else {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                engineCylinders: ((prev as any).engineCylinders || []).filter((v: string) => v !== d.name),
+                              }));
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{d.name}</span>
+                        <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No engine options available.</div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
+
+            {/* Displacement Liters */}
+            {((filterOptions && filterOptions.displacement_liters && filterOptions.displacement_liters.length > 0) || (appliedFilters.displacementLiters && appliedFilters.displacementLiters.length > 0)) && (
+              <FilterSection
+                title="Displacement (L)"
+                isCollapsed={collapsedFilters.displacementLiters}
+                onToggle={() => toggleFilter("displacementLiters")}
+              >
+                <div className="space-y-1">
+                  {filterOptions.displacement_liters && filterOptions.displacement_liters.length > 0 ? (
+                    filterOptions.displacement_liters.map((d: any) => (
+                      <label
+                        key={d.name}
+                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={(appliedFilters.displacementLiters || []).includes(d.name)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if ((e.target as HTMLInputElement).checked) {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                displacementLiters: [...(prev as any).displacementLiters, d.name],
+                              }));
+                            } else {
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                displacementLiters: ((prev as any).displacementLiters || []).filter((v: string) => v !== d.name),
+                              }));
+                            }
+                          }}
+                        />
+                        <span className="carzino-filter-option">{d.name}</span>
+                        <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No displacement options available.</div>
+                  )}
+                </div>
+              </FilterSection>
+            )}
+
             {/* NEW: Fuel Type */}
             {((fuelOptions && fuelOptions.length > 0) ||
               (appliedFilters.fuelType &&
