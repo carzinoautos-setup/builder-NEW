@@ -275,10 +275,10 @@ export default function Footer() {
 
               {/* Four links below the text - responsive: 4/2/1 columns */}
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="#" className="text-white/90">Privacy policy</a>
-                <a href="#" className="text-white/90">Terms and conditions</a>
-                <a href="#" className="text-white/90">Return Policy</a>
-                <a href="#" className="text-white/90">Safety guidelines</a>
+                <a href="https://www.carzino.com/privacy-policy/" className="text-white/90">Privacy policy</a>
+                <a href="https://www.carzino.com/terms-conditions/" className="text-white/90">Terms and conditions</a>
+                <a href="https://www.carzino.com/return-policy/" className="text-white/90">Return Policy</a>
+                <a href="https://www.carzino.com/safety-guidelines/" className="text-white/90">Safety guidelines</a>
               </div>
             </div>
           </div>
