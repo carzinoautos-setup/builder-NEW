@@ -3,7 +3,7 @@ import { BuilderComponent } from "@builder.io/react";
 import { builder } from "../lib/builder";
 import { useNavigate } from "react-router-dom";
 
-export default function Footer() {
+export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (href: string) => void }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const navigate = useNavigate();
 
