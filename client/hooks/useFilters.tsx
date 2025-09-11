@@ -30,6 +30,9 @@ export type AppliedFilters = {
   highwayMpg?: string[];
   titleStatus?: string[];
   status?: string[];
+  // Engine / displacement
+  engineCylinders?: string[];
+  displacementLiters?: string[];
 };
 
 type FilterMap = Record<string, { name: string; count: number }[]>;
