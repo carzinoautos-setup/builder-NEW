@@ -294,6 +294,8 @@ export default function Header({ topTemplate }: HeaderProps) {
                       "Shop Used": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F30f147c94e904a5ba1b1ce7ce9ebd89b",
                       "Used Trucks": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fd19800dca9084c47b346aae3c1681942",
                       Trucks: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
+                      "Ext Cabs": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+                      ELECTRIC: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fae7632a8c279400b9724d3b299b41085",
                     };
 
                     const labels = [
