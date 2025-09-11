@@ -276,12 +276,12 @@ export default function Header({ topTemplate }: HeaderProps) {
                 >
                   <span className="text-gray-800 font-bold">Search by Vehicle Type</span>
                   <svg
-                    className={`w-4 h-4 transform transition-transform ${vehiclesOpen ? "rotate-180" : ""}`}
+                    className={`w-4 h-4 transform transition-transform text-red-600 ${vehiclesOpen ? "rotate-180" : ""}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path d="M6 9l6 6 6-6" stroke="#24272C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
 
