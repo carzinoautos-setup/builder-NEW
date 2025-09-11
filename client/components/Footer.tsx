@@ -254,16 +254,19 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                               onClick={(e) => {
                                 if (isInternal) {
                                   e.preventDefault();
-                                  try {
-                                    if ((window as any).carzinoClearAllFilters) {
-                                      (window as any).carzinoClearAllFilters();
-                                      // ensure filters flush then navigate
-                                      setTimeout(() => navigate(href, { replace: false }), 0);
-                                    } else {
+                                  if (onResetAndNavigate) {
+                                    onResetAndNavigate(href);
+                                  } else {
+                                    try {
+                                      if ((window as any).carzinoClearAllFilters) {
+                                        (window as any).carzinoClearAllFilters();
+                                        setTimeout(() => navigate(href, { replace: false }), 0);
+                                      } else {
+                                        navigate(href, { replace: false });
+                                      }
+                                    } catch (err) {
                                       navigate(href, { replace: false });
                                     }
-                                  } catch (err) {
-                                    navigate(href, { replace: false });
                                   }
                                 }
                               }}
@@ -298,15 +301,19 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
-                                  try {
-                                    if ((window as any).carzinoClearAllFilters) {
-                                      (window as any).carzinoClearAllFilters();
-                                      setTimeout(() => navigate(href, { replace: false }), 0);
-                                    } else {
+                                  if (onResetAndNavigate) {
+                                    onResetAndNavigate(href);
+                                  } else {
+                                    try {
+                                      if ((window as any).carzinoClearAllFilters) {
+                                        (window as any).carzinoClearAllFilters();
+                                        setTimeout(() => navigate(href, { replace: false }), 0);
+                                      } else {
+                                        navigate(href, { replace: false });
+                                      }
+                                    } catch (err) {
                                       navigate(href, { replace: false });
                                     }
-                                  } catch (err) {
-                                    navigate(href, { replace: false });
                                   }
                                 }
                               }}
@@ -329,15 +336,19 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
-                                  try {
-                                    if ((window as any).carzinoClearAllFilters) {
-                                      (window as any).carzinoClearAllFilters();
-                                      setTimeout(() => navigate(href, { replace: false }), 0);
-                                    } else {
+                                  if (onResetAndNavigate) {
+                                    onResetAndNavigate(href);
+                                  } else {
+                                    try {
+                                      if ((window as any).carzinoClearAllFilters) {
+                                        (window as any).carzinoClearAllFilters();
+                                        setTimeout(() => navigate(href, { replace: false }), 0);
+                                      } else {
+                                        navigate(href, { replace: false });
+                                      }
+                                    } catch (err) {
                                       navigate(href, { replace: false });
                                     }
-                                  } catch (err) {
-                                    navigate(href, { replace: false });
                                   }
                                 }
                               }}
