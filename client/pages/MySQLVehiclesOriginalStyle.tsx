@@ -5365,15 +5365,15 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Engine Cylinders */}
-            {((filterOptions && filterOptions.engine_cylinders && filterOptions.engine_cylinders.length > 0) || (appliedFilters.engineCylinders && appliedFilters.engineCylinders.length > 0)) && (
+            {((engineOptions && engineOptions.length > 0) || (appliedFilters.engineCylinders && appliedFilters.engineCylinders.length > 0)) && (
               <FilterSection
                 title="Engine Cylinders"
                 isCollapsed={collapsedFilters.engineCylinders}
                 onToggle={() => toggleFilter("engineCylinders")}
               >
                 <div className="space-y-1">
-                  {filterOptions.engine_cylinders && filterOptions.engine_cylinders.length > 0 ? (
-                    filterOptions.engine_cylinders.map((d: any) => (
+                  {engineOptions && engineOptions.length > 0 ? (
+                    engineOptions.map((d: any) => (
                       <label
                         key={d.name}
                         className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
