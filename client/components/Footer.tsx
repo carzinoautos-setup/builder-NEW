@@ -60,6 +60,24 @@ export default function Footer() {
     },
   ];
 
+  useEffect(() => {
+    try {
+      if (builder && builder.registerComponent) {
+        builder.registerComponent({
+          name: "footer-promo",
+          inputs: [
+            { name: "image", type: "file" },
+            { name: "headline", type: "string" },
+            { name: "subtext", type: "string" },
+            { name: "note", type: "string" },
+          ],
+        });
+      }
+    } catch (e) {
+      // ignore if builder not initialized
+    }
+  }, []);
+
   return (
     <footer className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#24272C] text-white pt-0 pb-10 px-4 sm:px-6 lg:px-16">
       {/* Builder-editable promo: create a Builder model named 'footer-promo' to edit this content in Design */}
