@@ -281,6 +281,21 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
   };
 };
 
+// Helper to reorder vehicles when sorting by price
+const reorderForPrice = (arr: Vehicle[], sortByVal?: string) => {
+  const sb = sortByVal !== undefined ? sortByVal : (typeof sortBy !== 'undefined' ? (sortBy as string) : undefined);
+  if (!sb || (sb !== "price-low" && sb !== "price-high")) return arr;
+  const comp = (a: number | undefined | null, b: number | undefined | null) => {
+    const aValid = a !== undefined && a !== null && Number(a) !== 0;
+    const bValid = b !== undefined && b !== null && Number(b) !== 0;
+    if (aValid && bValid) return sb === "price-low" ? Number(a) - Number(b) : Number(b) - Number(a);
+    if (aValid && !bValid) return -1;
+    if (!aValid && bValid) return 1;
+    return 0;
+  };
+  return arr.slice().sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
+};
+
 export default function MySQLVehiclesOriginalStyle() {
   // React Router hooks
   const location = useLocation();
@@ -375,6 +390,9 @@ export default function MySQLVehiclesOriginalStyle() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [appendResults, setAppendResults] = useState(false);
+  const [prefetchedVehicles, setPrefetchedVehicles] = useState<Vehicle[] | null>(null);
+  const [prefetchedMeta, setPrefetchedMeta] = useState<PaginationMeta | null>(null);
+  const [prefetching, setPrefetching] = useState(false);
   const totalPages = apiResponse?.meta?.totalPages || 1;
   const totalResults = apiResponse?.meta?.totalRecords || 0;
   const resultsPerPage = 27;
@@ -1040,29 +1058,6 @@ export default function MySQLVehiclesOriginalStyle() {
 
         // Transform VehicleRecord[] to Vehicle[] for display
         const transformedVehicles = filteredRecords.map(transformVehicleRecord);
-        // If sorting by price, ensure vehicles without a price are placed at the end
-        const reorderForPrice = (arr: Vehicle[]) => {
-          if (sortBy !== "price-low" && sortBy !== "price-high") return arr;
-          // Determine comparator for numeric prices
-          const comp = (
-            a: number | undefined | null,
-            b: number | undefined | null,
-          ) => {
-            const aValid = a !== undefined && a !== null && Number(a) !== 0;
-            const bValid = b !== undefined && b !== null && Number(b) !== 0;
-            if (aValid && bValid)
-              return sortBy === "price-low"
-                ? Number(a) - Number(b)
-                : Number(b) - Number(a);
-            if (aValid && !bValid) return -1;
-            if (!aValid && bValid) return 1;
-            return 0; // both invalid -> keep original order
-          };
-          // Stable sort while preserving relative order for equal values
-          return arr
-            .slice()
-            .sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
-        };
         if (appendResults) {
           setVehicles((prev) => reorderForPrice([...prev, ...transformedVehicles]));
         } else {
@@ -1162,26 +1157,6 @@ export default function MySQLVehiclesOriginalStyle() {
             });
 
             const transformedVehicles = mapped.map(transformVehicleRecord);
-            const reorderForPrice = (arr: Vehicle[]) => {
-              if (sortBy !== "price-low" && sortBy !== "price-high") return arr;
-              const comp = (
-                a: number | undefined | null,
-                b: number | undefined | null,
-              ) => {
-                const aValid = a !== undefined && a !== null && Number(a) !== 0;
-                const bValid = b !== undefined && b !== null && Number(b) !== 0;
-                if (aValid && bValid)
-                  return sortBy === "price-low"
-                    ? Number(a) - Number(b)
-                    : Number(b) - Number(a);
-                if (aValid && !bValid) return -1;
-                if (!aValid && bValid) return 1;
-                return 0;
-              };
-              return arr
-                .slice()
-                .sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
-            };
             if (appendResults) {
           setVehicles((prev) => reorderForPrice([...prev, ...transformedVehicles]));
         } else {
@@ -1360,6 +1335,184 @@ export default function MySQLVehiclesOriginalStyle() {
     }, 200);
     return () => clearTimeout(t);
   }, [fetchVehicles]);
+
+  // Prefetch next page on mobile when the user scrolls near the bottom
+  const prefetchNextPage = useCallback(async (pageToPrefetch?: number) => {
+    const target = pageToPrefetch || currentPage + 1;
+    if (!apiResponse?.meta || target > (apiResponse?.meta?.totalPages || 1)) return;
+    try {
+      setPrefetching(true);
+      const params = new URLSearchParams({
+        page: String(target),
+        per_page: resultsPerPage.toString(),
+      });
+
+      const hasExplicitFilter =
+        appliedFilters.make.length > 0 ||
+        appliedFilters.model.length > 0 ||
+        appliedFilters.trim.length > 0;
+      if (searchTerm.trim() && !hasExplicitFilter) {
+        params.append("search", searchTerm.trim());
+      }
+
+      if (sortBy !== "relevance") {
+        params.append("sort", sortBy);
+        const mapping: Record<string, { field?: string; order?: "ASC" | "DESC" }> = {
+          "price-low": { field: "price", order: "ASC" },
+          "price-high": { field: "price", order: "DESC" },
+          "miles-low": { field: "mileage", order: "ASC" },
+          "miles-high": { field: "mileage", order: "DESC" },
+          "year-newest": { field: "year", order: "DESC" },
+          "year-oldest": { field: "year", order: "ASC" },
+          "distance-closest": { field: "id", order: "ASC" },
+        };
+        const mapped = mapping[sortBy];
+        if (mapped && mapped.field) {
+          if (!import.meta.env.VITE_WP_URL) {
+            params.append("sortBy", mapped.field);
+            params.append("sortOrder", mapped.order || "DESC");
+          }
+        }
+      }
+
+      if (appliedLocation && appliedRadius !== "nationwide") {
+        params.append("lat", appliedLocation.lat.toString());
+        params.append("lng", appliedLocation.lng.toString());
+        params.append("radius", appliedRadius);
+      }
+
+      if (appliedFilters.condition.length > 0) params.append("condition", appliedFilters.condition.join(","));
+      if (appliedFilters.make.length > 0) params.append("make", appliedFilters.make.join(","));
+      if (appliedFilters.model.length > 0) params.append("model", appliedFilters.model.join(","));
+      if (appliedFilters.trim.length > 0) params.append("trim", appliedFilters.trim.join(","));
+      if (appliedFilters.vehicleType.length > 0) params.append("body_style", appliedFilters.vehicleType.join(","));
+      if (appliedFilters.driveType.length > 0) params.append("drivetrain", appliedFilters.driveType.join(","));
+      if (appliedFilters.transmission.length > 0) params.append("transmission", appliedFilters.transmission.join(","));
+      if (appliedFilters.mileage) params.append("max_mileage", String(appliedFilters.mileage));
+      if (appliedFilters.exteriorColor.length > 0) params.append("exterior_color", appliedFilters.exteriorColor.join(","));
+      if (appliedFilters.sellerType.length > 0) params.append("account_type_seller", appliedFilters.sellerType.join(","));
+      if (appliedFilters.dealer.length > 0) params.append("account_name_seller", appliedFilters.dealer.join(","));
+      if ((appliedFilters as any).state && (appliedFilters as any).state.length > 0) params.append("state_seller", (appliedFilters as any).state.join(","));
+      if ((appliedFilters as any).city && (appliedFilters as any).city.length > 0) params.append("city_seller", (appliedFilters as any).city.join(","));
+
+      if (appliedFilters.priceMin) params.append("min_price", appliedFilters.priceMin);
+      if (appliedFilters.priceMax) params.append("max_price", appliedFilters.priceMax);
+      if (appliedFilters.paymentMin) params.append("payment_min", appliedFilters.paymentMin);
+      if (appliedFilters.paymentMax) params.append("payment_max", appliedFilters.paymentMax);
+
+      if (appliedFilters.fuelType.length > 0) params.append("fuel_type", appliedFilters.fuelType.join(","));
+      if (appliedFilters.certified.length > 0) params.append("certified", appliedFilters.certified.includes("Certified") ? "true" : "false");
+      if ((appliedFilters as any).doors && (appliedFilters as any).doors.length > 0) params.append("doors", (appliedFilters as any).doors.join(","));
+      if ((appliedFilters as any).transmissionSpeed && (appliedFilters as any).transmissionSpeed.length > 0) params.append("transmission_speed", (appliedFilters as any).transmissionSpeed.join(","));
+      if ((appliedFilters as any).highwayMpg && (appliedFilters as any).highwayMpg.length > 0) {
+        const h = (appliedFilters as any).highwayMpg;
+        if (h.length === 2) {
+          params.append("highway_mpg_min", String(h[0]));
+          params.append("highway_mpg_max", String(h[1]));
+        } else {
+          params.append("highway_mpg", (appliedFilters as any).highwayMpg.join(","));
+        }
+      }
+      if ((appliedFilters as any).titleStatus && (appliedFilters as any).titleStatus.length > 0) params.append("title_status", (appliedFilters as any).titleStatus.join(","));
+      if ((appliedFilters as any).status && (appliedFilters as any).status.length > 0) params.append("status", (appliedFilters as any).status.join(","));
+
+      const apiUrl = `/api/vehicles?${params.toString()}`;
+      const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
+      const response = await fetchWithRetry(apiUrl, { method: "GET", headers: { "Content-Type": "application/json" } }, 1, 8000);
+      if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
+      const data = await response.json();
+      if (data.success) {
+        let records: any[] = data.data || [];
+        const isWP = records.length > 0 && records[0].acf;
+        const mappedRecords = records.map((r: any) => {
+          if (!isWP) return r;
+          const acf = r.acf || {};
+          return {
+            id: r.id,
+            year: Number(acf.year) || new Date().getFullYear(),
+            make: acf.make || "",
+            model: acf.model || "",
+            trim: acf.trim || "",
+            body_style: acf.body_style || acf.bodyStyle || "",
+            engine_cylinders: Number(acf.engine_cylinders) || 0,
+            fuel_type: acf.fuel_type || "",
+            transmission: acf.transmission || "",
+            transmission_speed: acf.transmission_speed || "",
+            drivetrain: acf.drivetrain || "",
+            exterior_color_generic: acf.exterior_color || "",
+            interior_color_generic: acf.interior_color || "",
+            doors: parseInt(acf.doors) || 4,
+            price: Number(acf.price) || 0,
+            mileage: Number(acf.mileage) || 0,
+            title_status: acf.title_status || "",
+            highway_mpg: Number(acf.highway_mpg) || 0,
+            condition: acf.condition || "",
+            certified: acf.certified === true || acf.certified === "1" || acf.is_certified === true,
+            seller_account_number: acf.account_number_seller || acf.account_number || "",
+            seller_type: acf.account_type_seller || acf.account_type || "",
+            dealer: acf.account_name_seller || r.dealer || "",
+            city_seller: acf.city_seller || r.city_seller || "",
+            state_seller: acf.state_seller || r.state_seller || "",
+            interest_rate: Number(acf.interest_rate) || 0,
+            down_payment: Number(acf.down_payment) || 0,
+            loan_term: Number(acf.loan_term) || 0,
+            payments: Number(acf.payment) || 0,
+            featured_image: r.featured_image || acf.featured_image || r.featuredImage || null,
+          } as any;
+        });
+        const filteredRecords = mappedRecords.filter((r: any) => {
+          const body = (r.body_style || r.bodyType || "").toString().trim();
+          return body !== "" && body.toLowerCase() !== "uncategorized";
+        });
+        const transformedVehicles = filteredRecords.map(transformVehicleRecord);
+        const pagination = data.pagination || data.meta || {};
+        const page = pagination.page || pagination.currentPage || target;
+        const perPage = pagination.per_page || pagination.pageSize || resultsPerPage;
+        const total = pagination.total || pagination.totalRecords || 0;
+        const totalPages = pagination.total_pages || pagination.totalPages || Math.ceil(total / perPage || 1);
+        const compatibleMeta = {
+          totalRecords: total,
+          totalPages,
+          currentPage: page,
+          pageSize: perPage,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1,
+        };
+        setPrefetchedVehicles(reorderForPrice(transformedVehicles));
+        setPrefetchedMeta(compatibleMeta as PaginationMeta);
+      }
+    } catch (e) {
+      console.warn("Prefetch failed:", e);
+    } finally {
+      setPrefetching(false);
+    }
+  }, [currentPage, appliedFilters, searchTerm, sortBy, appliedLocation, appliedRadius, resultsPerPage, apiResponse?.meta]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    if (!apiResponse?.meta || !apiResponse.meta.hasNextPage) return;
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY || window.pageYOffset;
+        const vh = window.innerHeight;
+        const docH = document.documentElement.scrollHeight;
+        const threshold = docH * 0.6; // 60% down the page
+        if (scrollY + vh >= threshold) {
+          if (!prefetching && !prefetchedVehicles) {
+            prefetchNextPage();
+          }
+        }
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isMobile, apiResponse, prefetching, prefetchedVehicles, prefetchNextPage]);
 
   // Geocode ZIP code when it changes (with debouncing)
   useEffect(() => {
@@ -5799,10 +5952,19 @@ export default function MySQLVehiclesOriginalStyle() {
                             <button
                               onClick={() => {
                                 if (!loading) {
-                                  setAppendResults(true);
-                                  setCurrentPage((p) => p + 1);
+                                  if (prefetchedVehicles && prefetchedMeta && prefetchedMeta.currentPage === currentPage + 1) {
+                                    // Append prefetched results immediately
+                                    setVehicles((prev) => reorderForPrice([...prev, ...prefetchedVehicles]));
+                                    setApiResponse((prev) => ({ ...(prev || { success: true, data: [], meta: prefetchedMeta }), meta: prefetchedMeta }));
+                                    setCurrentPage(prefetchedMeta.currentPage);
+                                    setPrefetchedVehicles(null);
+                                    setPrefetchedMeta(null);
+                                  } else {
+                                    setAppendResults(true);
+                                    setCurrentPage((p) => p + 1);
+                                  }
                                 }
-                              }}
+                              } }
                               disabled={loading}
                               className="bg-red-600 text-white px-6 py-3 rounded-full shadow-lg"
                             >
