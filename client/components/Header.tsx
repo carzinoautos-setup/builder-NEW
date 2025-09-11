@@ -298,20 +298,22 @@ export default function Header({ topTemplate }: HeaderProps) {
                       ELECTRIC: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
                     };
 
-                    const labels = [
-                      "Convertible",
-                      "Coupe",
-                      "Sedans",
-                      "Hatchback",
-                      "Crossover/SUV",
-                      "Vans",
-                      "Wagons",
-                      "Shop Used",
-                      "Used Trucks",
-                      "Trucks",
-                      "Ext Cabs",
-                      "ELECTRIC",
-                    ];
+                    const displayMap: Record<string, React.ReactNode> = {
+                      Convertible: "Convertible",
+                      Coupe: "Coupe",
+                      Sedans: "Sedans",
+                      Hatchback: "Hatchback",
+                      "Crossover/SUV": "Crossover/SUV",
+                      Vans: "Vans/Minivans",
+                      Wagons: "Wagons",
+                      "Shop Used": "Truck",
+                      "Used Trucks": "Extended Cab",
+                      Trucks: "Crew Cab",
+                      "Ext Cabs": "All Cars",
+                      ELECTRIC: "All Trucks",
+                    };
+
+                    const labels = Object.keys(displayMap);
 
                     return labels.map((label) => (
                       <a
@@ -324,10 +326,10 @@ export default function Header({ topTemplate }: HeaderProps) {
                       >
                         <img
                           src={vehicleImages[label] || import.meta.env.VITE_PLACEHOLDER_IMAGE}
-                          alt={label}
+                          alt={String(displayMap[label] || label)}
                           className="w-full h-12 object-contain mb-1"
                         />
-                        <div className="text-xs font-medium text-gray-800">{label}</div>
+                        <div className="text-xs font-medium text-gray-800">{displayMap[label] || label}</div>
                       </a>
                     ));
                   })()}
