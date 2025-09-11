@@ -651,6 +651,67 @@ export default function MySQLVehiclesOriginalStyle() {
   // UI: fuel type show more and default selection
   const [showMoreFuel, setShowMoreFuel] = useState(false);
 
+  // Suggestion computation depends on filterOptions — compute with useMemo to avoid TDZ
+  const {
+    computedInventorySuggestions,
+    computedQuickFilterSuggestions,
+    computedFilteredSuggestions,
+  } = useMemo(() => {
+    const qs = debouncedUnifiedSearch.trim().toLowerCase();
+
+    const inventoryCandidates: string[] = [];
+    if (filterOptions) {
+      if (Array.isArray(filterOptions.make)) {
+        inventoryCandidates.push(...filterOptions.make.map((m: any) => String(m.name)));
+      }
+      if (Array.isArray(filterOptions.model)) {
+        inventoryCandidates.push(...filterOptions.model.map((m: any) => String(m.name)));
+      }
+      if (Array.isArray(filterOptions.trim)) {
+        inventoryCandidates.push(...filterOptions.trim.map((t: any) => String(t.name)));
+      }
+      if (Array.isArray(filterOptions.year)) {
+        inventoryCandidates.push(...filterOptions.year.map((y: any) => String(y.name || y)));
+      }
+      if (Array.isArray(filterOptions.body_style)) {
+        inventoryCandidates.push(...filterOptions.body_style.map((b: any) => String(b.name)));
+      }
+      if (Array.isArray(filterOptions.condition)) {
+        inventoryCandidates.push(...filterOptions.condition.map((c: any) => String(c.name)));
+      }
+    }
+
+    const inventorySuggestions = qs
+      ? inventoryCandidates.filter((s) => s.toLowerCase().includes(qs)).slice(0, 8)
+      : [];
+
+    const startsWithStatic = (() => {
+      if (!qs) return true;
+      return staticKeywords.some((k) => qs.startsWith(k));
+    })();
+
+    const quickFilterSuggestions = startsWithStatic
+      ? staticSuggestions.filter((s) => {
+          if (!qs) return true;
+          return s.toLowerCase().startsWith(qs);
+        })
+      : [];
+
+    const filteredSuggestions =
+      inventorySuggestions.length > 0 ? inventorySuggestions : quickFilterSuggestions.slice(0, 6);
+
+    return {
+      computedInventorySuggestions: inventorySuggestions,
+      computedQuickFilterSuggestions: quickFilterSuggestions,
+      computedFilteredSuggestions: filteredSuggestions,
+    };
+  }, [filterOptions, debouncedUnifiedSearch]);
+
+  // Map memoized values back to local variables used by the render logic
+  const inventorySuggestions = computedInventorySuggestions;
+  const quickFilterSuggestions = computedQuickFilterSuggestions;
+  const filteredSuggestions = computedFilteredSuggestions;
+
   // Highway MPG slider state (min/max)
   const [highwayMpgMin, setHighwayMpgMin] = useState<number | null>(null);
   const [highwayMpgMax, setHighwayMpgMax] = useState<number | null>(null);
