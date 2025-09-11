@@ -227,35 +227,35 @@ export default function Header({ topTemplate }: HeaderProps) {
           <div className="mx-auto max-w-[1325px] px-4 sm:px-6 lg:px-10 box-border">
             <div className="flex flex-col py-4">
               <a
-                href="#"
+                href="/cars-for-sale/"
                 onClick={() => setMobileOpen(false)}
                 className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors"
               >
                 Cars For Sale
               </a>
               <a
-                href="#"
+                href="https://www.carzino.com/trade-in-your-car/"
                 onClick={() => setMobileOpen(false)}
                 className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors"
               >
                 Trade in your car
               </a>
               <a
-                href="#"
+                href="https://www.carzino.com/sell-your-car/"
                 onClick={() => setMobileOpen(false)}
                 className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors"
               >
                 Sell your car
               </a>
               <a
-                href="#"
+                href="https://www.carzino.com/dealers/"
                 onClick={() => setMobileOpen(false)}
                 className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors"
               >
                 Dealers
               </a>
               <a
-                href="#"
+                href="https://www.carzino.com/contact/"
                 onClick={() => setMobileOpen(false)}
                 className="py-2 text-gray-800 font-bold hover:text-red-600 transition-colors"
               >
