@@ -65,6 +65,9 @@ export function buildFiltersQuery(paramsObj: Partial<AppliedFilters>) {
     ["highwayMpg", "highway_mpg"],
     ["titleStatus", "title_status"],
     ["status", "status"],
+    // Engine and displacement mappings
+    ["engineCylinders", "engine_cylinders"],
+    ["displacementLiters", "displacement_liters"],
     // Location mappings
     ["state", "state_seller"],
     ["city", "city_seller"],
