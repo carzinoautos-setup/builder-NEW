@@ -415,6 +415,15 @@ export default function MySQLVehiclesOriginalStyle() {
   // Unified search state for URL generation
   const [unifiedSearch, setUnifiedSearch] = useState("");
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const [debouncedUnifiedSearch, setDebouncedUnifiedSearch] = useState(unifiedSearch);
+
+  // Debounce unified search input to avoid rapid filtering
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedUnifiedSearch(unifiedSearch), 250);
+    return () => clearTimeout(t);
+  }, [unifiedSearch]);
+
   const staticSuggestions = [
     "Cheap cars under $4,000",
     "Affordable cars under $20,000",
@@ -437,8 +446,8 @@ export default function MySQLVehiclesOriginalStyle() {
     "Full-size trucks for sale",
     "2018–2021 trucks under $35,000",
   ];
-  const filteredSuggestions = unifiedSearch
-    ? staticSuggestions.filter((s) => s.toLowerCase().includes(unifiedSearch.toLowerCase()))
+  const filteredSuggestions = debouncedUnifiedSearch
+    ? staticSuggestions.filter((s) => s.toLowerCase().includes(debouncedUnifiedSearch.toLowerCase()))
     : staticSuggestions.slice(0, 6);
 
   // Location/Distance states
@@ -2360,7 +2369,7 @@ export default function MySQLVehiclesOriginalStyle() {
         const result = await response.json();
         if (result.success && result.data) {
           console.log(
-            `��� Geocoded ${zip} to ${result.data.city}, ${result.data.state}`,
+            `✅ Geocoded ${zip} to ${result.data.city}, ${result.data.state}`,
           );
           return {
             lat: result.data.lat,
