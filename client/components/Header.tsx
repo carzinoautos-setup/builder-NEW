@@ -88,31 +88,31 @@ export default function Header({ topTemplate }: HeaderProps) {
             >
               <a
                 className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
-                href="#"
+                href="/cars-for-sale/"
               >
                 Cars For Sale
               </a>
               <a
                 className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
-                href="#"
+                href="https://www.carzino.com/trade-in-your-car/"
               >
                 Trade in your car
               </a>
               <a
                 className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
-                href="#"
+                href="https://www.carzino.com/sell-your-car/"
               >
                 Sell your car
               </a>
               <a
                 className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
-                href="#"
+                href="https://www.carzino.com/dealers/"
               >
                 Dealers
               </a>
               <a
                 className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
-                href="#"
+                href="https://www.carzino.com/contact/"
               >
                 Contact
               </a>
