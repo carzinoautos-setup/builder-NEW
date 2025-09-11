@@ -6040,7 +6040,17 @@ export default function MySQLVehiclesOriginalStyle() {
                       )
                     }
                   >
-                    Favorites
+                    <span className="flex items-center gap-2">
+                      <span>Favorites</span>
+                      {favoritesCount > 0 && (
+                        <span className="md:hidden inline-flex">
+                          <span className="bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {favoritesCount}
+                          </span>
+                        </span>
+                      )}
+                    </span>
+
                     <div className="relative">
                       <div
                         className={`w-12 h-6 rounded-full ${viewMode === "favorites" ? "bg-red-600" : "bg-gray-300"} transition-colors`}
