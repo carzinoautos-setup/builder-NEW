@@ -1407,7 +1407,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Initialize filters from URL
   useEffect(() => {
-    const urlFilters = parseFiltersFromURL(location.pathname);
+    const urlFilters = parseFiltersFromURL(location.pathname, location.search);
 
     // Only update if we're on the cars-for-sale route and have filters
     if (
