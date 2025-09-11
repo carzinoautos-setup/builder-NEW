@@ -468,9 +468,9 @@ export default function MySQLVehiclesOriginalStyle() {
   ];
 
   // Placeholders for suggestions — actual computation moved below after filterOptions is available
-  const inventorySuggestions: string[] = [];
-  const quickFilterSuggestions: string[] = [];
-  const filteredSuggestions: string[] = [];
+  let inventorySuggestions: string[] = [];
+  let quickFilterSuggestions: string[] = [];
+  let filteredSuggestions: string[] = [];
 
   // Location/Distance states
   const [zipCode, setZipCode] = useState(""); // No default ZIP
