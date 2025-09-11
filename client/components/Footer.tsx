@@ -351,10 +351,10 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
             <div className="bg-transparent text-white">
               {/* Four links above the text - responsive: 4/2/1 columns */}
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="https://www.carzino.com/privacy-policy/" className="text-white/90">Privacy policy</a>
-                <a href="https://www.carzino.com/terms-conditions/" className="text-white/90">Terms and conditions</a>
-                <a href="https://www.carzino.com/return-policy/" className="text-white/90">Return Policy</a>
-                <a href="https://www.carzino.com/safety-guidelines/" className="text-white/90">Safety guidelines</a>
+                <a href="https://www.carzino.com/privacy-policy/" className="text-white">Privacy policy</a>
+                <a href="https://www.carzino.com/terms-conditions/" className="text-white">Terms and conditions</a>
+                <a href="https://www.carzino.com/return-policy/" className="text-white">Return Policy</a>
+                <a href="https://www.carzino.com/safety-guidelines/" className="text-white">Safety guidelines</a>
               </div>
 
               <div className="text-center text-sm opacity-90" style={{paddingTop: '20px'}}>
