@@ -23,7 +23,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
       >
         <h3 className="carzino-filter-title">{title}</h3>
         <ChevronDown
-          className={`w-5 h-5 lg:w-5 lg:h-5 md:w-6 md:h-6 text-red-600 transition-transform mobile-chevron ${
+          className={`w-4 h-4 lg:w-4 lg:h-4 md:w-5 md:h-5 text-red-600 transition-transform mobile-chevron ${
             !isCollapsed ? "rotate-180" : ""
           }`}
         />
