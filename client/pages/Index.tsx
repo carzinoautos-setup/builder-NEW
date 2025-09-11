@@ -1273,7 +1273,7 @@ export default function Index() {
             </div>
 
             {/* Desktop Search Section */}
-            <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
+            <div className="hidden lg:block mb-4 pb-4">
               <div className="relative">
                 <input
                   type="text"
