@@ -5674,9 +5674,110 @@ export default function MySQLVehiclesOriginalStyle() {
                 <input
                   type="text"
                   placeholder="Search vehicles..."
-                  className="w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-red-600"
+                  value={unifiedSearch}
+                  onFocus={() => {
+                    setSuggestionsOpen(true);
+                    setActiveSuggestionIndex(-1);
+                  }}
+                  onBlur={() => setTimeout(() => setSuggestionsOpen(false), 150)}
+                  onChange={(e) => {
+                    setUnifiedSearch(e.target.value);
+                    setActiveSuggestionIndex(-1);
+                  }}
+                  onKeyDown={(e) => {
+                    if (!suggestionsOpen) {
+                      if (e.key === "Enter") {
+                        // submit when suggestions closed
+                        e.preventDefault();
+                        handleUnifiedSearchSubmit(e as any);
+                      }
+                      return;
+                    }
+                    if (e.key === "ArrowDown") {
+                      e.preventDefault();
+                      setActiveSuggestionIndex((i) => Math.min(i + 1, filteredSuggestions.length - 1));
+                    } else if (e.key === "ArrowUp") {
+                      e.preventDefault();
+                      setActiveSuggestionIndex((i) => Math.max(i - 1, 0));
+                    } else if (e.key === "Enter") {
+                      if (activeSuggestionIndex >= 0 && filteredSuggestions[activeSuggestionIndex]) {
+                        e.preventDefault();
+                        const s = filteredSuggestions[activeSuggestionIndex];
+                        setUnifiedSearch(s);
+                        setSuggestionsOpen(false);
+                        setActiveSuggestionIndex(-1);
+                        setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                      } else {
+                        // No suggestion selected — submit the form
+                        e.preventDefault();
+                        handleUnifiedSearchSubmit(e as any);
+                      }
+                    } else if (e.key === "Escape") {
+                      setSuggestionsOpen(false);
+                      setActiveSuggestionIndex(-1);
+                    }
+                  }}
+                  className="carzino-search-input w-full pl-4 pr-14 py-2.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-red-600"
                 />
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1">
+
+                {suggestionsOpen && (inventorySuggestions.length > 0 || quickFilterSuggestions.length > 0) && (
+                  <div role="listbox" aria-label="Search suggestions" className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50">
+                    {inventorySuggestions.length > 0 && (
+                      <div>
+                        <div className="px-3 py-2 text-xs text-gray-500">Inventory Suggestions</div>
+                        {inventorySuggestions.map((s, idx) => (
+                          <button
+                            key={`inv-${s}`}
+                            type="button"
+                            role="option"
+                            aria-selected={idx === activeSuggestionIndex}
+                            onMouseDown={(ev) => ev.preventDefault()}
+                            onMouseEnter={() => setActiveSuggestionIndex(idx)}
+                            onClick={() => {
+                              setUnifiedSearch(s);
+                              setSuggestionsOpen(false);
+                              setActiveSuggestionIndex(-1);
+                              setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                            }}
+                            className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {quickFilterSuggestions.length > 0 && (
+                      <div>
+                        <div className="px-3 py-2 text-xs text-gray-500">Quick Filters</div>
+                        {quickFilterSuggestions.slice(0, 6).map((s, qi) => {
+                          const idx = inventorySuggestions.length + qi;
+                          return (
+                            <button
+                              key={`quick-${s}`}
+                              type="button"
+                              role="option"
+                              aria-selected={idx === activeSuggestionIndex}
+                              onMouseDown={(ev) => ev.preventDefault()}
+                              onMouseEnter={() => setActiveSuggestionIndex(idx)}
+                              onClick={() => {
+                                setUnifiedSearch(s);
+                                setSuggestionsOpen(false);
+                                setActiveSuggestionIndex(-1);
+                                setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                              }}
+                              className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                            >
+                              {s}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1" type="button" onClick={(e) => { e.preventDefault(); handleUnifiedSearchSubmit(e as any); }}>
                   <Search className="w-5 h-5" />
                 </button>
               </div>
