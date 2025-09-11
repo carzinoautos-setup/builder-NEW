@@ -237,7 +237,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                         const label = typeof item === "string" ? item : item.label;
                         const href = typeof item === "string" ? "#" : item.url;
                         return (
-                          <a key={label} href={href} className="block">
+                          <a key={label} href={href} className="block md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed">
                             {label}
                           </a>
                         );
@@ -253,7 +253,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className="block"
+                              className="block md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed"
                               onClick={(e) => {
                                 if (isInternal) {
                                   e.preventDefault();
