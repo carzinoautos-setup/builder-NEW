@@ -123,7 +123,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-[1280px] mx-auto">
+      <div className="max-w-[1280px] mx-auto pt-10">
         <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-8">
           {sections.map((s, idx) => (
             <div key={s.title}>
