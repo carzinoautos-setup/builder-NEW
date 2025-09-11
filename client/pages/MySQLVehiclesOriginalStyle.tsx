@@ -444,7 +444,7 @@ export default function MySQLVehiclesOriginalStyle() {
     "Sedans under $15,000",
     "Compact cars under $15,000",
     "Full-size trucks for sale",
-    "2018–2021 trucks under $35,000",
+    "2018���2021 trucks under $35,000",
   ];
 
   const staticKeywords = [
@@ -708,9 +708,9 @@ export default function MySQLVehiclesOriginalStyle() {
   }, [filterOptions, debouncedUnifiedSearch]);
 
   // Map memoized values back to local variables used by the render logic
-  const inventorySuggestions = computedInventorySuggestions;
-  const quickFilterSuggestions = computedQuickFilterSuggestions;
-  const filteredSuggestions = computedFilteredSuggestions;
+  inventorySuggestions = computedInventorySuggestions;
+  quickFilterSuggestions = computedQuickFilterSuggestions;
+  filteredSuggestions = computedFilteredSuggestions;
 
   // Highway MPG slider state (min/max)
   const [highwayMpgMin, setHighwayMpgMin] = useState<number | null>(null);
