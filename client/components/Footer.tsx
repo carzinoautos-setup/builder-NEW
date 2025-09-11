@@ -60,14 +60,21 @@ export default function Footer() {
 
   return (
     <footer className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#24272C] text-white pt-0 pb-10 px-4 sm:px-6 lg:px-16">
+      {/* Builder-editable promo: create a Builder model named 'footer-promo' to edit this content in Design */}
       <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-gray-100">
         <div className="max-w-[1280px] mx-auto">
           <div className="py-3 px-4 flex items-center justify-center">
-            <div className="max-w-[900px] text-center">
-              <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fde9c1f5a7af24b049f611559e659d12d?format=webp&width=800" alt="Carzino promo" className="mx-auto h-8 mb-2" />
-              <div className="text-sm text-gray-700">"Find it. Love it. Drive it. Carzino it."</div>
-              <div className="text-xs text-gray-500 mt-2">Dealers: Exclusive early access now available- enjoy three 3-6 months of free listings. Learn more.</div>
-              <div className="text-xs text-red-600 mt-2 font-medium">Coming soon for Private sellers.</div>
+            <div className="max-w-[900px] w-full">
+              <BuilderComponent model="footer-promo" options={{ includeRefs: true }} />
+              {/* Fallback static content (rendered when Builder model is not present) */}
+              <div className="hidden" data-fallback>
+                <div className="text-center">
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fde9c1f5a7af24b049f611559e659d12d?format=webp&width=800" alt="Carzino promo" className="mx-auto h-8 mb-2" />
+                  <div className="text-sm text-gray-700">"Find it. Love it. Drive it. Carzino it."</div>
+                  <div className="text-xs text-gray-500 mt-2">Dealers: Exclusive early access now available- enjoy three 3-6 months of free listings. Learn more.</div>
+                  <div className="text-xs text-red-600 mt-2 font-medium">Coming soon for Private sellers.</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
