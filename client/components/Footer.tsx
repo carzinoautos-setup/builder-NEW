@@ -245,8 +245,20 @@ export default function Footer() {
                         {s.links.map((item) => {
                           const label = typeof item === "string" ? item : item.label;
                           const href = typeof item === "string" ? "#" : item.url;
+                          const isInternal = href && href.startsWith("/");
                           return (
-                            <a key={label} href={href} className="block">
+                            <a
+                              key={label}
+                              href={href}
+                              className="block"
+                              onClick={(e) => {
+                                if (isInternal) {
+                                  e.preventDefault();
+                                  // Use router navigation to avoid full page reloads and ensure location is updated
+                                  navigate(href, { replace: false });
+                                }
+                              }}
+                            >
                               {label}
                             </a>
                           );
