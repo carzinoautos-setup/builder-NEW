@@ -229,27 +229,27 @@ export default function Footer() {
                 <div className="font-semibold text-lg">{s.title}</div>
                 <div className="mt-6 opacity-80">
                   {s.links ? (
-                    <nav>
-                      {s.links.map((l) => (
-                        l === "Trade in your Cars" ? (
-                          <p key={l}>
-                            <a href="https://www.carzino.com/trade-in-your-car/" className={`block ${l ? "mt-0" : "mt-3"}`}>
-                              {l}
+                    s.title === "Links" ? (
+                      <nav>
+                        {s.links.map((item) => {
+                          const label = typeof item === "string" ? item : item.label;
+                          const href = typeof item === "string" ? "#" : item.url;
+                          return (
+                            <a key={label} href={href} className={`block ${label ? "mt-0" : "mt-3"}`}>
+                              {label}
                             </a>
-                          </p>
-                        ) : l === "Careers With Us" ? (
-                          <p key={l}>
-                            <a href="https://www.carzino.com/sell-your-car/" className={`block ${l ? "mt-0" : "mt-3"}`}>
-                              Sell Your Car
-                            </a>
-                          </p>
-                        ) : (
+                          );
+                        })}
+                      </nav>
+                    ) : (
+                      <nav>
+                        {s.links.map((l) => (
                           <a key={l} className={`block ${l ? "mt-0" : "mt-3"}`} href="#">
                             {l}
                           </a>
-                        )
-                      ))}
-                    </nav>
+                        ))}
+                      </nav>
+                    )
                   ) : (
                     s.content
                   )}
