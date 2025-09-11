@@ -254,8 +254,8 @@ export default function Footer() {
                               onClick={(e) => {
                                 if (isInternal) {
                                   e.preventDefault();
-                                  // Use router navigation to avoid full page reloads and ensure location is updated
-                                  navigate(href, { replace: false });
+                                  // Ask the page to clear filters first, then navigate
+                                  window.dispatchEvent(new CustomEvent('carzino:navigate-with-reset', { detail: { href } }));
                                 }
                               }}
                             >
