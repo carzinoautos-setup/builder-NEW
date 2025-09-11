@@ -363,7 +363,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
 
                 {/* Static fallback when builder model missing */}
                 <div className="mt-2">
-                  <p>
+                  <p className="text-xs">
                     Carzino 2025© All rights reserved. | By using Carzino.com, you agree to the monitoring plus storing your interactions on the website, including those with Carzino dealers, with the purpose of enhancing and customizing our services. Refer to our Privacy Policy for more information
                   </p>
                 </div>
