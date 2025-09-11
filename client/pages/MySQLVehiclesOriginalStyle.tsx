@@ -5777,7 +5777,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     <>
                       <div className="md:hidden">
                         {apiResponse.meta.currentPage < apiResponse.meta.totalPages && (
-                          <div className="fixed inset-x-0 bottom-4 flex justify-center z-50">
+                          <div className="flex justify-center my-4">
                             <button
                               onClick={() => {
                                 if (!loading) {
