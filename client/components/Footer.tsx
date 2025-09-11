@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { BuilderComponent } from "@builder.io/react";
 import { builder } from "../lib/builder";
+import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const sections: {
     title: string;
