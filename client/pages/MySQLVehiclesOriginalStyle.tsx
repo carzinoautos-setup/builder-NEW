@@ -1402,8 +1402,11 @@ export default function MySQLVehiclesOriginalStyle() {
         urlFilters.year ||
         urlFilters.bodyStyle)
     ) {
-      setAppliedFilters((prev) => ({
-        ...prev,
+      // Replace appliedFilters entirely with values derived from the URL to avoid merging stale selections.
+      setAppliedFilters({
+        condition: Array.isArray(urlFilters.condition)
+          ? urlFilters.condition.map((v) => normalizeFilterValue(v))
+          : [],
         make: Array.isArray(urlFilters.make)
           ? urlFilters.make.map((v) => normalizeFilterValue(v))
           : [],
@@ -1413,14 +1416,29 @@ export default function MySQLVehiclesOriginalStyle() {
         trim: Array.isArray(urlFilters.trim)
           ? urlFilters.trim.map((v) => normalizeFilterValue(v))
           : [],
-        condition: Array.isArray(urlFilters.condition)
-          ? urlFilters.condition.map((v) => normalizeFilterValue(v))
-          : [],
         year: Array.isArray(urlFilters.year) ? urlFilters.year : [],
         bodyStyle: Array.isArray(urlFilters.bodyStyle)
           ? urlFilters.bodyStyle.map((v) => normalizeFilterValue(v))
           : [],
-      }));
+        vehicleType: [],
+        driveType: [],
+        transmission: [],
+        mileage: "",
+        exteriorColor: [],
+        sellerType: [],
+        dealer: [],
+        priceMin: "",
+        priceMax: "",
+        paymentMin: "",
+        paymentMax: "",
+        fuelType: [],
+        certified: [],
+        doors: [],
+        transmissionSpeed: [],
+        highwayMpg: [],
+        titleStatus: [],
+        status: [],
+      });
     }
   }, [location.pathname]);
 
@@ -2479,7 +2497,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
       } else {
         console.error(
-          `��� Geocoding API error: ${response.status} ${response.statusText}`,
+          `���� Geocoding API error: ${response.status} ${response.statusText}`,
         );
       }
 
