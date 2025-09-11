@@ -898,60 +898,6 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, [filterOptions?.highway_mpg]);
 
-  // Listen for footer navigation requests that require clearing filters first
-  useEffect(() => {
-    const handler = (ev: any) => {
-      const href = ev?.detail?.href;
-      if (!href) return;
-
-      // Reset filters without navigating (mirror of clearAllFilters but without the navigate call)
-      setSearchTerm("");
-      setUnifiedSearch("");
-      setZipCode("");
-      setRadius("200");
-      setAppliedLocation(null);
-      setAppliedRadius("200");
-      setAppliedFilters({
-        condition: [],
-        make: [],
-        model: [],
-        trim: [],
-        year: [],
-        bodyStyle: [],
-        vehicleType: [],
-        driveType: [],
-        transmission: [],
-        mileage: "",
-        exteriorColor: [],
-        sellerType: [],
-        dealer: [],
-        priceMin: "",
-        priceMax: "",
-        paymentMin: "",
-        paymentMax: "",
-        fuelType: [],
-        certified: [],
-        doors: [],
-        transmissionSpeed: [],
-        highwayMpg: [],
-        titleStatus: [],
-        status: [],
-      });
-      setPriceMin("1000");
-      setPriceMax("50000");
-      setPaymentMin("100");
-      setPaymentMax("2000");
-      setYearFrom("");
-      setYearTo("");
-      setCurrentPage(1);
-
-      // After clearing, navigate to the requested href so parseFiltersFromURL will re-apply URL filters
-      navigate(href, { replace: false });
-    };
-
-    window.addEventListener("carzino:navigate-with-reset", handler as EventListener);
-    return () => window.removeEventListener("carzino:navigate-with-reset", handler as EventListener);
-  }, [navigate]);
 
   // Get the API base URL - point to WordPress site (Vite env)
   const getApiBaseUrl = () => {
@@ -2210,21 +2156,6 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   };
 
-  // Expose clearAllFilters so footer links can call it synchronously before navigation
-  React.useEffect(() => {
-    try {
-      (window as any).carzinoClearAllFilters = () => clearAllFilters();
-    } catch (e) {
-      /* ignore */
-    }
-    return () => {
-      try {
-        delete (window as any).carzinoClearAllFilters;
-      } catch (e) {
-        /* ignore */
-      }
-    };
-  }, [/* intentionally no deps to keep function reference stable across renders */]);
 
   const displayedVehicles = getDisplayedVehicles();
   const favoritesCount = Object.keys(favorites).length;
