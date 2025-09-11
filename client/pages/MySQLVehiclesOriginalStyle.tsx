@@ -88,7 +88,9 @@ interface VehiclesApiResponse {
 // URL utility functions
 const parseFiltersFromURL = (pathname: string, search?: string) => {
   // Check query params first (e.g. ?make=Toyota,Ford&model=Camry,Corolla)
-  const qs = new URLSearchParams((search !== undefined ? search : window.location.search) || "");
+  const qs = new URLSearchParams(
+    (search !== undefined ? search : window.location.search) || "",
+  );
   const getArr = (key: string) => {
     const v = qs.get(key);
     if (!v) return undefined;
@@ -897,7 +899,6 @@ export default function MySQLVehiclesOriginalStyle() {
       }
     }
   }, [filterOptions?.highway_mpg]);
-
 
   // Get the API base URL - point to WordPress site (Vite env)
   const getApiBaseUrl = () => {
@@ -2155,7 +2156,6 @@ export default function MySQLVehiclesOriginalStyle() {
       navigate("/cars-for-sale/", { replace: true });
     }
   };
-
 
   const displayedVehicles = getDisplayedVehicles();
   const favoritesCount = Object.keys(favorites).length;
@@ -7015,11 +7015,13 @@ export default function MySQLVehiclesOriginalStyle() {
         </div>
       </div>
 
-      <Footer onResetAndNavigate={(href: string) => {
-        // Clear filters then navigate — use a tiny timeout to ensure state updates
-        clearAllFilters();
-        setTimeout(() => navigate(href, { replace: false }), 0);
-      }} />
+      <Footer
+        onResetAndNavigate={(href: string) => {
+          // Clear filters then navigate — use a tiny timeout to ensure state updates
+          clearAllFilters();
+          setTimeout(() => navigate(href, { replace: false }), 0);
+        }}
+      />
     </div>
   );
 }
