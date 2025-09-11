@@ -214,6 +214,17 @@ export default function Footer() {
                               {l}
                             </a>
                           </p>
+                        ) : l === "Careers With Us" ? (
+                          <p key={l}>
+                            <a
+                              href="https://www.carzino.com/sell-your-car/"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                              className={`block ${l ? "mt-0" : "mt-3"}`}
+                            >
+                              Sell Your Car
+                            </a>
+                          </p>
                         ) : (
                           <a
                             key={l}
