@@ -1092,6 +1092,20 @@ export default function MySQLVehiclesOriginalStyle() {
       ) {
         params.append("doors", (appliedFilters as any).doors.join(","));
       }
+
+      if (
+        (appliedFilters as any).engineCylinders &&
+        (appliedFilters as any).engineCylinders.length > 0
+      ) {
+        params.append("engine_cylinders", (appliedFilters as any).engineCylinders.join(","));
+      }
+
+      if (
+        (appliedFilters as any).displacementLiters &&
+        (appliedFilters as any).displacementLiters.length > 0
+      ) {
+        params.append("displacement_liters", (appliedFilters as any).displacementLiters.join(","));
+      }
       if (
         (appliedFilters as any).transmissionSpeed &&
         (appliedFilters as any).transmissionSpeed.length > 0
