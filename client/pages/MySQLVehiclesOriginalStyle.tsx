@@ -416,7 +416,8 @@ export default function MySQLVehiclesOriginalStyle() {
   const [unifiedSearch, setUnifiedSearch] = useState("");
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
-  const [debouncedUnifiedSearch, setDebouncedUnifiedSearch] = useState(unifiedSearch);
+  const [debouncedUnifiedSearch, setDebouncedUnifiedSearch] =
+    useState(unifiedSearch);
 
   // Debounce unified search input to avoid rapid filtering
   useEffect(() => {
@@ -662,27 +663,41 @@ export default function MySQLVehiclesOriginalStyle() {
     const inventoryCandidates: string[] = [];
     if (filterOptions) {
       if (Array.isArray(filterOptions.make)) {
-        inventoryCandidates.push(...filterOptions.make.map((m: any) => String(m.name)));
+        inventoryCandidates.push(
+          ...filterOptions.make.map((m: any) => String(m.name)),
+        );
       }
       if (Array.isArray(filterOptions.model)) {
-        inventoryCandidates.push(...filterOptions.model.map((m: any) => String(m.name)));
+        inventoryCandidates.push(
+          ...filterOptions.model.map((m: any) => String(m.name)),
+        );
       }
       if (Array.isArray(filterOptions.trim)) {
-        inventoryCandidates.push(...filterOptions.trim.map((t: any) => String(t.name)));
+        inventoryCandidates.push(
+          ...filterOptions.trim.map((t: any) => String(t.name)),
+        );
       }
       if (Array.isArray(filterOptions.year)) {
-        inventoryCandidates.push(...filterOptions.year.map((y: any) => String(y.name || y)));
+        inventoryCandidates.push(
+          ...filterOptions.year.map((y: any) => String(y.name || y)),
+        );
       }
       if (Array.isArray(filterOptions.body_style)) {
-        inventoryCandidates.push(...filterOptions.body_style.map((b: any) => String(b.name)));
+        inventoryCandidates.push(
+          ...filterOptions.body_style.map((b: any) => String(b.name)),
+        );
       }
       if (Array.isArray(filterOptions.condition)) {
-        inventoryCandidates.push(...filterOptions.condition.map((c: any) => String(c.name)));
+        inventoryCandidates.push(
+          ...filterOptions.condition.map((c: any) => String(c.name)),
+        );
       }
     }
 
     const inventorySuggestions = qs
-      ? inventoryCandidates.filter((s) => s.toLowerCase().includes(qs)).slice(0, 8)
+      ? inventoryCandidates
+          .filter((s) => s.toLowerCase().includes(qs))
+          .slice(0, 8)
       : [];
 
     const startsWithStatic = (() => {
@@ -698,7 +713,9 @@ export default function MySQLVehiclesOriginalStyle() {
       : [];
 
     const filteredSuggestions =
-      inventorySuggestions.length > 0 ? inventorySuggestions : quickFilterSuggestions.slice(0, 6);
+      inventorySuggestions.length > 0
+        ? inventorySuggestions
+        : quickFilterSuggestions.slice(0, 6);
 
     return {
       computedInventorySuggestions: inventorySuggestions,
@@ -2258,7 +2275,10 @@ export default function MySQLVehiclesOriginalStyle() {
       { pattern: /\bcheap cars\b/, min: 1, max: 4000 },
       { pattern: /\bunder\s*\$?(\d{1,3}(?:,\d{3})?|\d+(?:k)?)\b/, min: 1 },
       { pattern: /\bunder\s*(\d+(?:k)?)\b/, min: 1 },
-      { pattern: /\bbetween\s*\$?(\d+(?:k)?)\s*(?:and|-)\s*\$?(\d+(?:k)?)\b/, min: 0 },
+      {
+        pattern: /\bbetween\s*\$?(\d+(?:k)?)\s*(?:and|-)\s*\$?(\d+(?:k)?)\b/,
+        min: 0,
+      },
       { pattern: /\b(over|above)\s*\$?(\d+(?:,\d{3})?|\d+(?:k)?)\b/, min: 0 },
       { pattern: /\b(\d+(?:k))\b/, min: 0 },
     ];
@@ -2283,7 +2303,9 @@ export default function MySQLVehiclesOriginalStyle() {
       filters.priceMax = 20000;
     }
 
-    const betweenMatch = query.match(/\bbetween\s*\$?(\d+(?:k)?)\s*(?:and|-)\s*\$?(\d+(?:k)?)\b/);
+    const betweenMatch = query.match(
+      /\bbetween\s*\$?(\d+(?:k)?)\s*(?:and|-)\s*\$?(\d+(?:k)?)\b/,
+    );
     if (betweenMatch) {
       const a = parsePriceValue(betweenMatch[1]);
       const b = parsePriceValue(betweenMatch[2]);
@@ -2302,7 +2324,9 @@ export default function MySQLVehiclesOriginalStyle() {
       }
     }
 
-    const overMatch = query.match(/\b(?:over|above)\s*\$?(\d+(?:,\d{3})?|\d+(?:k)?)\b/);
+    const overMatch = query.match(
+      /\b(?:over|above)\s*\$?(\d+(?:,\d{3})?|\d+(?:k)?)\b/,
+    );
     if (overMatch) {
       const v = parsePriceValue(overMatch[1]);
       if (!isNaN(v)) {
@@ -2342,13 +2366,23 @@ export default function MySQLVehiclesOriginalStyle() {
 
     // If no explicit make/model/trim/year/bodyStyle/condition identified, keep as free-text search
     const hasExplicit =
-      filters.make || filters.model || filters.trim || filters.year || filters.condition || filters.bodyStyle || filters.priceMin || filters.priceMax;
+      filters.make ||
+      filters.model ||
+      filters.trim ||
+      filters.year ||
+      filters.condition ||
+      filters.bodyStyle ||
+      filters.priceMin ||
+      filters.priceMax;
     if (!hasExplicit) {
       filters.search = query;
     }
 
     // Ensure price_min enforcement: if price filters used, make sure priceMin >=1
-    if (filters.priceMin !== undefined && (filters.priceMin === null || filters.priceMin === "")) {
+    if (
+      filters.priceMin !== undefined &&
+      (filters.priceMin === null || filters.priceMin === "")
+    ) {
       filters.priceMin = 1;
     }
 
@@ -2400,8 +2434,14 @@ export default function MySQLVehiclesOriginalStyle() {
       exteriorColor: [],
       sellerType: [],
       dealer: [],
-      priceMin: parsedFilters.priceMin !== undefined ? String(parsedFilters.priceMin) : "",
-      priceMax: parsedFilters.priceMax !== undefined ? String(parsedFilters.priceMax) : "",
+      priceMin:
+        parsedFilters.priceMin !== undefined
+          ? String(parsedFilters.priceMin)
+          : "",
+      priceMax:
+        parsedFilters.priceMax !== undefined
+          ? String(parsedFilters.priceMax)
+          : "",
       paymentMin: "",
       paymentMax: "",
       fuelType: [],
@@ -2997,7 +3037,9 @@ export default function MySQLVehiclesOriginalStyle() {
                       setSuggestionsOpen(true);
                       setActiveSuggestionIndex(-1);
                     }}
-                    onBlur={() => setTimeout(() => setSuggestionsOpen(false), 150)}
+                    onBlur={() =>
+                      setTimeout(() => setSuggestionsOpen(false), 150)
+                    }
                     onChange={(e) => {
                       setUnifiedSearch(e.target.value);
                       setActiveSuggestionIndex(-1);
@@ -3006,18 +3048,29 @@ export default function MySQLVehiclesOriginalStyle() {
                       if (!suggestionsOpen) return;
                       if (e.key === "ArrowDown") {
                         e.preventDefault();
-                        setActiveSuggestionIndex((i) => Math.min(i + 1, filteredSuggestions.length - 1));
+                        setActiveSuggestionIndex((i) =>
+                          Math.min(i + 1, filteredSuggestions.length - 1),
+                        );
                       } else if (e.key === "ArrowUp") {
                         e.preventDefault();
                         setActiveSuggestionIndex((i) => Math.max(i - 1, 0));
                       } else if (e.key === "Enter") {
-                        if (activeSuggestionIndex >= 0 && filteredSuggestions[activeSuggestionIndex]) {
+                        if (
+                          activeSuggestionIndex >= 0 &&
+                          filteredSuggestions[activeSuggestionIndex]
+                        ) {
                           e.preventDefault();
                           const s = filteredSuggestions[activeSuggestionIndex];
                           setUnifiedSearch(s);
                           setSuggestionsOpen(false);
                           setActiveSuggestionIndex(-1);
-                          setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                          setTimeout(
+                            () =>
+                              handleUnifiedSearchSubmit(
+                                new Event("submit") as any,
+                              ),
+                            0,
+                          );
                         } else {
                           // No suggestion selected ��� submit the form
                           e.preventDefault();
@@ -3030,62 +3083,88 @@ export default function MySQLVehiclesOriginalStyle() {
                     }}
                     className="carzino-search-input w-full pl-4 pr-14 py-2.5 border border-gray-300 rounded-[10px] sm:rounded-full overflow-hidden focus:outline-none focus:border-red-600"
                   />
-                  {suggestionsOpen && (inventorySuggestions.length > 0 || quickFilterSuggestions.length > 0) && (
-                    <div role="listbox" aria-label="Search suggestions" className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50">
-                      {inventorySuggestions.length > 0 && (
-                        <div>
-                          <div className="px-3 py-2 text-xs text-gray-500">Inventory Suggestions</div>
-                          {inventorySuggestions.map((s, idx) => (
-                            <button
-                              key={`inv-${s}`}
-                              type="button"
-                              role="option"
-                              aria-selected={idx === activeSuggestionIndex}
-                              onMouseDown={(ev) => ev.preventDefault()} // prevent blur
-                              onMouseEnter={() => setActiveSuggestionIndex(idx)}
-                              onClick={() => {
-                                setUnifiedSearch(s);
-                                setSuggestionsOpen(false);
-                                setActiveSuggestionIndex(-1);
-                                setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
-                              }}
-                              className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
-                            >
-                              {s}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-
-                      {quickFilterSuggestions.length > 0 && (
-                        <div>
-                          <div className="px-3 py-2 text-xs text-gray-500">Quick Filters</div>
-                          {quickFilterSuggestions.slice(0, 6).map((s, qi) => {
-                            const idx = inventorySuggestions.length + qi;
-                            return (
+                  {suggestionsOpen &&
+                    (inventorySuggestions.length > 0 ||
+                      quickFilterSuggestions.length > 0) && (
+                      <div
+                        role="listbox"
+                        aria-label="Search suggestions"
+                        className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50"
+                      >
+                        {inventorySuggestions.length > 0 && (
+                          <div>
+                            <div className="px-3 py-2 text-xs text-gray-500">
+                              Inventory Suggestions
+                            </div>
+                            {inventorySuggestions.map((s, idx) => (
                               <button
-                                key={`quick-${s}`}
+                                key={`inv-${s}`}
                                 type="button"
                                 role="option"
                                 aria-selected={idx === activeSuggestionIndex}
                                 onMouseDown={(ev) => ev.preventDefault()} // prevent blur
-                                onMouseEnter={() => setActiveSuggestionIndex(idx)}
+                                onMouseEnter={() =>
+                                  setActiveSuggestionIndex(idx)
+                                }
                                 onClick={() => {
                                   setUnifiedSearch(s);
                                   setSuggestionsOpen(false);
                                   setActiveSuggestionIndex(-1);
-                                  setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                                  setTimeout(
+                                    () =>
+                                      handleUnifiedSearchSubmit(
+                                        new Event("submit") as any,
+                                      ),
+                                    0,
+                                  );
                                 }}
-                                className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                                className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
                               >
                                 {s}
                               </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                            ))}
+                          </div>
+                        )}
+
+                        {quickFilterSuggestions.length > 0 && (
+                          <div>
+                            <div className="px-3 py-2 text-xs text-gray-500">
+                              Quick Filters
+                            </div>
+                            {quickFilterSuggestions.slice(0, 6).map((s, qi) => {
+                              const idx = inventorySuggestions.length + qi;
+                              return (
+                                <button
+                                  key={`quick-${s}`}
+                                  type="button"
+                                  role="option"
+                                  aria-selected={idx === activeSuggestionIndex}
+                                  onMouseDown={(ev) => ev.preventDefault()} // prevent blur
+                                  onMouseEnter={() =>
+                                    setActiveSuggestionIndex(idx)
+                                  }
+                                  onClick={() => {
+                                    setUnifiedSearch(s);
+                                    setSuggestionsOpen(false);
+                                    setActiveSuggestionIndex(-1);
+                                    setTimeout(
+                                      () =>
+                                        handleUnifiedSearchSubmit(
+                                          new Event("submit") as any,
+                                        ),
+                                      0,
+                                    );
+                                  }}
+                                  className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
+                                >
+                                  {s}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   <button
                     type="submit"
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1"
@@ -3251,7 +3330,9 @@ export default function MySQLVehiclesOriginalStyle() {
                       setSuggestionsOpen(true);
                       setActiveSuggestionIndex(-1);
                     }}
-                    onBlur={() => setTimeout(() => setSuggestionsOpen(false), 150)}
+                    onBlur={() =>
+                      setTimeout(() => setSuggestionsOpen(false), 150)
+                    }
                     onChange={(e) => {
                       setUnifiedSearch(e.target.value);
                       setActiveSuggestionIndex(-1);
@@ -3260,18 +3341,29 @@ export default function MySQLVehiclesOriginalStyle() {
                       if (!suggestionsOpen) return;
                       if (e.key === "ArrowDown") {
                         e.preventDefault();
-                        setActiveSuggestionIndex((i) => Math.min(i + 1, filteredSuggestions.length - 1));
+                        setActiveSuggestionIndex((i) =>
+                          Math.min(i + 1, filteredSuggestions.length - 1),
+                        );
                       } else if (e.key === "ArrowUp") {
                         e.preventDefault();
                         setActiveSuggestionIndex((i) => Math.max(i - 1, 0));
                       } else if (e.key === "Enter") {
-                        if (activeSuggestionIndex >= 0 && filteredSuggestions[activeSuggestionIndex]) {
+                        if (
+                          activeSuggestionIndex >= 0 &&
+                          filteredSuggestions[activeSuggestionIndex]
+                        ) {
                           e.preventDefault();
                           const s = filteredSuggestions[activeSuggestionIndex];
                           setUnifiedSearch(s);
                           setSuggestionsOpen(false);
                           setActiveSuggestionIndex(-1);
-                          setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                          setTimeout(
+                            () =>
+                              handleUnifiedSearchSubmit(
+                                new Event("submit") as any,
+                              ),
+                            0,
+                          );
                         } else {
                           // No suggestion selected — submit the form
                           e.preventDefault();
@@ -3284,62 +3376,88 @@ export default function MySQLVehiclesOriginalStyle() {
                     }}
                     className="carzino-search-input w-full px-3 py-2 pr-14 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
                   />
-                  {suggestionsOpen && (inventorySuggestions.length > 0 || quickFilterSuggestions.length > 0) && (
-                    <div role="listbox" aria-label="Search suggestions" className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50">
-                      {inventorySuggestions.length > 0 && (
-                        <div>
-                          <div className="px-3 py-2 text-xs text-gray-500">Inventory Suggestions</div>
-                          {inventorySuggestions.map((s, idx) => (
-                            <button
-                              key={`inv-${s}`}
-                              type="button"
-                              role="option"
-                              aria-selected={idx === activeSuggestionIndex}
-                              onMouseDown={(ev) => ev.preventDefault()}
-                              onMouseEnter={() => setActiveSuggestionIndex(idx)}
-                              onClick={() => {
-                                setUnifiedSearch(s);
-                                setSuggestionsOpen(false);
-                                setActiveSuggestionIndex(-1);
-                                setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
-                              }}
-                              className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
-                            >
-                              {s}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-
-                      {quickFilterSuggestions.length > 0 && (
-                        <div>
-                          <div className="px-3 py-2 text-xs text-gray-500">Quick Filters</div>
-                          {quickFilterSuggestions.slice(0, 6).map((s, qi) => {
-                            const idx = inventorySuggestions.length + qi;
-                            return (
+                  {suggestionsOpen &&
+                    (inventorySuggestions.length > 0 ||
+                      quickFilterSuggestions.length > 0) && (
+                      <div
+                        role="listbox"
+                        aria-label="Search suggestions"
+                        className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50"
+                      >
+                        {inventorySuggestions.length > 0 && (
+                          <div>
+                            <div className="px-3 py-2 text-xs text-gray-500">
+                              Inventory Suggestions
+                            </div>
+                            {inventorySuggestions.map((s, idx) => (
                               <button
-                                key={`quick-${s}`}
+                                key={`inv-${s}`}
                                 type="button"
                                 role="option"
                                 aria-selected={idx === activeSuggestionIndex}
                                 onMouseDown={(ev) => ev.preventDefault()}
-                                onMouseEnter={() => setActiveSuggestionIndex(idx)}
+                                onMouseEnter={() =>
+                                  setActiveSuggestionIndex(idx)
+                                }
                                 onClick={() => {
                                   setUnifiedSearch(s);
                                   setSuggestionsOpen(false);
                                   setActiveSuggestionIndex(-1);
-                                  setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                                  setTimeout(
+                                    () =>
+                                      handleUnifiedSearchSubmit(
+                                        new Event("submit") as any,
+                                      ),
+                                    0,
+                                  );
                                 }}
-                                className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                                className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
                               >
                                 {s}
                               </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                            ))}
+                          </div>
+                        )}
+
+                        {quickFilterSuggestions.length > 0 && (
+                          <div>
+                            <div className="px-3 py-2 text-xs text-gray-500">
+                              Quick Filters
+                            </div>
+                            {quickFilterSuggestions.slice(0, 6).map((s, qi) => {
+                              const idx = inventorySuggestions.length + qi;
+                              return (
+                                <button
+                                  key={`quick-${s}`}
+                                  type="button"
+                                  role="option"
+                                  aria-selected={idx === activeSuggestionIndex}
+                                  onMouseDown={(ev) => ev.preventDefault()}
+                                  onMouseEnter={() =>
+                                    setActiveSuggestionIndex(idx)
+                                  }
+                                  onClick={() => {
+                                    setUnifiedSearch(s);
+                                    setSuggestionsOpen(false);
+                                    setActiveSuggestionIndex(-1);
+                                    setTimeout(
+                                      () =>
+                                        handleUnifiedSearchSubmit(
+                                          new Event("submit") as any,
+                                        ),
+                                      0,
+                                    );
+                                  }}
+                                  className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
+                                >
+                                  {s}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   <button
                     type="submit"
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1"
@@ -5679,7 +5797,9 @@ export default function MySQLVehiclesOriginalStyle() {
                     setSuggestionsOpen(true);
                     setActiveSuggestionIndex(-1);
                   }}
-                  onBlur={() => setTimeout(() => setSuggestionsOpen(false), 150)}
+                  onBlur={() =>
+                    setTimeout(() => setSuggestionsOpen(false), 150)
+                  }
                   onChange={(e) => {
                     setUnifiedSearch(e.target.value);
                     setActiveSuggestionIndex(-1);
@@ -5695,18 +5815,29 @@ export default function MySQLVehiclesOriginalStyle() {
                     }
                     if (e.key === "ArrowDown") {
                       e.preventDefault();
-                      setActiveSuggestionIndex((i) => Math.min(i + 1, filteredSuggestions.length - 1));
+                      setActiveSuggestionIndex((i) =>
+                        Math.min(i + 1, filteredSuggestions.length - 1),
+                      );
                     } else if (e.key === "ArrowUp") {
                       e.preventDefault();
                       setActiveSuggestionIndex((i) => Math.max(i - 1, 0));
                     } else if (e.key === "Enter") {
-                      if (activeSuggestionIndex >= 0 && filteredSuggestions[activeSuggestionIndex]) {
+                      if (
+                        activeSuggestionIndex >= 0 &&
+                        filteredSuggestions[activeSuggestionIndex]
+                      ) {
                         e.preventDefault();
                         const s = filteredSuggestions[activeSuggestionIndex];
                         setUnifiedSearch(s);
                         setSuggestionsOpen(false);
                         setActiveSuggestionIndex(-1);
-                        setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                        setTimeout(
+                          () =>
+                            handleUnifiedSearchSubmit(
+                              new Event("submit") as any,
+                            ),
+                          0,
+                        );
                       } else {
                         // No suggestion selected — submit the form
                         e.preventDefault();
@@ -5720,41 +5851,22 @@ export default function MySQLVehiclesOriginalStyle() {
                   className="carzino-search-input w-full pl-4 pr-14 py-2.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-red-600"
                 />
 
-                {suggestionsOpen && (inventorySuggestions.length > 0 || quickFilterSuggestions.length > 0) && (
-                  <div role="listbox" aria-label="Search suggestions" className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50">
-                    {inventorySuggestions.length > 0 && (
-                      <div>
-                        <div className="px-3 py-2 text-xs text-gray-500">Inventory Suggestions</div>
-                        {inventorySuggestions.map((s, idx) => (
-                          <button
-                            key={`inv-${s}`}
-                            type="button"
-                            role="option"
-                            aria-selected={idx === activeSuggestionIndex}
-                            onMouseDown={(ev) => ev.preventDefault()}
-                            onMouseEnter={() => setActiveSuggestionIndex(idx)}
-                            onClick={() => {
-                              setUnifiedSearch(s);
-                              setSuggestionsOpen(false);
-                              setActiveSuggestionIndex(-1);
-                              setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
-                            }}
-                            className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-
-                    {quickFilterSuggestions.length > 0 && (
-                      <div>
-                        <div className="px-3 py-2 text-xs text-gray-500">Quick Filters</div>
-                        {quickFilterSuggestions.slice(0, 6).map((s, qi) => {
-                          const idx = inventorySuggestions.length + qi;
-                          return (
+                {suggestionsOpen &&
+                  (inventorySuggestions.length > 0 ||
+                    quickFilterSuggestions.length > 0) && (
+                    <div
+                      role="listbox"
+                      aria-label="Search suggestions"
+                      className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50"
+                    >
+                      {inventorySuggestions.length > 0 && (
+                        <div>
+                          <div className="px-3 py-2 text-xs text-gray-500">
+                            Inventory Suggestions
+                          </div>
+                          {inventorySuggestions.map((s, idx) => (
                             <button
-                              key={`quick-${s}`}
+                              key={`inv-${s}`}
                               type="button"
                               role="option"
                               aria-selected={idx === activeSuggestionIndex}
@@ -5764,20 +5876,70 @@ export default function MySQLVehiclesOriginalStyle() {
                                 setUnifiedSearch(s);
                                 setSuggestionsOpen(false);
                                 setActiveSuggestionIndex(-1);
-                                setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                                setTimeout(
+                                  () =>
+                                    handleUnifiedSearchSubmit(
+                                      new Event("submit") as any,
+                                    ),
+                                  0,
+                                );
                               }}
-                              className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                              className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
                             >
                               {s}
                             </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                )}
+                          ))}
+                        </div>
+                      )}
 
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1" type="button" onClick={(e) => { e.preventDefault(); handleUnifiedSearchSubmit(e as any); }}>
+                      {quickFilterSuggestions.length > 0 && (
+                        <div>
+                          <div className="px-3 py-2 text-xs text-gray-500">
+                            Quick Filters
+                          </div>
+                          {quickFilterSuggestions.slice(0, 6).map((s, qi) => {
+                            const idx = inventorySuggestions.length + qi;
+                            return (
+                              <button
+                                key={`quick-${s}`}
+                                type="button"
+                                role="option"
+                                aria-selected={idx === activeSuggestionIndex}
+                                onMouseDown={(ev) => ev.preventDefault()}
+                                onMouseEnter={() =>
+                                  setActiveSuggestionIndex(idx)
+                                }
+                                onClick={() => {
+                                  setUnifiedSearch(s);
+                                  setSuggestionsOpen(false);
+                                  setActiveSuggestionIndex(-1);
+                                  setTimeout(
+                                    () =>
+                                      handleUnifiedSearchSubmit(
+                                        new Event("submit") as any,
+                                      ),
+                                    0,
+                                  );
+                                }}
+                                className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
+                              >
+                                {s}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                <button
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1"
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleUnifiedSearchSubmit(e as any);
+                  }}
+                >
                   <Search className="w-5 h-5" />
                 </button>
               </div>
@@ -6577,8 +6739,13 @@ export default function MySQLVehiclesOriginalStyle() {
               )}
 
               {/* Show no-results message in header when appropriate */}
-              {viewMode !== "favorites" && !loading && !error && displayedVehicles.length === 0 ? (
-                <div className="font-medium">No results found. Search by year, make, model, or use filters.</div>
+              {viewMode !== "favorites" &&
+              !loading &&
+              !error &&
+              displayedVehicles.length === 0 ? (
+                <div className="font-medium">
+                  No results found. Search by year, make, model, or use filters.
+                </div>
               ) : (
                 <span className="font-medium">
                   {viewMode === "favorites"
@@ -6619,7 +6786,10 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div>
                   {displayedVehicles.length === 0 ? (
                     <div className="text-center py-12">
-                      <div className="text-lg">No results found. Search by year, make, model, or use filters.</div>
+                      <div className="text-lg">
+                        No results found. Search by year, make, model, or use
+                        filters.
+                      </div>
                     </div>
                   ) : (
                     <div className="vehicle-grid grid grid-cols-1 gap-4 mb-8">
@@ -6711,13 +6881,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     : "New and Used Vehicles for sale"}
                 </h1>
                 <p className="text-gray-600 text-sm mt-1">
-                  {viewMode === "favorites" ? (
-                    `${favoritesCount} Vehicles`
-                  ) : !loading && !error && displayedVehicles.length === 0 ? (
-                    "No results found. Search by year, make, model, or use filters."
-                  ) : (
-                    `${totalResults.toLocaleString()} Matches${appliedLocation && (appliedLocation.city || appliedLocation.state) ? ` by ${appliedLocation.city || ""}${appliedLocation.city && appliedLocation.state ? ", " : ""}${appliedLocation.state || ""}` : ""}`
-                  )}
+                  {viewMode === "favorites"
+                    ? `${favoritesCount} Vehicles`
+                    : !loading && !error && displayedVehicles.length === 0
+                      ? "No results found. Search by year, make, model, or use filters."
+                      : `${totalResults.toLocaleString()} Matches${appliedLocation && (appliedLocation.city || appliedLocation.state) ? ` by ${appliedLocation.city || ""}${appliedLocation.city && appliedLocation.state ? ", " : ""}${appliedLocation.state || ""}` : ""}`}
                 </p>
               </div>
 
