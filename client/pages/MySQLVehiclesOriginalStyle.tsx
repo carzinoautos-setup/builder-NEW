@@ -2210,6 +2210,22 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   };
 
+  // Expose clearAllFilters so footer links can call it synchronously before navigation
+  React.useEffect(() => {
+    try {
+      (window as any).carzinoClearAllFilters = () => clearAllFilters();
+    } catch (e) {
+      /* ignore */
+    }
+    return () => {
+      try {
+        delete (window as any).carzinoClearAllFilters;
+      } catch (e) {
+        /* ignore */
+      }
+    };
+  }, [/* intentionally no deps to keep function reference stable across renders */]);
+
   const displayedVehicles = getDisplayedVehicles();
   const favoritesCount = Object.keys(favorites).length;
 
