@@ -267,8 +267,10 @@ export default function Footer() {
 
             {/* Static fallback when builder model missing */}
             <div className="bg-transparent text-white">
-              <div className="text-center text-sm opacity-90">
-                Example full-width footer text. Create a Builder model named "footer-fullwidth" to edit this area in the Design tab.
+              <div className="text-center text-sm opacity-90" style={{paddingTop: '20px'}}>
+                <p>
+                  Carzino 2025© All rights reserved. | By using Carzino.com, you agree to the monitoring plus storing your interactions on the website, including those with Carzino dealers, with the purpose of enhancing and customizing our services. Refer to our Privacy Policy for more information
+                </p>
               </div>
 
               {/* Four links below the text - responsive: 4/2/1 columns */}
