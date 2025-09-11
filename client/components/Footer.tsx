@@ -221,7 +221,9 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Full-width editable footer area (above copyright) */}
+        <div className="h-px bg-white/5 mb-6" />
+
+        {/* Full-width editable footer area (below the rule and above copyright) */}
         <div className="w-full">
           <div className="max-w-[1280px] mx-auto py-6 px-4 sm:px-6 lg:px-16">
             <BuilderComponent model="footer-fullwidth" options={{ includeRefs: true }} />
@@ -232,6 +234,7 @@ export default function Footer() {
                 Example full-width footer text. Create a Builder model named "footer-fullwidth" to edit this area in the Design tab.
               </div>
 
+              {/* Four links below the text - responsive: 4/2/1 columns */}
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <a href="#" className="text-white/90">Privacy policy</a>
                 <a href="#" className="text-white/90">Terms and conditions</a>
