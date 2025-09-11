@@ -300,6 +300,30 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                 .map(mapItem)
                 .filter(Boolean) as any;
 
+            // Engine cylinders
+            const engineCyl = pickArrayFromFilters(
+              f,
+              "engine_cylinders",
+              "engineCylinders",
+              "engine_cylinders",
+            );
+            if (engineCyl)
+              normalized.engine_cylinders = engineCyl
+                .map(mapItem)
+                .filter(Boolean) as any;
+
+            // Displacement liters
+            const displacement = pickArrayFromFilters(
+              f,
+              "displacement_liters",
+              "displacementLiters",
+              "displacement_liters",
+            );
+            if (displacement)
+              normalized.displacement_liters = displacement
+                .map(mapItem)
+                .filter(Boolean) as any;
+
             const titles = pickArrayFromFilters(
               f,
               "title_status",
