@@ -197,27 +197,27 @@ export default function Footer() {
                   className={`mt-4 overflow-hidden transition-all duration-200 ${openIdx === idx ? "max-h-[1000px]" : "max-h-0"}`}
                 >
                   {s.links ? (
-                    <nav className="mt-0 opacity-80 flex flex-col gap-3">
-                      {s.links.map((l) => (
-                        l === "Trade in your Cars" ? (
-                          <p key={l}>
-                            <a href="https://www.carzino.com/trade-in-your-car/" className="block">
-                              {l}
+                    s.title === "Links" ? (
+                      <nav className="mt-0 opacity-80 flex flex-col gap-3">
+                        {s.links.map((item) => {
+                          const label = typeof item === "string" ? item : item.label;
+                          const href = typeof item === "string" ? "#" : item.url;
+                          return (
+                            <a key={label} href={href} className="block">
+                              {label}
                             </a>
-                          </p>
-                        ) : l === "Careers With Us" ? (
-                          <p key={l}>
-                            <a href="https://www.carzino.com/sell-your-car/" className="block">
-                              Sell Your Car
-                            </a>
-                          </p>
-                        ) : (
+                          );
+                        })}
+                      </nav>
+                    ) : (
+                      <nav className="mt-0 opacity-80 flex flex-col gap-3">
+                        {s.links.map((l) => (
                           <a key={l} className="block" href="#">
                             {l}
                           </a>
-                        )
-                      ))}
-                    </nav>
+                        ))}
+                      </nav>
+                    )
                   ) : (
                     <div className="mt-0">{s.content}</div>
                   )}
