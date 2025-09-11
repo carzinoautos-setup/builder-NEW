@@ -162,13 +162,13 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
       <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-gray-100">
         <div className="max-w-[1280px] mx-auto">
           <div className="py-3 px-4 flex items-center justify-center">
-            <div className="w-full">
+            <div className="w-full footer-promo">
               <BuilderComponent
                 model="footer-promo"
                 options={{ includeRefs: true }}
               />
               {/* Fallback static content (visible when Builder model not present) */}
-              <div>
+              <div className="footer-promo-fallback">
                 <div className="text-center">
                   <img
                     src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2c48de389c614655b60a7c83a7b13cc9?format=webp&width=800"
