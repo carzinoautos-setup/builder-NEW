@@ -6,6 +6,7 @@ type HeaderProps = {
 
 export default function Header({ topTemplate }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [vehiclesOpen, setVehiclesOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -265,6 +266,57 @@ export default function Header({ topTemplate }: HeaderProps) {
               >
                 Contact
               </a>
+
+              {/* Mobile accordion: Search by Vehicle Type */}
+              <div className="w-full">
+                <button
+                  type="button"
+                  onClick={() => setVehiclesOpen((s) => !s)}
+                  className="w-full flex items-center justify-between py-2 px-0 mt-1"
+                >
+                  <span className="text-gray-800 font-bold">Search by Vehicle Type</span>
+                  <svg
+                    className={`w-4 h-4 transform transition-transform ${vehiclesOpen ? "rotate-180" : ""}`}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M6 9l6 6 6-6" stroke="#24272C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+
+                {vehiclesOpen && (
+                  <div className="grid grid-cols-3 gap-3 pt-3 pb-2">
+                    {[
+                      "Convertible",
+                      "Coupe",
+                      "Sedans",
+                      "Hatchback",
+                      "Crossover/SUV",
+                      "Vans",
+                      "Wagons",
+                      "Shop Used",
+                      "Used Trucks",
+                      "Trucks",
+                      "Ext Cabs",
+                      "ELECTRIC",
+                    ].map((label) => (
+                      <a
+                        key={label}
+                        href="#"
+                        onClick={() => {
+                          setMobileOpen(false);
+                        }}
+                        className="block text-center bg-white border border-gray-200 rounded-md p-2 text-sm hover:shadow-sm"
+                      >
+                        <img src={import.meta.env.VITE_PLACEHOLDER_IMAGE} alt="" className="w-full h-12 object-contain mb-1" />
+                        <div className="text-xs font-medium text-gray-800">{label}</div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div className="border-t border-gray-100 my-2" />
               <a
                 href="#"
