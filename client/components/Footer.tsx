@@ -221,8 +221,6 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="h-px bg-white/5 mb-6" />
-
         {/* Full-width editable footer area (below the rule and above copyright) */}
         <div className="w-full">
           <div className="max-w-[1280px] mx-auto py-6 px-4 sm:px-6 lg:px-16">
