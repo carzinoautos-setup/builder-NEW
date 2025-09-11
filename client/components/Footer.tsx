@@ -204,15 +204,18 @@ export default function Footer() {
                   {s.links ? (
                     s.title === "Links" ? (
                       <nav className="mt-0 opacity-80 flex flex-col gap-3">
-                        {s.links.map((item) => {
-                          const label = typeof item === "string" ? item : item.label;
-                          const href = typeof item === "string" ? "#" : item.url;
-                          return (
-                            <a key={label} href={href} className="block">
-                              {label}
-                            </a>
-                          );
-                        })}
+                        <BuilderComponent model="footer-links" options={{ includeRefs: true }} />
+
+                      {/* Static fallback when Builder model not present */}
+                      {s.links.map((item) => {
+                        const label = typeof item === "string" ? item : item.label;
+                        const href = typeof item === "string" ? "#" : item.url;
+                        return (
+                          <a key={label} href={href} className="block">
+                            {label}
+                          </a>
+                        );
+                      })}
                       </nav>
                     ) : (
                       <nav className="mt-0 opacity-80 flex flex-col gap-3">
