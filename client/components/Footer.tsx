@@ -162,10 +162,26 @@ export default function Footer() {
                     <>
                       {s.title === "Links" && (
                         <div className="mb-4">
-                          <textarea
-                            className="w-full h-24 rounded-lg p-3 bg-white/5 text-white placeholder:text-white/70 border-none"
-                            aria-label="Footer full text box"
-                          />
+                          <BuilderComponent model="footer-text" options={{ includeRefs: true }} />
+
+                          {/* Static fallback for when Builder model is not present */}
+                          <div className="mt-3 text-sm opacity-80 text-white">
+                            Example editable footer text. Create a Builder model named "footer-text" to edit this content in the Design tab.
+                          </div>
+
+                          {/* Editable links grid (Builder model) */}
+                          <div className="mt-4">
+                            <BuilderComponent model="footer-links-grid" options={{ includeRefs: true }} />
+
+                            {/* Static fallback grid */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
+                              {s.links.slice(0,4).map((l, i) => (
+                                <a key={i} href="#" className="block text-white/90">
+                                  {l}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       )}
 
@@ -208,39 +224,59 @@ export default function Footer() {
                 <div className="font-semibold text-lg">{s.title}</div>
                 <div className="mt-6 opacity-80">
                   {s.links ? (
-                    <nav>
-                      {s.links.map((l) => (
-                        l === "Trade in your Cars" ? (
-                          <p key={l}>
-                            <a
-                              href="https://www.carzino.com/trade-in-your-car/"
+                    <>
+                      {s.title === "Links" && (
+                        <div className="mb-4">
+                          <BuilderComponent model="footer-text" options={{ includeRefs: true }} />
+                          <div className="mt-3 text-sm opacity-80 text-white">
+                            Example editable footer text. Create a Builder model named "footer-text" to edit this content in the Design tab.
+                          </div>
 
+                          <div className="mt-4">
+                            <BuilderComponent model="footer-links-grid" options={{ includeRefs: true }} />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
+                              {s.links.slice(0,4).map((l, i) => (
+                                <a key={i} href="#" className={`block ${l ? "mt-0" : "mt-3"}`}>
+                                  {l}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <nav>
+                        {s.links.map((l) => (
+                          l === "Trade in your Cars" ? (
+                            <p key={l}>
+                              <a
+                                href="https://www.carzino.com/trade-in-your-car/"
+                                className={`block ${l ? "mt-0" : "mt-3"}`}
+                              >
+                                {l}
+                              </a>
+                            </p>
+                          ) : l === "Careers With Us" ? (
+                            <p key={l}>
+                              <a
+                                href="https://www.carzino.com/sell-your-car/"
+                                className={`block ${l ? "mt-0" : "mt-3"}`}
+                              >
+                                Sell Your Car
+                              </a>
+                            </p>
+                          ) : (
+                            <a
+                              key={l}
                               className={`block ${l ? "mt-0" : "mt-3"}`}
+                              href="#"
                             >
                               {l}
                             </a>
-                          </p>
-                        ) : l === "Careers With Us" ? (
-                          <p key={l}>
-                            <a
-                              href="https://www.carzino.com/sell-your-car/"
-
-                              className={`block ${l ? "mt-0" : "mt-3"}`}
-                            >
-                              Sell Your Car
-                            </a>
-                          </p>
-                        ) : (
-                          <a
-                            key={l}
-                            className={`block ${l ? "mt-0" : "mt-3"}`}
-                            href="#"
-                          >
-                            {l}
-                          </a>
-                        )
-                      ))}
-                    </nav>
+                          )
+                        ))}
+                      </nav>
+                    </>
                   ) : (
                     s.content
                   )}
