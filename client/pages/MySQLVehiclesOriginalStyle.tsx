@@ -652,6 +652,42 @@ export default function MySQLVehiclesOriginalStyle() {
   const { filterOptions, filtersLoading, filtersError, refetch, pruneInvalid } =
     useFilters(appliedFilters);
 
+  // Derive engine/displacement options from the current vehicles list when the filters endpoint
+  // does not include engine_cylinders. This avoids requiring backend changes immediately.
+  const engineOptions = React.useMemo(() => {
+    if (filterOptions && filterOptions.engine_cylinders && filterOptions.engine_cylinders.length > 0)
+      return filterOptions.engine_cylinders;
+    const map = new Map<string, number>();
+    for (const v of vehicles || []) {
+      const val = (v as any).engine_cylinders ?? (v as any).engineCylinders ?? null;
+      if (val === null || val === undefined || val === "") continue;
+      const name = String(val);
+      map.set(name, (map.get(name) || 0) + 1);
+    }
+    return Array.from(map.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => Number(b.count) - Number(a.count));
+  }, [vehicles, filterOptions]);
+
+  const displacementOptions = React.useMemo(() => {
+    if (
+      filterOptions &&
+      filterOptions.displacement_liters &&
+      filterOptions.displacement_liters.length > 0
+    )
+      return filterOptions.displacement_liters;
+    const map = new Map<string, number>();
+    for (const v of vehicles || []) {
+      const val = (v as any).displacement_liters ?? (v as any).displacementLiters ?? (v as any).displacement || null;
+      if (val === null || val === undefined || val === "") continue;
+      const name = String(val);
+      map.set(name, (map.get(name) || 0) + 1);
+    }
+    return Array.from(map.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => Number(b.count) - Number(a.count));
+  }, [vehicles, filterOptions]);
+
   // UI: show more state for Make/Model/Trim lists
   const [showMoreMakes, setShowMoreMakes] = useState(false);
   const [showMoreModels, setShowMoreModels] = useState(false);
