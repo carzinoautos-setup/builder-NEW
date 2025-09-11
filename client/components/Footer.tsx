@@ -282,7 +282,17 @@ export default function Footer() {
                           const label = typeof item === "string" ? item : item.label;
                           const href = typeof item === "string" ? "#" : item.url;
                           return (
-                            <a key={label} href={href} className={`block ${label ? "mt-0" : "mt-3"}`}>
+                            <a
+                              key={label}
+                              href={href}
+                              className={`block ${label ? "mt-0" : "mt-3"}`}
+                              onClick={(e) => {
+                                if (href && href.startsWith("/")) {
+                                  e.preventDefault();
+                                  navigate(href, { replace: false });
+                                }
+                              }}
+                            >
                               {label}
                             </a>
                           );
@@ -294,7 +304,17 @@ export default function Footer() {
                           const label = typeof item === "string" ? item : item.label;
                           const href = typeof item === "string" ? "#" : item.url;
                           return (
-                            <a key={label} href={href} className={`block ${label ? "mt-0" : "mt-3"}`}>
+                            <a
+                              key={label}
+                              href={href}
+                              className={`block ${label ? "mt-0" : "mt-3"}`}
+                              onClick={(e) => {
+                                if (href && href.startsWith("/")) {
+                                  e.preventDefault();
+                                  navigate(href, { replace: false });
+                                }
+                              }}
+                            >
                               {label}
                             </a>
                           );
