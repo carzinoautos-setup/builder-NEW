@@ -291,7 +291,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className={`block ${label ? "mt-0" : "mt-3"}`}
+                              className={`block ${label ? "mt-0" : "mt-3"} md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed`}
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
@@ -317,7 +317,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className={`block ${label ? "mt-0" : "mt-3"}`}
+                              className={`block ${label ? "mt-0" : "mt-3"} md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed`}
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
