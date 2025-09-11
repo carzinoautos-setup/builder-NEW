@@ -1029,7 +1029,7 @@ export default function Index() {
         }
       `}</style>
 
-      <div className="flex flex-col lg:flex-row min-h-screen max-w-[1325px] mx-auto">
+      <div className="flex flex-col lg:flex-row min-h-screen max-w-[1325px] mx-auto pb-12">
         <div
           className={`mobile-filter-overlay lg:hidden ${mobileFiltersOpen ? "open" : ""}`}
           onClick={() => setMobileFiltersOpen(false)}
@@ -1264,7 +1264,7 @@ export default function Index() {
                         }
                         className="ml-1 text-white"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   )}
