@@ -70,7 +70,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const paginationPages = getPaginationPages();
 
   return (
-    <div className="border-t border-gray-200 bg-white px-4 py-4 mt-4">
+    <div className="bg-white px-4 py-4 mt-4">
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="text-sm text-gray-700 text-center">
           Showing <span className="font-medium">{startResult}</span> to{" "}
