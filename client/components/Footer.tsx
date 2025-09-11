@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BuilderComponent } from "@builder.io/react";
+import { builder } from "../lib/builder";
 
 export default function Footer() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
