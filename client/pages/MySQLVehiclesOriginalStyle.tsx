@@ -6610,9 +6610,13 @@ export default function MySQLVehiclesOriginalStyle() {
                     : "New and Used Vehicles for sale"}
                 </h1>
                 <p className="text-gray-600 text-sm mt-1">
-                  {viewMode === "favorites"
-                    ? `${favoritesCount} Vehicles`
-                    : `${totalResults.toLocaleString()} Matches${appliedLocation && (appliedLocation.city || appliedLocation.state) ? ` by ${appliedLocation.city || ""}${appliedLocation.city && appliedLocation.state ? ", " : ""}${appliedLocation.state || ""}` : ""}`}
+                  {viewMode === "favorites" ? (
+                    `${favoritesCount} Vehicles`
+                  ) : !loading && !error && displayedVehicles.length === 0 ? (
+                    "No results found. Search by year, make, model, or use filters."
+                  ) : (
+                    `${totalResults.toLocaleString()} Matches${appliedLocation && (appliedLocation.city || appliedLocation.state) ? ` by ${appliedLocation.city || ""}${appliedLocation.city && appliedLocation.state ? ", " : ""}${appliedLocation.state || ""}` : ""}`
+                  )}
                 </p>
               </div>
 
