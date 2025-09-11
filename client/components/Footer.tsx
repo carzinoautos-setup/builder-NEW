@@ -276,11 +276,15 @@ export default function Footer() {
                       </nav>
                     ) : (
                       <nav>
-                        {s.links.map((l) => (
-                          <a key={l} className={`block ${l ? "mt-0" : "mt-3"}`} href="#">
-                            {l}
-                          </a>
-                        ))}
+                        {s.links.map((item) => {
+                          const label = typeof item === "string" ? item : item.label;
+                          const href = typeof item === "string" ? "#" : item.url;
+                          return (
+                            <a key={label} href={href} className={`block ${label ? "mt-0" : "mt-3"}`}>
+                              {label}
+                            </a>
+                          );
+                        })}
                       </nav>
                     )
                   ) : (
