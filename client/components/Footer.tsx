@@ -221,7 +221,8 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Full-width editable footer area (below the rule and above copyright) */}
+        <div className="h-px bg-white/5 mb-6" />
+
         <div className="w-full">
           <div className="max-w-[1280px] mx-auto py-6 px-4 sm:px-6 lg:px-16">
             <BuilderComponent model="footer-fullwidth" options={{ includeRefs: true }} />
@@ -242,8 +243,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
-        <div className="h-px bg-white/5 mb-6" />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm">© 2025 Carzino. All rights reserved</div>
