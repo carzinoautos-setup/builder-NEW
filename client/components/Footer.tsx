@@ -72,6 +72,7 @@ export default function Footer() {
   useEffect(() => {
     try {
       if (builder && builder.registerComponent) {
+        // existing promo component
         builder.registerComponent({
           name: "footer-promo",
           inputs: [
@@ -79,6 +80,43 @@ export default function Footer() {
             { name: "headline", type: "string" },
             { name: "subtext", type: "string" },
             { name: "note", type: "string" },
+          ],
+        });
+
+        // full-width editable footer content
+        builder.registerComponent({
+          name: "footer-fullwidth",
+          inputs: [
+            { name: "content", type: "richText" },
+            {
+              name: "links",
+              type: "list",
+              subFields: [
+                { name: "label", type: "string" },
+                { name: "url", type: "string" },
+              ],
+            },
+          ],
+        });
+
+        // simple text block model
+        builder.registerComponent({
+          name: "footer-text",
+          inputs: [{ name: "text", type: "richText" }],
+        });
+
+        // links grid model
+        builder.registerComponent({
+          name: "footer-links-grid",
+          inputs: [
+            {
+              name: "items",
+              type: "list",
+              subFields: [
+                { name: "label", type: "string" },
+                { name: "url", type: "string" },
+              ],
+            },
           ],
         });
       }
