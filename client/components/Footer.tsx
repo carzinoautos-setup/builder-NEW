@@ -59,10 +59,10 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#24272C] text-white py-10 px-4 sm:px-6 lg:px-16">
-      <div className="max-w-[1280px] mx-auto">
-        <div className="mb-6">
-          <div className="w-full bg-gray-100 rounded-md py-6 px-4 flex items-center justify-center">
+    <footer className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#24272C] text-white pt-0 pb-10 px-4 sm:px-6 lg:px-16">
+      <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-gray-100">
+        <div className="max-w-[1280px] mx-auto">
+          <div className="py-3 px-4 flex items-center justify-center">
             <div className="max-w-[900px] text-center">
               <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2a88d4103dcd4d6495ff2952672a516b?format=webp&width=800" alt="Carzino promo" className="mx-auto h-8 mb-2" />
               <div className="text-sm text-gray-700">"Find it. Love it. Drive it. Carzino it."</div>
@@ -71,7 +71,9 @@ export default function Footer() {
             </div>
           </div>
         </div>
+      </div>
 
+      <div className="max-w-[1280px] mx-auto">
         <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-8">
           {sections.map((s, idx) => (
             <div key={s.title}>
