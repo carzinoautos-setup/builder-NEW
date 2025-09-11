@@ -2360,6 +2360,13 @@ export default function MySQLVehiclesOriginalStyle() {
     // Clear any previously applied filters first (but we'll restore the unified search below)
     clearAllFilters();
 
+    // Reset pagination, append state, and any prefetched data so this is a fresh search
+    setAppendResults(false);
+    setPrefetchedVehicles(null);
+    setPrefetchedMeta(null);
+    setApiResponse(null);
+    setCurrentPage(1);
+
     // Apply only the parsed filters from the unified search (everything else cleared)
     setAppliedFilters({
       condition: parsedFilters.condition || [],
