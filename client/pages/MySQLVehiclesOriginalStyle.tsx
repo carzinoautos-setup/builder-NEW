@@ -2405,7 +2405,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
         {/* Sidebar - exactly like original */}
         <div
-          className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block ${mobileFiltersOpen ? "open" : ""}`}
+          className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block self-start ${mobileFiltersOpen ? "open" : ""}`}
           style={{ width: "280px" }}
         >
           <div className="hidden">
