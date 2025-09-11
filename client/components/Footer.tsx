@@ -347,7 +347,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
         <div className="h-px bg-white/5 mb-6" />
 
         <div className="w-full">
-          <div className="max-w-[1280px] mx-auto pt-0 pb-6 px-16">
+          <div className="max-w-[1280px] mx-auto pt-0 pb-6 px-4 sm:px-6 lg:px-16 w-full">
             <div className="bg-transparent text-white">
               {/* Four links above the text - responsive: 4/2/1 columns */}
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
