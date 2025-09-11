@@ -1063,7 +1063,13 @@ export default function MySQLVehiclesOriginalStyle() {
             .slice()
             .sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
         };
-        setVehicles(reorderForPrice(transformedVehicles));
+        if (appendResults) {
+          setVehicles((prev) => reorderForPrice([...prev, ...transformedVehicles]));
+        } else {
+          setVehicles(reorderForPrice(transformedVehicles));
+        }
+        // reset append flag
+        setAppendResults(false);
 
         // Build meta compatible with VehiclesApiResponse
         const pagination = data.pagination || data.meta || {};
@@ -1176,7 +1182,13 @@ export default function MySQLVehiclesOriginalStyle() {
                 .slice()
                 .sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
             };
-            setVehicles(reorderForPrice(transformedVehicles));
+            if (appendResults) {
+          setVehicles((prev) => reorderForPrice([...prev, ...transformedVehicles]));
+        } else {
+          setVehicles(reorderForPrice(transformedVehicles));
+        }
+        // reset append flag
+        setAppendResults(false);
             setApiResponse({
               success: true,
               data: transformedVehicles,
