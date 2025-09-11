@@ -468,7 +468,7 @@ export default function MySQLVehiclesOriginalStyle() {
     "sedan",
   ];
 
-  // Placeholders for suggestions �� actual computation moved below after filterOptions is available
+  // Placeholders for suggestions — actual computation moved below after filterOptions is available
   let inventorySuggestions: string[] = [];
   let quickFilterSuggestions: string[] = [];
   let filteredSuggestions: string[] = [];
@@ -1457,7 +1457,7 @@ export default function MySQLVehiclesOriginalStyle() {
         status: [],
       });
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   // Function to update URL when filters change
   const updateURLFromFilters = useCallback(
