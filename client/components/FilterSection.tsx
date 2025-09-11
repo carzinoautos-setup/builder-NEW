@@ -18,7 +18,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
     <div className="border-b border-gray-200 pb-2 mb-2">
       <button
         type="button"
-        className="w-full flex items-center justify-between cursor-pointer py-1 hover:bg-gray-50 px-1 -mx-1 rounded"
+        className="w-full flex items-center justify-between cursor-pointer py-1.5 hover:bg-gray-50 px-1 -mx-1 rounded"
         onClick={onToggle}
       >
         <h3 className="carzino-filter-title">{title}</h3>
