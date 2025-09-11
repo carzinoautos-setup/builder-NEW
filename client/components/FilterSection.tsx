@@ -15,7 +15,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
   onToggle,
 }) => {
   return (
-    <div className="border-b border-gray-200 pb-3 mb-3">
+    <div className="border-b border-gray-200 pb-1 mb-2">
       <button
         type="button"
         className="w-full flex items-center justify-between cursor-pointer py-2 hover:bg-gray-50 px-1 -mx-1 rounded"
