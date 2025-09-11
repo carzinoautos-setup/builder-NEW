@@ -374,6 +374,7 @@ export default function MySQLVehiclesOriginalStyle() {
     null,
   );
   const [currentPage, setCurrentPage] = useState(1);
+  const [appendResults, setAppendResults] = useState(false);
   const totalPages = apiResponse?.meta?.totalPages || 1;
   const totalResults = apiResponse?.meta?.totalRecords || 0;
   const resultsPerPage = 27;
