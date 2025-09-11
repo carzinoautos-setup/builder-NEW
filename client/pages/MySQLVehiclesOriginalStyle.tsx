@@ -582,6 +582,8 @@ export default function MySQLVehiclesOriginalStyle() {
     // new collapsible filters
     doors: true,
     highwayMpg: true,
+    engineCylinders: true,
+    displacementLiters: true,
     titleStatus: true,
     status: true,
     city: true,
