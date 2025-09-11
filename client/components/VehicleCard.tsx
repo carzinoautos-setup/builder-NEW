@@ -161,12 +161,18 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     return s;
   };
 
-  const citySellerRaw = sanitize((vehicle as any).city_seller || (vehicle as any).city || "");
-  const stateSellerRaw = sanitize((vehicle as any).state_seller || (vehicle as any).state || "");
+  const citySellerRaw = sanitize(
+    (vehicle as any).city_seller || (vehicle as any).city || "",
+  );
+  const stateSellerRaw = sanitize(
+    (vehicle as any).state_seller || (vehicle as any).state || "",
+  );
   const fallbackLocation = sanitize(vehicle.location || "");
 
   const [sellerInfo, setSellerInfo] = React.useState<any>(null);
-  const accountTypeField = sanitize((vehicle as any).account_type_seller || (vehicle as any).seller_type || "");
+  const accountTypeField = sanitize(
+    (vehicle as any).account_type_seller || (vehicle as any).seller_type || "",
+  );
 
   React.useEffect(() => {
     let mounted = true;
@@ -221,10 +227,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // Determine displayed city/state preferring sellerInfo (sanitize 'Unknown')
   const displayedCity = sanitize(
-    (sellerInfo && (sellerInfo.city || sellerInfo.city_seller)) || citySellerRaw,
+    (sellerInfo && (sellerInfo.city || sellerInfo.city_seller)) ||
+      citySellerRaw,
   );
   const displayedState = sanitize(
-    (sellerInfo && (sellerInfo.state || sellerInfo.state_seller)) || stateSellerRaw,
+    (sellerInfo && (sellerInfo.state || sellerInfo.state_seller)) ||
+      stateSellerRaw,
   );
   const locationDisplay =
     displayedCity || displayedState
@@ -233,7 +241,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // Final account type to display: prefer sellerInfo, then vehicle custom field, then seller_type
   const accountTypeSeller = sanitize(
-    (sellerInfo && (sellerInfo.accountType || sellerInfo.type)) || accountTypeField || (vehicle as any).seller_type || "",
+    (sellerInfo && (sellerInfo.accountType || sellerInfo.type)) ||
+      accountTypeField ||
+      (vehicle as any).seller_type ||
+      "",
   );
 
   return (
