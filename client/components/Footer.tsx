@@ -228,7 +228,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                   className={`mt-4 overflow-hidden transition-all duration-200 ${openIdx === idx ? "max-h-[1000px]" : "max-h-0"}`}
                 >
                   {s.links ? (
-                    s.title === "Links" ? (
+                    s.title === "Links" || s.title === "Popular Searches" ? (
                       <nav className="mt-0 opacity-80 flex flex-col gap-3">
                         <BuilderComponent model="footer-links" options={{ includeRefs: true }} />
 
@@ -282,7 +282,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                 <div className="font-semibold text-lg">{s.title}</div>
                 <div className="mt-6 opacity-80">
                   {s.links ? (
-                    s.title === "Links" ? (
+                    s.title === "Links" || s.title === "Popular Searches" ? (
                       <nav>
                         {s.links.map((item) => {
                           const label = typeof item === "string" ? item : item.label;
