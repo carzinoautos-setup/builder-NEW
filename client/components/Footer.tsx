@@ -40,7 +40,7 @@ export default function Footer() {
       ],
     },
     {
-      title: "Other",
+      title: "Popular Searches",
       links: [
         "How it work",
         "Terms and Conditions",
