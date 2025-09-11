@@ -3019,7 +3019,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           setActiveSuggestionIndex(-1);
                           setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
                         } else {
-                          // No suggestion selected — submit the form
+                          // No suggestion selected ��� submit the form
                           e.preventDefault();
                           handleUnifiedSearchSubmit(e as any);
                         }
@@ -6474,11 +6474,17 @@ export default function MySQLVehiclesOriginalStyle() {
                   Connection issues detected. Some features may be limited.
                 </div>
               )}
-              <span className="font-medium">
-                {viewMode === "favorites"
-                  ? `${favoritesCount} Saved Vehicles`
-                  : `${appliedFilters.condition.join(", ")}${appliedFilters.condition.length > 0 && appliedFilters.make.length > 0 ? ", " : ""}${appliedFilters.make.join(", ")}${appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 ? " for sale" : "All Vehicles"} - ${totalResults.toLocaleString()} Results`}
-              </span>
+
+              {/* Show no-results message in header when appropriate */}
+              {viewMode !== "favorites" && !loading && !error && displayedVehicles.length === 0 ? (
+                <div className="font-medium">No results found. Search by year, make, model, or use filters.</div>
+              ) : (
+                <span className="font-medium">
+                  {viewMode === "favorites"
+                    ? `${favoritesCount} Saved Vehicles`
+                    : `${appliedFilters.condition.join(", ")}${appliedFilters.condition.length > 0 && appliedFilters.make.length > 0 ? ", " : ""}${appliedFilters.make.join(", ")}${appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 ? " for sale" : "All Vehicles"} - ${totalResults.toLocaleString()} Results`}
+                </span>
+              )}
             </div>
 
             {/* Mobile Product Grid */}
