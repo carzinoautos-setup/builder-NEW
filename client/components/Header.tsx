@@ -289,7 +289,7 @@ export default function Header({ topTemplate }: HeaderProps) {
                   <div className="grid grid-cols-3 gap-3 pt-3 pb-2">
                     {(() => {
                     const vehicleImages: Record<string, string> = {
-                      Convertible: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+                      Convertible: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F064c51214995430a9384ae9f1722bee9",
                       Coupe: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
                       Sedans: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
                     };
