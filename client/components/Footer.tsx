@@ -7,19 +7,24 @@ export default function Footer() {
 
   const sections: {
     title: string;
-    links?: string[];
+    links?: Array<string | { label: string; url: string }>;
     content?: React.ReactNode;
   }[] = [
     {
       title: "Links",
       links: [
-        "Trade in your Cars",
-        "Careers With Us",
-        "Terms & Conditions",
-        "Privacy Policy",
-        "Corporate Policies",
-        "Investors",
-        "FAQs",
+        { label: "Trade In Your Car", url: "https://www.carzino.com/trade-in-your-car/" },
+        { label: "Carzino for Dealers", url: "https://www.carzino.com/dealers/" },
+        { label: "Carzino for Private Sellers", url: "https://www.carzino.com/dealers/" },
+        { label: "About Us", url: "https://uploadbackup62225.kinsta.cloud/about-us/" },
+        { label: "Sell Your Car", url: "https://www.carzino.com/sell-your-car/" },
+        { label: "Create Account", url: "https://www.carzino.com/select-account-type/" },
+        { label: "Sign In", url: "https://www.carzino.com/sign-in/" },
+        { label: "Contact Us", url: "https://www.carzino.com/Contact/" },
+        { label: "Site Map", url: "https://www.carzino.com/site_map/" },
+        { label: "FAQ", url: "https://www.carzino.com/frequently-asked-questions/" },
+        { label: "Report a Suspicious Listing", url: "https://www.carzino.com/Contact/" },
+        { label: "Monthly Payment Terms*", url: "https://uploadbackup62225.kinsta.cloud/payment-terms" },
       ],
     },
     {
