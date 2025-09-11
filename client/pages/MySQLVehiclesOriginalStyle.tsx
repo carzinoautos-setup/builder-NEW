@@ -446,9 +446,70 @@ export default function MySQLVehiclesOriginalStyle() {
     "Full-size trucks for sale",
     "2018–2021 trucks under $35,000",
   ];
-  const filteredSuggestions = debouncedUnifiedSearch
-    ? staticSuggestions.filter((s) => s.toLowerCase().includes(debouncedUnifiedSearch.toLowerCase()))
-    : staticSuggestions.slice(0, 6);
+
+  const staticKeywords = [
+    "cheap",
+    "affordable",
+    "budget",
+    "luxury",
+    "used",
+    "new",
+    "certified",
+    "truck",
+    "trucks",
+    "suv",
+    "suvs",
+    "van",
+    "vans",
+    "convertible",
+    "hatchback",
+    "coupe",
+    "sedan",
+  ];
+
+  // Build inventory suggestions from available filterOptions
+  const inventoryCandidates: string[] = [];
+  if (filterOptions) {
+    if (Array.isArray(filterOptions.make)) {
+      inventoryCandidates.push(...filterOptions.make.map((m: any) => String(m.name)));
+    }
+    if (Array.isArray(filterOptions.model)) {
+      inventoryCandidates.push(...filterOptions.model.map((m: any) => String(m.name)));
+    }
+    if (Array.isArray(filterOptions.trim)) {
+      inventoryCandidates.push(...filterOptions.trim.map((t: any) => String(t.name)));
+    }
+    if (Array.isArray(filterOptions.year)) {
+      inventoryCandidates.push(...filterOptions.year.map((y: any) => String(y.name || y)));
+    }
+    if (Array.isArray(filterOptions.body_style)) {
+      inventoryCandidates.push(...filterOptions.body_style.map((b: any) => String(b.name)));
+    }
+    if (Array.isArray(filterOptions.condition)) {
+      inventoryCandidates.push(...filterOptions.condition.map((c: any) => String(c.name)));
+    }
+  }
+
+  const qs = debouncedUnifiedSearch.trim().toLowerCase();
+  const inventorySuggestions = qs
+    ? inventoryCandidates.filter((s) => s.toLowerCase().includes(qs)).slice(0, 8)
+    : [];
+
+  // Determine whether to show static quick filters: only when input is blank OR starts with a static keyword
+  const startsWithStatic = (() => {
+    if (!qs) return true; // blank -> show static
+    return staticKeywords.some((k) => qs.startsWith(k));
+  })();
+
+  const quickFilterSuggestions = startsWithStatic
+    ? staticSuggestions.filter((s) => {
+        if (!qs) return true;
+        return s.toLowerCase().startsWith(qs);
+      })
+    : [];
+
+  // Suggested rendering logic: if there are inventory suggestions, show them first. Otherwise show quick filters when allowed.
+  const filteredSuggestions = inventorySuggestions.length > 0 ? inventorySuggestions : quickFilterSuggestions.slice(0, 6);
 
   // Location/Distance states
   const [zipCode, setZipCode] = useState(""); // No default ZIP
