@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BuilderComponent } from "@builder.io/react";
 
 export default function Footer() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
