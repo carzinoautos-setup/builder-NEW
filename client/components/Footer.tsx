@@ -350,7 +350,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
           <div className="max-w-[1280px] mx-auto pt-0 pb-6 px-4 sm:px-6 lg:px-16 w-full">
             <div className="bg-transparent text-white">
               {/* Four links above the text - responsive: 4/2/1 columns */}
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="mt-4 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
                 <a href="https://www.carzino.com/privacy-policy/" className="text-white">Privacy policy</a>
                 <a href="https://www.carzino.com/terms-conditions/" className="text-white">Terms and conditions</a>
                 <a href="https://www.carzino.com/return-policy/" className="text-white">Return Policy</a>
