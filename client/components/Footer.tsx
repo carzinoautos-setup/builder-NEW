@@ -5,7 +5,11 @@ import { builder } from "../lib/builder";
 export default function Footer() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
-  const sections: { title: string; links?: string[]; content?: React.ReactNode }[] = [
+  const sections: {
+    title: string;
+    links?: string[];
+    content?: React.ReactNode;
+  }[] = [
     {
       title: "Links",
       links: [
@@ -46,7 +50,10 @@ export default function Footer() {
       title: "Newsletter",
       content: (
         <div>
-          <div className="opacity-80 text-sm">Stay on top of the latest car trends, tips, and tricks for selling your car.</div>
+          <div className="opacity-80 text-sm">
+            Stay on top of the latest car trends, tips, and tricks for selling
+            your car.
+          </div>
           <div className="mt-5">
             <input
               type="email"
@@ -54,7 +61,9 @@ export default function Footer() {
               className="w-full h-12 rounded-lg px-4 bg-white/5 text-white placeholder:text-white/70 border-none"
             />
           </div>
-          <button className="w-full mt-4 h-12 bg-[#E82121] rounded-lg text-white font-medium">Send</button>
+          <button className="w-full mt-4 h-12 bg-[#E82121] rounded-lg text-white font-medium">
+            Send
+          </button>
         </div>
       ),
     },
@@ -85,14 +94,28 @@ export default function Footer() {
         <div className="max-w-[1280px] mx-auto">
           <div className="py-3 px-4 flex items-center justify-center">
             <div className="w-full">
-              <BuilderComponent model="footer-promo" options={{ includeRefs: true }} />
+              <BuilderComponent
+                model="footer-promo"
+                options={{ includeRefs: true }}
+              />
               {/* Fallback static content (visible when Builder model not present) */}
               <div>
                 <div className="text-center">
-                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2c48de389c614655b60a7c83a7b13cc9?format=webp&width=800" alt="Carzino promo" className="mx-auto h-16 mb-2 object-contain" />
-                  <div className="text-sm text-gray-700">"Find it. Love it. Drive it. Carzino it."</div>
-                  <div className="text-xs text-gray-500 mt-2">Dealers: Exclusive early access now available- enjoy three 3-6 months of free listings. Learn more.</div>
-                  <div className="text-xs text-red-600 mt-2 font-medium">Coming soon for Private sellers.</div>
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2c48de389c614655b60a7c83a7b13cc9?format=webp&width=800"
+                    alt="Carzino promo"
+                    className="mx-auto h-16 mb-2 object-contain"
+                  />
+                  <div className="text-sm text-gray-700">
+                    "Find it. Love it. Drive it. Carzino it."
+                  </div>
+                  <div className="text-xs text-gray-500 mt-2">
+                    Dealers: Exclusive early access now available- enjoy three
+                    3-6 months of free listings. Learn more.
+                  </div>
+                  <div className="text-xs text-red-600 mt-2 font-medium">
+                    Coming soon for Private sellers.
+                  </div>
                 </div>
               </div>
             </div>
@@ -112,7 +135,9 @@ export default function Footer() {
                   onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
                   className="w-full flex items-center justify-between"
                 >
-                  <div className="font-semibold text-lg text-left">{s.title}</div>
+                  <div className="font-semibold text-lg text-left">
+                    {s.title}
+                  </div>
                   <svg
                     className={`w-5 h-5 ml-3 transform transition-transform duration-200 ${openIdx === idx ? "rotate-180" : ""}`}
                     viewBox="0 0 24 24"
@@ -120,7 +145,13 @@ export default function Footer() {
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden
                   >
-                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M6 9l6 6 6-6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </button>
 
@@ -148,7 +179,11 @@ export default function Footer() {
                   {s.links ? (
                     <nav>
                       {s.links.map((l) => (
-                        <a key={l} className={`block ${l ? "mt-0" : "mt-3"}`} href="#">
+                        <a
+                          key={l}
+                          className={`block ${l ? "mt-0" : "mt-3"}`}
+                          href="#"
+                        >
                           {l}
                         </a>
                       ))}
@@ -168,14 +203,42 @@ export default function Footer() {
           <div className="text-sm">© 2025 Carzino. All rights reserved</div>
 
           <div className="flex items-center gap-3">
-            <a href="#" aria-label="facebook" className="flex items-center justify-center bg-white/8 rounded-full h-10 w-10">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0z" fill="#fff" fillOpacity="0.08"/>
+            <a
+              href="#"
+              aria-label="facebook"
+              className="flex items-center justify-center bg-white/8 rounded-full h-10 w-10"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0z"
+                  fill="#fff"
+                  fillOpacity="0.08"
+                />
               </svg>
             </a>
-            <a href="#" aria-label="twitter" className="flex items-center justify-center bg-white/8 rounded-full h-10 w-10">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0z" fill="#fff" fillOpacity="0.08"/>
+            <a
+              href="#"
+              aria-label="twitter"
+              className="flex items-center justify-center bg-white/8 rounded-full h-10 w-10"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0z"
+                  fill="#fff"
+                  fillOpacity="0.08"
+                />
               </svg>
             </a>
           </div>

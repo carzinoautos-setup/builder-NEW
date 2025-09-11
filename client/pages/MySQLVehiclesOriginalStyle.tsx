@@ -520,7 +520,8 @@ export default function MySQLVehiclesOriginalStyle() {
     Boolean(appliedFilters.paymentMin) ||
     Boolean(appliedFilters.paymentMax) ||
     (searchTerm && searchTerm.trim().length > 0) ||
-    (unifiedSearch && unifiedSearch.trim().length > 0 &&
+    (unifiedSearch &&
+      unifiedSearch.trim().length > 0 &&
       appliedFilters.make.length === 0 &&
       appliedFilters.model.length === 0 &&
       appliedFilters.trim.length === 0);
@@ -2647,7 +2648,9 @@ export default function MySQLVehiclesOriginalStyle() {
 
             {/* Desktop Applied Filters */}
             {true && (
-              <div className={`hidden lg:block mb-4 pb-4 border-b border-gray-200 bg-white ${hasAppliedFilters ? 'sticky top-16 z-40' : ''}`}>
+              <div
+                className={`hidden lg:block mb-4 pb-4 border-b border-gray-200 bg-white ${hasAppliedFilters ? "sticky top-16 z-40" : ""}`}
+              >
                 <div className="rounded-lg border border-gray-300 bg-white p-3">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="carzino-filter-title">Applied Filters</h3>
@@ -2659,238 +2662,210 @@ export default function MySQLVehiclesOriginalStyle() {
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                  {/* Show free-text search or unified search when appropriate */}
-                  {(searchTerm && searchTerm.trim().length > 0) ||
-                  (unifiedSearch &&
-                    unifiedSearch.trim().length > 0 &&
-                    appliedFilters.make.length === 0 &&
-                    appliedFilters.model.length === 0 &&
-                    appliedFilters.trim.length === 0) ? (
-                    <span
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                      onClick={() => {
-                        setSearchTerm("");
-                        setUnifiedSearch("");
-                      }}
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {searchTerm && searchTerm.trim().length > 0
-                        ? searchTerm
-                        : unifiedSearch}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
+                    {/* Show free-text search or unified search when appropriate */}
+                    {(searchTerm && searchTerm.trim().length > 0) ||
+                    (unifiedSearch &&
+                      unifiedSearch.trim().length > 0 &&
+                      appliedFilters.make.length === 0 &&
+                      appliedFilters.model.length === 0 &&
+                      appliedFilters.trim.length === 0) ? (
+                      <span
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                        onClick={() => {
                           setSearchTerm("");
                           setUnifiedSearch("");
                         }}
-                        className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
-                      </button>
-                    </span>
-                  ) : null}
+                        <Check className="w-3 h-3 text-red-600" />
+                        {searchTerm && searchTerm.trim().length > 0
+                          ? searchTerm
+                          : unifiedSearch}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSearchTerm("");
+                            setUnifiedSearch("");
+                          }}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ) : null}
 
-                  {appliedLocation && appliedRadius !== "nationwide" && (
-                    <span
-                      onClick={() => {
-                        setAppliedLocation(null);
-                        setAppliedRadius("200");
-                      }}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      <MapPin className="w-3 h-3" />
-                      {appliedRadius} miles
-                      <button
+                    {appliedLocation && appliedRadius !== "nationwide" && (
+                      <span
                         onClick={() => {
                           setAppliedLocation(null);
                           setAppliedRadius("200");
                         }}
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  )}
-                  {appliedFilters.condition.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("condition", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("condition", item)}
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {appliedFilters.make.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("make", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("make", item)}
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {appliedFilters.model.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("model", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("model", item)}
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {appliedFilters.trim.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("trim", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("trim", item)}
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {appliedFilters.year.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("year", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("year", item)}
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {appliedFilters.bodyStyle.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("bodyStyle", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("bodyStyle", item)}
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {(() => {
-                    const CAR_CHILD_SLUGS = [
-                      "sedan",
-                      "coupe",
-                      "hatchback",
-                      "wagon",
-                      "convertible",
-                      "crossover-suv",
-                      "van-minivan",
-                    ];
-                    const TRUCK_CHILD_SLUGS = [
-                      "crew-cab",
-                      "extended-cab",
-                      "regular-cab-truck",
-                    ];
-                    const selected = new Set(appliedFilters.vehicleType || []);
-
-                    const carAll = CAR_CHILD_SLUGS.every((s) =>
-                      selected.has(s),
-                    );
-                    const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
-                      selected.has(s),
-                    );
-
-                    const chips: string[] = [];
-                    if (carAll) chips.push("car");
-                    else
-                      CAR_CHILD_SLUGS.forEach(
-                        (s) => selected.has(s) && chips.push(s),
-                      );
-                    if (truckAll) chips.push("truck");
-                    else
-                      TRUCK_CHILD_SLUGS.forEach(
-                        (s) => selected.has(s) && chips.push(s),
-                      );
-
-                    // include any other selected slugs not in the above lists
-                    for (const s of Array.from(selected)) {
-                      if (
-                        !CAR_CHILD_SLUGS.includes(s) &&
-                        !TRUCK_CHILD_SLUGS.includes(s) &&
-                        s !== "car" &&
-                        s !== "truck"
-                      ) {
-                        chips.push(s);
-                      }
-                    }
-
-                    return chips.map((item) => (
-                      <span
-                        key={item}
-                        onClick={() => {
-                          // remove chip: if parent, remove all children; otherwise remove single child
-                          setAppliedFilters((prev) => {
-                            const nextSet = new Set(prev.vehicleType || []);
-                            if (item === "car") {
-                              CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
-                            } else if (item === "truck") {
-                              TRUCK_CHILD_SLUGS.forEach((s) =>
-                                nextSet.delete(s),
-                              );
-                            } else {
-                              nextSet.delete(item);
-                            }
-                            const next = {
-                              ...prev,
-                              vehicleType: Array.from(nextSet),
-                            };
-                            updateURLFromFilters(next);
-                            return next;
-                          });
-                        }}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item === "car"
-                          ? "All Cars"
-                          : item === "truck"
-                            ? "All Trucks"
-                            : normalizeFilterValue(item)}
+                        <MapPin className="w-3 h-3" />
+                        {appliedRadius} miles
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
+                          onClick={() => {
+                            setAppliedLocation(null);
+                            setAppliedRadius("200");
+                          }}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    {appliedFilters.condition.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => removeAppliedFilter("condition", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("condition", item)}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.make.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => removeAppliedFilter("make", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("make", item)}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.model.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => removeAppliedFilter("model", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("model", item)}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.trim.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => removeAppliedFilter("trim", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("trim", item)}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.year.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => removeAppliedFilter("year", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("year", item)}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.bodyStyle.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => removeAppliedFilter("bodyStyle", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("bodyStyle", item)}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {(() => {
+                      const CAR_CHILD_SLUGS = [
+                        "sedan",
+                        "coupe",
+                        "hatchback",
+                        "wagon",
+                        "convertible",
+                        "crossover-suv",
+                        "van-minivan",
+                      ];
+                      const TRUCK_CHILD_SLUGS = [
+                        "crew-cab",
+                        "extended-cab",
+                        "regular-cab-truck",
+                      ];
+                      const selected = new Set(
+                        appliedFilters.vehicleType || [],
+                      );
+
+                      const carAll = CAR_CHILD_SLUGS.every((s) =>
+                        selected.has(s),
+                      );
+                      const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                        selected.has(s),
+                      );
+
+                      const chips: string[] = [];
+                      if (carAll) chips.push("car");
+                      else
+                        CAR_CHILD_SLUGS.forEach(
+                          (s) => selected.has(s) && chips.push(s),
+                        );
+                      if (truckAll) chips.push("truck");
+                      else
+                        TRUCK_CHILD_SLUGS.forEach(
+                          (s) => selected.has(s) && chips.push(s),
+                        );
+
+                      // include any other selected slugs not in the above lists
+                      for (const s of Array.from(selected)) {
+                        if (
+                          !CAR_CHILD_SLUGS.includes(s) &&
+                          !TRUCK_CHILD_SLUGS.includes(s) &&
+                          s !== "car" &&
+                          s !== "truck"
+                        ) {
+                          chips.push(s);
+                        }
+                      }
+
+                      return chips.map((item) => (
+                        <span
+                          key={item}
+                          onClick={() => {
+                            // remove chip: if parent, remove all children; otherwise remove single child
                             setAppliedFilters((prev) => {
                               const nextSet = new Set(prev.vehicleType || []);
                               if (item === "car") {
@@ -2912,59 +2887,73 @@ export default function MySQLVehiclesOriginalStyle() {
                               return next;
                             });
                           }}
+                          className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                        >
+                          <Check className="w-3 h-3 text-red-600" />
+                          {item === "car"
+                            ? "All Cars"
+                            : item === "truck"
+                              ? "All Trucks"
+                              : normalizeFilterValue(item)}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAppliedFilters((prev) => {
+                                const nextSet = new Set(prev.vehicleType || []);
+                                if (item === "car") {
+                                  CAR_CHILD_SLUGS.forEach((s) =>
+                                    nextSet.delete(s),
+                                  );
+                                } else if (item === "truck") {
+                                  TRUCK_CHILD_SLUGS.forEach((s) =>
+                                    nextSet.delete(s),
+                                  );
+                                } else {
+                                  nextSet.delete(item);
+                                }
+                                const next = {
+                                  ...prev,
+                                  vehicleType: Array.from(nextSet),
+                                };
+                                updateURLFromFilters(next);
+                                return next;
+                              });
+                            }}
+                            className="ml-1 text-white hover:text-gray-300"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ));
+                    })()}
+                    {appliedFilters.driveType.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => removeAppliedFilter("driveType", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
                           ×
                         </button>
                       </span>
-                    ));
-                  })()}
-                  {appliedFilters.driveType.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("driveType", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("driveType", item)}
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {(() => {
-                    const unique = Array.from(
-                      new Set(
-                        appliedFilters.transmissionSpeed.map((v) =>
-                          normalizeTransmission(v),
+                    ))}
+                    {(() => {
+                      const unique = Array.from(
+                        new Set(
+                          appliedFilters.transmissionSpeed.map((v) =>
+                            normalizeTransmission(v),
+                          ),
                         ),
-                      ),
-                    );
-                    return unique.map((label) => (
-                      <span
-                        key={label}
-                        onClick={() => {
-                          setAppliedFilters((prev) => {
-                            const next = {
-                              ...prev,
-                              transmissionSpeed: prev.transmissionSpeed.filter(
-                                (v) => normalizeTransmission(v) !== label,
-                              ),
-                            };
-                            updateURLFromFilters(next);
-                            return next;
-                          });
-                        }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
-                      >
-                        <Check className="w-3 h-3 text-red-600" />
-                        {label}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
+                      );
+                      return unique.map((label) => (
+                        <span
+                          key={label}
+                          onClick={() => {
                             setAppliedFilters((prev) => {
                               const next = {
                                 ...prev,
@@ -2977,100 +2966,108 @@ export default function MySQLVehiclesOriginalStyle() {
                               return next;
                             });
                           }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                        >
+                          <Check className="w-3 h-3 text-red-600" />
+                          {label}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAppliedFilters((prev) => {
+                                const next = {
+                                  ...prev,
+                                  transmissionSpeed:
+                                    prev.transmissionSpeed.filter(
+                                      (v) => normalizeTransmission(v) !== label,
+                                    ),
+                                };
+                                updateURLFromFilters(next);
+                                return next;
+                              });
+                            }}
+                            className="ml-1 text-white hover:text-gray-300"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ));
+                    })()}
+                    {appliedFilters.exteriorColor.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() =>
+                          removeAppliedFilter("exteriorColor", item)
+                        }
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item} Color
+                        <button
+                          onClick={() =>
+                            removeAppliedFilter("exteriorColor", item)
+                          }
                           className="ml-1 text-white hover:text-gray-300"
                         >
                           ×
                         </button>
                       </span>
-                    ));
-                  })()}
-                  {appliedFilters.exteriorColor.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("exteriorColor", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item} Color
-                      <button
-                        onClick={() =>
-                          removeAppliedFilter("exteriorColor", item)
-                        }
-                        className="ml-1 text-white hover:text-gray-300"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {appliedFilters.sellerType.map((item) => (
-                    <span
-                      key={item}
-                      onClick={() => removeAppliedFilter("sellerType", item)}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
+                    ))}
+                    {appliedFilters.sellerType.map((item) => (
+                      <span
+                        key={item}
                         onClick={() => removeAppliedFilter("sellerType", item)}
-                        className="ml-1 text-white hover:text-gray-300"
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                  {appliedFilters.mileage && (
-                    <span
-                      onClick={() =>
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          mileage: "",
-                        }))
-                      }
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {(() => {
-                        const m = appliedFilters.mileage;
-                        if (!m) return null;
-                        if (m.includes("-")) {
-                          const [min, max] = m.split("-");
-                          return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
-                        }
-                        if (m.endsWith("+")) {
-                          return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
-                        }
-                        return `Under ${Number(m).toLocaleString()} Miles`;
-                      })()}
-                      <button
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item}
+                        <button
+                          onClick={() =>
+                            removeAppliedFilter("sellerType", item)
+                          }
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.mileage && (
+                      <span
                         onClick={() =>
                           setAppliedFilters((prev) => ({
                             ...prev,
                             mileage: "",
                           }))
                         }
-                        className="ml-1 text-white hover:text-gray-300"
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
-                        ×
-                      </button>
-                    </span>
-                  )}
-                  {(appliedFilters.priceMin || appliedFilters.priceMax) && (
-                    <span
-                      onClick={() => {
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          priceMin: "",
-                          priceMax: "",
-                        }));
-                        setPriceMin("1000");
-                        setPriceMax("50000");
-                      }}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />$
-                      {appliedFilters.priceMin || "0"} - $
-                      {appliedFilters.priceMax || "Any"}
-                      <button
+                        <Check className="w-3 h-3 text-red-600" />
+                        {(() => {
+                          const m = appliedFilters.mileage;
+                          if (!m) return null;
+                          if (m.includes("-")) {
+                            const [min, max] = m.split("-");
+                            return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                          }
+                          if (m.endsWith("+")) {
+                            return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
+                          }
+                          return `Under ${Number(m).toLocaleString()} Miles`;
+                        })()}
+                        <button
+                          onClick={() =>
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              mileage: "",
+                            }))
+                          }
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    {(appliedFilters.priceMin || appliedFilters.priceMax) && (
+                      <span
                         onClick={() => {
                           setAppliedFilters((prev) => ({
                             ...prev,
@@ -3080,27 +3077,30 @@ export default function MySQLVehiclesOriginalStyle() {
                           setPriceMin("1000");
                           setPriceMax("50000");
                         }}
-                        className="ml-1 text-white hover:text-gray-300"
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
-                        ×
-                      </button>
-                    </span>
-                  )}
-                  {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (
-                    <span
-                      onClick={() =>
-                        setAppliedFilters((prev) => ({
-                          ...prev,
-                          paymentMin: "",
-                          paymentMax: "",
-                        }))
-                      }
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />$
-                      {appliedFilters.paymentMin || "0"}-$
-                      {appliedFilters.paymentMax || "Any"}/mo
-                      <button
+                        <Check className="w-3 h-3 text-red-600" />$
+                        {appliedFilters.priceMin || "0"} - $
+                        {appliedFilters.priceMax || "Any"}
+                        <button
+                          onClick={() => {
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              priceMin: "",
+                              priceMax: "",
+                            }));
+                            setPriceMin("1000");
+                            setPriceMax("50000");
+                          }}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    {(appliedFilters.paymentMin ||
+                      appliedFilters.paymentMax) && (
+                      <span
                         onClick={() =>
                           setAppliedFilters((prev) => ({
                             ...prev,
@@ -3108,15 +3108,28 @@ export default function MySQLVehiclesOriginalStyle() {
                             paymentMax: "",
                           }))
                         }
-                        className="ml-1 text-white hover:text-gray-300"
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
-                        ×
-                      </button>
-                    </span>
-                  )}
+                        <Check className="w-3 h-3 text-red-600" />$
+                        {appliedFilters.paymentMin || "0"}-$
+                        {appliedFilters.paymentMax || "Any"}/mo
+                        <button
+                          onClick={() =>
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              paymentMin: "",
+                              paymentMax: "",
+                            }))
+                          }
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
             )}
 
             {/* Distance */}
