@@ -315,23 +315,32 @@ export default function Header({ topTemplate }: HeaderProps) {
 
                     const labels = Object.keys(displayMap);
 
-                    return labels.map((label) => (
-                      <a
-                        key={label}
-                        href="#"
-                        onClick={() => {
-                          setMobileOpen(false);
-                        }}
-                        className="block text-center bg-white border border-gray-200 rounded-md p-2 text-sm hover:shadow-sm"
-                      >
-                        <img
-                          src={vehicleImages[label] || import.meta.env.VITE_PLACEHOLDER_IMAGE}
-                          alt={String(displayMap[label] || label)}
-                          className="w-full h-12 object-contain mb-1"
-                        />
-                        <div className="text-xs font-medium text-gray-800">{displayMap[label] || label}</div>
-                      </a>
-                    ));
+                    return labels.map((label) => {
+                      const display = String(displayMap[label] || label);
+                      const slug = display.toLowerCase().replace(/\s+/g, "-");
+                      const url = `/cars-for-sale/${slug}/`;
+
+                      return (
+                        <a
+                          key={label}
+                          href={url}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setMobileOpen(false);
+                            // Navigate to filtered inventory URL for this vehicle type
+                            window.location.href = url;
+                          }}
+                          className="block text-center bg-white border border-gray-200 rounded-md p-2 text-sm hover:shadow-sm"
+                        >
+                          <img
+                            src={vehicleImages[label] || import.meta.env.VITE_PLACEHOLDER_IMAGE}
+                            alt={display}
+                            className="w-full h-12 object-contain mb-1"
+                          />
+                          <div className="text-xs font-medium text-gray-800">{display}</div>
+                        </a>
+                      );
+                    });
                   })()}
                   </div>
                 )}
