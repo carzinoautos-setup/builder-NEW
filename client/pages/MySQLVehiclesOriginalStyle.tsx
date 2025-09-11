@@ -86,9 +86,9 @@ interface VehiclesApiResponse {
 }
 
 // URL utility functions
-const parseFiltersFromURL = (pathname: string) => {
+const parseFiltersFromURL = (pathname: string, search?: string) => {
   // Check query params first (e.g. ?make=Toyota,Ford&model=Camry,Corolla)
-  const qs = new URLSearchParams(window.location.search || "");
+  const qs = new URLSearchParams((search !== undefined ? search : window.location.search) || "");
   const getArr = (key: string) => {
     const v = qs.get(key);
     if (!v) return undefined;
@@ -468,7 +468,7 @@ export default function MySQLVehiclesOriginalStyle() {
     "sedan",
   ];
 
-  // Placeholders for suggestions — actual computation moved below after filterOptions is available
+  // Placeholders for suggestions �� actual computation moved below after filterOptions is available
   let inventorySuggestions: string[] = [];
   let quickFilterSuggestions: string[] = [];
   let filteredSuggestions: string[] = [];
