@@ -6589,6 +6589,8 @@ export default function MySQLVehiclesOriginalStyle() {
                           appliedFilters.vehicleType.length +
                           appliedFilters.driveType.length +
                           appliedFilters.exteriorColor.length +
+                          appliedFilters.engineCylinders.length +
+                          appliedFilters.displacementLiters.length +
                           (appliedFilters.mileage ? 1 : 0) +
                           (appliedFilters.priceMin || appliedFilters.priceMax
                             ? 1
