@@ -50,13 +50,16 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
     {
       title: "Popular Searches",
       links: [
-        "How it work",
-        "Terms and Conditions",
-        "Privacy Policy",
-        "Copyrights",
-        "Help center",
-        "Car sales trends",
-        "Personal loan",
+        { label: "Cheap Cars Under $4,000", url: "/cars-for-sale/?price_min=1&price_max=4000" },
+        { label: "Cars Under $10,000", url: "/cars-for-sale/?price_min=1&price_max=10000" },
+        { label: "Sedans Under $10,000", url: "/cars-for-sale/?bodyStyle=sedan&price_min=1&price_max=10000" },
+        { label: "Fuel-Efficient Cars 30+ MPG", url: "/cars-for-sale/?mpg_min=30&search=fuel%20efficient%20cars%2030%20mpg" },
+        { label: "Affordable Cars Under $20,000", url: "/cars-for-sale/?price_min=1&price_max=20000" },
+        { label: "Used Cars for Sale", url: "/cars-for-sale/?condition=used" },
+        { label: "Used Trucks for Sale", url: "/cars-for-sale/?condition=used&bodyStyle=truck" },
+        { label: "Used SUVs and Crossovers for Sale", url: "/cars-for-sale/?condition=used&bodyStyle=suv,crossover-suv" },
+        { label: "Trucks Under $15,000", url: "/cars-for-sale/?bodyStyle=truck&price_min=1&price_max=15000" },
+        { label: "Trucks Under $30,000", url: "/cars-for-sale/?bodyStyle=truck&price_min=1&price_max=30000" },
       ],
     },
     {
