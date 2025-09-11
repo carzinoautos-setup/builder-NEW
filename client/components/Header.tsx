@@ -37,15 +37,11 @@ export default function Header({ topTemplate }: HeaderProps) {
     // add class to body to allow other components to hide when header menu is open
     if (mobileOpen) {
       document.body.classList.add("header-menu-open");
-      // prevent body scroll while menu open
-      document.body.style.overflow = "hidden";
     } else {
       document.body.classList.remove("header-menu-open");
-      document.body.style.overflow = "";
     }
     return () => {
       document.body.classList.remove("header-menu-open");
-      document.body.style.overflow = "";
     };
   }, [mobileOpen]);
 
