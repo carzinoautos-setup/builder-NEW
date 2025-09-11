@@ -532,6 +532,9 @@ export default function MySQLVehiclesOriginalStyle() {
     highwayMpg: [] as string[],
     titleStatus: [] as string[],
     status: [] as string[],
+    // WP ACF custom fields
+    engineCylinders: [] as string[],
+    displacementLiters: [] as string[],
   });
 
   // Rehydrate appliedFilters from sessionStorage when available (one-time). This helps Builder.io preview
