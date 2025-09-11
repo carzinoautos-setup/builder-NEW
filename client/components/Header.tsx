@@ -291,6 +291,8 @@ export default function Header({ topTemplate }: HeaderProps) {
                       "Crossover/SUV": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F98d1869674c64e419bf7ca7da66e25b8",
                       Vans: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff0d0c6c20e02423dad8eefa6f0ef508a",
                       Wagons: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F24bf3ece0537462bbd1edd12a2485c0a",
+                      "Shop Used": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F30f147c94e904a5ba1b1ce7ce9ebd89b",
+                      "Used Trucks": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fff53ac6b3db945bfb31c2b7a009be0b1",
                     };
 
                     const labels = [
