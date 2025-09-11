@@ -287,7 +287,14 @@ export default function Header({ topTemplate }: HeaderProps) {
 
                 {vehiclesOpen && (
                   <div className="grid grid-cols-3 gap-3 pt-3 pb-2">
-                    {[
+                    {(() => {
+                    const vehicleImages: Record<string, string> = {
+                      Convertible: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+                      Coupe: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+                      Sedans: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+                    };
+
+                    const labels = [
                       "Convertible",
                       "Coupe",
                       "Sedans",
@@ -300,7 +307,9 @@ export default function Header({ topTemplate }: HeaderProps) {
                       "Trucks",
                       "Ext Cabs",
                       "ELECTRIC",
-                    ].map((label) => (
+                    ];
+
+                    return labels.map((label) => (
                       <a
                         key={label}
                         href="#"
@@ -309,10 +318,15 @@ export default function Header({ topTemplate }: HeaderProps) {
                         }}
                         className="block text-center bg-white border border-gray-200 rounded-md p-2 text-sm hover:shadow-sm"
                       >
-                        <img src={import.meta.env.VITE_PLACEHOLDER_IMAGE} alt="" className="w-full h-12 object-contain mb-1" />
+                        <img
+                          src={vehicleImages[label] || import.meta.env.VITE_PLACEHOLDER_IMAGE}
+                          alt={label}
+                          className="w-full h-12 object-contain mb-1"
+                        />
                         <div className="text-xs font-medium text-gray-800">{label}</div>
                       </a>
-                    ))}
+                    ));
+                  })()}
                   </div>
                 )}
               </div>
