@@ -2813,48 +2813,38 @@ export default function MySQLVehiclesOriginalStyle() {
                       </span>
                     ))}
                     {(() => {
-                      const CAR_CHILD_SLUGS = [
-                        "sedan",
-                        "coupe",
-                        "hatchback",
-                        "wagon",
-                        "convertible",
-                        "crossover-suv",
-                        "van-minivan",
-                      ];
-                      const TRUCK_CHILD_SLUGS = [
-                        "crew-cab",
-                        "extended-cab",
-                        "regular-cab-truck",
-                      ];
-                      const selected = new Set(
-                        appliedFilters.vehicleType || [],
+                      const normalizeSlug = (v: string) =>
+                        String(v || "")
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/^-+|-+$/g, "");
+
+                      const isTruckSlug = (s: string) => /truck|pickup|cab|van/.test(s);
+                      const carChildSlugs = (vehicleTypes || [])
+                        .map((t) => String((t && (t as any).slug) || ""))
+                        .filter((s) => s && !isTruckSlug(s));
+                      const truckChildSlugs = (vehicleTypes || [])
+                        .map((t) => String((t && (t as any).slug) || ""))
+                        .filter((s) => s && isTruckSlug(s));
+
+                      const selectedNorm = new Set(
+                        (appliedFilters.vehicleType || []).map((v) => normalizeSlug(v)),
                       );
 
-                      const carAll = CAR_CHILD_SLUGS.every((s) =>
-                        selected.has(s),
-                      );
-                      const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
-                        selected.has(s),
-                      );
+                      const carAll = carChildSlugs.length > 0 && carChildSlugs.every((s) => selectedNorm.has(s));
+                      const truckAll = truckChildSlugs.length > 0 && truckChildSlugs.every((s) => selectedNorm.has(s));
 
                       const chips: string[] = [];
                       if (carAll) chips.push("car");
-                      else
-                        CAR_CHILD_SLUGS.forEach(
-                          (s) => selected.has(s) && chips.push(s),
-                        );
+                      else carChildSlugs.forEach((s) => selectedNorm.has(s) && chips.push(s));
                       if (truckAll) chips.push("truck");
-                      else
-                        TRUCK_CHILD_SLUGS.forEach(
-                          (s) => selected.has(s) && chips.push(s),
-                        );
+                      else truckChildSlugs.forEach((s) => selectedNorm.has(s) && chips.push(s));
 
-                      // include any other selected slugs not in the above lists
-                      for (const s of Array.from(selected)) {
+                      // include any other selected normalized slugs not in the above lists
+                      for (const s of Array.from(selectedNorm)) {
                         if (
-                          !CAR_CHILD_SLUGS.includes(s) &&
-                          !TRUCK_CHILD_SLUGS.includes(s) &&
+                          !carChildSlugs.includes(s) &&
+                          !truckChildSlugs.includes(s) &&
                           s !== "car" &&
                           s !== "truck"
                         ) {
@@ -2868,22 +2858,13 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => {
                             // remove chip: if parent, remove all children; otherwise remove single child
                             setAppliedFilters((prev) => {
-                              const nextSet = new Set(prev.vehicleType || []);
-                              if (item === "car") {
-                                CAR_CHILD_SLUGS.forEach((s) =>
-                                  nextSet.delete(s),
-                                );
-                              } else if (item === "truck") {
-                                TRUCK_CHILD_SLUGS.forEach((s) =>
-                                  nextSet.delete(s),
-                                );
-                              } else {
-                                nextSet.delete(item);
-                              }
-                              const next = {
-                                ...prev,
-                                vehicleType: Array.from(nextSet),
-                              };
+                              const nextArr = (prev.vehicleType || []).filter((v) => {
+                                const n = normalizeSlug(v);
+                                if (item === "car") return !carChildSlugs.includes(n);
+                                if (item === "truck") return !truckChildSlugs.includes(n);
+                                return n !== item;
+                              });
+                              const next = { ...prev, vehicleType: Array.from(new Set(nextArr)) };
                               updateURLFromFilters(next);
                               return next;
                             });
@@ -2900,22 +2881,13 @@ export default function MySQLVehiclesOriginalStyle() {
                             onClick={(e) => {
                               e.stopPropagation();
                               setAppliedFilters((prev) => {
-                                const nextSet = new Set(prev.vehicleType || []);
-                                if (item === "car") {
-                                  CAR_CHILD_SLUGS.forEach((s) =>
-                                    nextSet.delete(s),
-                                  );
-                                } else if (item === "truck") {
-                                  TRUCK_CHILD_SLUGS.forEach((s) =>
-                                    nextSet.delete(s),
-                                  );
-                                } else {
-                                  nextSet.delete(item);
-                                }
-                                const next = {
-                                  ...prev,
-                                  vehicleType: Array.from(nextSet),
-                                };
+                                const nextArr = (prev.vehicleType || []).filter((v) => {
+                                  const n = normalizeSlug(v);
+                                  if (item === "car") return !carChildSlugs.includes(n);
+                                  if (item === "truck") return !truckChildSlugs.includes(n);
+                                  return n !== item;
+                                });
+                                const next = { ...prev, vehicleType: Array.from(new Set(nextArr)) };
                                 updateURLFromFilters(next);
                                 return next;
                               });
