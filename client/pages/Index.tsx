@@ -938,7 +938,7 @@ export default function Index() {
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.5);
-            z-index: 35;
+            z-index: 231;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -955,11 +955,13 @@ export default function Index() {
             left: 0;
             bottom: 0;
             background: white;
-            z-index: 40;
+            z-index: 232;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
             width: 100% !important;
             max-width: 100% !important;
+            height: 100vh;
+            max-height: 100vh;
             overflow-y: auto !important;
             overflow-x: hidden;
             display: block !important;
