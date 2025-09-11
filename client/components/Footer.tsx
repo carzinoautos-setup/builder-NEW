@@ -165,8 +165,7 @@ export default function Footer() {
                           <p key={l}>
                             <a
                               href="https://www.carzino.com/trade-in-your-car/"
-                              rel="noopener noreferrer"
-                              target="_blank"
+
                               className="block"
                             >
                               {l}
@@ -176,8 +175,7 @@ export default function Footer() {
                           <p key={l}>
                             <a
                               href="https://www.carzino.com/sell-your-car/"
-                              rel="noopener noreferrer"
-                              target="_blank"
+
                               className="block"
                             >
                               Sell Your Car
@@ -207,8 +205,7 @@ export default function Footer() {
                           <p key={l}>
                             <a
                               href="https://www.carzino.com/trade-in-your-car/"
-                              rel="noopener noreferrer"
-                              target="_blank"
+
                               className={`block ${l ? "mt-0" : "mt-3"}`}
                             >
                               {l}
@@ -218,8 +215,7 @@ export default function Footer() {
                           <p key={l}>
                             <a
                               href="https://www.carzino.com/sell-your-car/"
-                              rel="noopener noreferrer"
-                              target="_blank"
+
                               className={`block ${l ? "mt-0" : "mt-3"}`}
                             >
                               Sell Your Car
