@@ -161,9 +161,33 @@ export default function Footer() {
                   {s.links ? (
                     <nav className="mt-0 opacity-80 flex flex-col gap-3">
                       {s.links.map((l) => (
-                        <a key={l} className="block" href="#">
-                          {l}
-                        </a>
+                        l === "Trade in your Cars" ? (
+                          <p key={l}>
+                            <a
+                              href="https://www.carzino.com/trade-in-your-car/"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                              className="block"
+                            >
+                              {l}
+                            </a>
+                          </p>
+                        ) : l === "Careers With Us" ? (
+                          <p key={l}>
+                            <a
+                              href="https://www.carzino.com/sell-your-car/"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                              className="block"
+                            >
+                              Sell Your Car
+                            </a>
+                          </p>
+                        ) : (
+                          <a key={l} className="block" href="#">
+                            {l}
+                          </a>
+                        )
                       ))}
                     </nav>
                   ) : (
