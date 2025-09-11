@@ -257,16 +257,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                                   if (onResetAndNavigate) {
                                     onResetAndNavigate(href);
                                   } else {
-                                    try {
-                                      if ((window as any).carzinoClearAllFilters) {
-                                        (window as any).carzinoClearAllFilters();
-                                        setTimeout(() => navigate(href, { replace: false }), 0);
-                                      } else {
-                                        navigate(href, { replace: false });
-                                      }
-                                    } catch (err) {
-                                      navigate(href, { replace: false });
-                                    }
+                                    navigate(href, { replace: false });
                                   }
                                 }
                               }}
