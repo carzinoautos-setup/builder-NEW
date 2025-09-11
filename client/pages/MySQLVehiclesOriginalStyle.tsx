@@ -678,7 +678,7 @@ export default function MySQLVehiclesOriginalStyle() {
       return filterOptions.displacement_liters;
     const map = new Map<string, number>();
     for (const v of vehicles || []) {
-      const val = (v as any).displacement_liters ?? (v as any).displacementLiters ?? (v as any).displacement || null;
+      const val = ((v as any).displacement_liters ?? (v as any).displacementLiters ?? (v as any).displacement) || null;
       if (val === null || val === undefined || val === "") continue;
       const name = String(val);
       map.set(name, (map.get(name) || 0) + 1);
