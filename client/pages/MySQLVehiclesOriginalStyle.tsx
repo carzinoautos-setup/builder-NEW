@@ -2778,13 +2778,11 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="relative">
                   <input
                     type="text"
-                    aria-label="Search Make, Model, and Trim"
-                    placeholder="Search Make, Model & Trim"
+                    placeholder="Search Cars For Sale"
                     value={unifiedSearch}
                     onChange={(e) => setUnifiedSearch(e.target.value)}
                     className="carzino-search-input w-full pl-4 pr-14 py-2.5 border border-gray-300 rounded-[10px] sm:rounded-full overflow-hidden focus:outline-none focus:border-red-600"
                   />
-                  <div className="text-xs text-gray-500 mt-1">Searches across Make, Model, and Trim</div>
                   <button
                     type="submit"
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1"
@@ -2944,13 +2942,11 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="relative">
                   <input
                     type="text"
-                    aria-label="Search Make, Model, and Trim"
-                    placeholder="Search Make, Model & Trim"
+                    placeholder="Search Cars For Sale"
                     value={unifiedSearch}
                     onChange={(e) => setUnifiedSearch(e.target.value)}
                     className="carzino-search-input w-full px-3 py-2 pr-14 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
                   />
-                  <div className="text-xs text-gray-500 mt-1">Searches across Make, Model, and Trim</div>
                   <button
                     type="submit"
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1"
