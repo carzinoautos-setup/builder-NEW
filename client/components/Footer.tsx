@@ -298,7 +298,16 @@ export default function Footer() {
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
-                                  window.dispatchEvent(new CustomEvent('carzino:navigate-with-reset', { detail: { href } }));
+                                  try {
+                                    if ((window as any).carzinoClearAllFilters) {
+                                      (window as any).carzinoClearAllFilters();
+                                      setTimeout(() => navigate(href, { replace: false }), 0);
+                                    } else {
+                                      navigate(href, { replace: false });
+                                    }
+                                  } catch (err) {
+                                    navigate(href, { replace: false });
+                                  }
                                 }
                               }}
                             >
@@ -320,7 +329,16 @@ export default function Footer() {
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
-                                  window.dispatchEvent(new CustomEvent('carzino:navigate-with-reset', { detail: { href } }));
+                                  try {
+                                    if ((window as any).carzinoClearAllFilters) {
+                                      (window as any).carzinoClearAllFilters();
+                                      setTimeout(() => navigate(href, { replace: false }), 0);
+                                    } else {
+                                      navigate(href, { replace: false });
+                                    }
+                                  } catch (err) {
+                                    navigate(href, { replace: false });
+                                  }
                                 }
                               }}
                             >
