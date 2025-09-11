@@ -1606,7 +1606,25 @@ export default function MySQLVehiclesOriginalStyle() {
     if (viewMode === "favorites") {
       return Object.values(favorites);
     }
-    return vehicles;
+
+    // Grouping logic:
+    // 1) Vehicles with images and prices (normal results)
+    // 2) Vehicles without images but with prices (use fallback image)
+    // 3) Vehicles without prices (always last)
+    const base = vehicles || [];
+
+    const hasPrice = (v: Vehicle) =>
+      (v as any).rawPrice !== undefined &&
+      (v as any).rawPrice !== null &&
+      Number((v as any).rawPrice) !== 0;
+
+    const hasImage = (v: Vehicle) => Array.isArray(v.images) && v.images.length > 0;
+
+    const group1 = base.filter((v) => hasImage(v) && hasPrice(v));
+    const group2 = base.filter((v) => !hasImage(v) && hasPrice(v));
+    const group3 = base.filter((v) => !hasPrice(v));
+
+    return [...group1, ...group2, ...group3];
   };
 
   const toggleFilter = (filterName: string) => {
