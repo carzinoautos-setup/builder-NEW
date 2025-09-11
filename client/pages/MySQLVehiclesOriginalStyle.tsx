@@ -652,7 +652,7 @@ export default function MySQLVehiclesOriginalStyle() {
   // UI: fuel type show more and default selection
   const [showMoreFuel, setShowMoreFuel] = useState(false);
 
-  // Suggestion computation depends on filterOptions — compute with useMemo to avoid TDZ
+  // Suggestion computation depends on filterOptions ��� compute with useMemo to avoid TDZ
   const {
     computedInventorySuggestions,
     computedQuickFilterSuggestions,
@@ -7084,7 +7084,11 @@ export default function MySQLVehiclesOriginalStyle() {
         </div>
       </div>
 
-      <Footer />
+      <Footer onResetAndNavigate={(href: string) => {
+        // Clear filters then navigate — use a tiny timeout to ensure state updates
+        clearAllFilters();
+        setTimeout(() => navigate(href, { replace: false }), 0);
+      }} />
     </div>
   );
 }
