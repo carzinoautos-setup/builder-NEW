@@ -159,35 +159,44 @@ export default function Footer() {
                   className={`mt-4 overflow-hidden transition-all duration-200 ${openIdx === idx ? "max-h-[1000px]" : "max-h-0"}`}
                 >
                   {s.links ? (
-                    <nav className="mt-0 opacity-80 flex flex-col gap-3">
-                      {s.links.map((l) => (
-                        l === "Trade in your Cars" ? (
-                          <p key={l}>
-                            <a
-                              href="https://www.carzino.com/trade-in-your-car/"
+                    <>
+                      {s.title === "Links" && (
+                        <div className="mb-4">
+                          <textarea
+                            className="w-full h-24 rounded-lg p-3 bg-white/5 text-white placeholder:text-white/70 border-none"
+                            aria-label="Footer full text box"
+                          />
+                        </div>
+                      )}
 
-                              className="block"
-                            >
+                      <nav className="mt-0 opacity-80 flex flex-col gap-3">
+                        {s.links.map((l) => (
+                          l === "Trade in your Cars" ? (
+                            <p key={l}>
+                              <a
+                                href="https://www.carzino.com/trade-in-your-car/"
+                                className="block"
+                              >
+                                {l}
+                              </a>
+                            </p>
+                          ) : l === "Careers With Us" ? (
+                            <p key={l}>
+                              <a
+                                href="https://www.carzino.com/sell-your-car/"
+                                className="block"
+                              >
+                                Sell Your Car
+                              </a>
+                            </p>
+                          ) : (
+                            <a key={l} className="block" href="#">
                               {l}
                             </a>
-                          </p>
-                        ) : l === "Careers With Us" ? (
-                          <p key={l}>
-                            <a
-                              href="https://www.carzino.com/sell-your-car/"
-
-                              className="block"
-                            >
-                              Sell Your Car
-                            </a>
-                          </p>
-                        ) : (
-                          <a key={l} className="block" href="#">
-                            {l}
-                          </a>
-                        )
-                      ))}
-                    </nav>
+                          )
+                        ))}
+                      </nav>
+                    </>
                   ) : (
                     <div className="mt-0">{s.content}</div>
                   )}
