@@ -3836,6 +3836,38 @@ export default function MySQLVehiclesOriginalStyle() {
                         </span>
                       ));
                     })()}
+
+                    {appliedFilters.engineCylinders.map((item) => (
+                      <span
+                        key={"engine-" + item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item} Cyl
+                        <button
+                          onClick={() => removeAppliedFilter("engineCylinders", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.displacementLiters.map((item) => (
+                      <span
+                        key={"disp-" + item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item} L
+                        <button
+                          onClick={() => removeAppliedFilter("displacementLiters", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+
                     {appliedFilters.exteriorColor.map((item) => (
                       <span
                         key={item}
@@ -6418,6 +6450,38 @@ export default function MySQLVehiclesOriginalStyle() {
                         </span>
                       ));
                     })()}
+
+                    {appliedFilters.engineCylinders.map((item) => (
+                      <span
+                        key={"engine-" + item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item} Cyl
+                        <button
+                          onClick={() => removeAppliedFilter("engineCylinders", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    {appliedFilters.displacementLiters.map((item) => (
+                      <span
+                        key={"disp-" + item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item} L
+                        <button
+                          onClick={() => removeAppliedFilter("displacementLiters", item)}
+                          className="ml-1 text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+
                     {appliedFilters.exteriorColor.map((item) => (
                       <span
                         key={item}
