@@ -263,22 +263,25 @@ export default function Footer() {
 
         <div className="w-full">
           <div className="max-w-[1280px] mx-auto py-6 px-4 sm:px-6 lg:px-16">
-            <BuilderComponent model="footer-fullwidth" options={{ includeRefs: true }} />
-
-            {/* Static fallback when builder model missing */}
             <div className="bg-transparent text-white">
-              <div className="text-center text-sm opacity-90" style={{paddingTop: '20px'}}>
-                <p>
-                  Carzino 2025© All rights reserved. | By using Carzino.com, you agree to the monitoring plus storing your interactions on the website, including those with Carzino dealers, with the purpose of enhancing and customizing our services. Refer to our Privacy Policy for more information
-                </p>
-              </div>
-
-              {/* Four links below the text - responsive: 4/2/1 columns */}
+              {/* Four links above the text - responsive: 4/2/1 columns */}
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <a href="https://www.carzino.com/privacy-policy/" className="text-white/90">Privacy policy</a>
                 <a href="https://www.carzino.com/terms-conditions/" className="text-white/90">Terms and conditions</a>
                 <a href="https://www.carzino.com/return-policy/" className="text-white/90">Return Policy</a>
                 <a href="https://www.carzino.com/safety-guidelines/" className="text-white/90">Safety guidelines</a>
+              </div>
+
+              <div className="text-center text-sm opacity-90" style={{paddingTop: '20px'}}>
+                {/* Editable paragraph in Design tab */}
+                <BuilderComponent model="footer-fullwidth" options={{ includeRefs: true }} />
+
+                {/* Static fallback when builder model missing */}
+                <div className="mt-2">
+                  <p>
+                    Carzino 2025© All rights reserved. | By using Carzino.com, you agree to the monitoring plus storing your interactions on the website, including those with Carzino dealers, with the purpose of enhancing and customizing our services. Refer to our Privacy Policy for more information
+                  </p>
+                </div>
               </div>
             </div>
           </div>
