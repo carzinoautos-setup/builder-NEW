@@ -28,9 +28,9 @@ export default function Header({ topTemplate }: HeaderProps) {
     };
   }, [mobileOpen]);
 
-  // mobile panel class with reduced height
+  // mobile panel class now expands with content (not fixed limited height)
   const mobilePanelClass =
-    "md:hidden fixed left-0 right-0 bg-white shadow-md z-[220] max-h-[50vh] overflow-auto transition-all duration-150 origin-top " +
+    "md:hidden left-0 right-0 bg-white shadow-md z-[220] transition-all duration-150 origin-top " +
     (mobileOpen ? "block" : "hidden");
 
   useEffect(() => {
