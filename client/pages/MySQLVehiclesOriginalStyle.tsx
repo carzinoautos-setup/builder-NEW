@@ -5773,14 +5773,37 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                   </div>
 
-                  {viewMode === "all" && (
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      totalResults={totalResults}
-                      resultsPerPage={resultsPerPage}
-                      onPageChange={handlePageChange}
-                    />
+                  {viewMode === "all" && apiResponse?.meta && (
+                    <>
+                      <div className="md:hidden">
+                        {apiResponse.meta.currentPage < apiResponse.meta.totalPages && (
+                          <div className="fixed inset-x-0 bottom-4 flex justify-center z-50">
+                            <button
+                              onClick={() => {
+                                if (!loading) {
+                                  setAppendResults(true);
+                                  setCurrentPage((p) => p + 1);
+                                }
+                              }}
+                              disabled={loading}
+                              className="bg-red-600 text-white px-6 py-3 rounded-full shadow-lg"
+                            >
+                              {loading ? "Loading..." : "Load More Vehicles"}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="hidden md:block">
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          totalResults={totalResults}
+                          resultsPerPage={resultsPerPage}
+                          onPageChange={handlePageChange}
+                        />
+                      </div>
+                    </>
                   )}
                 </div>
               )}
