@@ -353,7 +353,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
               <div className="mt-4 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
                 <a href="https://www.carzino.com/privacy-policy/" className="text-white block w-full px-4 sm:px-0">Privacy policy</a>
                 <a href="https://www.carzino.com/terms-conditions/" className="text-white block w-full px-4 sm:px-0">Terms and conditions</a>
-                <a href="https://www.carzino.com/return-policy/" className="text-white">Return Policy</a>
+                <a href="https://www.carzino.com/return-policy/" className="text-white block w-full px-4 sm:px-0">Return Policy</a>
                 <a href="https://www.carzino.com/safety-guidelines/" className="text-white">Safety guidelines</a>
               </div>
 
