@@ -5159,33 +5159,36 @@ export default function MySQLVehiclesOriginalStyle() {
                         "regular-cab-truck",
                       ];
 
-                      const selected = new Set(
-                        appliedFilters.vehicleType || [],
-                      );
+                      const normalizeSlug = (v: string) =>
+                        String(v || "")
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/^-+|-+$/g, "");
 
-                      const carAll = CAR_CHILD_SLUGS.every((s) =>
-                        selected.has(s),
-                      );
-                      const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
-                        selected.has(s),
-                      );
+                      // Build a map from normalized slug -> original values in appliedFilters
+                      const originalMap = new Map<string, string[]>();
+                      (appliedFilters.vehicleType || []).forEach((val) => {
+                        const n = normalizeSlug(val);
+                        const arr = originalMap.get(n) || [];
+                        arr.push(val);
+                        originalMap.set(n, arr);
+                      });
+
+                      const selectedNorm = new Set(Array.from(originalMap.keys()));
+
+                      const carAll = CAR_CHILD_SLUGS.every((s) => selectedNorm.has(s));
+                      const truckAll = TRUCK_CHILD_SLUGS.every((s) => selectedNorm.has(s));
 
                       const chips: string[] = [];
 
                       if (carAll) chips.push("car");
-                      else
-                        CAR_CHILD_SLUGS.forEach(
-                          (s) => selected.has(s) && chips.push(s),
-                        );
+                      else CAR_CHILD_SLUGS.forEach((s) => selectedNorm.has(s) && chips.push(s));
 
                       if (truckAll) chips.push("truck");
-                      else
-                        TRUCK_CHILD_SLUGS.forEach(
-                          (s) => selected.has(s) && chips.push(s),
-                        );
+                      else TRUCK_CHILD_SLUGS.forEach((s) => selectedNorm.has(s) && chips.push(s));
 
-                      // include any other selected slugs not in the above lists
-                      for (const s of Array.from(selected)) {
+                      // include any other selected normalized slugs not in the above lists
+                      for (const s of Array.from(selectedNorm)) {
                         if (
                           !CAR_CHILD_SLUGS.includes(s) &&
                           !TRUCK_CHILD_SLUGS.includes(s) &&
@@ -5202,22 +5205,13 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => {
                             // remove chip: if parent, remove all children; otherwise remove single child
                             setAppliedFilters((prev) => {
-                              const nextSet = new Set(prev.vehicleType || []);
-                              if (item === "car") {
-                                CAR_CHILD_SLUGS.forEach((s) =>
-                                  nextSet.delete(s),
-                                );
-                              } else if (item === "truck") {
-                                TRUCK_CHILD_SLUGS.forEach((s) =>
-                                  nextSet.delete(s),
-                                );
-                              } else {
-                                nextSet.delete(item);
-                              }
-                              const next = {
-                                ...prev,
-                                vehicleType: Array.from(nextSet),
-                              };
+                              const nextArr = (prev.vehicleType || []).filter((v) => {
+                                const n = normalizeSlug(v);
+                                if (item === "car") return !CAR_CHILD_SLUGS.includes(n);
+                                if (item === "truck") return !TRUCK_CHILD_SLUGS.includes(n);
+                                return n !== item;
+                              });
+                              const next = { ...prev, vehicleType: Array.from(new Set(nextArr)) };
                               updateURLFromFilters(next);
                               return next;
                             });
@@ -5235,22 +5229,13 @@ export default function MySQLVehiclesOriginalStyle() {
                               e.stopPropagation();
                               // same remove logic
                               setAppliedFilters((prev) => {
-                                const nextSet = new Set(prev.vehicleType || []);
-                                if (item === "car") {
-                                  CAR_CHILD_SLUGS.forEach((s) =>
-                                    nextSet.delete(s),
-                                  );
-                                } else if (item === "truck") {
-                                  TRUCK_CHILD_SLUGS.forEach((s) =>
-                                    nextSet.delete(s),
-                                  );
-                                } else {
-                                  nextSet.delete(item);
-                                }
-                                const next = {
-                                  ...prev,
-                                  vehicleType: Array.from(nextSet),
-                                };
+                                const nextArr = (prev.vehicleType || []).filter((v) => {
+                                  const n = normalizeSlug(v);
+                                  if (item === "car") return !CAR_CHILD_SLUGS.includes(n);
+                                  if (item === "truck") return !TRUCK_CHILD_SLUGS.includes(n);
+                                  return n !== item;
+                                });
+                                const next = { ...prev, vehicleType: Array.from(new Set(nextArr)) };
                                 updateURLFromFilters(next);
                                 return next;
                               });
