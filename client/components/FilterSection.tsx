@@ -28,7 +28,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
           }`}
         />
       </button>
-      {!isCollapsed && <div className="mt-1">{children}</div>}
+      {!isCollapsed && <div className="mt-2">{children}</div>}
     </div>
   );
 };
