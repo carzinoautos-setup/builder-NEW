@@ -3018,6 +3018,10 @@ export default function MySQLVehiclesOriginalStyle() {
                           setSuggestionsOpen(false);
                           setActiveSuggestionIndex(-1);
                           setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                        } else {
+                          // No suggestion selected — submit the form
+                          e.preventDefault();
+                          handleUnifiedSearchSubmit(e as any);
                         }
                       } else if (e.key === "Escape") {
                         setSuggestionsOpen(false);
@@ -3268,6 +3272,10 @@ export default function MySQLVehiclesOriginalStyle() {
                           setSuggestionsOpen(false);
                           setActiveSuggestionIndex(-1);
                           setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                        } else {
+                          // No suggestion selected — submit the form
+                          e.preventDefault();
+                          handleUnifiedSearchSubmit(e as any);
                         }
                       } else if (e.key === "Escape") {
                         setSuggestionsOpen(false);
