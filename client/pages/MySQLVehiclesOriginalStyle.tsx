@@ -414,6 +414,32 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Unified search state for URL generation
   const [unifiedSearch, setUnifiedSearch] = useState("");
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const staticSuggestions = [
+    "Cheap cars under $4,000",
+    "Affordable cars under $20,000",
+    "Cars under $10,000",
+    "Used cars for sale",
+    "Used trucks for sale",
+    "Used SUVs for sale",
+    "Certified cars",
+    "Certified sedans under $25,000",
+    "SUVs under $20,000",
+    "Trucks under $30,000",
+    "Luxury cars over $50,000",
+    "New trucks for sale",
+    "Vans and minivans for sale",
+    "Convertibles under $30,000",
+    "Hatchbacks under $12,000",
+    "Coupes under $25,000",
+    "Sedans under $15,000",
+    "Compact cars under $15,000",
+    "Full-size trucks for sale",
+    "2018–2021 trucks under $35,000",
+  ];
+  const filteredSuggestions = unifiedSearch
+    ? staticSuggestions.filter((s) => s.toLowerCase().includes(unifiedSearch.toLowerCase()))
+    : staticSuggestions.slice(0, 6);
 
   // Location/Distance states
   const [zipCode, setZipCode] = useState(""); // No default ZIP
@@ -2028,7 +2054,7 @@ export default function MySQLVehiclesOriginalStyle() {
     setCurrentPage(1); // Reset to first page when applying filters
   };
 
-  // Parse unified search query and extract vehicle attributes
+  // Parse unified search query and extract vehicle attributes (extended with price parsing)
   const parseUnifiedSearch = (query: string) => {
     const words = query.toLowerCase().trim().split(/\s+/);
     const filters: any = {};
@@ -2115,8 +2141,66 @@ export default function MySQLVehiclesOriginalStyle() {
       ];
     }
 
-    // For model and trim, try to identify them by position or common patterns
-    // This is a simplified approach - you might want to add more sophisticated logic
+    // Price keyword mapping
+    // enforce price_min = 1 so vehicles without price are excluded for price queries
+    const priceKeywords: { pattern: RegExp; min?: number; max?: number }[] = [
+      { pattern: /\b(affordable|budget)\b/, min: 1, max: 20000 },
+      { pattern: /\bcheap cars\b/, min: 1, max: 4000 },
+      { pattern: /\bunder\s*\$?(\d{1,3}(?:,\d{3})?|\d+(?:k)?)\b/, min: 1 },
+      { pattern: /\bunder\s*(\d+(?:k)?)\b/, min: 1 },
+      { pattern: /\bbetween\s*\$?(\d+(?:k)?)\s*(?:and|-)\s*\$?(\d+(?:k)?)\b/, min: 0 },
+      { pattern: /\b(over|above)\s*\$?(\d+(?:,\d{3})?|\d+(?:k)?)\b/, min: 0 },
+      { pattern: /\b(\d+(?:k))\b/, min: 0 },
+    ];
+
+    // Helper to normalize strings like '10k' -> 10000
+    const parsePriceValue = (str: string) => {
+      if (!str) return NaN;
+      const s = String(str).toLowerCase().replace(/[,\$]/g, "");
+      if (s.endsWith("k")) return parseFloat(s.slice(0, -1)) * 1000;
+      return parseFloat(s);
+    };
+
+    // Specific patterns
+    const cheapMatch = query.match(/\bcheap cars\b/);
+    if (cheapMatch) {
+      filters.priceMin = 1;
+      filters.priceMax = 4000;
+    }
+    const affordableMatch = query.match(/\b(affordable|budget)\b/);
+    if (affordableMatch) {
+      filters.priceMin = 1;
+      filters.priceMax = 20000;
+    }
+
+    const betweenMatch = query.match(/\bbetween\s*\$?(\d+(?:k)?)\s*(?:and|-)\s*\$?(\d+(?:k)?)\b/);
+    if (betweenMatch) {
+      const a = parsePriceValue(betweenMatch[1]);
+      const b = parsePriceValue(betweenMatch[2]);
+      if (!isNaN(a) && !isNaN(b)) {
+        filters.priceMin = Math.min(a, b);
+        filters.priceMax = Math.max(a, b);
+      }
+    }
+
+    const underMatch = query.match(/\bunder\s*\$?(\d+(?:,\d{3})?|\d+(?:k)?)\b/);
+    if (underMatch) {
+      const v = parsePriceValue(underMatch[1]);
+      if (!isNaN(v)) {
+        filters.priceMin = 1;
+        filters.priceMax = v;
+      }
+    }
+
+    const overMatch = query.match(/\b(?:over|above)\s*\$?(\d+(?:,\d{3})?|\d+(?:k)?)\b/);
+    if (overMatch) {
+      const v = parsePriceValue(overMatch[1]);
+      if (!isNaN(v)) {
+        filters.priceMin = v;
+      }
+    }
+
+    // Extract make/model/trim by position as before
     if (foundMake) {
       const makeIndex = words.indexOf(foundMake.toLowerCase());
       if (makeIndex >= 0 && makeIndex + 1 < words.length) {
@@ -2144,6 +2228,18 @@ export default function MySQLVehiclesOriginalStyle() {
           }
         }
       }
+    }
+
+    // If no explicit make/model/trim/year/bodyStyle/condition identified, keep as free-text search
+    const hasExplicit =
+      filters.make || filters.model || filters.trim || filters.year || filters.condition || filters.bodyStyle || filters.priceMin || filters.priceMax;
+    if (!hasExplicit) {
+      filters.search = query;
+    }
+
+    // Ensure price_min enforcement: if price filters used, make sure priceMin >=1
+    if (filters.priceMin !== undefined && (filters.priceMin === null || filters.priceMin === "")) {
+      filters.priceMin = 1;
     }
 
     return filters;
@@ -2187,8 +2283,8 @@ export default function MySQLVehiclesOriginalStyle() {
       exteriorColor: [],
       sellerType: [],
       dealer: [],
-      priceMin: "",
-      priceMax: "",
+      priceMin: parsedFilters.priceMin !== undefined ? String(parsedFilters.priceMin) : "",
+      priceMax: parsedFilters.priceMax !== undefined ? String(parsedFilters.priceMax) : "",
       paymentMin: "",
       paymentMax: "",
       fuelType: [],
@@ -2264,7 +2360,7 @@ export default function MySQLVehiclesOriginalStyle() {
         const result = await response.json();
         if (result.success && result.data) {
           console.log(
-            `✅ Geocoded ${zip} to ${result.data.city}, ${result.data.state}`,
+            `��� Geocoded ${zip} to ${result.data.city}, ${result.data.state}`,
           );
           return {
             lat: result.data.lat,
@@ -2780,9 +2876,31 @@ export default function MySQLVehiclesOriginalStyle() {
                     type="text"
                     placeholder="Search Cars For Sale"
                     value={unifiedSearch}
+                    onFocus={() => setSuggestionsOpen(true)}
+                    onBlur={() => setTimeout(() => setSuggestionsOpen(false), 150)}
                     onChange={(e) => setUnifiedSearch(e.target.value)}
                     className="carzino-search-input w-full pl-4 pr-14 py-2.5 border border-gray-300 rounded-[10px] sm:rounded-full overflow-hidden focus:outline-none focus:border-red-600"
                   />
+                  {suggestionsOpen && filteredSuggestions.length > 0 && (
+                    <div className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50">
+                      {filteredSuggestions.map((s, idx) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onMouseDown={(ev) => ev.preventDefault()} // prevent blur
+                          onClick={() => {
+                            setUnifiedSearch(s);
+                            setSuggestionsOpen(false);
+                            // submit after setting
+                            setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                          }}
+                          className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <button
                     type="submit"
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1"
@@ -2944,9 +3062,30 @@ export default function MySQLVehiclesOriginalStyle() {
                     type="text"
                     placeholder="Search Cars For Sale"
                     value={unifiedSearch}
+                    onFocus={() => setSuggestionsOpen(true)}
+                    onBlur={() => setTimeout(() => setSuggestionsOpen(false), 150)}
                     onChange={(e) => setUnifiedSearch(e.target.value)}
                     className="carzino-search-input w-full px-3 py-2 pr-14 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
                   />
+                  {suggestionsOpen && filteredSuggestions.length > 0 && (
+                    <div className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-50">
+                      {filteredSuggestions.map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onMouseDown={(ev) => ev.preventDefault()}
+                          onClick={() => {
+                            setUnifiedSearch(s);
+                            setSuggestionsOpen(false);
+                            setTimeout(() => handleUnifiedSearchSubmit(new Event('submit') as any), 0);
+                          }}
+                          className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <button
                     type="submit"
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 p-1"
@@ -6117,20 +6256,26 @@ export default function MySQLVehiclesOriginalStyle() {
                 </div>
               ) : (
                 <div>
-                  <div className="vehicle-grid grid grid-cols-1 gap-4 mb-8">
-                    {displayedVehicles.map((vehicle) => (
-                      <VehicleCard
-                        key={vehicle.id}
-                        vehicle={vehicle}
-                        favorites={favorites}
-                        onToggleFavorite={toggleFavorite}
-                        keeperMessage={keeperMessage}
-                        termLength={termLength}
-                        interestRate={interestRate}
-                        downPayment={downPayment}
-                      />
-                    ))}
-                  </div>
+                  {displayedVehicles.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="text-lg">No results found. Search by year, make, model, or use filters.</div>
+                    </div>
+                  ) : (
+                    <div className="vehicle-grid grid grid-cols-1 gap-4 mb-8">
+                      {displayedVehicles.map((vehicle) => (
+                        <VehicleCard
+                          key={vehicle.id}
+                          vehicle={vehicle}
+                          favorites={favorites}
+                          onToggleFavorite={toggleFavorite}
+                          keeperMessage={keeperMessage}
+                          termLength={termLength}
+                          interestRate={interestRate}
+                          downPayment={downPayment}
+                        />
+                      ))}
+                    </div>
+                  )}
 
                   {viewMode === "all" && apiResponse?.meta && (
                     <>
