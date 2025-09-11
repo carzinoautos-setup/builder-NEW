@@ -179,13 +179,26 @@ export default function Footer() {
                   {s.links ? (
                     <nav>
                       {s.links.map((l) => (
-                        <a
-                          key={l}
-                          className={`block ${l ? "mt-0" : "mt-3"}`}
-                          href="#"
-                        >
-                          {l}
-                        </a>
+                        l === "Trade in your Cars" ? (
+                          <p key={l}>
+                            <a
+                              href="https://www.carzino.com/trade-in-your-car/"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                              className={`block ${l ? "mt-0" : "mt-3"}`}
+                            >
+                              {l}
+                            </a>
+                          </p>
+                        ) : (
+                          <a
+                            key={l}
+                            className={`block ${l ? "mt-0" : "mt-3"}`}
+                            href="#"
+                          >
+                            {l}
+                          </a>
+                        )
                       ))}
                     </nav>
                   ) : (
