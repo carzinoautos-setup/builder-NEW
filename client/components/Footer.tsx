@@ -124,6 +124,21 @@ export default function Footer() {
             },
           ],
         });
+
+        // footer links editor (single column list)
+        builder.registerComponent({
+          name: "footer-links",
+          inputs: [
+            {
+              name: "items",
+              type: "list",
+              subFields: [
+                { name: "label", type: "string" },
+                { name: "url", type: "string" },
+              ],
+            },
+          ],
+        });
       }
     } catch (e) {
       // ignore if builder not initialized
