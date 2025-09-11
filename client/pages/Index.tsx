@@ -1037,7 +1037,7 @@ export default function Index() {
 
         {/* Sidebar - Hidden on mobile by default */}
         <div
-          className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block ${mobileFiltersOpen ? "open" : ""}`}
+          className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block self-start ${mobileFiltersOpen ? "open" : ""}`}
           style={{
             width: "280px",
           }}
