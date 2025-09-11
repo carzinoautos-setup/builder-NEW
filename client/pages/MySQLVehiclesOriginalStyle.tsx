@@ -5409,15 +5409,15 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Displacement Liters */}
-            {((filterOptions && filterOptions.displacement_liters && filterOptions.displacement_liters.length > 0) || (appliedFilters.displacementLiters && appliedFilters.displacementLiters.length > 0)) && (
+            {((displacementOptions && displacementOptions.length > 0) || (appliedFilters.displacementLiters && appliedFilters.displacementLiters.length > 0)) && (
               <FilterSection
                 title="Displacement (L)"
                 isCollapsed={collapsedFilters.displacementLiters}
                 onToggle={() => toggleFilter("displacementLiters")}
               >
                 <div className="space-y-1">
-                  {filterOptions.displacement_liters && filterOptions.displacement_liters.length > 0 ? (
-                    filterOptions.displacement_liters.map((d: any) => (
+                  {displacementOptions && displacementOptions.length > 0 ? (
+                    displacementOptions.map((d: any) => (
                       <label
                         key={d.name}
                         className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
