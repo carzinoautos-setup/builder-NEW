@@ -5522,7 +5522,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             }
                           }}
                         />
-                        <span className="carzino-filter-option">{d.name}</span>
+                        <span className="carzino-filter-option">{(() => { const s = String(d.name || ''); if (/[lL]$/.test(s)) return s; if (/^\d+(?:\.\d+)?\s*-\s*\d+(?:\.\d+)?$/.test(s)) return `${s}L`; const n = Number(s); return Number.isNaN(n) ? s : `${n}L`; })()}</span>
                         <span className="carzino-filter-count ml-1">
                           ({d.count ?? 0})
                         </span>
