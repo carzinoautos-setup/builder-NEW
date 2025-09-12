@@ -5485,7 +5485,7 @@ export default function MySQLVehiclesOriginalStyle() {
               (appliedFilters.displacementLiters &&
                 appliedFilters.displacementLiters.length > 0)) && (
               <FilterSection
-                title="Displacement (L)"
+                title="Engine Displacement"
                 isCollapsed={collapsedFilters.displacementLiters}
                 onToggle={() => toggleFilter("displacementLiters")}
               >
