@@ -2559,14 +2559,26 @@ export default function MySQLVehiclesOriginalStyle() {
     // Parse the unified search query
     const parsedFilters = parseUnifiedSearch(q);
 
+    // Sanitize parsed values to avoid corrupted characters being applied to pills
+    const sanitizedParsed = {
+      ...parsedFilters,
+      make: (parsedFilters.make || []).map((v: any) => sanitizeLabel(v)),
+      model: (parsedFilters.model || []).map((v: any) => sanitizeLabel(v)),
+      trim: (parsedFilters.trim || []).map((v: any) => sanitizeLabel(v)),
+      condition: (parsedFilters.condition || []).map((v: any) => sanitizeLabel(v)),
+      year: parsedFilters.year ? parsedFilters.year.map((v: any) => sanitizeLabel(v)) : parsedFilters.year,
+      bodyStyle: parsedFilters.bodyStyle ? parsedFilters.bodyStyle.map((v: any) => sanitizeLabel(v)) : parsedFilters.bodyStyle,
+      search: sanitizeLabel(parsedFilters.search),
+    };
+
     // Generate URL and navigate
     const searchURL = generateURLFromFilters({
-      make: parsedFilters.make,
-      model: parsedFilters.model,
-      trim: parsedFilters.trim,
-      condition: parsedFilters.condition,
-      year: parsedFilters.year?.[0],
-      bodyStyle: parsedFilters.bodyStyle?.[0],
+      make: sanitizedParsed.make,
+      model: sanitizedParsed.model,
+      trim: sanitizedParsed.trim,
+      condition: sanitizedParsed.condition,
+      year: sanitizedParsed.year?.[0],
+      bodyStyle: sanitizedParsed.bodyStyle?.[0],
     });
 
     // Clear any previously applied filters first (but we'll restore the unified search below)
