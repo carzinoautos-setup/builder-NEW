@@ -2887,11 +2887,51 @@ export default function MySQLVehiclesOriginalStyle() {
     Green: "#008000",
   };
 
+  const extractColorFromName = (name: string, fallback = "#D1D5DB") => {
+    if (!name || typeof name !== "string") return fallback;
+
+    // 1) hex like #fff or #ffffff
+    const hexMatch = name.match(/#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b/);
+    if (hexMatch) {
+      let hx = hexMatch[0];
+      if (hx.length === 4) {
+        // expand #abc => #aabbcc
+        hx =
+          "#" +
+          hx[1] + hx[1] +
+          hx[2] + hx[2] +
+          hx[3] + hx[3];
+      }
+      return hx;
+    }
+
+    // 2) rgb(...) or rgba(...)
+    const rgbMatch = name.match(/rgba?\([^\)]+\)/i);
+    if (rgbMatch) return rgbMatch[0];
+
+    // 3) find known color words from palette
+    for (const key of Object.keys(colorPalette)) {
+      const regex = new RegExp("\\b" + key + "\\b", "i");
+      if (regex.test(name)) return colorPalette[key];
+    }
+
+    // 4) fallback: generate a deterministic HSL color from the name
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      hash = hash & hash;
+    }
+    const h = Math.abs(hash) % 360;
+    const s = 50 + (Math.abs(hash) % 20); // 50-69%
+    const l = 35 + (Math.abs(hash) % 30); // 35-64%
+    return `hsl(${h}, ${s}%, ${l}%)`;
+  };
+
   const exteriorColors = useMemo(() => {
     const list = (filterOptions.exterior_color || []) as any[];
     return list.map((c) => ({
       name: c.name,
-      color: colorPalette[c.name] || "#D1D5DB",
+      color: extractColorFromName(String(c.name || ""), "#D1D5DB"),
       count: c.count || 0,
     }));
   }, [filterOptions.exterior_color]);
@@ -2900,7 +2940,7 @@ export default function MySQLVehiclesOriginalStyle() {
     const list = (filterOptions.interior_color || []) as any[];
     return list.map((c) => ({
       name: c.name,
-      color: colorPalette[c.name] || "#E5E7EB",
+      color: extractColorFromName(String(c.name || ""), "#E5E7EB"),
       count: c.count || 0,
     }));
   }, [filterOptions.interior_color]);
