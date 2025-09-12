@@ -449,7 +449,7 @@ export default function MySQLVehiclesOriginalStyle() {
       s = s.normalize();
       // Remove any unexpected characters that are not letters, numbers, punctuation, space separators or symbols
       try {
-        s = s.replace(/[^^\p{L}\p{N}\p{P}\p{Zs}\p{S}]+/gu, "");
+        s = s.replace(/[^\p{L}\p{N}\p{P}\p{Zs}\p{S}]+/gu, "");
       } catch (e) {
         // If unicode property escapes not supported, do a conservative fallback: remove control chars
         s = s.replace(/[\x00-\x1F\x7F]/g, "");
