@@ -689,26 +689,45 @@ export default function MySQLVehiclesOriginalStyle() {
   }, [vehicles, filterOptions]);
 
   const displacementOptions = React.useMemo(() => {
+    const src: any[] = [];
+
     if (
       filterOptions &&
       filterOptions.displacement_liters &&
       filterOptions.displacement_liters.length > 0
-    )
-      return filterOptions.displacement_liters;
-    const map = new Map<string, number>();
-    for (const v of vehicles || []) {
-      const val =
-        ((v as any).displacement_liters ??
-          (v as any).displacementLiters ??
-          (v as any).displacement) ||
-        null;
-      if (val === null || val === undefined || val === "") continue;
-      const name = String(val);
-      map.set(name, (map.get(name) || 0) + 1);
+    ) {
+      for (const item of filterOptions.displacement_liters) {
+        if (typeof item === 'string') src.push({ name: item, count: 0 });
+        else if (item && typeof item === 'object') src.push({ name: String(item.name ?? item.value ?? ''), count: Number(item.count ?? 0) });
+      }
+    } else {
+      const map = new Map<string, number>();
+      for (const v of vehicles || []) {
+        const val =
+          ((v as any).displacement_liters ??
+            (v as any).displacementLiters ??
+            (v as any).displacement) ||
+          null;
+        if (val === null || val === undefined || val === '') continue;
+        const name = String(val);
+        map.set(name, (map.get(name) || 0) + 1);
+      }
+      for (const [name, count] of Array.from(map.entries())) src.push({ name, count });
     }
-    return Array.from(map.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => Number(b.count) - Number(a.count));
+
+    // Sort ascending by numeric start of range (e.g. 1.0-1.9 -> 1.0). Fallback to numeric value, then lexicographic.
+    src.sort((a: any, b: any) => {
+      const ra = String(a.name).match(/^(\d+(?:\.\d+)?)/);
+      const rb = String(b.name).match(/^(\d+(?:\.\d+)?)/);
+      const na = ra ? Number(ra[1]) : Number(a.name);
+      const nb = rb ? Number(rb[1]) : Number(b.name);
+      if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+      if (!Number.isNaN(na)) return -1;
+      if (!Number.isNaN(nb)) return 1;
+      return String(a.name).localeCompare(String(b.name));
+    });
+
+    return src;
   }, [vehicles, filterOptions]);
 
   // UI: show more state for Make/Model/Trim lists
