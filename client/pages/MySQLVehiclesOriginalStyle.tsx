@@ -812,7 +812,7 @@ export default function MySQLVehiclesOriginalStyle() {
   // UI: fuel type show more and default selection
   const [showMoreFuel, setShowMoreFuel] = useState(false);
 
-  // Suggestion computation depends on filterOptions ��� compute with useMemo to avoid TDZ
+  // Suggestion computation depends on filterOptions ×� compute with useMemo to avoid TDZ
   const {
     computedInventorySuggestions,
     computedQuickFilterSuggestions,
@@ -2116,7 +2116,7 @@ export default function MySQLVehiclesOriginalStyle() {
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
             console.log(
-              "����� Merged Builder VehicleTypeCard images into runtime mapping",
+              "××� Merged Builder VehicleTypeCard images into runtime mapping",
               foundImages,
             );
             // Clear persisted local overrides so Builder/editor images take effect immediately
@@ -2736,7 +2736,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
       } else {
         console.error(
-          `���� Geocoding API error: ${response.status} ${response.statusText}`,
+          `×× Geocoding API error: ${response.status} ${response.statusText}`,
         );
       }
 
@@ -2750,7 +2750,7 @@ export default function MySQLVehiclesOriginalStyle() {
         (error.message.includes("Failed to fetch") ||
           error.message.includes("NetworkError"))
       ) {
-        console.log("���� Using fallback coordinates due to network error");
+        console.log("×× Using fallback coordinates due to network error");
         const zipCoordinates: {
           [key: string]: {
             lat: number;
@@ -6309,7 +6309,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          ��
+                          ×
                         </button>
                       </span>
                     ) : null}
@@ -6668,7 +6668,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          ����
+                          ××
                         </button>
                       </span>
                     ))}
@@ -6813,7 +6813,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          ��
+                          ×
                         </button>
                       </span>
                     ) : null}
