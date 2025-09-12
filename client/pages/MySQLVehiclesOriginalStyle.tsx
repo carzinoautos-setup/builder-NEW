@@ -6085,7 +6085,7 @@ export default function MySQLVehiclesOriginalStyle() {
               </h1>
 
               {/* Search Bar */}
-              <div className="relative">
+              <div className="relative z-[300]">
                 <input
                   type="text"
                   placeholder="Search vehicles..."
