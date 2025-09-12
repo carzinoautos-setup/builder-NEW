@@ -572,6 +572,7 @@ export default function MySQLVehiclesOriginalStyle() {
     transmission: [] as string[],
     mileage: "",
     exteriorColor: [] as string[],
+    interiorColor: [] as string[],
     sellerType: [] as string[],
     dealer: [] as string[],
     priceMin: "",
