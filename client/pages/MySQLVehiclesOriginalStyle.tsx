@@ -3236,7 +3236,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       <div
                         role="listbox"
                         aria-label="Search suggestions"
-                        className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-60"
+                        className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-[310]"
                       >
                         {inventorySuggestions.length > 0 && (
                           <div>
@@ -3529,7 +3529,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       <div
                         role="listbox"
                         aria-label="Search suggestions"
-                        className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-60"
+                        className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-[310]"
                       >
                         {inventorySuggestions.length > 0 && (
                           <div>
@@ -6154,7 +6154,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     <div
                       role="listbox"
                       aria-label="Search suggestions"
-                      className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-60"
+                      className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow z-[310]"
                     >
                       {inventorySuggestions.length > 0 && (
                         <div>
