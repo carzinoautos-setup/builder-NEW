@@ -3194,54 +3194,9 @@ export default function MySQLVehiclesOriginalStyle() {
                   <input
                     type="text"
                     placeholder="Search Cars For Sale"
-                    value={unifiedSearch}
-                    onFocus={() => {
-                      setSuggestionsOpen(true);
-                      setActiveSuggestionIndex(-1);
-                    }}
-                    onBlur={() =>
-                      setTimeout(() => setSuggestionsOpen(false), 150)
-                    }
+                    value={panelSearch}
                     onChange={(e) => {
-                      setUnifiedSearch(e.target.value);
-                      setActiveSuggestionIndex(-1);
-                    }}
-                    onKeyDown={(e) => {
-                      if (!suggestionsOpen) return;
-                      if (e.key === "ArrowDown") {
-                        e.preventDefault();
-                        setActiveSuggestionIndex((i) =>
-                          Math.min(i + 1, filteredSuggestions.length - 1),
-                        );
-                      } else if (e.key === "ArrowUp") {
-                        e.preventDefault();
-                        setActiveSuggestionIndex((i) => Math.max(i - 1, 0));
-                      } else if (e.key === "Enter") {
-                        if (
-                          activeSuggestionIndex >= 0 &&
-                          filteredSuggestions[activeSuggestionIndex]
-                        ) {
-                          e.preventDefault();
-                          const s = filteredSuggestions[activeSuggestionIndex];
-                          setUnifiedSearch(sanitizeLabel(s));
-                          setSuggestionsOpen(false);
-                          setActiveSuggestionIndex(-1);
-                          setTimeout(
-                            () =>
-                              handleUnifiedSearchSubmit(
-                                new Event("submit") as any,
-                              ),
-                            0,
-                          );
-                        } else {
-                          // No suggestion selected ��� submit the form
-                          e.preventDefault();
-                          handleUnifiedSearchSubmit(e as any);
-                        }
-                      } else if (e.key === "Escape") {
-                        setSuggestionsOpen(false);
-                        setActiveSuggestionIndex(-1);
-                      }
+                      setPanelSearch(e.target.value);
                     }}
                     className="carzino-search-input w-full pl-4 pr-14 py-2.5 border border-gray-300 rounded-[10px] sm:rounded-full overflow-hidden focus:outline-none focus:border-red-600"
                   />
@@ -6309,7 +6264,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          ×
+                          ��
                         </button>
                       </span>
                     ) : null}
