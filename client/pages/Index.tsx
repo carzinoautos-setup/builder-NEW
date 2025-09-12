@@ -1165,13 +1165,23 @@ export default function Index() {
                       "regular-cab-truck",
                     ];
                     const selected = new Set(appliedFilters.vehicleType || []);
-                    const carAll = CAR_CHILD_SLUGS.every((s) => selected.has(s));
-                    const truckAll = TRUCK_CHILD_SLUGS.every((s) => selected.has(s));
+                    const carAll = CAR_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
+                    const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
                     const chips: string[] = [];
                     if (carAll) chips.push("car");
-                    else CAR_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                    else
+                      CAR_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
                     if (truckAll) chips.push("truck");
-                    else TRUCK_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                    else
+                      TRUCK_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
                     for (const s of Array.from(selected)) {
                       if (
                         !CAR_CHILD_SLUGS.includes(s) &&
@@ -1191,30 +1201,46 @@ export default function Index() {
                             if (item === "car") {
                               CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
                             } else if (item === "truck") {
-                              TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                              TRUCK_CHILD_SLUGS.forEach((s) =>
+                                nextSet.delete(s),
+                              );
                             } else {
                               nextSet.delete(item);
                             }
-                            return { ...prev, vehicleType: Array.from(nextSet) };
+                            return {
+                              ...prev,
+                              vehicleType: Array.from(nextSet),
+                            };
                           });
                         }}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item === "car" ? "All Cars" : item === "truck" ? "All Trucks" : item}
+                        {item === "car"
+                          ? "All Cars"
+                          : item === "truck"
+                            ? "All Trucks"
+                            : item}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setAppliedFilters((prev) => {
                               const nextSet = new Set(prev.vehicleType || []);
                               if (item === "car") {
-                                CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                CAR_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else if (item === "truck") {
-                                TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                TRUCK_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else {
                                 nextSet.delete(item);
                               }
-                              return { ...prev, vehicleType: Array.from(nextSet) };
+                              return {
+                                ...prev,
+                                vehicleType: Array.from(nextSet),
+                              };
                             });
                           }}
                           className="ml-1 text-white"
@@ -1449,13 +1475,23 @@ export default function Index() {
                       "regular-cab-truck",
                     ];
                     const selected = new Set(appliedFilters.vehicleType || []);
-                    const carAll = CAR_CHILD_SLUGS.every((s) => selected.has(s));
-                    const truckAll = TRUCK_CHILD_SLUGS.every((s) => selected.has(s));
+                    const carAll = CAR_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
+                    const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
                     const chips: string[] = [];
                     if (carAll) chips.push("car");
-                    else CAR_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                    else
+                      CAR_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
                     if (truckAll) chips.push("truck");
-                    else TRUCK_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                    else
+                      TRUCK_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
                     for (const s of Array.from(selected)) {
                       if (
                         !CAR_CHILD_SLUGS.includes(s) &&
@@ -1475,30 +1511,46 @@ export default function Index() {
                             if (item === "car") {
                               CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
                             } else if (item === "truck") {
-                              TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                              TRUCK_CHILD_SLUGS.forEach((s) =>
+                                nextSet.delete(s),
+                              );
                             } else {
                               nextSet.delete(item);
                             }
-                            return { ...prev, vehicleType: Array.from(nextSet) };
+                            return {
+                              ...prev,
+                              vehicleType: Array.from(nextSet),
+                            };
                           });
                         }}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item === "car" ? "All Cars" : item === "truck" ? "All Trucks" : item}
+                        {item === "car"
+                          ? "All Cars"
+                          : item === "truck"
+                            ? "All Trucks"
+                            : item}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setAppliedFilters((prev) => {
                               const nextSet = new Set(prev.vehicleType || []);
                               if (item === "car") {
-                                CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                CAR_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else if (item === "truck") {
-                                TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                TRUCK_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else {
                                 nextSet.delete(item);
                               }
-                              return { ...prev, vehicleType: Array.from(nextSet) };
+                              return {
+                                ...prev,
+                                vehicleType: Array.from(nextSet),
+                              };
                             });
                           }}
                           className="ml-1 text-white hover:text-gray-300"
@@ -2479,14 +2531,26 @@ export default function Index() {
                         "extended-cab",
                         "regular-cab-truck",
                       ];
-                      const selected = new Set(appliedFilters.vehicleType || []);
-                      const carAll = CAR_CHILD_SLUGS.every((s) => selected.has(s));
-                      const truckAll = TRUCK_CHILD_SLUGS.every((s) => selected.has(s));
+                      const selected = new Set(
+                        appliedFilters.vehicleType || [],
+                      );
+                      const carAll = CAR_CHILD_SLUGS.every((s) =>
+                        selected.has(s),
+                      );
+                      const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                        selected.has(s),
+                      );
                       const chips: string[] = [];
                       if (carAll) chips.push("car");
-                      else CAR_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                      else
+                        CAR_CHILD_SLUGS.forEach(
+                          (s) => selected.has(s) && chips.push(s),
+                        );
                       if (truckAll) chips.push("truck");
-                      else TRUCK_CHILD_SLUGS.forEach((s) => selected.has(s) && chips.push(s));
+                      else
+                        TRUCK_CHILD_SLUGS.forEach(
+                          (s) => selected.has(s) && chips.push(s),
+                        );
                       for (const s of Array.from(selected)) {
                         if (
                           !CAR_CHILD_SLUGS.includes(s) &&
@@ -2504,32 +2568,50 @@ export default function Index() {
                             setAppliedFilters((prev) => {
                               const nextSet = new Set(prev.vehicleType || []);
                               if (item === "car") {
-                                CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                CAR_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else if (item === "truck") {
-                                TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                TRUCK_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
                               } else {
                                 nextSet.delete(item);
                               }
-                              return { ...prev, vehicleType: Array.from(nextSet) };
+                              return {
+                                ...prev,
+                                vehicleType: Array.from(nextSet),
+                              };
                             });
                           }}
                           className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                         >
                           <Check className="w-3 h-3 text-red-600" />
-                          {item === "car" ? "All Cars" : item === "truck" ? "All Trucks" : item}
+                          {item === "car"
+                            ? "All Cars"
+                            : item === "truck"
+                              ? "All Trucks"
+                              : item}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setAppliedFilters((prev) => {
                                 const nextSet = new Set(prev.vehicleType || []);
                                 if (item === "car") {
-                                  CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                  CAR_CHILD_SLUGS.forEach((s) =>
+                                    nextSet.delete(s),
+                                  );
                                 } else if (item === "truck") {
-                                  TRUCK_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                                  TRUCK_CHILD_SLUGS.forEach((s) =>
+                                    nextSet.delete(s),
+                                  );
                                 } else {
                                   nextSet.delete(item);
                                 }
-                                return { ...prev, vehicleType: Array.from(nextSet) };
+                                return {
+                                  ...prev,
+                                  vehicleType: Array.from(nextSet),
+                                };
                               });
                             }}
                             className="ml-1 text-white"

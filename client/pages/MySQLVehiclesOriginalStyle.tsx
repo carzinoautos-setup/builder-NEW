@@ -656,11 +656,16 @@ export default function MySQLVehiclesOriginalStyle() {
   // Derive engine/displacement options from the current vehicles list when the filters endpoint
   // does not include engine_cylinders. This avoids requiring backend changes immediately.
   const engineOptions = React.useMemo(() => {
-    if (filterOptions && filterOptions.engine_cylinders && filterOptions.engine_cylinders.length > 0)
+    if (
+      filterOptions &&
+      filterOptions.engine_cylinders &&
+      filterOptions.engine_cylinders.length > 0
+    )
       return filterOptions.engine_cylinders;
     const map = new Map<string, number>();
     for (const v of vehicles || []) {
-      const val = (v as any).engine_cylinders ?? (v as any).engineCylinders ?? null;
+      const val =
+        (v as any).engine_cylinders ?? (v as any).engineCylinders ?? null;
       if (val === null || val === undefined || val === "") continue;
       const name = String(val);
       map.set(name, (map.get(name) || 0) + 1);
@@ -679,7 +684,11 @@ export default function MySQLVehiclesOriginalStyle() {
       return filterOptions.displacement_liters;
     const map = new Map<string, number>();
     for (const v of vehicles || []) {
-      const val = ((v as any).displacement_liters ?? (v as any).displacementLiters ?? (v as any).displacement) || null;
+      const val =
+        ((v as any).displacement_liters ??
+          (v as any).displacementLiters ??
+          (v as any).displacement) ||
+        null;
       if (val === null || val === undefined || val === "") continue;
       const name = String(val);
       map.set(name, (map.get(name) || 0) + 1);
@@ -1134,14 +1143,20 @@ export default function MySQLVehiclesOriginalStyle() {
         (appliedFilters as any).engineCylinders &&
         (appliedFilters as any).engineCylinders.length > 0
       ) {
-        params.append("engine_cylinders", (appliedFilters as any).engineCylinders.join(","));
+        params.append(
+          "engine_cylinders",
+          (appliedFilters as any).engineCylinders.join(","),
+        );
       }
 
       if (
         (appliedFilters as any).displacementLiters &&
         (appliedFilters as any).displacementLiters.length > 0
       ) {
-        params.append("displacement_liters", (appliedFilters as any).displacementLiters.join(","));
+        params.append(
+          "displacement_liters",
+          (appliedFilters as any).displacementLiters.join(","),
+        );
       }
       if (
         (appliedFilters as any).transmissionSpeed &&
@@ -3889,7 +3904,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <Check className="w-3 h-3 text-red-600" />
                         {item} Cyl
                         <button
-                          onClick={() => removeAppliedFilter("engineCylinders", item)}
+                          onClick={() =>
+                            removeAppliedFilter("engineCylinders", item)
+                          }
                           className="ml-1 text-white"
                         >
                           ×
@@ -3904,7 +3921,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <Check className="w-3 h-3 text-red-600" />
                         {item} L
                         <button
-                          onClick={() => removeAppliedFilter("displacementLiters", item)}
+                          onClick={() =>
+                            removeAppliedFilter("displacementLiters", item)
+                          }
                           className="ml-1 text-white"
                         >
                           ×
@@ -5373,7 +5392,9 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Engine Cylinders */}
-            {((engineOptions && engineOptions.length > 0) || (appliedFilters.engineCylinders && appliedFilters.engineCylinders.length > 0)) && (
+            {((engineOptions && engineOptions.length > 0) ||
+              (appliedFilters.engineCylinders &&
+                appliedFilters.engineCylinders.length > 0)) && (
               <FilterSection
                 title="Engine Cylinders"
                 isCollapsed={collapsedFilters.engineCylinders}
@@ -5389,35 +5410,48 @@ export default function MySQLVehiclesOriginalStyle() {
                         <input
                           type="checkbox"
                           className="mr-2"
-                          checked={(appliedFilters.engineCylinders || []).includes(d.name)}
+                          checked={(
+                            appliedFilters.engineCylinders || []
+                          ).includes(d.name)}
                           onChange={(e) => {
                             e.stopPropagation();
                             if ((e.target as HTMLInputElement).checked) {
                               setAppliedFilters((prev) => ({
                                 ...prev,
-                                engineCylinders: [...(prev as any).engineCylinders, d.name],
+                                engineCylinders: [
+                                  ...(prev as any).engineCylinders,
+                                  d.name,
+                                ],
                               }));
                             } else {
                               setAppliedFilters((prev) => ({
                                 ...prev,
-                                engineCylinders: ((prev as any).engineCylinders || []).filter((v: string) => v !== d.name),
+                                engineCylinders: (
+                                  (prev as any).engineCylinders || []
+                                ).filter((v: string) => v !== d.name),
                               }));
                             }
                           }}
                         />
                         <span className="carzino-filter-option">{d.name}</span>
-                        <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({d.count ?? 0})
+                        </span>
                       </label>
                     ))
                   ) : (
-                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No engine options available.</div>
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No engine options available.
+                    </div>
                   )}
                 </div>
               </FilterSection>
             )}
 
             {/* Displacement Liters */}
-            {((displacementOptions && displacementOptions.length > 0) || (appliedFilters.displacementLiters && appliedFilters.displacementLiters.length > 0)) && (
+            {((displacementOptions && displacementOptions.length > 0) ||
+              (appliedFilters.displacementLiters &&
+                appliedFilters.displacementLiters.length > 0)) && (
               <FilterSection
                 title="Displacement (L)"
                 isCollapsed={collapsedFilters.displacementLiters}
@@ -5433,28 +5467,39 @@ export default function MySQLVehiclesOriginalStyle() {
                         <input
                           type="checkbox"
                           className="mr-2"
-                          checked={(appliedFilters.displacementLiters || []).includes(d.name)}
+                          checked={(
+                            appliedFilters.displacementLiters || []
+                          ).includes(d.name)}
                           onChange={(e) => {
                             e.stopPropagation();
                             if ((e.target as HTMLInputElement).checked) {
                               setAppliedFilters((prev) => ({
                                 ...prev,
-                                displacementLiters: [...(prev as any).displacementLiters, d.name],
+                                displacementLiters: [
+                                  ...(prev as any).displacementLiters,
+                                  d.name,
+                                ],
                               }));
                             } else {
                               setAppliedFilters((prev) => ({
                                 ...prev,
-                                displacementLiters: ((prev as any).displacementLiters || []).filter((v: string) => v !== d.name),
+                                displacementLiters: (
+                                  (prev as any).displacementLiters || []
+                                ).filter((v: string) => v !== d.name),
                               }));
                             }
                           }}
                         />
                         <span className="carzino-filter-option">{d.name}</span>
-                        <span className="carzino-filter-count ml-1">({d.count ?? 0})</span>
+                        <span className="carzino-filter-count ml-1">
+                          ({d.count ?? 0})
+                        </span>
                       </label>
                     ))
                   ) : (
-                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">No displacement options available.</div>
+                    <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
+                      No displacement options available.
+                    </div>
                   )}
                 </div>
               </FilterSection>
@@ -6503,7 +6548,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <Check className="w-3 h-3 text-red-600" />
                         {item} Cyl
                         <button
-                          onClick={() => removeAppliedFilter("engineCylinders", item)}
+                          onClick={() =>
+                            removeAppliedFilter("engineCylinders", item)
+                          }
                           className="ml-1 text-white"
                         >
                           ×
@@ -6518,7 +6565,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <Check className="w-3 h-3 text-red-600" />
                         {item} L
                         <button
-                          onClick={() => removeAppliedFilter("displacementLiters", item)}
+                          onClick={() =>
+                            removeAppliedFilter("displacementLiters", item)
+                          }
                           className="ml-1 text-white"
                         >
                           ×
