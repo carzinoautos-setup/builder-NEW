@@ -12,7 +12,9 @@ type Props = {
 export default function FavoriteToggle({ count, active, hasAny, onToggle, className }: Props) {
   return (
     <div className={`flex items-center gap-2 ${className || ''}`}>
-      <span className={`pointer-events-none text-sm ${active ? 'text-red-600' : 'text-black'}`}>Favorites</span>
+      <span className={`pointer-events-none text-sm ${active ? 'text-black' : 'text-black'}`}>
+        {active ? 'View Autos' : 'Favorites'}
+      </span>
 
       <button
         onClick={onToggle}
