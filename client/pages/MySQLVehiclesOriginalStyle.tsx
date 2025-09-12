@@ -3553,9 +3553,9 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Desktop Applied Filters */}
             {true && (
               <div
-                className={`hidden lg:block mb-4 bg-white ${hasAppliedFilters ? "sticky top-16 z-40" : ""}` }
+                className={`hidden lg:block mb-4 bg-white ${hasAppliedFilters ? "sticky top-0 z-40" : ""}` }
               >
-                <div className="rounded-lg border border-gray-300 bg-white p-3">
+                <div className={`rounded-lg border border-gray-300 bg-white p-3 ${hasAppliedFilters ? 'shadow-sm' : ''}`}>
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="carzino-filter-title">Applied Filters</h3>
                     <button
