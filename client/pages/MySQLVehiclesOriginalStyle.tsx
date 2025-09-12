@@ -3553,7 +3553,7 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Desktop Applied Filters */}
             {true && (
               <div
-                className={`hidden lg:block mb-4 pb-4 border-b border-gray-200 bg-white ${hasAppliedFilters ? "sticky top-16 z-40" : ""}`}
+                className={`hidden lg:block mb-4 bg-white ${hasAppliedFilters ? "sticky top-16 z-40" : ""}` }
               >
                 <div className="rounded-lg border border-gray-300 bg-white p-3">
                   <div className="flex items-center justify-between mb-2">
