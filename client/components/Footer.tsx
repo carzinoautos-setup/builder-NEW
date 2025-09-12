@@ -372,7 +372,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <div className="text-sm">© 2025 Carzino. All rights reserved</div>
 
           <div className="flex items-center gap-3">
