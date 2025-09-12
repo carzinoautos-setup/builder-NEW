@@ -6881,7 +6881,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   </div>
                 )}
                 {/* Filter, Sort, Favorites Bar */}
-                <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md mobile-filter-bar">
+                <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-gray-400 bg-white shadow-md mobile-filter-bar relative z-[200]">
                   <button
                     className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
                     onClick={() => setMobileFiltersOpen(true)}
