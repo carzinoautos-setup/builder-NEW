@@ -2684,7 +2684,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
       } else {
         console.error(
-          `������ Geocoding API error: ${response.status} ${response.statusText}`,
+          `���� Geocoding API error: ${response.status} ${response.statusText}`,
         );
       }
 
@@ -2904,7 +2904,7 @@ export default function MySQLVehiclesOriginalStyle() {
             --carzino-price-value: 18px;
             --carzino-dealer-info: 12px;
             --carzino-image-counter: 14px;
-            --carzino-filter-title: 18px;
+            --carzino-filter-title: 14px;
             --carzino-filter-option: 16px;
             --carzino-filter-count: 16px;
             --carzino-search-input: 16px;
