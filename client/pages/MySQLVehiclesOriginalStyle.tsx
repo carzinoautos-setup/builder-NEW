@@ -3765,7 +3765,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          ×
+                          ��
                         </button>
                       </span>
                     ))}
@@ -7015,7 +7015,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
                   <div className="border-l border-gray-400 h-8"></div>
 
-                  <div className="relative">
+                  <div ref={sortDropdownRef} className="relative">
                     <button
                       className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium"
                       onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
@@ -7032,7 +7032,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       Sort
                     </button>
                     {sortDropdownOpen && (
-                      <div ref={sortDropdownRef} className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[300] w-56">
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[300] w-56">
                         <button
                           onClick={() => {
                             setSortBy("relevance");
