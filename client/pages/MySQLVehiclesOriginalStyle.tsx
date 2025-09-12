@@ -7318,17 +7318,20 @@ export default function MySQLVehiclesOriginalStyle() {
                           <div className="flex justify-center my-4">
                             <button
                               onClick={() => {
-                                if (!loading) {
+                                try {
+                                  if (loading) return;
+
+                                  // If we have a valid prefetched page that matches the expected next page, append it.
                                   if (
-                                    prefetchedVehicles &&
+                                    Array.isArray(prefetchedVehicles) &&
                                     prefetchedMeta &&
-                                    prefetchedMeta.currentPage ===
-                                      currentPage + 1
+                                    typeof prefetchedMeta.currentPage === 'number' &&
+                                    prefetchedMeta.currentPage === currentPage + 1
                                   ) {
-                                    // Append prefetched results immediately
+                                    // Append prefetched results immediately (defensive)
                                     setVehicles((prev) =>
                                       reorderForPrice([
-                                        ...prev,
+                                        ...(Array.isArray(prev) ? prev : []),
                                         ...prefetchedVehicles,
                                       ]),
                                     );
@@ -7344,9 +7347,15 @@ export default function MySQLVehiclesOriginalStyle() {
                                     setPrefetchedVehicles(null);
                                     setPrefetchedMeta(null);
                                   } else {
+                                    const totalPages = apiResponse?.meta?.totalPages || 1;
+                                    if (currentPage >= totalPages) return; // nothing to load
+
+                                    // Request next page and let fetchVehicles append when it resolves
                                     setAppendResults(true);
                                     setCurrentPage((p) => p + 1);
                                   }
+                                } catch (err) {
+                                  console.warn('Load more error:', err);
                                 }
                               }}
                               disabled={loading}
