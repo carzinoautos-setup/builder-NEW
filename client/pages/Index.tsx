@@ -329,6 +329,8 @@ export default function Index() {
       priceMax: "",
       paymentMin: "",
       paymentMax: "",
+      engineCylinders: [],
+      displacementLiters: [],
     });
     setPriceMin("10000");
     setPriceMax("100000");
