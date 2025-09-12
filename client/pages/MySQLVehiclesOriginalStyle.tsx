@@ -438,12 +438,18 @@ export default function MySQLVehiclesOriginalStyle() {
       } catch (e) {
         /* ignore */
       }
-      // Remove replacement character and control characters
-      s = s.replace(/\uFFFD/g, "").replace(/[\x00-\x1F\x7F]/g, "");
-      // Normalize unicode and remove any odd isolated symbols outside basic punctuation
-      s = s.normalize();
-      // Trim whitespace
-      return s.trim();
+      // Remove replacement character and control / invisible characters (Unicode category C)
+      try {
+        s = s.replace(/\uFFFD/g, "").replace(/[\x00-\x1F\x7F]/g, "");
+        s = s.replace(/\p{C}/gu, "");
+      } catch (e) {
+        // If environment doesn't support \p{C}, fall back to basic removal above
+      }
+      // Normalize unicode and trim whitespace
+      s = s.normalize().trim();
+      // Collapse repeated whitespace
+      s = s.replace(/\s+/g, " ");
+      return s;
     } catch (err) {
       return String(val);
     }
