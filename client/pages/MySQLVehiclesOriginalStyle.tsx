@@ -2201,6 +2201,9 @@ export default function MySQLVehiclesOriginalStyle() {
       highwayMpg: [],
       titleStatus: [],
       status: [],
+      // WP ACF custom fields
+      engineCylinders: [],
+      displacementLiters: [],
     });
     setPriceMin("1000");
     setPriceMax("50000");
