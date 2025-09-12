@@ -83,35 +83,35 @@ export default function Header({ topTemplate }: HeaderProps) {
             </div>
 
             <nav
-              className="hidden lg:flex flex-1 items-center justify-start min-w-0 gap-[23px] pl-10"
+              className="hidden lg:flex flex-1 items-center justify-start min-w-0 gap-[28px] pl-10"
               aria-label="Primary"
             >
               <a
-                className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
+                className="text-gray-800 font-bold whitespace-nowrap decoration-transparent hover:decoration-gray-400 decoration-2 underline-offset-2 hover:text-red-600 transition-colors"
                 href="/cars-for-sale/"
               >
                 Cars For Sale
               </a>
               <a
-                className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
+                className="text-gray-800 font-bold whitespace-nowrap decoration-transparent hover:decoration-gray-400 decoration-2 underline-offset-2 hover:text-red-600 transition-colors"
                 href="https://www.carzino.com/trade-in-your-car/"
               >
                 Trade in your car
               </a>
               <a
-                className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
+                className="text-gray-800 font-bold whitespace-nowrap decoration-transparent hover:decoration-gray-400 decoration-2 underline-offset-2 hover:text-red-600 transition-colors"
                 href="https://www.carzino.com/sell-your-car/"
               >
                 Sell your car
               </a>
               <a
-                className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
+                className="text-gray-800 font-bold whitespace-nowrap decoration-transparent hover:decoration-gray-400 decoration-2 underline-offset-2 hover:text-red-600 transition-colors"
                 href="https://www.carzino.com/dealers/"
               >
                 Dealers
               </a>
               <a
-                className="text-gray-800 font-bold whitespace-nowrap hover:text-red-600 transition-colors"
+                className="text-gray-800 font-bold whitespace-nowrap decoration-transparent hover:decoration-gray-400 decoration-2 underline-offset-2 hover:text-red-600 transition-colors"
                 href="https://www.carzino.com/contact/"
               >
                 Contact
@@ -122,9 +122,9 @@ export default function Header({ topTemplate }: HeaderProps) {
               <div className="hidden md:flex items-center gap-3 max-w-[360px]">
                 <a
                   href="#"
-                  className="flex items-center gap-2 px-2 py-1 rounded-[8px] hover:bg-gray-50"
+                  className="flex items-center gap-2 px-2 py-1 rounded-[8px]"
                 >
-                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F9c67e3a6b2074b1589d8a96750b2a465?format=webp" alt="Login" className="w-5 h-5" style={{ filter: 'brightness(0)' }} />
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F9c67e3a6b2074b1589d8a96750b2a465?format=webp" alt="Login" className="w-6 h-6" style={{ filter: 'brightness(0)' }} />
                   <span className="text-black font-medium">Login</span>
                   <span className="text-black font-medium"> / </span>
                   <span className="text-red-600 font-medium">Signup</span>
