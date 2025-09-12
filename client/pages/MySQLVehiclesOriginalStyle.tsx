@@ -3175,7 +3175,7 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Search Section - Mobile Only */}
             <div className="lg:hidden mb-4">
               <form onSubmit={handleUnifiedSearchSubmit} className="space-y-2">
-                <div className="relative z-50 lg:z-auto">
+                <div className="relative z-[300] lg:z-auto">
                   <input
                     type="text"
                     placeholder="Search Cars For Sale"
