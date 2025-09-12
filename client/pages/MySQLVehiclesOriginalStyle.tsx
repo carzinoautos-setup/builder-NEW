@@ -3566,7 +3566,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          ×
+                          ��
                         </button>
                       </span>
                     ))}
@@ -7232,7 +7232,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
 
             {/* Mobile Product Grid */}
-            <div className="p-4 bg-white pt-4 lg:pt-28">
+            <div ref={resultsRef} className="p-4 bg-white pt-4 lg:pt-28">
               {loading && vehicles.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-lg">Loading vehicles...</div>
