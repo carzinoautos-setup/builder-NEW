@@ -772,7 +772,7 @@ export default function Index() {
     name: string;
     count: number;
   }) => (
-    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
       <input type="checkbox" className="mr-2" />
       <div
         className="w-4 h-4 rounded border border-gray-300 mr-2"
@@ -1657,7 +1657,7 @@ export default function Index() {
                 {displayedMakes.map((make, index) => (
                   <label
                     key={index}
-                    className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                    className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                   >
                     <input
                       type="checkbox"
@@ -1710,7 +1710,7 @@ export default function Index() {
                     {displayedModels.map((model, index) => (
                       <label
                         key={index}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -1766,7 +1766,7 @@ export default function Index() {
                   displayedTrims.map((trim, index) => (
                     <label
                       key={index}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -1953,7 +1953,7 @@ export default function Index() {
               onToggle={() => toggleFilter("condition")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -1973,7 +1973,7 @@ export default function Index() {
                   <span className="carzino-filter-option">New</span>
                   <span className="carzino-filter-count ml-1">(125,989)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -1993,7 +1993,7 @@ export default function Index() {
                   <span className="carzino-filter-option">Used</span>
                   <span className="carzino-filter-count ml-1">(78,800)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2088,7 +2088,7 @@ export default function Index() {
               onToggle={() => toggleFilter("driveType")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2108,7 +2108,7 @@ export default function Index() {
                   <span className="carzino-filter-option">AWD/4WD</span>
                   <span className="carzino-filter-count ml-1">(25,309)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2128,7 +2128,7 @@ export default function Index() {
                   <span className="carzino-filter-option">FWD</span>
                   <span className="carzino-filter-count ml-1">(12,057)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2158,19 +2158,19 @@ export default function Index() {
               onToggle={() => toggleFilter("transmissionSpeed")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
                     4-Speed Automatic
                   </span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
                     6-Speed Automatic
                   </span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
                     8-Speed Automatic
@@ -2189,7 +2189,7 @@ export default function Index() {
                 {exteriorColors.map((color, index) => (
                   <label
                     key={index}
-                    className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded"
+                    className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded"
                   >
                     <input
                       type="checkbox"
@@ -2247,7 +2247,7 @@ export default function Index() {
               onToggle={() => toggleFilter("sellerType")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2267,7 +2267,7 @@ export default function Index() {
                   <span className="carzino-filter-option">Dealer</span>
                   <span className="carzino-filter-count ml-1">(6,543)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2299,14 +2299,14 @@ export default function Index() {
               onToggle={() => toggleFilter("dealer")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
                     Bayside Auto Sales
                   </span>
                   <span className="carzino-filter-count ml-1">(234)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">ABC Car Sales</span>
                   <span className="carzino-filter-count ml-1">(156)</span>
@@ -2321,12 +2321,12 @@ export default function Index() {
               onToggle={() => toggleFilter("state")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Washington</span>
                   <span className="carzino-filter-count ml-1">(12,456)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Oregon</span>
                   <span className="carzino-filter-count ml-1">(8,234)</span>
@@ -2341,12 +2341,12 @@ export default function Index() {
               onToggle={() => toggleFilter("city")}
             >
               <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Seattle</span>
                   <span className="carzino-filter-count ml-1">(4,567)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Portland</span>
                   <span className="carzino-filter-count ml-1">(3,234)</span>
