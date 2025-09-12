@@ -796,14 +796,14 @@ export default function Index() {
     name: string;
     count: number;
   }) => (
-    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
+    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded min-w-0">
       <input type="checkbox" className="mr-2" />
       <div
-        className="w-4 h-4 rounded border border-gray-300 mr-2"
+        className="w-4 h-4 rounded border border-gray-300 mr-2 flex-shrink-0"
         style={{ backgroundColor: color }}
       ></div>
-      <span className="carzino-filter-option">{name}</span>
-      <span className="carzino-filter-count ml-1">({count})</span>
+      <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">{name}</span>
+      <span className="carzino-filter-count ml-1 flex-shrink-0">({count})</span>
     </label>
   );
 
