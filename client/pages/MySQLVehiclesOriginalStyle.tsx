@@ -19,6 +19,7 @@ import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
+import FavoriteToggle from "@/components/FavoriteToggle";
 import {
   VehicleRecord,
   VehiclesApiResponse,
@@ -4142,7 +4143,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          ×
+                          ��
                         </button>
                       </span>
                     )}
