@@ -2593,12 +2593,12 @@ export default function MySQLVehiclesOriginalStyle() {
 
     // Apply only the parsed filters from the unified search (everything else cleared)
     setAppliedFilters({
-      condition: parsedFilters.condition || [],
-      make: parsedFilters.make || [],
-      model: parsedFilters.model || [],
-      trim: parsedFilters.trim || [],
-      year: parsedFilters.year || [],
-      bodyStyle: parsedFilters.bodyStyle || [],
+      condition: sanitizedParsed.condition || [],
+      make: sanitizedParsed.make || [],
+      model: sanitizedParsed.model || [],
+      trim: sanitizedParsed.trim || [],
+      year: sanitizedParsed.year || [],
+      bodyStyle: sanitizedParsed.bodyStyle || [],
       vehicleType: [],
       driveType: [],
       transmission: [],
@@ -2607,12 +2607,12 @@ export default function MySQLVehiclesOriginalStyle() {
       sellerType: [],
       dealer: [],
       priceMin:
-        parsedFilters.priceMin !== undefined
-          ? String(parsedFilters.priceMin)
+        sanitizedParsed.priceMin !== undefined
+          ? String(sanitizedParsed.priceMin)
           : "",
       priceMax:
-        parsedFilters.priceMax !== undefined
-          ? String(parsedFilters.priceMax)
+        sanitizedParsed.priceMax !== undefined
+          ? String(sanitizedParsed.priceMax)
           : "",
       paymentMin: "",
       paymentMax: "",
