@@ -321,6 +321,31 @@ export default function MySQLVehiclesOriginalStyle() {
   const [vehicleImages, setVehicleImages] = useState<{ [key: string]: string }>(
     {},
   );
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+
+  // When switching to favorites on mobile, scroll to the first favorite result
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (viewMode !== "favorites") return;
+
+    // Slight delay to allow DOM updates
+    const id = window.setTimeout(() => {
+      try {
+        if (!resultsRef.current) return;
+        const grid = resultsRef.current.querySelector('.vehicle-grid');
+        const first = grid ? (grid.firstElementChild as HTMLElement | null) : null;
+        if (first) {
+          first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } catch (e) {
+        // ignore
+      }
+    }, 50);
+
+    return () => window.clearTimeout(id);
+  }, [viewMode]);
 
   // Persisted custom vehicle type images in localStorage key
   const VEHICLE_IMAGES_KEY = "carzino_vehicle_type_images";
