@@ -448,7 +448,7 @@ export default function MySQLVehiclesOriginalStyle() {
     "Sedans under $15,000",
     "Compact cars under $15,000",
     "Full-size trucks for sale",
-    "2018���2021 trucks under $35,000",
+    "2018����2021 trucks under $35,000",
   ];
 
   const staticKeywords = [
@@ -2866,7 +2866,7 @@ export default function MySQLVehiclesOriginalStyle() {
           --carzino-price-value: 16px;
           --carzino-dealer-info: 10px;
           --carzino-image-counter: 12px;
-          --carzino-filter-title: 16px;
+          --carzino-filter-title: 14px;
           --carzino-filter-option: 14px;
           --carzino-filter-count: 14px;
           --carzino-search-input: 14px;
