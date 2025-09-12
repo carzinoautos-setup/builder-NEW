@@ -699,20 +699,30 @@ export default function MySQLVehiclesOriginalStyle() {
     // Build normalized source list (objects with name and count)
     const src: any[] = [];
 
-    if (filterOptions && filterOptions.engine_cylinders && filterOptions.engine_cylinders.length > 0) {
+    if (
+      filterOptions &&
+      filterOptions.engine_cylinders &&
+      filterOptions.engine_cylinders.length > 0
+    ) {
       for (const item of filterOptions.engine_cylinders) {
-        if (typeof item === 'string') src.push({ name: item, count: 0 });
-        else if (item && typeof item === 'object') src.push({ name: String(item.name ?? item.value ?? ''), count: Number(item.count ?? 0) });
+        if (typeof item === "string") src.push({ name: item, count: 0 });
+        else if (item && typeof item === "object")
+          src.push({
+            name: String(item.name ?? item.value ?? ""),
+            count: Number(item.count ?? 0),
+          });
       }
     } else {
       const map = new Map<string, number>();
       for (const v of vehicles || []) {
-        const val = (v as any).engine_cylinders ?? (v as any).engineCylinders ?? null;
-        if (val === null || val === undefined || val === '') continue;
+        const val =
+          (v as any).engine_cylinders ?? (v as any).engineCylinders ?? null;
+        if (val === null || val === undefined || val === "") continue;
         const name = String(val);
         map.set(name, (map.get(name) || 0) + 1);
       }
-      for (const [name, count] of Array.from(map.entries())) src.push({ name, count });
+      for (const [name, count] of Array.from(map.entries()))
+        src.push({ name, count });
     }
 
     // Sort by numeric cylinder value (high to low). If not numeric, fallback to lexicographic.
@@ -737,8 +747,12 @@ export default function MySQLVehiclesOriginalStyle() {
       filterOptions.displacement_liters.length > 0
     ) {
       for (const item of filterOptions.displacement_liters) {
-        if (typeof item === 'string') src.push({ name: item, count: 0 });
-        else if (item && typeof item === 'object') src.push({ name: String(item.name ?? item.value ?? ''), count: Number(item.count ?? 0) });
+        if (typeof item === "string") src.push({ name: item, count: 0 });
+        else if (item && typeof item === "object")
+          src.push({
+            name: String(item.name ?? item.value ?? ""),
+            count: Number(item.count ?? 0),
+          });
       }
     } else {
       const map = new Map<string, number>();
@@ -748,18 +762,22 @@ export default function MySQLVehiclesOriginalStyle() {
             (v as any).displacementLiters ??
             (v as any).displacement) ||
           null;
-        if (val === null || val === undefined || val === '') continue;
+        if (val === null || val === undefined || val === "") continue;
         const name = String(val);
         map.set(name, (map.get(name) || 0) + 1);
       }
-      for (const [name, count] of Array.from(map.entries())) src.push({ name, count });
+      for (const [name, count] of Array.from(map.entries()))
+        src.push({ name, count });
     }
 
     // Bucket numeric values into 1.0 ranges (e.g. 1.0-1.9 -> "1.0 - 1.9L") and aggregate counts.
-    const buckets = new Map<string, { start: number | null; label: string; count: number }>();
+    const buckets = new Map<
+      string,
+      { start: number | null; label: string; count: number }
+    >();
 
     for (const item of src) {
-      const s = String(item.name || '').trim();
+      const s = String(item.name || "").trim();
       // If already a range like "1.0 - 1.9" or "1.0-1.9", extract start
       const rangeMatch = s.match(/^(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)/);
       if (rangeMatch) {
@@ -777,7 +795,7 @@ export default function MySQLVehiclesOriginalStyle() {
       if (!Number.isNaN(n)) {
         const start = Math.floor(n);
         const key = `${start}`;
-        const label = `${start.toFixed(1)} - ${ (start + 0.9).toFixed(1)}L`;
+        const label = `${start.toFixed(1)} - ${(start + 0.9).toFixed(1)}L`;
         const prev = buckets.get(key) || { start, label, count: 0 };
         prev.count += Number(item.count || 0);
         buckets.set(key, prev);
@@ -794,7 +812,8 @@ export default function MySQLVehiclesOriginalStyle() {
     // Convert buckets to array and sort by numeric start (ascending), then lexicographic for non-numeric
     const results = Array.from(buckets.values());
     results.sort((a, b) => {
-      if (a.start === null && b.start === null) return String(a.label).localeCompare(String(b.label));
+      if (a.start === null && b.start === null)
+        return String(a.label).localeCompare(String(b.label));
       if (a.start === null) return 1;
       if (b.start === null) return -1;
       return (a.start as number) - (b.start as number);
@@ -2590,9 +2609,15 @@ export default function MySQLVehiclesOriginalStyle() {
       make: (parsedFilters.make || []).map((v: any) => sanitizeLabel(v)),
       model: (parsedFilters.model || []).map((v: any) => sanitizeLabel(v)),
       trim: (parsedFilters.trim || []).map((v: any) => sanitizeLabel(v)),
-      condition: (parsedFilters.condition || []).map((v: any) => sanitizeLabel(v)),
-      year: parsedFilters.year ? parsedFilters.year.map((v: any) => sanitizeLabel(v)) : parsedFilters.year,
-      bodyStyle: parsedFilters.bodyStyle ? parsedFilters.bodyStyle.map((v: any) => sanitizeLabel(v)) : parsedFilters.bodyStyle,
+      condition: (parsedFilters.condition || []).map((v: any) =>
+        sanitizeLabel(v),
+      ),
+      year: parsedFilters.year
+        ? parsedFilters.year.map((v: any) => sanitizeLabel(v))
+        : parsedFilters.year,
+      bodyStyle: parsedFilters.bodyStyle
+        ? parsedFilters.bodyStyle.map((v: any) => sanitizeLabel(v))
+        : parsedFilters.bodyStyle,
       search: sanitizeLabel(parsedFilters.search),
     };
 
@@ -3300,7 +3325,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                   }
                                   onClick={() => {
                                     setUnifiedSearch(sanitizeLabel(s));
-                                  setPanelSearch(sanitizeLabel(s));
+                                    setPanelSearch(sanitizeLabel(s));
                                     setSuggestionsOpen(false);
                                     setActiveSuggestionIndex(-1);
                                     setTimeout(
@@ -3511,7 +3536,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           e.preventDefault();
                           const s = filteredSuggestions[activeSuggestionIndex];
                           setUnifiedSearch(sanitizeLabel(s));
-                                  setPanelSearch(sanitizeLabel(s));
+                          setPanelSearch(sanitizeLabel(s));
                           setSuggestionsOpen(false);
                           setActiveSuggestionIndex(-1);
                           setTimeout(
@@ -3596,7 +3621,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                   }
                                   onClick={() => {
                                     setUnifiedSearch(sanitizeLabel(s));
-                                  setPanelSearch(sanitizeLabel(s));
+                                    setPanelSearch(sanitizeLabel(s));
                                     setSuggestionsOpen(false);
                                     setActiveSuggestionIndex(-1);
                                     setTimeout(
@@ -3630,9 +3655,11 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Desktop Applied Filters */}
             {true && (
               <div
-                className={`hidden lg:block mb-4 bg-white ${hasAppliedFilters ? "sticky top-0 z-40" : ""}` }
+                className={`hidden lg:block mb-4 bg-white ${hasAppliedFilters ? "sticky top-0 z-40" : ""}`}
               >
-                <div className={`rounded-lg border border-gray-300 bg-white p-3 ${hasAppliedFilters ? 'shadow-sm' : ''}`}>
+                <div
+                  className={`rounded-lg border border-gray-300 bg-white p-3 ${hasAppliedFilters ? "shadow-sm" : ""}`}
+                >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="carzino-filter-title">Applied Filters</h3>
                     <button
@@ -3979,7 +4006,12 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {(() => { const n = Number(item); return Number.isNaN(n) ? item : `${n} ${n === 1 ? 'Cylinder' : 'Cylinders'}` })()}
+                        {(() => {
+                          const n = Number(item);
+                          return Number.isNaN(n)
+                            ? item
+                            : `${n} ${n === 1 ? "Cylinder" : "Cylinders"}`;
+                        })()}
                         <button
                           onClick={() =>
                             removeAppliedFilter("engineCylinders", item)
@@ -5039,7 +5071,8 @@ export default function MySQLVehiclesOriginalStyle() {
 
                             return (
                               <div key={parentKey} className="p-1">
-                                <VehicleTypeCard onImageUpload={handleVehicleTypeImageUpload}
+                                <VehicleTypeCard
+                                  onImageUpload={handleVehicleTypeImageUpload}
                                   type={parent.label}
                                   count={parent.count}
                                   vehicleImages={vehicleImages}
@@ -5082,7 +5115,8 @@ export default function MySQLVehiclesOriginalStyle() {
                             .concat(parents.truck.children)
                             .map((child) => (
                               <div key={child.slug} className="p-1">
-                                <VehicleTypeCard onImageUpload={handleVehicleTypeImageUpload}
+                                <VehicleTypeCard
+                                  onImageUpload={handleVehicleTypeImageUpload}
                                   type={child.name}
                                   count={child.count}
                                   vehicleImages={vehicleImages}
@@ -5510,7 +5544,14 @@ export default function MySQLVehiclesOriginalStyle() {
                             }
                           }}
                         />
-                        <span className="carzino-filter-option">{(() => { const n = Number(d.name); return Number.isNaN(n) ? d.name : `${n} ${n === 1 ? 'Cylinder' : 'Cylinders'}` })()}</span>
+                        <span className="carzino-filter-option">
+                          {(() => {
+                            const n = Number(d.name);
+                            return Number.isNaN(n)
+                              ? d.name
+                              : `${n} ${n === 1 ? "Cylinder" : "Cylinders"}`;
+                          })()}
+                        </span>
                         <span className="carzino-filter-count ml-1">
                           ({d.count ?? 0})
                         </span>
@@ -5567,7 +5608,16 @@ export default function MySQLVehiclesOriginalStyle() {
                             }
                           }}
                         />
-                        <span className="carzino-filter-option">{(() => { const s = String(d.name || ''); if (/[lL]$/.test(s)) return s; if (/^\d+(?:\.\d+)?\s*-\s*\d+(?:\.\d+)?$/.test(s)) return `${s}L`; const n = Number(s); return Number.isNaN(n) ? s : `${n}L`; })()}</span>
+                        <span className="carzino-filter-option">
+                          {(() => {
+                            const s = String(d.name || "");
+                            if (/[lL]$/.test(s)) return s;
+                            if (/^\d+(?:\.\d+)?\s*-\s*\d+(?:\.\d+)?$/.test(s))
+                              return `${s}L`;
+                            const n = Number(s);
+                            return Number.isNaN(n) ? s : `${n}L`;
+                          })()}
+                        </span>
                         <span className="carzino-filter-count ml-1">
                           ({d.count ?? 0})
                         </span>
@@ -6097,7 +6147,9 @@ export default function MySQLVehiclesOriginalStyle() {
               </h1>
 
               {/* Search Bar */}
-              <div className={`relative z-[300] ${mobileFiltersOpen ? "hidden" : ""}`}>
+              <div
+                className={`relative z-[300] ${mobileFiltersOpen ? "hidden" : ""}`}
+              >
                 <input
                   type="text"
                   placeholder="Search vehicles..."
@@ -6138,7 +6190,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         e.preventDefault();
                         const s = filteredSuggestions[activeSuggestionIndex];
                         setUnifiedSearch(sanitizeLabel(s));
-                                  setPanelSearch(sanitizeLabel(s));
+                        setPanelSearch(sanitizeLabel(s));
                         setSuggestionsOpen(false);
                         setActiveSuggestionIndex(-1);
                         setTimeout(
@@ -6184,7 +6236,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               onMouseEnter={() => setActiveSuggestionIndex(idx)}
                               onClick={() => {
                                 setUnifiedSearch(sanitizeLabel(s));
-                                  setPanelSearch(sanitizeLabel(s));
+                                setPanelSearch(sanitizeLabel(s));
                                 setSuggestionsOpen(false);
                                 setActiveSuggestionIndex(-1);
                                 setTimeout(
@@ -6626,7 +6678,12 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {(() => { const n = Number(item); return Number.isNaN(n) ? item : `${n} ${n === 1 ? 'Cylinder' : 'Cylinders'}` })()}
+                        {(() => {
+                          const n = Number(item);
+                          return Number.isNaN(n)
+                            ? item
+                            : `${n} ${n === 1 ? "Cylinder" : "Cylinders"}`;
+                        })()}
                         <button
                           onClick={() =>
                             removeAppliedFilter("engineCylinders", item)

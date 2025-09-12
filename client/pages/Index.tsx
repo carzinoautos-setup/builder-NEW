@@ -2142,7 +2142,8 @@ export default function Index() {
                   </div>
                 ) : (
                   availableBodyTypes.map((type, index) => (
-                    <VehicleTypeCard onImageUpload={handleVehicleTypeImageUpload}
+                    <VehicleTypeCard
+                      onImageUpload={handleVehicleTypeImageUpload}
                       key={index}
                       type={type.name}
                       count={type.count}
