@@ -656,23 +656,36 @@ export default function MySQLVehiclesOriginalStyle() {
   // Derive engine/displacement options from the current vehicles list when the filters endpoint
   // does not include engine_cylinders. This avoids requiring backend changes immediately.
   const engineOptions = React.useMemo(() => {
-    if (
-      filterOptions &&
-      filterOptions.engine_cylinders &&
-      filterOptions.engine_cylinders.length > 0
-    )
-      return filterOptions.engine_cylinders;
-    const map = new Map<string, number>();
-    for (const v of vehicles || []) {
-      const val =
-        (v as any).engine_cylinders ?? (v as any).engineCylinders ?? null;
-      if (val === null || val === undefined || val === "") continue;
-      const name = String(val);
-      map.set(name, (map.get(name) || 0) + 1);
+    // Build normalized source list (objects with name and count)
+    const src: any[] = [];
+
+    if (filterOptions && filterOptions.engine_cylinders && filterOptions.engine_cylinders.length > 0) {
+      for (const item of filterOptions.engine_cylinders) {
+        if (typeof item === 'string') src.push({ name: item, count: 0 });
+        else if (item && typeof item === 'object') src.push({ name: String(item.name ?? item.value ?? ''), count: Number(item.count ?? 0) });
+      }
+    } else {
+      const map = new Map<string, number>();
+      for (const v of vehicles || []) {
+        const val = (v as any).engine_cylinders ?? (v as any).engineCylinders ?? null;
+        if (val === null || val === undefined || val === '') continue;
+        const name = String(val);
+        map.set(name, (map.get(name) || 0) + 1);
+      }
+      for (const [name, count] of Array.from(map.entries())) src.push({ name, count });
     }
-    return Array.from(map.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => Number(b.count) - Number(a.count));
+
+    // Sort by numeric cylinder value (high to low). If not numeric, fallback to lexicographic.
+    src.sort((a: any, b: any) => {
+      const na = Number(a.name);
+      const nb = Number(b.name);
+      if (!Number.isNaN(na) && !Number.isNaN(nb)) return nb - na;
+      if (!Number.isNaN(na)) return -1;
+      if (!Number.isNaN(nb)) return 1;
+      return String(a.name).localeCompare(String(b.name));
+    });
+
+    return src;
   }, [vehicles, filterOptions]);
 
   const displacementOptions = React.useMemo(() => {
