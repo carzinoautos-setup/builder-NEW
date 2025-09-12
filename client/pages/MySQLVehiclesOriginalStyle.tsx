@@ -4143,7 +4143,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          ��
+                          ×
                         </button>
                       </span>
                     )}
@@ -7128,7 +7128,7 @@ export default function MySQLVehiclesOriginalStyle() {
               ) : (
                 <span className="font-medium">
                   {viewMode === "favorites"
-                    ? `${favoritesCount} Saved Vehicles`
+                    ? `${favoritesCount} Saved Vehicles - Viewing Favorites`
                     : `${appliedFilters.condition.join(", ")}${appliedFilters.condition.length > 0 && appliedFilters.make.length > 0 ? ", " : ""}${appliedFilters.make.join(", ")}${appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 ? " for sale" : "All Vehicles"} - ${totalResults.toLocaleString()} Results`}
                 </span>
               )}
