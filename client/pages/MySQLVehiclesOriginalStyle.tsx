@@ -1515,6 +1515,8 @@ export default function MySQLVehiclesOriginalStyle() {
         highwayMpg: [],
         titleStatus: [],
         status: [],
+        engineCylinders: [],
+        displacementLiters: [],
       });
     }
   }, [location.pathname, location.search]);
