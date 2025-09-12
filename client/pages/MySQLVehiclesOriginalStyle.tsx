@@ -7032,7 +7032,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       Sort
                     </button>
                     {sortDropdownOpen && (
-                      <div ref={sortDropdownRef} className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-56">
+                      <div ref={sortDropdownRef} className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[300] w-56">
                         <button
                           onClick={() => {
                             setSortBy("relevance");
