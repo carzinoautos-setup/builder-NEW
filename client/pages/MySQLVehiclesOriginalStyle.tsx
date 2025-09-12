@@ -422,6 +422,20 @@ export default function MySQLVehiclesOriginalStyle() {
   const [debouncedUnifiedSearch, setDebouncedUnifiedSearch] =
     useState(unifiedSearch);
 
+  // Sanitize labels shown in filter pills / suggestions to avoid bad characters
+  const sanitizeLabel = (val: any) => {
+    if (val === null || val === undefined) return "";
+    try {
+      let s = String(val);
+      // Remove replacement character and control characters
+      s = s.replace(/\uFFFD/g, "").replace(/[\x00-\x1F\x7F]/g, "");
+      // Trim whitespace
+      return s.trim();
+    } catch (err) {
+      return String(val);
+    }
+  };
+
   // Debounce unified search input to avoid rapid filtering
   useEffect(() => {
     const t = setTimeout(() => setDebouncedUnifiedSearch(unifiedSearch), 250);
