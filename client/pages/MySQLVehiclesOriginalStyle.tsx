@@ -4962,7 +4962,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
                             return (
                               <div key={parentKey} className="p-1">
-                                <VehicleTypeCard
+                                <VehicleTypeCard onImageUpload={handleVehicleTypeImageUpload}
                                   type={parent.label}
                                   count={parent.count}
                                   vehicleImages={vehicleImages}
@@ -5005,7 +5005,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             .concat(parents.truck.children)
                             .map((child) => (
                               <div key={child.slug} className="p-1">
-                                <VehicleTypeCard
+                                <VehicleTypeCard onImageUpload={handleVehicleTypeImageUpload}
                                   type={child.name}
                                   count={child.count}
                                   vehicleImages={vehicleImages}
