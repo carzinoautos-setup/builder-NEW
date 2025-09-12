@@ -86,9 +86,9 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
       "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
     // Placeholders for parent cards so "All Cars" / "All Trucks" show an image by default in Design
     "all-cars":
-      "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+      "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F21c7ad9abb364e3296adcf6602743f58?format=webp",
     "all-trucks":
-      "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F30f147c94e904a5ba1b1ce7ce9ebd89b",
+      "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fdbaef8998606495998742f0fa5139679?format=webp",
     car:
       "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
     truck:
