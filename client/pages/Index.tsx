@@ -1653,7 +1653,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.make}
               onToggle={() => toggleFilter("make")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {displayedMakes.map((make, index) => (
                   <label
                     key={index}
@@ -1696,7 +1696,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.model}
               onToggle={() => toggleFilter("model")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {appliedFilters.make.length === 0 ? (
                   <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
                     Select a make first to see available models
@@ -1753,7 +1753,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.trim}
               onToggle={() => toggleFilter("trim")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {appliedFilters.make.length === 0 ? (
                   <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
                     Select a make first to see available trims
@@ -1952,7 +1952,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.condition}
               onToggle={() => toggleFilter("condition")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
@@ -2022,7 +2022,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.mileage}
               onToggle={() => toggleFilter("mileage")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <select
                   className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none bg-white"
                   value={appliedFilters.mileage}
@@ -2087,7 +2087,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.driveType}
               onToggle={() => toggleFilter("driveType")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
@@ -2157,7 +2157,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.transmissionSpeed}
               onToggle={() => toggleFilter("transmissionSpeed")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
@@ -2185,7 +2185,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.exteriorColor}
               onToggle={() => toggleFilter("exteriorColor")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {exteriorColors.map((color, index) => (
                   <label
                     key={index}
@@ -2228,7 +2228,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.interiorColor}
               onToggle={() => toggleFilter("interiorColor")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {interiorColors.map((color, index) => (
                   <ColorSwatch
                     key={index}
@@ -2246,7 +2246,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.sellerType}
               onToggle={() => toggleFilter("sellerType")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
@@ -2298,7 +2298,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.dealer}
               onToggle={() => toggleFilter("dealer")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
@@ -2320,7 +2320,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.state}
               onToggle={() => toggleFilter("state")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Washington</span>
@@ -2340,7 +2340,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.city}
               onToggle={() => toggleFilter("city")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Seattle</span>
