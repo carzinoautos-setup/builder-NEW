@@ -2024,7 +2024,7 @@ export default function MySQLVehiclesOriginalStyle() {
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
             console.log(
-              "���� Merged Builder VehicleTypeCard images into runtime mapping",
+              "����� Merged Builder VehicleTypeCard images into runtime mapping",
               foundImages,
             );
             // Clear persisted local overrides so Builder/editor images take effect immediately
@@ -3915,7 +3915,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item} Cyl
+                        {(() => { const n = Number(item); return Number.isNaN(n) ? item : `${n} ${n === 1 ? 'Cylinder' : 'Cylinders'}` })()}
                         <button
                           onClick={() =>
                             removeAppliedFilter("engineCylinders", item)
@@ -6559,7 +6559,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item} Cyl
+                        {(() => { const n = Number(item); return Number.isNaN(n) ? item : `${n} ${n === 1 ? 'Cylinder' : 'Cylinders'}` })()}
                         <button
                           onClick={() =>
                             removeAppliedFilter("engineCylinders", item)
