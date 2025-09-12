@@ -279,7 +279,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
 
               {/* Desktop: static */}
               <div className="hidden lg:block">
-                <div className="font-semibold text-lg">{s.title}</div>
+                <div className="font-semibold text-lg">{s.title === 'Links' ? <p className="m-0">Carzino Links</p> : s.title}</div>
                 <div className="mt-6 opacity-95">
                   {s.links ? (
                     s.title === "Links" || s.title === "Popular Searches" ? (
