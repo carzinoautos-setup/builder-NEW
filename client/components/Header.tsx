@@ -124,7 +124,7 @@ export default function Header({ topTemplate }: HeaderProps) {
                   href="#"
                   className="flex items-center gap-2 px-2 py-1 rounded-[8px]"
                 >
-                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F9c67e3a6b2074b1589d8a96750b2a465?format=webp" alt="Login" className="w-6 h-6" style={{ filter: 'brightness(0)' }} />
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F9c67e3a6b2074b1589d8a96750b2a465?format=webp" alt="Login" className="w-6 h-6 transform" style={{ filter: 'brightness(0)', transform: 'scale(1.15)' }} />
                   <span className="text-black font-medium">Login</span>
                   <span className="text-black font-medium"> / </span>
                   <span className="text-red-600 font-medium">Signup</span>
