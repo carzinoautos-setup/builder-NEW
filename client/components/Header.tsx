@@ -83,7 +83,7 @@ export default function Header({ topTemplate }: HeaderProps) {
             </div>
 
             <nav
-              className="hidden lg:flex flex-1 items-center justify-start min-w-0 gap-[23px]"
+              className="hidden lg:flex flex-1 items-center justify-start min-w-0 gap-[23px] pl-10"
               aria-label="Primary"
             >
               <a
