@@ -3428,12 +3428,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     )}
                     {appliedFilters.condition.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3444,12 +3444,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.make.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("make", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3460,12 +3460,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.model.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("model", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3700,12 +3700,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     )}
                     {appliedFilters.condition.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3716,12 +3716,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.make.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("make", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3732,12 +3732,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.model.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("model", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3748,12 +3748,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.trim.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3764,12 +3764,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.year.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("year", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("year", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3780,12 +3780,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.bodyStyle.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("bodyStyle", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("bodyStyle", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3849,7 +3849,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
                       return chips.map((item) => (
                         <span
-                          key={item}
+                          key={sanitizeLabel(item)}
                           onClick={() => {
                             // remove chip: if parent, remove all children; otherwise remove single child
                             setAppliedFilters((prev) => {
@@ -3910,12 +3910,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     })()}
                     {appliedFilters.driveType.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("driveType", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white hover:text-gray-300"
@@ -3998,7 +3998,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item} L
+                        {sanitizeLabel(item)} L
                         <button
                           onClick={() =>
                             removeAppliedFilter("displacementLiters", item)
@@ -4012,14 +4012,14 @@ export default function MySQLVehiclesOriginalStyle() {
 
                     {appliedFilters.exteriorColor.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() =>
                           removeAppliedFilter("exteriorColor", item)
                         }
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item} Color
+                        {sanitizeLabel(item)} Color
                         <button
                           onClick={() =>
                             removeAppliedFilter("exteriorColor", item)
@@ -4032,12 +4032,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.sellerType.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         onClick={() => removeAppliedFilter("sellerType", item)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() =>
                             removeAppliedFilter("sellerType", item)
@@ -6330,11 +6330,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     )}
                     {appliedFilters.condition.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white"
@@ -6345,11 +6345,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.make.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
@@ -6360,11 +6360,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.model.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white"
@@ -6375,11 +6375,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.trim.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
@@ -6390,11 +6390,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.year.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("year", item)}
                           className="ml-1 text-white"
@@ -6405,11 +6405,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.bodyStyle.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("bodyStyle", item)}
                           className="ml-1 text-white"
@@ -6493,7 +6493,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
                       return chips.map((item) => (
                         <span
-                          key={item}
+                          key={sanitizeLabel(item)}
                           onClick={() => {
                             // remove chip: if parent, remove all children; otherwise remove single child
                             setAppliedFilters((prev) => {
@@ -6555,11 +6555,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     })()}
                     {appliedFilters.driveType.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white"
@@ -6642,7 +6642,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item} L
+                        {sanitizeLabel(item)} L
                         <button
                           onClick={() =>
                             removeAppliedFilter("displacementLiters", item)
@@ -6656,11 +6656,11 @@ export default function MySQLVehiclesOriginalStyle() {
 
                     {appliedFilters.exteriorColor.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item} Color
+                        {sanitizeLabel(item)} Color
                         <button
                           onClick={() =>
                             removeAppliedFilter("exteriorColor", item)
@@ -6673,11 +6673,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.sellerType.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() =>
                             removeAppliedFilter("sellerType", item)
@@ -6834,11 +6834,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     )}
                     {appliedFilters.condition.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white"
@@ -6849,11 +6849,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.make.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
@@ -6864,11 +6864,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.model.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white"
@@ -6879,11 +6879,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
                     {appliedFilters.trim.map((item) => (
                       <span
-                        key={item}
+                        key={sanitizeLabel(item)}
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {item}
+                        {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
