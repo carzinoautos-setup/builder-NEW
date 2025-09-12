@@ -122,12 +122,12 @@ export default function Header({ topTemplate }: HeaderProps) {
               <div className="hidden md:flex items-center gap-3 max-w-[360px]">
                 <a
                   href="#"
-                  className="flex items-center gap-2 px-2 py-1 rounded-[8px] hover:bg-gray-50 text-red-600 font-bold"
+                  className="flex items-center gap-2 px-2 py-1 rounded-[8px] hover:bg-gray-50"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
-                    <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.866 0-7 3.134-7 7v1h14v-1c0-3.866-3.134-7-7-7z" fill="#E11D48" />
-                  </svg>
-                  <span className="text-red-600 font-bold">Login / Sign up</span>
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F9c67e3a6b2074b1589d8a96750b2a465?format=webp" alt="Login" className="w-5 h-5" style={{ filter: 'brightness(0)' }} />
+                  <span className="text-black font-medium">Login</span>
+                  <span className="text-black font-medium"> / </span>
+                  <span className="text-red-600 font-medium">Signup</span>
                 </a>
               </div>
 
