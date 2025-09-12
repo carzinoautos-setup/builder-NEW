@@ -124,10 +124,7 @@ export default function Header({ topTemplate }: HeaderProps) {
                   href="#"
                   className="flex items-center gap-2 px-2 py-1 rounded-[8px]"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 transform" viewBox="0 0 24 24" fill="none" style={{ filter: 'brightness(0)', transform: 'scale(1.15)' }}>
-                    <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fcf2a246c5266451a92f5e139c493af71?format=webp&width=800" alt="Login" className="w-6 h-6 transform" style={{ filter: 'brightness(0)', transform: 'scale(1.15)' }} />
                   <span className="text-black font-medium">Login</span>
                   <span className="text-black font-medium"> / </span>
                   <span className="text-red-600 font-medium">Signup</span>
