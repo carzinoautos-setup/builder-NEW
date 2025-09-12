@@ -217,7 +217,7 @@ export default function Header({ topTemplate }: HeaderProps) {
                   onClick={() => setVehiclesOpen((s) => !s)}
                   className="w-full flex items-center justify-between py-2 px-0 mt-1"
                 >
-                  <span className="text-gray-800 font-bold">Search by Vehicle Type</span>
+                  <span className="text-gray-800 font-medium">Search by Vehicle Type</span>
                   <svg
                     className={`w-4 h-4 transform transition-transform text-red-600 ${vehiclesOpen ? "rotate-180" : ""}`}
                     viewBox="0 0 24 24"
