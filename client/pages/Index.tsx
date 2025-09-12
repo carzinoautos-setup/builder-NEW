@@ -1376,7 +1376,7 @@ export default function Index() {
                         }
                         className="ml-1 text-white"
                       >
-                        ��
+                        ×
                       </button>
                     </span>
                   )}
