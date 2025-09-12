@@ -2744,7 +2744,7 @@ export default function MySQLVehiclesOriginalStyle() {
     name: string;
     count: number;
   }) => (
-    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
       <input
         type="checkbox"
         className="mr-2"
