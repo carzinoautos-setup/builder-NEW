@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Search,
@@ -332,12 +338,17 @@ export default function MySQLVehiclesOriginalStyle() {
     const id = window.setTimeout(() => {
       try {
         if (!resultsRef.current) return;
-        const grid = resultsRef.current.querySelector('.vehicle-grid');
-        const first = grid ? (grid.firstElementChild as HTMLElement | null) : null;
+        const grid = resultsRef.current.querySelector(".vehicle-grid");
+        const first = grid
+          ? (grid.firstElementChild as HTMLElement | null)
+          : null;
         if (first) {
-          first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          first.scrollIntoView({ behavior: "smooth", block: "start" });
         } else {
-          resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          resultsRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
         }
       } catch (e) {
         // ignore
@@ -1249,8 +1260,14 @@ export default function MySQLVehiclesOriginalStyle() {
       if (appliedFilters.exteriorColor.length > 0) {
         params.append("exterior_color", appliedFilters.exteriorColor.join(","));
       }
-      if ((appliedFilters as any).interiorColor && (appliedFilters as any).interiorColor.length > 0) {
-        params.append("interior_color", (appliedFilters as any).interiorColor.join(","));
+      if (
+        (appliedFilters as any).interiorColor &&
+        (appliedFilters as any).interiorColor.length > 0
+      ) {
+        params.append(
+          "interior_color",
+          (appliedFilters as any).interiorColor.join(","),
+        );
       }
       if (appliedFilters.sellerType.length > 0) {
         params.append(
@@ -2925,11 +2942,7 @@ export default function MySQLVehiclesOriginalStyle() {
       let hx = hexMatch[0];
       if (hx.length === 4) {
         // expand #abc => #aabbcc
-        hx =
-          "#" +
-          hx[1] + hx[1] +
-          hx[2] + hx[2] +
-          hx[3] + hx[3];
+        hx = "#" + hx[1] + hx[1] + hx[2] + hx[2] + hx[3] + hx[3];
       }
       return hx;
     }
@@ -2986,7 +2999,9 @@ export default function MySQLVehiclesOriginalStyle() {
     count: number;
     filter?: "exteriorColor" | "interiorColor";
   }) => {
-    const currentArr = Array.isArray((appliedFilters as any)[filter]) ? (appliedFilters as any)[filter] : [];
+    const currentArr = Array.isArray((appliedFilters as any)[filter])
+      ? (appliedFilters as any)[filter]
+      : [];
     const checked = currentArr.includes(name);
     return (
       <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
@@ -2998,7 +3013,9 @@ export default function MySQLVehiclesOriginalStyle() {
             e.stopPropagation();
             if ((e.target as HTMLInputElement).checked) {
               setAppliedFilters((prev) => {
-                const prevArr = Array.isArray((prev as any)[filter]) ? (prev as any)[filter] : [];
+                const prevArr = Array.isArray((prev as any)[filter])
+                  ? (prev as any)[filter]
+                  : [];
                 return {
                   ...prev,
                   [filter]: [...prevArr, name],
@@ -3013,8 +3030,12 @@ export default function MySQLVehiclesOriginalStyle() {
           className="w-4 h-4 rounded border border-gray-300 mr-2"
           style={{ backgroundColor: color }}
         ></div>
-        <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">{name}</span>
-        <span className="carzino-filter-count ml-1 flex-shrink-0">({count})</span>
+        <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">
+          {name}
+        </span>
+        <span className="carzino-filter-count ml-1 flex-shrink-0">
+          ({count})
+        </span>
       </label>
     );
   };
@@ -7195,7 +7216,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     count={favoritesCount}
                     active={viewMode === "favorites"}
                     hasAny={favoritesCount > 0}
-                    onToggle={() => setViewMode(viewMode === "favorites" ? "all" : "favorites")}
+                    onToggle={() =>
+                      setViewMode(
+                        viewMode === "favorites" ? "all" : "favorites",
+                      )
+                    }
                   />
                 </div>
               </div>
@@ -7222,7 +7247,8 @@ export default function MySQLVehiclesOriginalStyle() {
                 <span className="font-medium">
                   {viewMode === "favorites" ? (
                     <>
-                      {favoritesCount} Saved Vehicles - <span className="text-red-600">Viewing Favorites</span>
+                      {favoritesCount} Saved Vehicles -{" "}
+                      <span className="text-red-600">Viewing Favorites</span>
                     </>
                   ) : (
                     `${appliedFilters.condition.join(", ")}${appliedFilters.condition.length > 0 && appliedFilters.make.length > 0 ? ", " : ""}${appliedFilters.make.join(", ")}${appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 ? " for sale" : "All Vehicles"} - ${totalResults.toLocaleString()} Results`
