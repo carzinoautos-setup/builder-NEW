@@ -5446,7 +5446,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             }
                           }}
                         />
-                        <span className="carzino-filter-option">{d.name}</span>
+                        <span className="carzino-filter-option">{(() => { const n = Number(d.name); return Number.isNaN(n) ? d.name : `${n} ${n === 1 ? 'Cylinder' : 'Cylinders'}` })()}</span>
                         <span className="carzino-filter-count ml-1">
                           ({d.count ?? 0})
                         </span>
