@@ -136,23 +136,23 @@ const generateURLFromFilters = (filters?: {
   const segments = [];
 
   // Only include the first selected value for each filter in URL
-  if (filters.make && filters.make.length > 0) {
-    segments.push(filters.make[0].toLowerCase().replace(/\s+/g, "-"));
+  if (f.make && f.make.length > 0) {
+    segments.push(f.make[0].toLowerCase().replace(/\s+/g, "-"));
   }
-  if (filters.model && filters.model.length > 0) {
-    segments.push(filters.model[0].toLowerCase().replace(/\s+/g, "-"));
+  if (f.model && f.model.length > 0) {
+    segments.push(f.model[0].toLowerCase().replace(/\s+/g, "-"));
   }
-  if (filters.trim && filters.trim.length > 0) {
-    segments.push(filters.trim[0].toLowerCase().replace(/\s+/g, "-"));
+  if (f.trim && f.trim.length > 0) {
+    segments.push(f.trim[0].toLowerCase().replace(/\s+/g, "-"));
   }
-  if (filters.condition && filters.condition.length > 0) {
-    segments.push(filters.condition[0].toLowerCase());
+  if (f.condition && f.condition.length > 0) {
+    segments.push(f.condition[0].toLowerCase());
   }
-  if (filters.year) {
-    segments.push(filters.year);
+  if (f.year) {
+    segments.push(f.year);
   }
-  if (filters.bodyStyle) {
-    segments.push(filters.bodyStyle.toLowerCase().replace(/\s+/g, "-"));
+  if (f.bodyStyle) {
+    segments.push(f.bodyStyle.toLowerCase().replace(/\s+/g, "-"));
   }
 
   return `/cars-for-sale/${segments.join("/")}/`;
