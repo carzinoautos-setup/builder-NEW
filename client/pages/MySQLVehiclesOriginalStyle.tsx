@@ -7097,43 +7097,12 @@ export default function MySQLVehiclesOriginalStyle() {
 
                   <div className="border-l border-gray-400 h-8"></div>
 
-                  <button
-                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium ${viewMode === "favorites" ? "text-red-600" : ""}`}
-                    onClick={() =>
-                      setViewMode(
-                        viewMode === "favorites" ? "all" : "favorites",
-                      )
-                    }
-                  >
-                    <span className="relative inline-block">
-                      <span className="pointer-events-none">Favorites</span>
-                      {favoritesCount > 0 && (
-                        <span className="md:hidden absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                          {favoritesCount}
-                        </span>
-                      )}
-                    </span>
-
-                    <div className="relative">
-                      <div
-                        className={`w-12 h-6 rounded-full ${viewMode === "favorites" ? "bg-red-600" : "bg-gray-300"} transition-colors`}
-                      >
-                        <div
-                          className={`absolute top-0.5 w-5 h-5 rounded-full transition-transform ${
-                            viewMode === "favorites"
-                              ? "translate-x-6"
-                              : "translate-x-0.5"
-                          } ${
-                            viewMode === "favorites"
-                              ? "bg-white"
-                              : favoritesCount > 0
-                                ? "bg-red-600 md:bg-white"
-                                : "bg-white"
-                          }`}
-                        />
-                      </div>
-                    </div>
-                  </button>
+                  <FavoriteToggle
+                    count={favoritesCount}
+                    active={viewMode === "favorites"}
+                    hasAny={favoritesCount > 0}
+                    onToggle={() => setViewMode(viewMode === "favorites" ? "all" : "favorites")}
+                  />
                 </div>
               </div>
             )}
