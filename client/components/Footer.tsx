@@ -63,7 +63,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
       ],
     },
     {
-      title: "Newsletter",
+      title: "Dealer Sign up",
       content: (
         <div>
           <div className="opacity-95 text-sm">
