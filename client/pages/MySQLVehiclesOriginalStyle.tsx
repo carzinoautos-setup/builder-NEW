@@ -2961,7 +2961,8 @@ export default function MySQLVehiclesOriginalStyle() {
     count: number;
     filter?: "exteriorColor" | "interiorColor";
   }) => {
-    const checked = (appliedFilters as any)[filter].includes(name);
+    const currentArr = Array.isArray((appliedFilters as any)[filter]) ? (appliedFilters as any)[filter] : [];
+    const checked = currentArr.includes(name);
     return (
       <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
         <input
@@ -2971,10 +2972,13 @@ export default function MySQLVehiclesOriginalStyle() {
           onChange={(e) => {
             e.stopPropagation();
             if ((e.target as HTMLInputElement).checked) {
-              setAppliedFilters((prev) => ({
-                ...prev,
-                [filter]: [...(prev as any)[filter], name],
-              }));
+              setAppliedFilters((prev) => {
+                const prevArr = Array.isArray((prev as any)[filter]) ? (prev as any)[filter] : [];
+                return {
+                  ...prev,
+                  [filter]: [...prevArr, name],
+                };
+              });
             } else {
               removeAppliedFilter(filter, name);
             }
