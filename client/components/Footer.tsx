@@ -357,7 +357,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                 <a href="https://www.carzino.com/safety-guidelines/" className="text-white/90 font-medium block w-full px-2 sm:px-0 py-1">Safety guidelines</a>
               </div>
 
-              <div className="text-center text-sm opacity-90" style={{paddingTop: '20px'}}>
+              <div className="text-center text-sm opacity-90">
                 {/* Editable paragraph in Design tab */}
                 <BuilderComponent model="footer-fullwidth" options={{ includeRefs: true }} />
 
