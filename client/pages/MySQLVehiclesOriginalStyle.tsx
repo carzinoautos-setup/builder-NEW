@@ -812,7 +812,7 @@ export default function MySQLVehiclesOriginalStyle() {
   // UI: fuel type show more and default selection
   const [showMoreFuel, setShowMoreFuel] = useState(false);
 
-  // Suggestion computation depends on filterOptions ×� compute with useMemo to avoid TDZ
+  // Suggestion computation depends on filterOptions × compute with useMemo to avoid TDZ
   const {
     computedInventorySuggestions,
     computedQuickFilterSuggestions,
@@ -2116,7 +2116,7 @@ export default function MySQLVehiclesOriginalStyle() {
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
             console.log(
-              "××� Merged Builder VehicleTypeCard images into runtime mapping",
+              "×× Merged Builder VehicleTypeCard images into runtime mapping",
               foundImages,
             );
             // Clear persisted local overrides so Builder/editor images take effect immediately
