@@ -417,6 +417,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Unified search state for URL generation
   const [unifiedSearch, setUnifiedSearch] = useState("");
+  const [panelSearch, setPanelSearch] = useState("");
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const [debouncedUnifiedSearch, setDebouncedUnifiedSearch] =
