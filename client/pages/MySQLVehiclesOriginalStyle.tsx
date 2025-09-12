@@ -6055,7 +6055,7 @@ export default function MySQLVehiclesOriginalStyle() {
               </h1>
 
               {/* Search Bar */}
-              <div className="relative z-[300]">
+              <div className={`relative z-[300] ${mobileFiltersOpen ? "hidden" : ""}`}>
                 <input
                   type="text"
                   placeholder="Search vehicles..."
