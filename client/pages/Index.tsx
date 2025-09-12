@@ -861,7 +861,7 @@ export default function Index() {
             --carzino-price-value: 18px;
             --carzino-dealer-info: 12px;
             --carzino-image-counter: 14px;
-            --carzino-filter-title: 18px;
+            --carzino-filter-title: 14px;
             --carzino-filter-option: 16px;
             --carzino-filter-count: 16px;
             --carzino-search-input: 16px;
@@ -1464,7 +1464,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("model", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ��
+                        ×
                       </button>
                     </span>
                   ))}
