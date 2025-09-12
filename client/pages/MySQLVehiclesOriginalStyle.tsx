@@ -2149,7 +2149,7 @@ export default function MySQLVehiclesOriginalStyle() {
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
             console.log(
-              "×× Merged Builder VehicleTypeCard images into runtime mapping",
+              "��× Merged Builder VehicleTypeCard images into runtime mapping",
               foundImages,
             );
             // Clear persisted local overrides so Builder/editor images take effect immediately
@@ -7032,7 +7032,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       Sort
                     </button>
                     {sortDropdownOpen && (
-                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-56">
+                      <div ref={sortDropdownRef} className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[60] w-56">
                         <button
                           onClick={() => {
                             setSortBy("relevance");
