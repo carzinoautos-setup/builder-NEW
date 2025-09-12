@@ -348,6 +348,19 @@ export default function MySQLVehiclesOriginalStyle() {
   };
   const [sortBy, setSortBy] = useState("relevance");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const sortDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (!sortDropdownOpen) return;
+      if (!sortDropdownRef.current) return;
+      if (!sortDropdownRef.current.contains(e.target as Node)) {
+        setSortDropdownOpen(false);
+      }
+    }
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, [sortDropdownOpen]);
 
   // API state
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
