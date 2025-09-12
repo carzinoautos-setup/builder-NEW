@@ -445,10 +445,17 @@ export default function MySQLVehiclesOriginalStyle() {
       } catch (e) {
         // If environment doesn't support \p{C}, fall back to basic removal above
       }
-      // Normalize unicode and trim whitespace
-      s = s.normalize().trim();
-      // Collapse repeated whitespace
-      s = s.replace(/\s+/g, " ");
+      // Normalize unicode
+      s = s.normalize();
+      // Remove any unexpected characters that are not letters, numbers, punctuation, space separators or symbols
+      try {
+        s = s.replace(/[^^\p{L}\p{N}\p{P}\p{Zs}\p{S}]+/gu, "");
+      } catch (e) {
+        // If unicode property escapes not supported, do a conservative fallback: remove control chars
+        s = s.replace(/[\x00-\x1F\x7F]/g, "");
+      }
+      // Trim and collapse repeated whitespace
+      s = s.trim().replace(/\s+/g, " ");
       return s;
     } catch (err) {
       return String(val);
@@ -1650,7 +1657,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
       const newURL = generateURLFromFilters(urlFilters);
 
-      // Do not navigate for make/model/trim changes ��� URLs only support single values and
+      // Do not navigate for make/model/trim changes — URLs only support single values and
       // navigating on selection prevents multi-select UX. Keep URL navigation for other filters.
       const hasMakeModelTrim =
         (urlFilters.make && urlFilters.make.length > 0) ||
