@@ -2286,11 +2286,11 @@ export default function MySQLVehiclesOriginalStyle() {
   };
 
   const removeAppliedFilter = (category: string, value: string) => {
+    const current = (appliedFilters as any)[category];
+    const currentArr = Array.isArray(current) ? current : [];
     const newFilters = {
       ...appliedFilters,
-      [category]: (
-        appliedFilters[category as keyof typeof appliedFilters] as string[]
-      ).filter((item: string) => item !== value),
+      [category]: currentArr.filter((item: string) => item !== value),
     };
     setAppliedFilters(newFilters);
 
