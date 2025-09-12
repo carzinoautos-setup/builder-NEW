@@ -3468,7 +3468,7 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Desktop Search Section */}
             <div className="hidden lg:block mb-4 pb-4 bg-white">
               <form onSubmit={handleUnifiedSearchSubmit}>
-                <div className="relative">
+                <div className="relative z-[300]">
                   <input
                     type="text"
                     placeholder="Search Cars For Sale"
