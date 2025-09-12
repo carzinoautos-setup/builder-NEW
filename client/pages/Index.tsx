@@ -823,7 +823,7 @@ export default function Index() {
           --carzino-price-value: 16px;
           --carzino-dealer-info: 10px;
           --carzino-image-counter: 12px;
-          --carzino-filter-title: 16px;
+          --carzino-filter-title: 14px;
           --carzino-filter-option: 14px;
           --carzino-filter-count: 14px;
           --carzino-search-input: 14px;
