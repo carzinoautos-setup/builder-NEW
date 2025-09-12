@@ -428,8 +428,20 @@ export default function MySQLVehiclesOriginalStyle() {
     if (val === null || val === undefined) return "";
     try {
       let s = String(val);
+      // Decode HTML entities if running in browser
+      try {
+        if (typeof document !== "undefined") {
+          const ta = document.createElement("textarea");
+          ta.innerHTML = s;
+          s = ta.value;
+        }
+      } catch (e) {
+        /* ignore */
+      }
       // Remove replacement character and control characters
       s = s.replace(/\uFFFD/g, "").replace(/[\x00-\x1F\x7F]/g, "");
+      // Normalize unicode and remove any odd isolated symbols outside basic punctuation
+      s = s.normalize();
       // Trim whitespace
       return s.trim();
     } catch (err) {
