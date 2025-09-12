@@ -45,6 +45,30 @@ export default function Index() {
   const [vehicleImages, setVehicleImages] = useState<{ [key: string]: string }>(
     {},
   );
+
+  // Persisted custom vehicle type images in localStorage key
+  const VEHICLE_IMAGES_KEY = "carzino_vehicle_type_images";
+
+  const handleVehicleTypeImageUpload = async (type: string, file: File) => {
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        setVehicleImages((prev) => {
+          const next = { ...prev, [type]: result };
+          try {
+            localStorage.setItem(VEHICLE_IMAGES_KEY, JSON.stringify(next));
+          } catch (e) {
+            /* ignore */
+          }
+          return next;
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Failed to read vehicle image", err);
+    }
+  };
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [sortBy, setSortBy] = useState("relevance");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -1440,7 +1464,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("model", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        ��
                       </button>
                     </span>
                   ))}
@@ -2118,7 +2142,7 @@ export default function Index() {
                   </div>
                 ) : (
                   availableBodyTypes.map((type, index) => (
-                    <VehicleTypeCard
+                    <VehicleTypeCard onImageUpload={handleVehicleTypeImageUpload}
                       key={index}
                       type={type.name}
                       count={type.count}
