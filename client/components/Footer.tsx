@@ -237,7 +237,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                         const label = typeof item === "string" ? item : item.label;
                         const href = typeof item === "string" ? "#" : item.url;
                         return (
-                          <a key={label} href={href} className="block md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed">
+                          <a key={label} href={href} className="block mt-2 md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed text-gray-300 font-medium">
                             {label}
                           </a>
                         );
@@ -253,7 +253,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className="block md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed"
+                              className="block mt-2 md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed text-gray-300 font-medium"
                               onClick={(e) => {
                                 if (isInternal) {
                                   e.preventDefault();
@@ -291,7 +291,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className={`block ${label ? "mt-0" : "mt-3"} md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed`}
+                              className={`block mt-2 md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed text-gray-300 font-medium`}
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
@@ -317,7 +317,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className={`block ${label ? "mt-0" : "mt-3"} md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed`}
+                              className={`block mt-2 md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed text-gray-300 font-medium`}
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
@@ -351,10 +351,10 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
             <div className="bg-transparent text-white">
               {/* Four links above the text - responsive: 4/2/1 columns */}
               <div className="mt-4 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-2 gap-x-4 w-full">
-                <a href="https://www.carzino.com/privacy-policy/" className="text-white block w-full px-2 sm:px-0">Privacy policy</a>
-                <a href="https://www.carzino.com/terms-conditions/" className="text-white block w-full px-2 sm:px-0">Terms &amp; Conditions</a>
-                <a href="https://www.carzino.com/return-policy/" className="text-white block w-full px-2 sm:px-0">Return Policy</a>
-                <a href="https://www.carzino.com/safety-guidelines/" className="text-white block w-full px-2 sm:px-0">Safety guidelines</a>
+                <a href="https://www.carzino.com/privacy-policy/" className="text-white/90 font-medium block w-full px-2 sm:px-0 py-1">Privacy policy</a>
+                <a href="https://www.carzino.com/terms-conditions/" className="text-white/90 font-medium block w-full px-2 sm:px-0 py-1">Terms &amp; Conditions</a>
+                <a href="https://www.carzino.com/return-policy/" className="text-white/90 font-medium block w-full px-2 sm:px-0 py-1">Return Policy</a>
+                <a href="https://www.carzino.com/safety-guidelines/" className="text-white/90 font-medium block w-full px-2 sm:px-0 py-1">Safety guidelines</a>
               </div>
 
               <div className="text-center text-sm opacity-90" style={{paddingTop: '20px'}}>
