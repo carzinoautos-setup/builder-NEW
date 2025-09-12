@@ -87,31 +87,31 @@ export default function Header({ topTemplate }: HeaderProps) {
               aria-label="Primary"
             >
               <a
-                className="text-gray-800 font-bold whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
+                className="text-gray-800 font-medium whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
                 href="/cars-for-sale/"
               >
                 Cars For Sale
               </a>
               <a
-                className="text-gray-800 font-bold whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
+                className="text-gray-800 font-medium whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
                 href="https://www.carzino.com/trade-in-your-car/"
               >
                 Trade in your car
               </a>
               <a
-                className="text-gray-800 font-bold whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
+                className="text-gray-800 font-medium whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
                 href="https://www.carzino.com/sell-your-car/"
               >
                 Sell your car
               </a>
               <a
-                className="text-gray-800 font-bold whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
+                className="text-gray-800 font-medium whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
                 href="https://www.carzino.com/dealers/"
               >
                 Dealers
               </a>
               <a
-                className="text-gray-800 font-bold whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
+                className="text-gray-800 font-medium whitespace-nowrap underline decoration-transparent hover:decoration-gray-400 decoration-1 underline-offset-2 hover:text-red-600 transition-colors"
                 href="https://www.carzino.com/contact/"
               >
                 Contact
