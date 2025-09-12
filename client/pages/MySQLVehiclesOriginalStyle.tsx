@@ -1224,6 +1224,9 @@ export default function MySQLVehiclesOriginalStyle() {
       if (appliedFilters.exteriorColor.length > 0) {
         params.append("exterior_color", appliedFilters.exteriorColor.join(","));
       }
+      if ((appliedFilters as any).interiorColor && (appliedFilters as any).interiorColor.length > 0) {
+        params.append("interior_color", (appliedFilters as any).interiorColor.join(","));
+      }
       if (appliedFilters.sellerType.length > 0) {
         params.append(
           "account_type_seller",
@@ -2737,7 +2740,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
       // Call our geocoding API with proper error handling
       const apiUrl = `${getApiBaseUrl()}/api/geocode/${zip}`;
-      console.log("🔍 Geocoding ZIP:", zip, "using:", apiUrl);
+      console.log("���� Geocoding ZIP:", zip, "using:", apiUrl);
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
