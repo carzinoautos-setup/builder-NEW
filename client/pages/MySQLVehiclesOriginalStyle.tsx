@@ -1650,7 +1650,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
       const newURL = generateURLFromFilters(urlFilters);
 
-      // Do not navigate for make/model/trim changes — URLs only support single values and
+      // Do not navigate for make/model/trim changes ��� URLs only support single values and
       // navigating on selection prevents multi-select UX. Keep URL navigation for other filters.
       const hasMakeModelTrim =
         (urlFilters.make && urlFilters.make.length > 0) ||
@@ -3283,7 +3283,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               const idx = inventorySuggestions.length + qi;
                               return (
                                 <button
-                                  key={`quick-${s}`}
+                                  key={`quick-${sanitizeLabel(s)}`}
                                   type="button"
                                   role="option"
                                   aria-selected={idx === activeSuggestionIndex}
@@ -3306,7 +3306,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                   }}
                                   className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
                                 >
-                                  {s}
+                                  {sanitizeLabel(s)}
                                 </button>
                               );
                             })}
