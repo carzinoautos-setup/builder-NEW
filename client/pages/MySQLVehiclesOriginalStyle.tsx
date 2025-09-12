@@ -4148,7 +4148,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.make}
                 onToggle={() => toggleFilter("make")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {displayedMakes.map((m: any) => {
                     const id = `make-${m.name.replace(/[^a-z0-9]/gi, "_")}`;
                     return (
@@ -4228,7 +4228,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.model}
                 onToggle={() => toggleFilter("model")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {appliedFilters.make.length ===
                   0 ? null : filterOptions.model && // Use filter options returned by WP /filters endpoint when available
                     filterOptions.model.length > 0 ? (
@@ -4332,7 +4332,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.trim}
                 onToggle={() => toggleFilter("trim")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {appliedFilters.make.length ===
                   0 ? null : filterOptions.trim &&
                     filterOptions.trim.length > 0 ? (
@@ -4735,7 +4735,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.condition}
                 onToggle={() => toggleFilter("condition")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.condition &&
                   filterOptions.condition.length > 0 ? (
                     filterOptions.condition.map((c: any) => (
@@ -4793,7 +4793,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.certified}
                 onToggle={() => toggleFilter("certified")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.certified &&
                   filterOptions.certified.length > 0 ? (
                     filterOptions.certified.map((c: any) => (
@@ -4842,7 +4842,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.mileage}
                 onToggle={() => toggleFilter("mileage")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <select
                     className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md h-10 focus:outline-none bg-white appearance-none"
                     value={appliedFilters.mileage}
@@ -5031,7 +5031,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.driveType}
                 onToggle={() => toggleFilter("driveType")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.drivetrain &&
                   filterOptions.drivetrain.length > 0 ? (
                     (() => {
@@ -5170,7 +5170,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.transmission}
                 onToggle={() => toggleFilter("transmission")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.transmission &&
                   filterOptions.transmission.length > 0 ? (
                     filterOptions.transmission.map((t: any) => (
@@ -5219,7 +5219,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.transmissionSpeed}
                 onToggle={() => toggleFilter("transmissionSpeed")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.transmission_speed &&
                   filterOptions.transmission_speed.length > 0 ? (
                     (() => {
@@ -5331,7 +5331,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.doors}
                 onToggle={() => toggleFilter("doors")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.doors && filterOptions.doors.length > 0 ? (
                     filterOptions.doors.map((d: any) => (
                       <label
@@ -5379,7 +5379,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.engineCylinders}
                 onToggle={() => toggleFilter("engineCylinders")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {engineOptions && engineOptions.length > 0 ? (
                     engineOptions.map((d: any) => (
                       <label
@@ -5423,7 +5423,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.displacementLiters}
                 onToggle={() => toggleFilter("displacementLiters")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {displacementOptions && displacementOptions.length > 0 ? (
                     displacementOptions.map((d: any) => (
                       <label
@@ -5469,7 +5469,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.fuelType}
                 onToggle={() => toggleFilter("fuelType")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {fuelOptions && fuelOptions.length > 0 ? (
                     <>
                       {displayedFuels.map((f: any) => (
@@ -5540,7 +5540,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.highwayMpg}
                 onToggle={() => toggleFilter("highwayMpg")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {(() => {
                     const options = [
                       { key: "any", label: "Any", min: 0 },
@@ -5648,7 +5648,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.exteriorColor}
                 onToggle={() => toggleFilter("exteriorColor")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {exteriorColors.map((color, index) => (
                     <ColorSwatch
                       key={index}
@@ -5670,7 +5670,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.interiorColor}
                 onToggle={() => toggleFilter("interiorColor")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {interiorColors.map((color, index) => (
                     <ColorSwatch
                       key={index}
@@ -5694,7 +5694,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.sellerType}
                 onToggle={() => toggleFilter("sellerType")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.account_type_seller &&
                   filterOptions.account_type_seller.length > 0 ? (
                     filterOptions.account_type_seller.map((s: any) => (
@@ -5741,7 +5741,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.dealer}
                 onToggle={() => toggleFilter("dealer")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {availableDealers.map((dealer, index) => (
                     <label
                       key={index}
@@ -5796,7 +5796,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.state}
                 onToggle={() => toggleFilter("state")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.state_seller &&
                   filterOptions.state_seller.length > 0 ? (
                     filterOptions.state_seller.map((s: any) => (
@@ -5856,7 +5856,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.city}
                 onToggle={() => toggleFilter("city")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.city_seller &&
                   filterOptions.city_seller.length > 0 ? (
                     filterOptions.city_seller.map((c: any) => (
@@ -5916,7 +5916,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 isCollapsed={collapsedFilters.titleStatus}
                 onToggle={() => toggleFilter("titleStatus")}
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {filterOptions.title_status &&
                   filterOptions.title_status.length > 0 ? (
                     filterOptions.title_status.map((t: any) => (
