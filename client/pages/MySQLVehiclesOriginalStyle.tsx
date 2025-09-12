@@ -4154,7 +4154,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     return (
                       <div
                         key={m.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded"
                       >
                         <input
                           id={id}
@@ -4249,7 +4249,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             return (
                               <div
                                 key={name}
-                                className="flex items-center hover:bg-gray-50 p-1 rounded"
+                                className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded"
                               >
                                 <input
                                   id={id}
@@ -4353,7 +4353,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             return (
                               <div
                                 key={name}
-                                className="flex items-center hover:bg-gray-50 p-1 rounded"
+                                className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded"
                               >
                                 <input
                                   id={id}
@@ -4741,7 +4741,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     filterOptions.condition.map((c: any) => (
                       <label
                         key={c.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -4799,7 +4799,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     filterOptions.certified.map((c: any) => (
                       <label
                         key={c.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5107,7 +5107,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             return (
                               <label
                                 key={g.display}
-                                className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                                className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                               >
                                 <input
                                   type="checkbox"
@@ -5176,7 +5176,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     filterOptions.transmission.map((t: any) => (
                       <label
                         key={t.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5249,7 +5249,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           {normalizedDisplayed.map((t: any) => (
                             <label
                               key={t.name}
-                              className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                              className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                             >
                               <input
                                 type="checkbox"
@@ -5336,7 +5336,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     filterOptions.doors.map((d: any) => (
                       <label
                         key={d.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5384,7 +5384,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     engineOptions.map((d: any) => (
                       <label
                         key={d.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5428,7 +5428,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     displacementOptions.map((d: any) => (
                       <label
                         key={d.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5475,7 +5475,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       {displayedFuels.map((f: any) => (
                         <label
                           key={f.name}
-                          className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                          className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                         >
                           <input
                             type="checkbox"
@@ -5574,7 +5574,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     return options.map((opt) => (
                       <label
                         key={opt.key}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5700,7 +5700,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     filterOptions.account_type_seller.map((s: any) => (
                       <label
                         key={s.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5745,7 +5745,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   {availableDealers.map((dealer, index) => (
                     <label
                       key={index}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -5802,7 +5802,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     filterOptions.state_seller.map((s: any) => (
                       <label
                         key={s.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5862,7 +5862,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     filterOptions.city_seller.map((c: any) => (
                       <label
                         key={c.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -5922,7 +5922,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     filterOptions.title_status.map((t: any) => (
                       <label
                         key={t.name}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
