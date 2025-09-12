@@ -3223,7 +3223,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         ) {
                           e.preventDefault();
                           const s = filteredSuggestions[activeSuggestionIndex];
-                          setUnifiedSearch(s);
+                          setUnifiedSearch(sanitizeLabel(s));
                           setSuggestionsOpen(false);
                           setActiveSuggestionIndex(-1);
                           setTimeout(
@@ -3269,7 +3269,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                   setActiveSuggestionIndex(idx)
                                 }
                                 onClick={() => {
-                                  setUnifiedSearch(s);
+                                  setUnifiedSearch(sanitizeLabel(s));
                                   setSuggestionsOpen(false);
                                   setActiveSuggestionIndex(-1);
                                   setTimeout(
@@ -3306,7 +3306,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                     setActiveSuggestionIndex(idx)
                                   }
                                   onClick={() => {
-                                    setUnifiedSearch(s);
+                                    setUnifiedSearch(sanitizeLabel(s));
                                     setSuggestionsOpen(false);
                                     setActiveSuggestionIndex(-1);
                                     setTimeout(
@@ -3516,7 +3516,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         ) {
                           e.preventDefault();
                           const s = filteredSuggestions[activeSuggestionIndex];
-                          setUnifiedSearch(s);
+                          setUnifiedSearch(sanitizeLabel(s));
                           setSuggestionsOpen(false);
                           setActiveSuggestionIndex(-1);
                           setTimeout(
@@ -3562,7 +3562,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                   setActiveSuggestionIndex(idx)
                                 }
                                 onClick={() => {
-                                  setUnifiedSearch(s);
+                                  setUnifiedSearch(sanitizeLabel(s));
                                   setSuggestionsOpen(false);
                                   setActiveSuggestionIndex(-1);
                                   setTimeout(
@@ -3599,7 +3599,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                     setActiveSuggestionIndex(idx)
                                   }
                                   onClick={() => {
-                                    setUnifiedSearch(s);
+                                    setUnifiedSearch(sanitizeLabel(s));
                                     setSuggestionsOpen(false);
                                     setActiveSuggestionIndex(-1);
                                     setTimeout(
@@ -6140,7 +6140,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       ) {
                         e.preventDefault();
                         const s = filteredSuggestions[activeSuggestionIndex];
-                        setUnifiedSearch(s);
+                        setUnifiedSearch(sanitizeLabel(s));
                         setSuggestionsOpen(false);
                         setActiveSuggestionIndex(-1);
                         setTimeout(
@@ -6185,7 +6185,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               onMouseDown={(ev) => ev.preventDefault()}
                               onMouseEnter={() => setActiveSuggestionIndex(idx)}
                               onClick={() => {
-                                setUnifiedSearch(s);
+                                setUnifiedSearch(sanitizeLabel(s));
                                 setSuggestionsOpen(false);
                                 setActiveSuggestionIndex(-1);
                                 setTimeout(
@@ -6222,7 +6222,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                   setActiveSuggestionIndex(idx)
                                 }
                                 onClick={() => {
-                                  setUnifiedSearch(s);
+                                  setUnifiedSearch(sanitizeLabel(s));
                                   setSuggestionsOpen(false);
                                   setActiveSuggestionIndex(-1);
                                   setTimeout(
