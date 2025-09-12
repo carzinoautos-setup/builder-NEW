@@ -463,7 +463,7 @@ export default function MySQLVehiclesOriginalStyle() {
     "Sedans under $15,000",
     "Compact cars under $15,000",
     "Full-size trucks for sale",
-    "2018����2021 trucks under $35,000",
+    "2018-2021 trucks under $35,000",
   ];
 
   const staticKeywords = [
