@@ -124,7 +124,7 @@ const parseFiltersFromURL = (pathname: string, search?: string) => {
   return { make, model, trim, condition, year, bodyStyle };
 };
 
-const generateURLFromFilters = (filters: {
+const generateURLFromFilters = (filters?: {
   make?: string[];
   model?: string[];
   trim?: string[];
@@ -132,6 +132,7 @@ const generateURLFromFilters = (filters: {
   year?: string;
   bodyStyle?: string;
 }) => {
+  const f = filters || {};
   const segments = [];
 
   // Only include the first selected value for each filter in URL
