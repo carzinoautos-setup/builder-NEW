@@ -205,7 +205,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                   className="w-full flex items-center justify-between"
                 >
                   <div className="font-semibold text-lg text-left">
-                    {s.title}
+                  {s.title === 'Links' ? 'Carzino Links' : s.title}
                   </div>
                   <svg
                     className={`w-5 h-5 ml-3 transform transition-transform duration-200 ${openIdx === idx ? "rotate-180" : ""}`}
