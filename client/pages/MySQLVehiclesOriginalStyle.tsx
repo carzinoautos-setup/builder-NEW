@@ -715,19 +715,52 @@ export default function MySQLVehiclesOriginalStyle() {
       for (const [name, count] of Array.from(map.entries())) src.push({ name, count });
     }
 
-    // Sort ascending by numeric start of range (e.g. 1.0-1.9 -> 1.0). Fallback to numeric value, then lexicographic.
-    src.sort((a: any, b: any) => {
-      const ra = String(a.name).match(/^(\d+(?:\.\d+)?)/);
-      const rb = String(b.name).match(/^(\d+(?:\.\d+)?)/);
-      const na = ra ? Number(ra[1]) : Number(a.name);
-      const nb = rb ? Number(rb[1]) : Number(b.name);
-      if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
-      if (!Number.isNaN(na)) return -1;
-      if (!Number.isNaN(nb)) return 1;
-      return String(a.name).localeCompare(String(b.name));
+    // Bucket numeric values into 1.0 ranges (e.g. 1.0-1.9 -> "1.0 - 1.9L") and aggregate counts.
+    const buckets = new Map<string, { start: number | null; label: string; count: number }>();
+
+    for (const item of src) {
+      const s = String(item.name || '').trim();
+      // If already a range like "1.0 - 1.9" or "1.0-1.9", extract start
+      const rangeMatch = s.match(/^(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)/);
+      if (rangeMatch) {
+        const start = Number(rangeMatch[1]);
+        const key = `${start}`;
+        const label = `${start.toFixed(1)} - ${Math.max(start + 0.9, Number(rangeMatch[2])).toFixed(1)}L`;
+        const prev = buckets.get(key) || { start, label, count: 0 };
+        prev.count += Number(item.count || 0);
+        buckets.set(key, prev);
+        continue;
+      }
+
+      // Try numeric value
+      const n = Number(s);
+      if (!Number.isNaN(n)) {
+        const start = Math.floor(n);
+        const key = `${start}`;
+        const label = `${start.toFixed(1)} - ${ (start + 0.9).toFixed(1)}L`;
+        const prev = buckets.get(key) || { start, label, count: 0 };
+        prev.count += Number(item.count || 0);
+        buckets.set(key, prev);
+        continue;
+      }
+
+      // Non-numeric, keep as-is (use name as key)
+      const key = `s_${s}`;
+      const prev = buckets.get(key) || { start: null, label: s, count: 0 };
+      prev.count += Number(item.count || 0);
+      buckets.set(key, prev);
+    }
+
+    // Convert buckets to array and sort by numeric start (ascending), then lexicographic for non-numeric
+    const results = Array.from(buckets.values());
+    results.sort((a, b) => {
+      if (a.start === null && b.start === null) return String(a.label).localeCompare(String(b.label));
+      if (a.start === null) return 1;
+      if (b.start === null) return -1;
+      return (a.start as number) - (b.start as number);
     });
 
-    return src;
+    return results.map((r) => ({ name: r.label, count: r.count }));
   }, [vehicles, filterOptions]);
 
   // UI: show more state for Make/Model/Trim lists
@@ -2651,7 +2684,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
       } else {
         console.error(
-          `���� Geocoding API error: ${response.status} ${response.statusText}`,
+          `������ Geocoding API error: ${response.status} ${response.statusText}`,
         );
       }
 
