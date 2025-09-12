@@ -7127,9 +7127,13 @@ export default function MySQLVehiclesOriginalStyle() {
                 </div>
               ) : (
                 <span className="font-medium">
-                  {viewMode === "favorites"
-                    ? `${favoritesCount} Saved Vehicles - Viewing Favorites`
-                    : `${appliedFilters.condition.join(", ")}${appliedFilters.condition.length > 0 && appliedFilters.make.length > 0 ? ", " : ""}${appliedFilters.make.join(", ")}${appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 ? " for sale" : "All Vehicles"} - ${totalResults.toLocaleString()} Results`}
+                  {viewMode === "favorites" ? (
+                    <>
+                      {favoritesCount} Saved Vehicles - <span className="text-red-600">Viewing Favorites</span>
+                    </>
+                  ) : (
+                    `${appliedFilters.condition.join(", ")}${appliedFilters.condition.length > 0 && appliedFilters.make.length > 0 ? ", " : ""}${appliedFilters.make.join(", ")}${appliedFilters.condition.length > 0 || appliedFilters.make.length > 0 ? " for sale" : "All Vehicles"} - ${totalResults.toLocaleString()} Results`
+                  )}
                 </span>
               )}
             </div>
