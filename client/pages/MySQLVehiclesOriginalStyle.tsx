@@ -2950,36 +2950,41 @@ export default function MySQLVehiclesOriginalStyle() {
     color,
     name,
     count,
+    filter = "exteriorColor",
   }: {
     color: string;
     name: string;
     count: number;
-  }) => (
-    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
-      <input
-        type="checkbox"
-        className="mr-2"
-        checked={appliedFilters.exteriorColor.includes(name)}
-        onChange={(e) => {
-          e.stopPropagation();
-          if (e.target.checked) {
-            setAppliedFilters((prev) => ({
-              ...prev,
-              exteriorColor: [...prev.exteriorColor, name],
-            }));
-          } else {
-            removeAppliedFilter("exteriorColor", name);
-          }
-        }}
-      />
-      <div
-        className="w-4 h-4 rounded border border-gray-300 mr-2"
-        style={{ backgroundColor: color }}
-      ></div>
-      <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">{name}</span>
-      <span className="carzino-filter-count ml-1 flex-shrink-0">({count})</span>
-    </label>
-  );
+    filter?: "exteriorColor" | "interiorColor";
+  }) => {
+    const checked = (appliedFilters as any)[filter].includes(name);
+    return (
+      <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
+        <input
+          type="checkbox"
+          className="mr-2"
+          checked={checked}
+          onChange={(e) => {
+            e.stopPropagation();
+            if ((e.target as HTMLInputElement).checked) {
+              setAppliedFilters((prev) => ({
+                ...prev,
+                [filter]: [...(prev as any)[filter], name],
+              }));
+            } else {
+              removeAppliedFilter(filter, name);
+            }
+          }}
+        />
+        <div
+          className="w-4 h-4 rounded border border-gray-300 mr-2"
+          style={{ backgroundColor: color }}
+        ></div>
+        <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">{name}</span>
+        <span className="carzino-filter-count ml-1 flex-shrink-0">({count})</span>
+      </label>
+    );
+  };
 
   return (
     <div
@@ -5881,6 +5886,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       color={color.color}
                       name={color.name}
                       count={color.count}
+                      filter="exteriorColor"
                     />
                   ))}
                 </div>
@@ -5903,6 +5909,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       color={color.color}
                       name={color.name}
                       count={color.count}
+                      filter="interiorColor"
                     />
                   ))}
                 </div>
