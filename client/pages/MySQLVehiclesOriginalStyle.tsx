@@ -2516,6 +2516,8 @@ export default function MySQLVehiclesOriginalStyle() {
       highwayMpg: [],
       titleStatus: [],
       status: [],
+      engineCylinders: [],
+      displacementLiters: [],
     });
 
     // Restore unified search input (clearAllFilters cleared it)
