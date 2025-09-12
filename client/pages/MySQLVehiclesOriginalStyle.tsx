@@ -6176,7 +6176,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           </div>
                           {inventorySuggestions.map((s, idx) => (
                             <button
-                              key={`inv-${s}`}
+                              key={`inv-${sanitizeLabel(s)}`}
                               type="button"
                               role="option"
                               aria-selected={idx === activeSuggestionIndex}
@@ -6197,7 +6197,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               }}
                               className={`block w-full text-left px-3 py-2 text-sm ${idx === activeSuggestionIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
                             >
-                              {s}
+                              {sanitizeLabel(s)}
                             </button>
                           ))}
                         </div>
