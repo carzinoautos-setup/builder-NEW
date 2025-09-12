@@ -237,7 +237,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                         const label = typeof item === "string" ? item : item.label;
                         const href = typeof item === "string" ? "#" : item.url;
                         return (
-                          <a key={label} href={href} className="block mt-2 md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed text-gray-300 font-medium">
+                          <a key={label} href={href} className="block mt-2 md:text-sm lg:text-sm md:leading-[19px] lg:leading-[19px] leading-[19px] text-gray-300 font-normal">
                             {label}
                           </a>
                         );
@@ -253,7 +253,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className="block mt-2 md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed text-gray-300 font-medium"
+                              className="block mt-2 md:text-sm lg:text-sm md:leading-[19px] lg:leading-[19px] leading-[19px] text-gray-300 font-normal"
                               onClick={(e) => {
                                 if (isInternal) {
                                   e.preventDefault();
@@ -291,7 +291,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className={`block mt-2 md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed text-gray-300 font-medium`}
+                              className={`block mt-2 md:text-sm lg:text-sm md:leading-[19px] lg:leading-[19px] leading-[19px] text-gray-300 font-normal`}
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
@@ -317,7 +317,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                             <a
                               key={label}
                               href={href}
-                              className={`block mt-2 md:text-sm lg:text-sm md:leading-relaxed lg:leading-relaxed text-gray-300 font-medium`}
+                              className={`block mt-2 md:text-sm lg:text-sm md:leading-[19px] lg:leading-[19px] leading-[19px] text-gray-300 font-normal`}
                               onClick={(e) => {
                                 if (href && href.startsWith("/")) {
                                   e.preventDefault();
