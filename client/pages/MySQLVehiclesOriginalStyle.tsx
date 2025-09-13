@@ -746,7 +746,7 @@ export default function MySQLVehiclesOriginalStyle() {
     setAcfPaymentMin((appliedFilters.paymentMin as string) || "");
     setAcfPaymentMax((appliedFilters.paymentMax as string) || "");
     setAcfDownPayment(((appliedFilters as any).down_payment as string) || "");
-  }, [appliedFilters.paymentMin, (appliedFilters as any).down_payment]);
+  }, [appliedFilters]);
 
   // Debounce ACF input changes before merging into appliedFilters (600ms)
   React.useEffect(() => {
