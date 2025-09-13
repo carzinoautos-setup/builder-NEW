@@ -502,24 +502,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               }}
             />
 
-            {/* Hidden relationship field (not shown to users) */}
-            <input
-              type="hidden"
-              value={
-                (vehicle as any).seller_account_number ||
-                (vehicle as any).account_number_seller ||
-                ""
-              }
-              data-seller-account-hidden
-              style={{
-                display: "flex",
-                appearance: "none",
-                backgroundColor: "rgba(0, 0, 0, 0)",
-                fontWeight: "400",
-                fontSize: "12px",
-                lineHeight: "12px",
-              }}
-            />
+            {/* Hidden relationship field (not shown to users) - kept for binding */}
+            <input type="hidden" value={acctNumberValue} data-seller-account-hidden />
           </div>
 
           <div className="flex-shrink-0 text-right">
@@ -530,11 +514,18 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 lineHeight: "12px",
                 fontWeight: "400",
                 color: "rgb(17, 24, 39)",
+                minWidth: 80,
+                textAlign: "right",
               }}
             >
               {accountTypeSeller || vehicle.seller_type}
             </div>
           </div>
+        </div>
+
+        {/* Full-width hidden binding row for account number (kept visually hidden but present for Builder bindings) */}
+        <div className="sr-only mt-1" aria-hidden>
+          <span data-account-number-hidden>{acctNumberValue}</span>
         </div>
       </div>
     </div>
