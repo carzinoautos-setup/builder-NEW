@@ -199,10 +199,8 @@ export function usePaymentFilters({
   // Reset to default values
   const resetPaymentFilters = useCallback(() => {
     setPaymentState({
-      paymentMin: "100",
-      paymentMax: "2000",
-      interestRate: "5",
-      loanTermMonths: "60",
+      paymentMin: "Any",
+      paymentMax: "Any",
       downPayment: "2000",
     });
   }, []);
