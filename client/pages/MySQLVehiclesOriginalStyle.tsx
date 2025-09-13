@@ -2409,6 +2409,7 @@ export default function MySQLVehiclesOriginalStyle() {
       priceMax: "",
       paymentMin: "",
       paymentMax: "",
+      down_payment: "",
       // NEW: Additional custom field filters
       fuelType: [],
       certified: [],
