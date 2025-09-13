@@ -1879,12 +1879,14 @@ export default function MySQLVehiclesOriginalStyle() {
 
         if (appliedFilters.priceMin)
           params.append("min_price", appliedFilters.priceMin);
-        if (appliedFilters.priceMax)
-          params.append("max_price", appliedFilters.priceMax);
-        if (appliedFilters.paymentMin)
-          params.append("payment_min", appliedFilters.paymentMin);
-        if (appliedFilters.paymentMax)
-          params.append("payment_max", appliedFilters.paymentMax);
+      if (appliedFilters.priceMax)
+        params.append("max_price", appliedFilters.priceMax);
+      if (appliedFilters.paymentMin)
+        params.append("payment_min", appliedFilters.paymentMin);
+      if (appliedFilters.paymentMax)
+        params.append("payment_max", appliedFilters.paymentMax);
+      if ((appliedFilters as any).down_payment !== undefined && (appliedFilters as any).down_payment !== "")
+        params.append("down_payment", String((appliedFilters as any).down_payment));
 
         if (appliedFilters.fuelType.length > 0)
           params.append("fuel_type", appliedFilters.fuelType.join(","));
