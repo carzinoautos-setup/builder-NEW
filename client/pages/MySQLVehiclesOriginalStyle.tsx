@@ -3867,7 +3867,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          ��
+                          ����
                         </button>
                       </span>
                     ))}
@@ -4890,6 +4890,8 @@ export default function MySQLVehiclesOriginalStyle() {
                         if (!downPayment && prevDownPayment !== null) {
                           setDownPayment(prevDownPayment);
                         }
+                        // Apply payment filters live when down payment editing finishes
+                        applyPaymentFilters();
                       }}
                       onChange={(e) => {
                         const value = e.target.value.replace(/[^\d]/g, "");
