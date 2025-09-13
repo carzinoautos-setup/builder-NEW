@@ -7194,8 +7194,6 @@ export default function MySQLVehiclesOriginalStyle() {
                           favorites={favorites}
                           onToggleFavorite={toggleFavorite}
                           keeperMessage={keeperMessage}
-                          termLength={termLength}
-                          interestRate={interestRate}
                           downPayment={downPayment}
                         />
                       ))}
@@ -7394,8 +7392,6 @@ export default function MySQLVehiclesOriginalStyle() {
                       favorites={favorites}
                       onToggleFavorite={toggleFavorite}
                       keeperMessage={keeperMessage}
-                      termLength={termLength}
-                      interestRate={interestRate}
                       downPayment={downPayment}
                     />
                   ))}
