@@ -826,6 +826,20 @@ export default function MySQLVehiclesOriginalStyle() {
   const { filterOptions, filtersLoading, filtersError, refetch, pruneInvalid } =
     useFilters(appliedFilters);
 
+  // If filterOptions did not load (e.g. network hiccup), attempt a forced refetch once when ready
+  React.useEffect(() => {
+    if (!filterOptions && !filtersLoading) {
+      console.warn("[filters] no filterOptions detected, forcing refetch");
+      try {
+        // refetch accepts (filters?, opts?) — force to true to bypass visibility guard
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        (refetch as any)(undefined, { force: true });
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, [filterOptions, filtersLoading, refetch]);
+
   // Derive engine/displacement options from the current vehicles list when the filters endpoint
   // does not include engine_cylinders. This avoids requiring backend changes immediately.
   const engineOptions = React.useMemo(() => {
@@ -4481,6 +4495,15 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Distance */}
+            {!filtersLoading && (!filterOptions || Object.keys(filterOptions).length === 0) && (
+              <div className="mb-4 p-3 border border-yellow-300 rounded bg-yellow-50 text-sm">
+                Filters unavailable — <button
+                  type="button"
+                  onClick={() => (refetch as any)(undefined, { force: true })}
+                  className="underline text-red-600"
+                >Retry</button>
+              </div>
+            )}
             <div className="mb-4 pb-4 border border-gray-200 rounded-lg p-3">
               <label className="carzino-location-label block mb-2">
                 Distance
