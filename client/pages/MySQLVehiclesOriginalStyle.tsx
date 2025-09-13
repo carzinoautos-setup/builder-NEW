@@ -7366,7 +7366,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           favorites={favorites}
                           onToggleFavorite={toggleFavorite}
                           keeperMessage={keeperMessage}
-                          downPayment={downPayment}
+                          downPayment={acfDownPayment || "0"}
                         />
                       ))}
                     </div>
