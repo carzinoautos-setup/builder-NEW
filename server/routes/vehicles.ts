@@ -119,6 +119,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
     }
     if (req.query.sellerType)
       filters.sellerType = req.query.sellerType as string;
+    if (req.query.payment_min) filters.paymentMin = Number(req.query.payment_min as string);
+    if (req.query.payment_max) filters.paymentMax = Number(req.query.payment_max as string);
+    if (req.query.down_payment) (filters as any).downPayment = Number(req.query.down_payment as string);
 
     // If WP API base is configured and not using mock, proxy the request directly to WordPress plugin API
     if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
