@@ -4327,10 +4327,13 @@ export default function MySQLVehiclesOriginalStyle() {
                         <Check className="w-3 h-3 text-red-600" />
                         {sanitizeLabel(item)}
                         <button
-                          onClick={() =>
-                            removeAppliedFilter("sellerType", item)
-                          }
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("sellerType", item);
+                          }}
                           className="ml-1 text-white hover:text-gray-300"
+                          aria-label={`Remove ${sanitizeLabel(item)}`}
                         >
                           <X className="w-3 h-3 inline" />
                         </button>
