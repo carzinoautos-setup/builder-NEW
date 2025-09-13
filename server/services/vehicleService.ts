@@ -92,6 +92,37 @@ export class VehicleService {
       params.push(filters.sellerType);
     }
 
+    // Payment filters: support filtering by monthly payment range. If a downPayment override
+    // is supplied in filters.downPayment, use it; otherwise use per-vehicle down_payment column.
+    if (filters.paymentMin !== undefined || filters.paymentMax !== undefined) {
+      const minProvided = filters.paymentMin !== undefined && filters.paymentMin !== null && filters.paymentMin !== "";
+      const maxProvided = filters.paymentMax !== undefined && filters.paymentMax !== null && filters.paymentMax !== "";
+      const downProvided = (filters as any).downPayment !== undefined && (filters as any).downPayment !== null && (filters as any).downPayment !== "";
+
+      // Build monthly payment expression
+      // Use parameter placeholder for provided down payment, otherwise use down_payment column
+      const downExpr = downProvided ? "?" : "down_payment";
+      // If interest_rate is 0, monthly = (price - down) / loan_term
+      const monthlyExpr = `(
+        CASE
+          WHEN interest_rate = 0 THEN ((price - ${downExpr}) / NULLIF(loan_term,0))
+          ELSE (((price - ${downExpr}) * (interest_rate/100/12)) / (1 - POW(1 + (interest_rate/100/12), -loan_term)))
+        END
+      )`;
+
+      if (minProvided) {
+        // If down payment param provided we need to push it before min value for this condition
+        if (downProvided) params.push(Number((filters as any).downPayment));
+        whereConditions.push(`${monthlyExpr} >= ?`);
+        params.push(Number(filters.paymentMin));
+      }
+      if (maxProvided) {
+        if (downProvided) params.push(Number((filters as any).downPayment));
+        whereConditions.push(`${monthlyExpr} <= ?`);
+        params.push(Number(filters.paymentMax));
+      }
+    }
+
     // Base query parts
     const whereClause =
       whereConditions.length > 0
