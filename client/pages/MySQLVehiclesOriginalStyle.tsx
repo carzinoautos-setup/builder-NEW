@@ -3710,7 +3710,12 @@ export default function MySQLVehiclesOriginalStyle() {
                         <Check className="w-3 h-3 text-red-600" />
                         {sanitizeLabel(item)}
                         <button
-                          onClick={() => removeAppliedFilter("condition", item)}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("condition", item);
+                          }}
+                          aria-label={`Remove filter ${sanitizeLabel(item)}`}
                           className="ml-1 text-white hover:text-gray-300"
                         >
                           <X className="w-3 h-3 inline-block" />
@@ -3987,7 +3992,12 @@ export default function MySQLVehiclesOriginalStyle() {
                         <Check className="w-3 h-3 text-red-600" />
                         {sanitizeLabel(item)}
                         <button
-                          onClick={() => removeAppliedFilter("condition", item)}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("condition", item);
+                          }}
+                          aria-label={`Remove filter ${sanitizeLabel(item)}`}
                           className="ml-1 text-white hover:text-gray-300"
                         >
                           <X className="w-3 h-3 inline-block" />
