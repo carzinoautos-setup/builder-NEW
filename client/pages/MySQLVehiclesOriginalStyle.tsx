@@ -872,11 +872,11 @@ export default function MySQLVehiclesOriginalStyle() {
         src.push({ name, count });
     }
 
-    // Sort by numeric cylinder value (high to low). If not numeric, fallback to lexicographic.
+    // Sort by numeric cylinder value (low to high). If not numeric, fallback to lexicographic.
     src.sort((a: any, b: any) => {
       const na = Number(a.name);
       const nb = Number(b.name);
-      if (!Number.isNaN(na) && !Number.isNaN(nb)) return nb - na;
+      if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb; // ascending
       if (!Number.isNaN(na)) return -1;
       if (!Number.isNaN(nb)) return 1;
       return String(a.name).localeCompare(String(b.name));
