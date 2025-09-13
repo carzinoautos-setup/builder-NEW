@@ -288,6 +288,14 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
     certified: record.certified,
     rawPrice: record.price,
     rawMileage: record.mileage,
+    // ACF-backed payment & loan fields for client-side recalculation
+    payment_min: (record as any).payment_min ?? null,
+    payment_max: (record as any).payment_max ?? null,
+    payments: (record as any).payments ?? (record as any).payment ?? 0,
+    interest_rate: (record as any).interest_rate ?? (record as any).apr ?? 0,
+    loan_term: (record as any).loan_term ?? (record as any).term ?? 60,
+    down_payment: (record as any).down_payment ?? 0,
+    featured_image: (record as any).featured_image ?? null,
   };
 };
 
