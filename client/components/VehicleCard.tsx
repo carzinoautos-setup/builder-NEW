@@ -207,9 +207,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   React.useEffect(() => {
     let mounted = true;
+    // Accept either naming convention for the account number
     const acct =
       (vehicle as any).seller_account_number ||
       (vehicle as any).account_number_seller ||
+      (vehicle as any).account_number ||
       null;
     if (!acct) return;
 
@@ -254,7 +256,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         /* ignore */
       }
     };
-  }, [vehicle.seller_account_number]);
+  }, [
+    (vehicle as any).seller_account_number,
+    (vehicle as any).account_number_seller,
+    (vehicle as any).account_number,
+  ]);
 
   // Determine displayed city/state preferring sellerInfo (sanitize 'Unknown')
   const displayedCity = sanitize(
