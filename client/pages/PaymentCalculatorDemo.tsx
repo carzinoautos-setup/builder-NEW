@@ -132,14 +132,36 @@ export const PaymentCalculatorDemo: React.FC = () => {
     return parseFloat(v);
   };
 
+  // Compute allowed To options based on the selected From value and ensure To stays valid
+  const paymentNumericOptions = [100,150,200,250,300,350,400,450,500,600,700];
+  const fromValue = paymentState.paymentMin;
+  const allowedToOptions: string[] = (() => {
+    if (fromValue === "Any") return ["Any", ...paymentNumericOptions.map(String), "800+"];
+    if (fromValue === "800+") return ["Any", "800+"];
+    const fromNum = parseFloat(fromValue);
+    const opts = ["Any", ...paymentNumericOptions.filter((v) => v >= fromNum).map(String)];
+    if (fromNum <= 800) opts.push("800+");
+    return opts;
+  })();
+
+  useEffect(() => {
+    // Auto-correct paymentMax if it's no longer valid for the selected From
+    if (!allowedToOptions.includes(paymentState.paymentMax)) {
+      // default conservatively to Any so we don't accidentally exclude results
+      updatePaymentState({ paymentMax: "Any" });
+    }
+  }, [paymentState.paymentMin]);
+
   const filteredVehicles = vehicles.filter((vehicle) => {
-    // if vehicle.payment not calculated yet, include while calculating
+    // If payment not yet calculated, include until calculation finishes so UI doesn't flash "no results"
     if (!vehicle.payment) return true;
+
     const numeric = Number(String(vehicle.payment).replace(/[^0-9.-]+/g, ""));
     const minVal = toNumber(paymentState.paymentMin);
     const maxVal = toNumber(paymentState.paymentMax);
 
     if (paymentState.paymentMin === "Any" && paymentState.paymentMax === "Any") return true;
+
     if (paymentState.paymentMin === "800+") {
       // include payments >= 800 (or Any)
       if (paymentState.paymentMax === "Any") return numeric >= 800;
@@ -151,8 +173,8 @@ export const PaymentCalculatorDemo: React.FC = () => {
     const min = minVal || 0;
     const max = maxVal || Number.MAX_SAFE_INTEGER;
 
-    // enforce To >= From logic
-    if (paymentState.paymentMax !== "Any" && max <= min) return false;
+    // enforce To >= From logic - if To is specified and below From, exclude
+    if (paymentState.paymentMax !== "Any" && max < min) return false;
 
     return numeric >= min && numeric <= max;
   });
@@ -211,11 +233,28 @@ export const PaymentCalculatorDemo: React.FC = () => {
                       onChange={(e) => updatePaymentState({ paymentMax: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                     >
+                      {/* To options are constrained based on the selected From value */}
+                      {/* Any is always available */}
                       <option value="Any">Any</option>
-                      {[100,150,200,250,300,350,400,450,500,600,700].map((v) => (
-                        <option key={v} value={String(v)}>${v}</option>
-                      ))}
-                      <option value="800+">$800+</option>
+                      {(() => {
+                        const from = paymentState.paymentMin;
+                        const baseOptions = [100,150,200,250,300,350,400,450,500,600,700];
+                        if (from === "Any") {
+                          return baseOptions.map((v) => (
+                            <option key={v} value={String(v)}>${v}</option>
+                          ));
+                        }
+                        if (from === "800+") {
+                          return [<option key="800+" value="800+">$800+</option>];
+                        }
+                        const fromNum = parseFloat(from);
+                        return baseOptions
+                          .filter((v) => v >= fromNum)
+                          .map((v) => (
+                            <option key={v} value={String(v)}>${v}</option>
+                          ))
+                          .concat(fromNum <= 800 ? [<option key="800+" value="800+">$800+</option>] : []);
+                      })()}
                     </select>
                   </div>
                 </div>
@@ -293,7 +332,7 @@ export const PaymentCalculatorDemo: React.FC = () => {
               </p>
             </div>
 
-            {filteredVehicles.length === 0 ? (
+            {!isCalculating && filteredVehicles.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg">
                 <Calculator className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -308,6 +347,14 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 >
                   Reset Filters
                 </button>
+              </div>
+            ) : isCalculating && filteredVehicles.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-lg">
+                <TrendingUp className="w-16 h-16 text-blue-400 mx-auto mb-4 animate-pulse" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Searching for vehicles...
+                </h3>
+                <p className="text-gray-500 mb-4">Please wait while we calculate payments</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
