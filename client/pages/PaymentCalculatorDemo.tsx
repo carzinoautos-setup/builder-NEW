@@ -297,10 +297,10 @@ export const PaymentCalculatorDemo: React.FC = () => {
               <div className="text-center py-12 bg-white rounded-lg">
                 <Calculator className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No vehicles match your payment criteria
+                  No vehicles found in this payment range
                 </h3>
                 <p className="text-gray-500 mb-4">
-                  Try adjusting your payment range or loan parameters
+                  Try adjusting your payment range
                 </p>
                 <button
                   onClick={resetPaymentFilters}
