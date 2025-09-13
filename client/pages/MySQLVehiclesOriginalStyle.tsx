@@ -721,11 +721,28 @@ export default function MySQLVehiclesOriginalStyle() {
   const [priceMax, setPriceMax] = useState("50000");
   const [paymentMin, setPaymentMin] = useState("100");
   const [paymentMax, setPaymentMax] = useState("2000");
-  const [termLength, setTermLength] = useState("60");
-  const [interestRate, setInterestRate] = useState("5");
   const [downPayment, setDownPayment] = useState("2000");
   const [isEditingDownPayment, setIsEditingDownPayment] = useState(false);
   const [prevDownPayment, setPrevDownPayment] = useState<string | null>(null);
+
+  // Payment dropdown options and derived To options based on From
+  const paymentNumericOptions = [100,150,200,250,300,350,400,450,500,600,700];
+  const fromValue = paymentMin;
+  const allowedToOptions: string[] = (() => {
+    if (fromValue === "Any") return ["Any", ...paymentNumericOptions.map(String), "800+"];
+    if (fromValue === "800+") return ["Any", "800+"];
+    const fromNum = parseFloat(fromValue);
+    const opts = ["Any", ...paymentNumericOptions.filter((v) => v >= fromNum).map(String)];
+    if (fromNum <= 800) opts.push("800+");
+    return opts;
+  })();
+
+  // Ensure paymentMax stays valid for selected From
+  React.useEffect(() => {
+    if (!allowedToOptions.includes(paymentMax)) {
+      setPaymentMax("Any");
+    }
+  }, [paymentMin]);
 
   const formatCurrency = (val: string | number) => {
     const n = Number(String(val).replace(/[^0-9.-]/g, "")) || 0;
@@ -4798,81 +4815,57 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="space-y-3">
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                        $
-                      </span>
-                      <input
-                        type="text"
-                        placeholder="100"
+                      <label className="sr-only">Payment From</label>
+                      <select
                         value={paymentMin}
                         onChange={(e) => {
                           setPaymentMin(e.target.value);
+                          // apply filters live
+                          applyPaymentFilters();
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
-                      />
+                        className="w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                      >
+                        <option value="Any">Any</option>
+                        {paymentNumericOptions.map((v) => (
+                          <option key={v} value={String(v)}>${v}</option>
+                        ))}
+                        <option value="800+">$800+</option>
+                      </select>
+                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        $
+                      </span>
                       <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
                         /mo
                       </span>
                     </div>
                     <div className="relative flex-1">
-                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                        $
-                      </span>
-                      <input
-                        type="text"
-                        placeholder="2,000"
+                      <label className="sr-only">Payment To</label>
+                      <select
                         value={paymentMax}
                         onChange={(e) => {
                           setPaymentMax(e.target.value);
+                          applyPaymentFilters();
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        className="carzino-search-input w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none"
-                      />
+                        className="w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                      >
+                        {allowedToOptions.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt === "Any" ? "Any" : opt === "800+" ? "$800+" : `$${opt}`}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        $
+                      </span>
                       <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
                         /mo
                       </span>
                     </div>
                   </div>
 
-                  {/* Term Length and Interest Rate */}
-                  <div className="flex gap-2">
-                    <select
-                      value={termLength}
-                      onChange={(e) => {
-                        setTermLength(e.target.value);
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                    >
-                      <option value="24">24 Months</option>
-                      <option value="36">36 Months</option>
-                      <option value="48">48 Months</option>
-                      <option value="60">60 Months</option>
-                      <option value="72">72 Months</option>
-                      <option value="84">84 Months</option>
-                    </select>
-                    <select
-                      value={interestRate}
-                      onChange={(e) => {
-                        setInterestRate(e.target.value);
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                    >
-                      <option value="0">0% APR</option>
-                      <option value="3">3% APR</option>
-                      <option value="4">4% APR</option>
-                      <option value="5">5% APR</option>
-                      <option value="6">6% APR</option>
-                      <option value="7">7% APR</option>
-                      <option value="8">8% APR</option>
-                      <option value="9">9% APR</option>
-                      <option value="10">10% APR</option>
-                      <option value="12">12% APR</option>
-                      <option value="16">16% APR</option>
-                    </select>
-                  </div>
+                  {/* APR and Term have been removed - they are auto-assigned by preset loan rules */}
 
                   {/* Down Payment */}
                   <div className="relative">
@@ -4907,18 +4900,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     />
                   </div>
 
-                  {/* Apply Button */}
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        applyPaymentFilters();
-                      }}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                    >
-                      Apply Payment Filters
-                    </button>
-                  </div>
+                  {/* Filters update live as selections change - no Apply button */}
                 </div>
               </FilterSection>
             )}
