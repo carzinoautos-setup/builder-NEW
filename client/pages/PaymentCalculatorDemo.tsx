@@ -12,6 +12,7 @@ const sampleVehicles = [
     images: ["/placeholder.svg"],
     badges: ["Low APR Available"],
     title: "2023 Honda Civic EX",
+    year: 2023,
     mileage: "15,000",
     transmission: "CVT",
     doors: "4 Doors",
