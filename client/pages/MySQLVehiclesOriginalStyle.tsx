@@ -726,6 +726,49 @@ export default function MySQLVehiclesOriginalStyle() {
   const [isEditingDownPayment, setIsEditingDownPayment] = useState(false);
   const [prevDownPayment, setPrevDownPayment] = useState<string | null>(null);
 
+  // New ACF-backed payment filter inputs (separate from existing payment dropdowns)
+  const [acfPaymentMin, setAcfPaymentMin] = useState<string>(
+    (appliedFilters.paymentMin as string) || ""
+  );
+  const [acfPaymentMax, setAcfPaymentMax] = useState<string>(
+    (appliedFilters.paymentMax as string) || ""
+  );
+  const [acfDownPayment, setAcfDownPayment] = useState<string>(
+    ((appliedFilters as any).down_payment as string) || ""
+  );
+  const [paymentRangeError, setPaymentRangeError] = useState<string | null>(null);
+
+  // Sync local ACF inputs when appliedFilters changes (persist values across drawer open/close)
+  React.useEffect(() => {
+    setAcfPaymentMin((appliedFilters.paymentMin as string) || "");
+    setAcfPaymentMax((appliedFilters.paymentMax as string) || "");
+    setAcfDownPayment(((appliedFilters as any).down_payment as string) || "");
+  }, [appliedFilters.paymentMin, (appliedFilters as any).down_payment]);
+
+  // Debounce ACF input changes before merging into appliedFilters (600ms)
+  React.useEffect(() => {
+    setPaymentRangeError(null);
+    const t = setTimeout(() => {
+      // validation: if both provided and min > max, show inline error and don't apply
+      const minN = acfPaymentMin ? Number(acfPaymentMin) : null;
+      const maxN = acfPaymentMax ? Number(acfPaymentMax) : null;
+      if (minN !== null && maxN !== null && minN > maxN) {
+        setPaymentRangeError("Minimum payment cannot be greater than maximum payment.");
+        return;
+      }
+
+      setAppliedFilters((prev) => ({
+        ...prev,
+        paymentMin: acfPaymentMin !== undefined ? acfPaymentMin : prev.paymentMin,
+        paymentMax: acfPaymentMax !== undefined ? acfPaymentMax : prev.paymentMax,
+        // Treat down payment as 0 if empty per requirement
+        down_payment: acfDownPayment !== undefined && acfDownPayment !== "" ? acfDownPayment : "0",
+      }));
+    }, 600);
+
+    return () => clearTimeout(t);
+  }, [acfPaymentMin, acfPaymentMax, acfDownPayment]);
+
   // Payment dropdown options and derived To options based on From
   const paymentNumericOptions = [100,150,200,250,300,350,400,450,500,600,700];
   const fromValue = paymentMin;
