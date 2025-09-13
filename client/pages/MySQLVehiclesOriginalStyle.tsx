@@ -4905,7 +4905,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="space-y-3">
                   {/* ACF-backed Payment Filter (New) */}
                   <div className="border rounded p-3 bg-gray-50">
-                    <div className="text-sm font-medium text-gray-700 mb-2">ACF Payment (New)</div>
+                    <div className="text-sm font-medium text-gray-700 mb-2">Payments</div>
                     <div className="flex gap-2 mb-2">
                       <div className="relative flex-1">
                         <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
