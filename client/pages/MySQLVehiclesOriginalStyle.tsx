@@ -4363,13 +4363,16 @@ export default function MySQLVehiclesOriginalStyle() {
                           return `Under ${Number(m).toLocaleString()} Miles`;
                         })()}
                         <button
-                          onClick={() =>
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setAppliedFilters((prev) => ({
                               ...prev,
                               mileage: "",
-                            }))
-                          }
+                            }));
+                          }}
                           className="ml-1 text-white hover:text-gray-300"
+                          aria-label="Remove mileage filter"
                         >
                           <X className="w-3 h-3 inline" />
                         </button>
