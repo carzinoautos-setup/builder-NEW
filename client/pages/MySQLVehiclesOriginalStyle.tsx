@@ -2330,7 +2330,7 @@ export default function MySQLVehiclesOriginalStyle() {
           if (Object.keys(foundImages).length > 0) {
             setVehicleImages((prev) => ({ ...prev, ...foundImages }));
             console.log(
-              "��× Merged Builder VehicleTypeCard images into runtime mapping",
+              "Merged Builder VehicleTypeCard images into runtime mapping",
               foundImages,
             );
             // Clear persisted local overrides so Builder/editor images take effect immediately
@@ -2924,7 +2924,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
       // Call our geocoding API with proper error handling
       const apiUrl = `${getApiBaseUrl()}/api/geocode/${zip}`;
-      console.log("���� Geocoding ZIP:", zip, "using:", apiUrl);
+      console.log("Geocoding ZIP:", zip, "using:", apiUrl);
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
@@ -3729,7 +3729,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          ��
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4006,7 +4006,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          ������
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
