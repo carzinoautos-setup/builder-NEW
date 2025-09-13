@@ -225,6 +225,46 @@ export const getVehicles: RequestHandler = async (req, res) => {
             json.meta = pagination;
           }
 
+          // If payment filters were present in the incoming params but WP did not filter correctly,
+          // perform server-side filtering on the proxied data as a fallback.
+          const qPaymentMin = incomingParams.get("payment_min");
+          const qPaymentMax = incomingParams.get("payment_max");
+          const qDownPayment = incomingParams.get("down_payment");
+          if ((qPaymentMin && qPaymentMin.trim() !== "") || (qPaymentMax && qPaymentMax.trim() !== "")) {
+            try {
+              const minN = qPaymentMin ? Number(qPaymentMin) : null;
+              const maxN = qPaymentMax ? Number(qPaymentMax) : null;
+              const downN = qDownPayment ? Number(qDownPayment) : null;
+
+              json.data = (json.data || []).filter((item: any) => {
+                const acf = item.acf || {};
+                const price = Number(acf.price ?? item.price ?? 0) || 0;
+                const interest = Number(acf.interest_rate ?? 0) || 0;
+                const term = Number(acf.loan_term ?? 60) || 60;
+                const down = downN !== null && !Number.isNaN(downN) ? downN : Number(acf.down_payment ?? 0) || 0;
+
+                // guard against zero or invalid term
+                const effectiveTerm = term && term > 0 ? term : 60;
+
+                let monthly = 0;
+                if (interest === 0) {
+                  monthly = (price - down) / effectiveTerm;
+                } else {
+                  const monthlyRate = interest / 100 / 12;
+                  const principal = price - down;
+                  const denom = 1 - Math.pow(1 + monthlyRate, -effectiveTerm);
+                  monthly = denom === 0 ? principal / effectiveTerm : (principal * monthlyRate) / denom;
+                }
+
+                if (minN !== null && !Number.isNaN(minN) && monthly < minN) return false;
+                if (maxN !== null && !Number.isNaN(maxN) && monthly > maxN) return false;
+                return true;
+              });
+            } catch (filterErr) {
+              console.warn("Failed to apply fallback payment filtering on proxied WP response:", filterErr);
+            }
+          }
+
           // Recompute filter lists from remaining data so filters match visible vehicles
           try {
             const computeCounts = (
