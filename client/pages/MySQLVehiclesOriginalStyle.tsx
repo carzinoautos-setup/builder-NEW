@@ -3674,7 +3674,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ) : null}
@@ -3697,7 +3697,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -3713,7 +3713,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -3745,7 +3745,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -3951,7 +3951,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ) : null}
@@ -3974,7 +3974,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -3990,7 +3990,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4022,7 +4022,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4038,7 +4038,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4054,7 +4054,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("year", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4070,7 +4070,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("bodyStyle", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4183,7 +4183,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             }}
                             className="ml-1 text-white hover:text-gray-300"
                           >
-                            <X className="w-3 h-3 inline" />
+                            <X className="w-3 h-3 inline-block" />
                           </button>
                         </span>
                       ));
@@ -4200,7 +4200,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4249,7 +4249,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             }}
                             className="ml-1 text-white hover:text-gray-300"
                           >
-                            <X className="w-3 h-3 inline" />
+                            <X className="w-3 h-3 inline-block" />
                           </button>
                         </span>
                       ));
@@ -4273,7 +4273,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4290,7 +4290,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4314,7 +4314,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           className="ml-1 text-white hover:text-gray-300"
                           aria-label={`Remove ${sanitizeLabel(item)}`}
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4335,7 +4335,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           className="ml-1 text-white hover:text-gray-300"
                           aria-label={`Remove ${sanitizeLabel(item)}`}
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -4374,7 +4374,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           className="ml-1 text-white hover:text-gray-300"
                           aria-label="Remove mileage filter"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -4409,7 +4409,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           className="ml-1 text-white hover:text-gray-300"
                           aria-label="Remove price filter"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -4441,7 +4441,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           className="ml-1 text-white hover:text-gray-300"
                           aria-label="Remove payment filter"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -6594,7 +6594,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ) : null}
@@ -6610,7 +6610,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -6625,7 +6625,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6640,7 +6640,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6655,7 +6655,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6670,7 +6670,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6685,7 +6685,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("year", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6700,7 +6700,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("bodyStyle", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6834,7 +6834,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             }}
                             className="ml-1 text-white"
                           >
-                            <X className="w-3 h-3 inline" />
+                            <X className="w-3 h-3 inline-block" />
                           </button>
                         </span>
                       ));
@@ -6850,7 +6850,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6899,7 +6899,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             }}
                             className="ml-1 text-white hover:text-gray-300"
                           >
-                            <X className="w-3 h-3 inline" />
+                            <X className="w-3 h-3 inline-block" />
                           </button>
                         </span>
                       ));
@@ -6923,7 +6923,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6940,7 +6940,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6958,7 +6958,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -6975,7 +6975,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -7003,7 +7003,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -7024,7 +7024,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -7044,7 +7044,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -7103,7 +7103,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ) : null}
@@ -7119,7 +7119,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     )}
@@ -7134,7 +7134,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -7149,7 +7149,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -7164,7 +7164,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
@@ -7179,7 +7179,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
                         >
-                          <X className="w-3 h-3 inline" />
+                          <X className="w-3 h-3 inline-block" />
                         </button>
                       </span>
                     ))}
