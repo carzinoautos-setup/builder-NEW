@@ -52,6 +52,7 @@ export function buildFiltersQuery(paramsObj: Partial<AppliedFilters>) {
     ["model", "model"],
     ["trim", "trim"],
     ["year", "year"],
+    ["condition", "condition"],
     ["bodyStyle", "body_style"],
     ["vehicleType", "body_style"],
     ["driveType", "drivetrain"],
