@@ -168,32 +168,32 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 </label>
                 <div className="flex gap-2">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                      Min
-                    </label>
-                    <input
-                      type="number"
+                    <label className="block text-xs text-gray-500 mb-1">From</label>
+                    <select
                       value={paymentState.paymentMin}
-                      onChange={(e) =>
-                        updatePaymentState({ paymentMin: e.target.value })
-                      }
+                      onChange={(e) => updatePaymentState({ paymentMin: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                      placeholder="300"
-                    />
+                    >
+                      <option value="Any">Any</option>
+                      {[100,150,200,250,300,350,400,450,500,600,700].map((v) => (
+                        <option key={v} value={String(v)}>${v}</option>
+                      ))}
+                      <option value="800+">$800+</option>
+                    </select>
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">
-                      Max
-                    </label>
-                    <input
-                      type="number"
+                    <label className="block text-xs text-gray-500 mb-1">To</label>
+                    <select
                       value={paymentState.paymentMax}
-                      onChange={(e) =>
-                        updatePaymentState({ paymentMax: e.target.value })
-                      }
+                      onChange={(e) => updatePaymentState({ paymentMax: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                      placeholder="600"
-                    />
+                    >
+                      <option value="Any">Any</option>
+                      {[100,150,200,250,300,350,400,450,500,600,700].map((v) => (
+                        <option key={v} value={String(v)}>${v}</option>
+                      ))}
+                      <option value="800+">$800+</option>
+                    </select>
                   </div>
                 </div>
               </div>
