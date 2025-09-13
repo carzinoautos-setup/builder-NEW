@@ -164,22 +164,24 @@ export function MySQLVehicleCard({
               <div className="flex justify-between items-center">
                 <span>Est. Payment:</span>
                 <span className="font-medium">
-                  {vehicle.payments && vehicle.payments > 0
-                    ? formatPrice(vehicle.payments) + "/mo"
-                    : (() => {
-                        try {
-                          const params = {
-                            salePrice: vehicle.price,
-                            downPayment: vehicle.down_payment || 0,
-                            interestRate: vehicle.interest_rate || 5,
-                            loanTermMonths: vehicle.loan_term || 60,
-                          };
-                          const res = calculateMonthlyPayment(params as any);
-                          return `$${Math.round(res.monthlyPayment).toLocaleString()}/mo`;
-                        } catch (e) {
-                          return "Call for Price";
-                        }
-                      })()}
+                  {vehicle.payment_min !== null && vehicle.payment_min !== undefined && vehicle.payment_min > 0
+                    ? `${formatPrice(vehicle.payment_min)}/mo`
+                    : (vehicle.payments && vehicle.payments > 0
+                      ? formatPrice(vehicle.payments) + "/mo"
+                      : (() => {
+                          try {
+                            const params = {
+                              salePrice: vehicle.price,
+                              downPayment: vehicle.down_payment || 0,
+                              interestRate: vehicle.interest_rate || 5,
+                              loanTermMonths: vehicle.loan_term || 60,
+                            };
+                            const res = calculateMonthlyPayment(params as any);
+                            return `$${Math.round(res.monthlyPayment).toLocaleString()}/mo`;
+                          } catch (e) {
+                            return "Call for Price";
+                          }
+                        })())}
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
