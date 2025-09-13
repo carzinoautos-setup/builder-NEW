@@ -4939,18 +4939,25 @@ export default function MySQLVehiclesOriginalStyle() {
                       </div>
                     </div>
                     <div className="relative">
-                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        placeholder="Down Payment"
-                        value={acfDownPayment ? formatPrice(acfDownPayment) : ""}
-                        onChange={(e) => {
-                          const v = unformatPrice(e.target.value);
-                          setAcfDownPayment(v);
-                        }}
-                        className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                      />
+                      {acfDownPayment ? (
+                        <div className="mb-1 text-sm font-medium text-gray-700">Down Payment: ${formatPrice(acfDownPayment)}</div>
+                      ) : null}
+
+                      <div className="relative">
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="Enter your down payment."
+                          value={acfDownPayment ? formatPrice(acfDownPayment) : ""}
+                          onChange={(e) => {
+                            const v = unformatPrice(e.target.value);
+                            setAcfDownPayment(v);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                        />
+                      </div>
                     </div>
                   {paymentRangeError && (
                     <p className="text-red-600 text-sm mt-2">{paymentRangeError}</p>
