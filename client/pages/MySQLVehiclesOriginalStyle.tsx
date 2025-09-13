@@ -4952,77 +4952,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
                       />
                     </div>
-                    {paymentRangeError && (
-                      <p className="text-red-600 text-sm mt-2">{paymentRangeError}</p>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <label className="sr-only">Payment From</label>
-                      <select
-                        value={paymentMin}
-                        onChange={(e) => {
-                          setPaymentMin(e.target.value);
-                          // apply filters live
-                          applyPaymentFilters();
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                      >
-                        <option value="Any">Any</option>
-                        {paymentNumericOptions.map((v) => (
-                          <option key={v} value={String(v)}>${v}</option>
-                        ))}
-                        <option value="800+">$800+</option>
-                      </select>
-                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                        $
-                      </span>
-                      <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
-                        /mo
-                      </span>
-                    </div>
-                    <div className="relative flex-1">
-                      <label className="sr-only">Payment To</label>
-                      <select
-                        value={paymentMax}
-                        onChange={(e) => {
-                          setPaymentMax(e.target.value);
-                          applyPaymentFilters();
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="w-full pl-6 pr-8 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                      >
-                        {allowedToOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt === "Any" ? "Any" : opt === "800+" ? "$800+" : `$${opt}`}
-                          </option>
-                        ))}
-                      </select>
-                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                        $
-                      </span>
-                      <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
-                        /mo
-                      </span>
-                    </div>
-                  </div>
-
-                                  {/* Down Payment (ACF-backed) - instantly used for card recalculation */}
-                  <div className="relative">
-                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="Down Payment"
-                      value={acfDownPayment ? formatPrice(acfDownPayment) : ""}
-                      onChange={(e) => {
-                        const v = unformatPrice(e.target.value);
-                        setAcfDownPayment(v);
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                    />
+                  {paymentRangeError && (
+                    <p className="text-red-600 text-sm mt-2">{paymentRangeError}</p>
+                  )}
                   </div>
 
                   {/* Filters update live as selections change - no Apply button */}
