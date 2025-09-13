@@ -56,48 +56,64 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
 
-  const calculateMonthlyPayment = (
-    salePrice: string,
-    termMonths: string,
-    apr: string,
-    down: string,
-  ): string => {
-    const price = parseFloat(salePrice.replace(/[$,]/g, ""));
-    const downAmt = parseFloat(down) || 0;
-    const principal = price - downAmt;
-    const months = parseInt(termMonths) || 60;
-    const rate = parseFloat(apr) / 100 / 12;
+  // Compute monthly payment using explicit numeric inputs. aprDecimal expects a decimal (e.g. 0.055 for 5.5%)
+  const computeMonthlyFromNumbers = (
+    priceNum: number,
+    downNum: number,
+    aprDecimal: number,
+    termMonths: number,
+  ) => {
+    const principal = Math.max(0, priceNum - downNum);
+    const months = termMonths && termMonths > 0 ? termMonths : 60;
+    const monthlyRate = aprDecimal / 12; // aprDecimal already in decimal form
 
-    if (isNaN(price) || price <= 0 || principal <= 0) {
-      return vehicle.payment || "Call for Price";
+    if (principal <= 0 || months <= 0) return null;
+
+    if (!monthlyRate || monthlyRate === 0) {
+      return Math.round(principal / months);
     }
 
-    if (rate === 0) {
-      const payment = principal / months;
-      return `$${Math.round(payment).toLocaleString()}`;
-    }
-
-    const payment =
-      (principal * rate * Math.pow(1 + rate, months)) /
-      (Math.pow(1 + rate, months) - 1);
-    return `$${Math.round(payment).toLocaleString()}`;
+    const denom = 1 - Math.pow(1 + monthlyRate, -months);
+    if (denom === 0) return Math.round(principal / months);
+    const monthly = (principal * monthlyRate) / denom;
+    return Math.round(monthly);
   };
 
   const getDisplayPayment = (): string => {
-    if (hasValidSalePrice()) {
-      try {
-        return calculateMonthlyPayment(
-          vehicle.salePrice || "0",
-          termLength,
-          interestRate,
-          downPayment,
-        );
-      } catch (e) {
-        return vehicle.payment || "Call for Price";
+    // Prefer ACF-backed per-vehicle values when available, and respect user-entered down payment (prop `downPayment`).
+    const salePriceNum = parseFormattedPrice(vehicle.salePrice) || null;
+    const userDown = downPayment ? Number(String(downPayment).replace(/[^0-9.-]/g, "")) : 0;
+
+    // Determine APR and term from vehicle ACF fields when present
+    const vehAprRaw = Number((vehicle as any).interest_rate ?? NaN);
+    const vehTerm = Number((vehicle as any).loan_term ?? NaN);
+
+    // Normalize APR to decimal (if stored as percent like 5 => 0.05)
+    let aprDecimal = NaN;
+    if (!isNaN(vehAprRaw)) {
+      aprDecimal = vehAprRaw > 1 ? vehAprRaw / 100 : vehAprRaw;
+    }
+
+    // If user provided a down payment value, recalculate instantly on client
+    if (salePriceNum !== null && userDown !== null && !isNaN(userDown)) {
+      const aprToUse = !isNaN(aprDecimal) ? aprDecimal : Number(interestRate) / 100;
+      const termToUse = !isNaN(vehTerm) && vehTerm > 0 ? vehTerm : parseInt(termLength) || 60;
+      const monthlyNum = computeMonthlyFromNumbers(salePriceNum, userDown, aprToUse, termToUse);
+      if (monthlyNum !== null && !isNaN(monthlyNum)) {
+        return `$${monthlyNum.toLocaleString()}`;
       }
     }
 
-    return vehicle.payment || "Call for Price";
+    // Default case: prefer per-vehicle ACF payment_min as the display 'from $X/mo'
+    const vehPaymentMin = (vehicle as any).payment_min ?? (vehicle as any).payments ?? null;
+    if (vehPaymentMin !== null && vehPaymentMin !== undefined && Number(vehPaymentMin) > 0) {
+      return `from $${Math.round(Number(vehPaymentMin)).toLocaleString()}`;
+    }
+
+    // Fallback: use vehicle.payment string if provided
+    if ((vehicle as any).payment) return (vehicle as any).payment;
+
+    return "Call for Price";
   };
 
   const getMediumImage = (url?: string) => {
