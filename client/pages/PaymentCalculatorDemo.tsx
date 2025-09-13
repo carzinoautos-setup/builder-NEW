@@ -90,7 +90,11 @@ export const PaymentCalculatorDemo: React.FC = () => {
   useEffect(() => {
     const updateVehiclePayments = async () => {
       const vehiclesWithPayments = await calculateBulkPayments(
-        vehicles.map((v) => ({ id: v.id, salePrice: v.rawPrice, year: (v as any).year })),
+        vehicles.map((v) => ({
+          id: v.id,
+          salePrice: v.rawPrice,
+          year: (v as any).year,
+        })),
       );
 
       setVehicles((prev) =>
@@ -133,13 +137,19 @@ export const PaymentCalculatorDemo: React.FC = () => {
   };
 
   // Compute allowed To options based on the selected From value and ensure To stays valid
-  const paymentNumericOptions = [100,150,200,250,300,350,400,450,500,600,700];
+  const paymentNumericOptions = [
+    100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700,
+  ];
   const fromValue = paymentState.paymentMin;
   const allowedToOptions: string[] = (() => {
-    if (fromValue === "Any") return ["Any", ...paymentNumericOptions.map(String), "800+"];
+    if (fromValue === "Any")
+      return ["Any", ...paymentNumericOptions.map(String), "800+"];
     if (fromValue === "800+") return ["Any", "800+"];
     const fromNum = parseFloat(fromValue);
-    const opts = ["Any", ...paymentNumericOptions.filter((v) => v >= fromNum).map(String)];
+    const opts = [
+      "Any",
+      ...paymentNumericOptions.filter((v) => v >= fromNum).map(String),
+    ];
     if (fromNum <= 800) opts.push("800+");
     return opts;
   })();
@@ -160,7 +170,8 @@ export const PaymentCalculatorDemo: React.FC = () => {
     const minVal = toNumber(paymentState.paymentMin);
     const maxVal = toNumber(paymentState.paymentMax);
 
-    if (paymentState.paymentMin === "Any" && paymentState.paymentMax === "Any") return true;
+    if (paymentState.paymentMin === "Any" && paymentState.paymentMax === "Any")
+      return true;
 
     if (paymentState.paymentMin === "800+") {
       // include payments >= 800 (or Any)
@@ -213,24 +224,36 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 </label>
                 <div className="flex gap-2">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">From</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      From
+                    </label>
                     <select
                       value={paymentState.paymentMin}
-                      onChange={(e) => updatePaymentState({ paymentMin: e.target.value })}
+                      onChange={(e) =>
+                        updatePaymentState({ paymentMin: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                     >
                       <option value="Any">Any</option>
-                      {[100,150,200,250,300,350,400,450,500,600,700].map((v) => (
-                        <option key={v} value={String(v)}>${v}</option>
+                      {[
+                        100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700,
+                      ].map((v) => (
+                        <option key={v} value={String(v)}>
+                          ${v}
+                        </option>
                       ))}
                       <option value="800+">$800+</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">To</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      To
+                    </label>
                     <select
                       value={paymentState.paymentMax}
-                      onChange={(e) => updatePaymentState({ paymentMax: e.target.value })}
+                      onChange={(e) =>
+                        updatePaymentState({ paymentMax: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                     >
                       {/* To options are constrained based on the selected From value */}
@@ -238,22 +261,40 @@ export const PaymentCalculatorDemo: React.FC = () => {
                       <option value="Any">Any</option>
                       {(() => {
                         const from = paymentState.paymentMin;
-                        const baseOptions = [100,150,200,250,300,350,400,450,500,600,700];
+                        const baseOptions = [
+                          100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700,
+                        ];
                         if (from === "Any") {
                           return baseOptions.map((v) => (
-                            <option key={v} value={String(v)}>${v}</option>
+                            <option key={v} value={String(v)}>
+                              ${v}
+                            </option>
                           ));
                         }
                         if (from === "800+") {
-                          return [<option key="800+" value="800+">$800+</option>];
+                          return [
+                            <option key="800+" value="800+">
+                              $800+
+                            </option>,
+                          ];
                         }
                         const fromNum = parseFloat(from);
                         return baseOptions
                           .filter((v) => v >= fromNum)
                           .map((v) => (
-                            <option key={v} value={String(v)}>${v}</option>
+                            <option key={v} value={String(v)}>
+                              ${v}
+                            </option>
                           ))
-                          .concat(fromNum <= 800 ? [<option key="800+" value="800+">$800+</option>] : []);
+                          .concat(
+                            fromNum <= 800
+                              ? [
+                                  <option key="800+" value="800+">
+                                    $800+
+                                  </option>,
+                                ]
+                              : [],
+                          );
                       })()}
                     </select>
                   </div>
@@ -354,7 +395,9 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   Searching for vehicles...
                 </h3>
-                <p className="text-gray-500 mb-4">Please wait while we calculate payments</p>
+                <p className="text-gray-500 mb-4">
+                  Please wait while we calculate payments
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

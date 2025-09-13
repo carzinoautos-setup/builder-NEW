@@ -119,9 +119,12 @@ export const getVehicles: RequestHandler = async (req, res) => {
     }
     if (req.query.sellerType)
       filters.sellerType = req.query.sellerType as string;
-    if (req.query.payment_min) filters.paymentMin = Number(req.query.payment_min as string);
-    if (req.query.payment_max) filters.paymentMax = Number(req.query.payment_max as string);
-    if (req.query.down_payment) (filters as any).downPayment = Number(req.query.down_payment as string);
+    if (req.query.payment_min)
+      filters.paymentMin = Number(req.query.payment_min as string);
+    if (req.query.payment_max)
+      filters.paymentMax = Number(req.query.payment_max as string);
+    if (req.query.down_payment)
+      (filters as any).downPayment = Number(req.query.down_payment as string);
 
     // If WP API base is configured and not using mock, proxy the request directly to WordPress plugin API
     if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
@@ -160,12 +163,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
           url,
           fetchErr,
         );
-        return res
-          .status(502)
-          .json({
-            success: false,
-            message: "Bad gateway: WordPress API unreachable",
-          });
+        return res.status(502).json({
+          success: false,
+          message: "Bad gateway: WordPress API unreachable",
+        });
       }
 
       // Log proxied response for debugging (trim large output)
@@ -233,7 +234,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
           const qPaymentMin = incomingParams.get("payment_min");
           const qPaymentMax = incomingParams.get("payment_max");
           const qDownPayment = incomingParams.get("down_payment");
-          if ((qPaymentMin && qPaymentMin.trim() !== "") || (qPaymentMax && qPaymentMax.trim() !== "")) {
+          if (
+            (qPaymentMin && qPaymentMin.trim() !== "") ||
+            (qPaymentMax && qPaymentMax.trim() !== "")
+          ) {
             try {
               const minN = qPaymentMin ? Number(qPaymentMin) : null;
               const maxN = qPaymentMax ? Number(qPaymentMax) : null;
@@ -249,11 +253,17 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 const rawVehPaymentMin = acf.payment_min ?? null;
                 const rawVehPaymentMax = acf.payment_max ?? null;
                 const vehiclePaymentMin =
-                  rawVehPaymentMin !== null && rawVehPaymentMin !== undefined && String(rawVehPaymentMin).trim() !== "" && !Number.isNaN(Number(rawVehPaymentMin))
+                  rawVehPaymentMin !== null &&
+                  rawVehPaymentMin !== undefined &&
+                  String(rawVehPaymentMin).trim() !== "" &&
+                  !Number.isNaN(Number(rawVehPaymentMin))
                     ? Number(rawVehPaymentMin)
                     : null;
                 const vehiclePaymentMax =
-                  rawVehPaymentMax !== null && rawVehPaymentMax !== undefined && String(rawVehPaymentMax).trim() !== "" && !Number.isNaN(Number(rawVehPaymentMax))
+                  rawVehPaymentMax !== null &&
+                  rawVehPaymentMax !== undefined &&
+                  String(rawVehPaymentMax).trim() !== "" &&
+                  !Number.isNaN(Number(rawVehPaymentMax))
                     ? Number(rawVehPaymentMax)
                     : null;
 
@@ -281,7 +291,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 const price = Number(acf.price ?? item.price ?? 0) || 0;
                 const interest = Number(acf.interest_rate ?? 0) || 0;
                 const term = Number(acf.loan_term ?? 60) || 60;
-                const down = downN !== null && !Number.isNaN(downN) ? downN : Number(acf.down_payment ?? 0) || 0;
+                const down =
+                  downN !== null && !Number.isNaN(downN)
+                    ? downN
+                    : Number(acf.down_payment ?? 0) || 0;
 
                 // guard against zero or invalid term
                 const effectiveTerm = term && term > 0 ? term : 60;
@@ -293,26 +306,47 @@ export const getVehicles: RequestHandler = async (req, res) => {
                   const monthlyRate = interest / 100 / 12;
                   const principal = price - down;
                   const denom = 1 - Math.pow(1 + monthlyRate, -effectiveTerm);
-                  monthly = denom === 0 ? principal / effectiveTerm : (principal * monthlyRate) / denom;
+                  monthly =
+                    denom === 0
+                      ? principal / effectiveTerm
+                      : (principal * monthlyRate) / denom;
                 }
 
-                if (minN !== null && !Number.isNaN(minN) && monthly < minN) return false;
-                if (maxN !== null && !Number.isNaN(maxN) && monthly > maxN) return false;
+                if (minN !== null && !Number.isNaN(minN) && monthly < minN)
+                  return false;
+                if (maxN !== null && !Number.isNaN(maxN) && monthly > maxN)
+                  return false;
                 return true;
               });
 
               const afterCount = (json.data || []).length;
               try {
                 // Attempt to compute IDs removed by the fallback filter for easier debugging
-                const beforeIds = (Array.isArray(json.data) ? json.data : []).slice(0, beforeCount).map((it: any) => it && it.id).filter(Boolean);
-                const afterIdsSet = new Set((json.data || []).map((it: any) => it && it.id).filter(Boolean));
-                const removedIds = beforeIds.filter((id: any) => !afterIdsSet.has(id));
-                console.log(`[WP_PROXY_FILTER] Payment filter applied. before=${beforeCount} after=${afterCount} removedSampleCount=${Math.min(removedIds.length,5)} removedSampleIds=${removedIds.slice(0,5).join(",")} params={payment_min:${qPaymentMin},payment_max:${qPaymentMax},down_payment:${qDownPayment}}`);
+                const beforeIds = (Array.isArray(json.data) ? json.data : [])
+                  .slice(0, beforeCount)
+                  .map((it: any) => it && it.id)
+                  .filter(Boolean);
+                const afterIdsSet = new Set(
+                  (json.data || [])
+                    .map((it: any) => it && it.id)
+                    .filter(Boolean),
+                );
+                const removedIds = beforeIds.filter(
+                  (id: any) => !afterIdsSet.has(id),
+                );
+                console.log(
+                  `[WP_PROXY_FILTER] Payment filter applied. before=${beforeCount} after=${afterCount} removedSampleCount=${Math.min(removedIds.length, 5)} removedSampleIds=${removedIds.slice(0, 5).join(",")} params={payment_min:${qPaymentMin},payment_max:${qPaymentMax},down_payment:${qDownPayment}}`,
+                );
               } catch (e) {
-                console.log(`[WP_PROXY_FILTER] Payment filter applied. before=${beforeCount} after=${afterCount} params={payment_min:${qPaymentMin},payment_max:${qPaymentMax},down_payment:${qDownPayment}}`);
+                console.log(
+                  `[WP_PROXY_FILTER] Payment filter applied. before=${beforeCount} after=${afterCount} params={payment_min:${qPaymentMin},payment_max:${qPaymentMax},down_payment:${qDownPayment}}`,
+                );
               }
             } catch (filterErr) {
-              console.warn("Failed to apply fallback payment filtering on proxied WP response:", filterErr);
+              console.warn(
+                "Failed to apply fallback payment filtering on proxied WP response:",
+                filterErr,
+              );
             }
           }
 

@@ -164,9 +164,11 @@ export function MySQLVehicleCard({
               <div className="flex justify-between items-center">
                 <span>Est. Payment:</span>
                 <span className="font-medium">
-                  {vehicle.payment_min !== null && vehicle.payment_min !== undefined && vehicle.payment_min > 0
+                  {vehicle.payment_min !== null &&
+                  vehicle.payment_min !== undefined &&
+                  vehicle.payment_min > 0
                     ? `${formatPrice(vehicle.payment_min)}/mo`
-                    : (vehicle.payments && vehicle.payments > 0
+                    : vehicle.payments && vehicle.payments > 0
                       ? formatPrice(vehicle.payments) + "/mo"
                       : (() => {
                           try {
@@ -181,7 +183,7 @@ export function MySQLVehicleCard({
                           } catch (e) {
                             return "Call for Price";
                           }
-                        })())}
+                        })()}
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">

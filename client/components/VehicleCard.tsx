@@ -82,7 +82,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const getDisplayPayment = (): string => {
     // Prefer ACF-backed per-vehicle values when available, and respect user-entered down payment (prop `downPayment`).
     const salePriceNum = parseFormattedPrice(vehicle.salePrice) || null;
-    const userDown = downPayment ? Number(String(downPayment).replace(/[^0-9.-]/g, "")) : 0;
+    const userDown = downPayment
+      ? Number(String(downPayment).replace(/[^0-9.-]/g, ""))
+      : 0;
 
     // Determine APR and term from vehicle ACF fields when present
     const vehAprRaw = Number((vehicle as any).interest_rate ?? NaN);
@@ -96,17 +98,30 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
     // If user provided a down payment value, recalculate instantly on client
     if (salePriceNum !== null && userDown !== null && !isNaN(userDown)) {
-      const aprToUse = !isNaN(aprDecimal) ? aprDecimal : Number(interestRate) / 100;
-      const termToUse = !isNaN(vehTerm) && vehTerm > 0 ? vehTerm : parseInt(termLength) || 60;
-      const monthlyNum = computeMonthlyFromNumbers(salePriceNum, userDown, aprToUse, termToUse);
+      const aprToUse = !isNaN(aprDecimal)
+        ? aprDecimal
+        : Number(interestRate) / 100;
+      const termToUse =
+        !isNaN(vehTerm) && vehTerm > 0 ? vehTerm : parseInt(termLength) || 60;
+      const monthlyNum = computeMonthlyFromNumbers(
+        salePriceNum,
+        userDown,
+        aprToUse,
+        termToUse,
+      );
       if (monthlyNum !== null && !isNaN(monthlyNum)) {
         return `$${monthlyNum.toLocaleString()}`;
       }
     }
 
     // Default case: prefer per-vehicle ACF payment_min as the display 'from $X/mo'
-    const vehPaymentMin = (vehicle as any).payment_min ?? (vehicle as any).payments ?? null;
-    if (vehPaymentMin !== null && vehPaymentMin !== undefined && Number(vehPaymentMin) > 0) {
+    const vehPaymentMin =
+      (vehicle as any).payment_min ?? (vehicle as any).payments ?? null;
+    if (
+      vehPaymentMin !== null &&
+      vehPaymentMin !== undefined &&
+      Number(vehPaymentMin) > 0
+    ) {
       return `from $${Math.round(Number(vehPaymentMin)).toLocaleString()}`;
     }
 

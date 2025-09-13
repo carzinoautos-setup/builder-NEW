@@ -1125,7 +1125,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.make.map((item) => (
@@ -1138,7 +1140,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("make", item)}
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.model.map((item) => (
@@ -1151,7 +1155,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("model", item)}
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.trim.map((item) => (
@@ -1164,7 +1170,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {(() => {
@@ -1262,7 +1270,9 @@ export default function Index() {
                             });
                           }}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ));
                   })()}
@@ -1276,7 +1286,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("driveType", item)}
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.exteriorColor.map((item) => (
@@ -1291,7 +1303,9 @@ export default function Index() {
                           removeAppliedFilter("exteriorColor", item)
                         }
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.sellerType.map((item) => (
@@ -1304,7 +1318,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("sellerType", item)}
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.mileage && (
@@ -1321,7 +1337,9 @@ export default function Index() {
                           }))
                         }
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   )}
                   {(appliedFilters.priceMin || appliedFilters.priceMax) && (
@@ -1340,7 +1358,9 @@ export default function Index() {
                           setPriceMax("100000");
                         }}
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   )}
                   {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (
@@ -1357,7 +1377,9 @@ export default function Index() {
                           }))
                         }
                         className="ml-1 text-white"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   )}
                 </div>
@@ -1413,7 +1435,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.make.map((item) => (
@@ -1426,7 +1450,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("make", item)}
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.model.map((item) => (
@@ -1439,7 +1465,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("model", item)}
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.trim.map((item) => (
@@ -1452,7 +1480,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {(() => {
@@ -1550,7 +1580,9 @@ export default function Index() {
                             });
                           }}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ));
                   })()}
@@ -1564,7 +1596,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("driveType", item)}
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.exteriorColor.map((item) => (
@@ -1579,7 +1613,9 @@ export default function Index() {
                           removeAppliedFilter("exteriorColor", item)
                         }
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.sellerType.map((item) => (
@@ -1592,7 +1628,9 @@ export default function Index() {
                       <button
                         onClick={() => removeAppliedFilter("sellerType", item)}
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   ))}
                   {appliedFilters.mileage && (
@@ -1609,7 +1647,9 @@ export default function Index() {
                           }))
                         }
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   )}
                   {(appliedFilters.priceMin || appliedFilters.priceMax) && (
@@ -1628,7 +1668,9 @@ export default function Index() {
                           setPriceMax("100000");
                         }}
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   )}
                   {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (
@@ -1645,7 +1687,9 @@ export default function Index() {
                           }))
                         }
                         className="ml-1 text-white hover:text-gray-300"
-                      ><X className="w-3 h-3 inline" /></button>
+                      >
+                        <X className="w-3 h-3 inline" />
+                      </button>
                     </span>
                   )}
                 </div>
@@ -2449,7 +2493,9 @@ export default function Index() {
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.make.map((item) => (
@@ -2462,7 +2508,9 @@ export default function Index() {
                         <button
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.model.map((item) => (
@@ -2475,7 +2523,9 @@ export default function Index() {
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.trim.map((item) => (
@@ -2488,7 +2538,9 @@ export default function Index() {
                         <button
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {(() => {
@@ -2590,7 +2642,9 @@ export default function Index() {
                               });
                             }}
                             className="ml-1 text-white"
-                          ><X className="w-3 h-3 inline" /></button>
+                          >
+                            <X className="w-3 h-3 inline" />
+                          </button>
                         </span>
                       ));
                     })()}
@@ -2604,7 +2658,9 @@ export default function Index() {
                         <button
                           onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.exteriorColor.map((item) => (
@@ -2619,7 +2675,9 @@ export default function Index() {
                             removeAppliedFilter("exteriorColor", item)
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.mileage && (
@@ -2636,7 +2694,9 @@ export default function Index() {
                             }))
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {(appliedFilters.priceMin || appliedFilters.priceMax) && (
@@ -2655,7 +2715,9 @@ export default function Index() {
                             setPriceMax("100000");
                           }}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {(appliedFilters.paymentMin ||
@@ -2673,7 +2735,9 @@ export default function Index() {
                             }))
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                   </div>

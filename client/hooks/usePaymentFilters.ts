@@ -58,7 +58,11 @@ export function usePaymentFilters({
     }, debounceMs);
 
     return () => clearTimeout(timeoutId);
-  }, [paymentState.paymentMin, paymentState.paymentMax, paymentState.downPayment]);
+  }, [
+    paymentState.paymentMin,
+    paymentState.paymentMax,
+    paymentState.downPayment,
+  ]);
 
   // Calculate affordable price range based on payment range
   const calculateAffordablePriceRange = useCallback(async () => {
@@ -68,14 +72,26 @@ export function usePaymentFilters({
 
       const downPaymentNum = parseFloat(paymentState.downPayment) || 0;
       // allow initialState to provide defaults for interest/term (backwards compatibility)
-      const defaultInterest = parseFloat((initialState as any).interestRate || "5") || 5;
-      const defaultTerm = parseInt((initialState as any).loanTermMonths || "60") || 60;
+      const defaultInterest =
+        parseFloat((initialState as any).interestRate || "5") || 5;
+      const defaultTerm =
+        parseInt((initialState as any).loanTermMonths || "60") || 60;
 
       const interestRateNum = defaultInterest;
       const loanTermNum = defaultTerm;
 
-      const paymentMinNum = parseFloat(paymentState.paymentMin === "Any" ? "0" : paymentState.paymentMin) || 0;
-      const paymentMaxNum = parseFloat(paymentState.paymentMax === "Any" ? "10000" : (paymentState.paymentMax === "800+" ? "10000" : paymentState.paymentMax)) || 10000;
+      const paymentMinNum =
+        parseFloat(
+          paymentState.paymentMin === "Any" ? "0" : paymentState.paymentMin,
+        ) || 0;
+      const paymentMaxNum =
+        parseFloat(
+          paymentState.paymentMax === "Any"
+            ? "10000"
+            : paymentState.paymentMax === "800+"
+              ? "10000"
+              : paymentState.paymentMax,
+        ) || 10000;
 
       if (paymentMinNum <= 0 && paymentState.paymentMin !== "Any") {
         setAffordablePriceRange(null);
@@ -114,7 +130,12 @@ export function usePaymentFilters({
     } finally {
       setIsCalculating(false);
     }
-  }, [paymentState.paymentMin, paymentState.paymentMax, paymentState.downPayment, onPaymentRangeChange]);
+  }, [
+    paymentState.paymentMin,
+    paymentState.paymentMax,
+    paymentState.downPayment,
+    onPaymentRangeChange,
+  ]);
 
   // Calculate payment for a specific vehicle
   const getPresetLoanRules = (year?: number | null, price?: number) => {
@@ -125,10 +146,14 @@ export function usePaymentFilters({
       if (p > 50000) return { interestRate: 5.5, loanTermMonths: 84 };
       return { interestRate: 5.5, loanTermMonths: 72 };
     }
-    if (y >= 2018 && y <= 2022) return { interestRate: 7.5, loanTermMonths: 72 };
-    if (y >= 2013 && y <= 2017) return { interestRate: 9.5, loanTermMonths: 60 };
-    if (y >= 2009 && y <= 2012) return { interestRate: 11.5, loanTermMonths: 60 };
-    if (y >= 2005 && y <= 2008) return { interestRate: 13.5, loanTermMonths: 48 };
+    if (y >= 2018 && y <= 2022)
+      return { interestRate: 7.5, loanTermMonths: 72 };
+    if (y >= 2013 && y <= 2017)
+      return { interestRate: 9.5, loanTermMonths: 60 };
+    if (y >= 2009 && y <= 2012)
+      return { interestRate: 11.5, loanTermMonths: 60 };
+    if (y >= 2005 && y <= 2008)
+      return { interestRate: 13.5, loanTermMonths: 48 };
     if (y <= 2000) return { interestRate: 17.5, loanTermMonths: 36 };
     // default fallback
     return { interestRate: 13.5, loanTermMonths: 48 };
@@ -162,11 +187,16 @@ export function usePaymentFilters({
 
         // Client-side calculation using preset loan rules per vehicle
         const results = vehicles.map((vehicle) => {
-          const payment = calculateVehiclePayment(vehicle.salePrice, (vehicle as any).year || null);
+          const payment = calculateVehiclePayment(
+            vehicle.salePrice,
+            (vehicle as any).year || null,
+          );
           return {
             id: vehicle.id,
             salePrice: vehicle.salePrice,
-            calculatedPayment: payment ? Math.round(payment.monthlyPayment) : undefined,
+            calculatedPayment: payment
+              ? Math.round(payment.monthlyPayment)
+              : undefined,
             paymentError: payment ? undefined : "Calculation failed",
           } as VehicleWithPayment;
         });

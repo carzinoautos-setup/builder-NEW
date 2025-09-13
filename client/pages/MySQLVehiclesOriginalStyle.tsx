@@ -734,15 +734,17 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // New ACF-backed payment filter inputs (separate from existing payment dropdowns)
   const [acfPaymentMin, setAcfPaymentMin] = useState<string>(
-    (appliedFilters.paymentMin as string) || ""
+    (appliedFilters.paymentMin as string) || "",
   );
   const [acfPaymentMax, setAcfPaymentMax] = useState<string>(
-    (appliedFilters.paymentMax as string) || ""
+    (appliedFilters.paymentMax as string) || "",
   );
   const [acfDownPayment, setAcfDownPayment] = useState<string>(
-    ((appliedFilters as any).down_payment as string) || ""
+    ((appliedFilters as any).down_payment as string) || "",
   );
-  const [paymentRangeError, setPaymentRangeError] = useState<string | null>(null);
+  const [paymentRangeError, setPaymentRangeError] = useState<string | null>(
+    null,
+  );
 
   // Sync local ACF inputs when appliedFilters changes (persist values across drawer open/close)
   React.useEffect(() => {
@@ -759,16 +761,23 @@ export default function MySQLVehiclesOriginalStyle() {
       const minN = acfPaymentMin ? Number(acfPaymentMin) : null;
       const maxN = acfPaymentMax ? Number(acfPaymentMax) : null;
       if (minN !== null && maxN !== null && minN > maxN) {
-        setPaymentRangeError("Minimum payment cannot be greater than maximum payment.");
+        setPaymentRangeError(
+          "Minimum payment cannot be greater than maximum payment.",
+        );
         return;
       }
 
       setAppliedFilters((prev) => ({
         ...prev,
-        paymentMin: acfPaymentMin !== undefined ? acfPaymentMin : prev.paymentMin,
-        paymentMax: acfPaymentMax !== undefined ? acfPaymentMax : prev.paymentMax,
+        paymentMin:
+          acfPaymentMin !== undefined ? acfPaymentMin : prev.paymentMin,
+        paymentMax:
+          acfPaymentMax !== undefined ? acfPaymentMax : prev.paymentMax,
         // Treat down payment as 0 if empty per requirement
-        down_payment: acfDownPayment !== undefined && acfDownPayment !== "" ? acfDownPayment : "0",
+        down_payment:
+          acfDownPayment !== undefined && acfDownPayment !== ""
+            ? acfDownPayment
+            : "0",
       }));
     }, 600);
 
@@ -776,13 +785,19 @@ export default function MySQLVehiclesOriginalStyle() {
   }, [acfPaymentMin, acfPaymentMax, acfDownPayment]);
 
   // Payment dropdown options and derived To options based on From
-  const paymentNumericOptions = [100,150,200,250,300,350,400,450,500,600,700];
+  const paymentNumericOptions = [
+    100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700,
+  ];
   const fromValue = paymentMin;
   const allowedToOptions: string[] = (() => {
-    if (fromValue === "Any") return ["Any", ...paymentNumericOptions.map(String), "800+"];
+    if (fromValue === "Any")
+      return ["Any", ...paymentNumericOptions.map(String), "800+"];
     if (fromValue === "800+") return ["Any", "800+"];
     const fromNum = parseFloat(fromValue);
-    const opts = ["Any", ...paymentNumericOptions.filter((v) => v >= fromNum).map(String)];
+    const opts = [
+      "Any",
+      ...paymentNumericOptions.filter((v) => v >= fromNum).map(String),
+    ];
     if (fromNum <= 800) opts.push("800+");
     return opts;
   })();
@@ -1470,7 +1485,9 @@ export default function MySQLVehiclesOriginalStyle() {
         );
 
         if (!response.ok) {
-          throw new Error(`API error: ${response.status} ${response.statusText}`);
+          throw new Error(
+            `API error: ${response.status} ${response.statusText}`,
+          );
         }
       } catch (err) {
         // If the request failed and we included down_payment, retry once without it (WP plugin may reject unexpected params)
@@ -1478,7 +1495,11 @@ export default function MySQLVehiclesOriginalStyle() {
           const fallbackParams = new URLSearchParams(params as any);
           fallbackParams.delete("down_payment");
           const fallbackUrl = `/api/vehicles?${fallbackParams.toString()}`;
-          console.warn("Primary vehicle fetch failed, retrying without down_payment:", fallbackUrl, err);
+          console.warn(
+            "Primary vehicle fetch failed, retrying without down_payment:",
+            fallbackUrl,
+            err,
+          );
           response = await fetchWithRetry(
             fallbackUrl,
             {
@@ -1489,7 +1510,9 @@ export default function MySQLVehiclesOriginalStyle() {
             8000,
           );
           if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
+            throw new Error(
+              `API error: ${response.status} ${response.statusText}`,
+            );
           }
         } else {
           throw err;
@@ -1543,14 +1566,17 @@ export default function MySQLVehiclesOriginalStyle() {
             down_payment: Number(acf.down_payment) || 0,
             loan_term: Number(acf.loan_term) || 0,
             // New ACF payment fields (min/max) supported by API
-            payment_min: acf.payment_min !== undefined ? Number(acf.payment_min) : null,
-            payment_max: acf.payment_max !== undefined ? Number(acf.payment_max) : null,
+            payment_min:
+              acf.payment_min !== undefined ? Number(acf.payment_min) : null,
+            payment_max:
+              acf.payment_max !== undefined ? Number(acf.payment_max) : null,
             // Legacy single payment field
-            payments: (acf.payment !== undefined && acf.payment !== null)
-              ? Number(acf.payment)
-              : acf.payment_min !== undefined && acf.payment_min !== null
-              ? Number(acf.payment_min)
-              : 0,
+            payments:
+              acf.payment !== undefined && acf.payment !== null
+                ? Number(acf.payment)
+                : acf.payment_min !== undefined && acf.payment_min !== null
+                  ? Number(acf.payment_min)
+                  : 0,
             featured_image:
               r.featured_image || acf.featured_image || r.featuredImage || null,
           } as any;
@@ -1804,11 +1830,11 @@ export default function MySQLVehiclesOriginalStyle() {
         sellerType: [],
         dealer: [],
         priceMin: "",
-      priceMax: "",
-      paymentMin: "",
-      paymentMax: "",
-      down_payment: "",
-      fuelType: [],
+        priceMax: "",
+        paymentMin: "",
+        paymentMax: "",
+        down_payment: "",
+        fuelType: [],
         certified: [],
         doors: [],
         transmissionSpeed: [],
@@ -1961,14 +1987,20 @@ export default function MySQLVehiclesOriginalStyle() {
 
         if (appliedFilters.priceMin)
           params.append("min_price", appliedFilters.priceMin);
-      if (appliedFilters.priceMax)
-        params.append("max_price", appliedFilters.priceMax);
-      if (appliedFilters.paymentMin)
-        params.append("payment_min", appliedFilters.paymentMin);
-      if (appliedFilters.paymentMax)
-        params.append("payment_max", appliedFilters.paymentMax);
-      if ((appliedFilters as any).down_payment !== undefined && (appliedFilters as any).down_payment !== "")
-        params.append("down_payment", String((appliedFilters as any).down_payment));
+        if (appliedFilters.priceMax)
+          params.append("max_price", appliedFilters.priceMax);
+        if (appliedFilters.paymentMin)
+          params.append("payment_min", appliedFilters.paymentMin);
+        if (appliedFilters.paymentMax)
+          params.append("payment_max", appliedFilters.paymentMax);
+        if (
+          (appliedFilters as any).down_payment !== undefined &&
+          (appliedFilters as any).down_payment !== ""
+        )
+          params.append(
+            "down_payment",
+            String((appliedFilters as any).down_payment),
+          );
 
         if (appliedFilters.fuelType.length > 0)
           params.append("fuel_type", appliedFilters.fuelType.join(","));
@@ -2539,7 +2571,10 @@ export default function MySQLVehiclesOriginalStyle() {
       ...prev,
       paymentMin: acfPaymentMin || "",
       paymentMax: acfPaymentMax || "",
-      down_payment: acfDownPayment !== undefined && acfDownPayment !== "" ? acfDownPayment : "0",
+      down_payment:
+        acfDownPayment !== undefined && acfDownPayment !== ""
+          ? acfDownPayment
+          : "0",
     }));
     setCurrentPage(1); // Reset to first page when applying filters
   };
@@ -3638,7 +3673,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setUnifiedSearch("");
                           }}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ) : null}
 
@@ -3659,7 +3696,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAppliedRadius("200");
                           }}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {appliedFilters.condition.map((item) => (
@@ -3673,7 +3712,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.make.map((item) => (
@@ -3703,7 +3744,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                   </div>
@@ -3907,7 +3950,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setUnifiedSearch("");
                           }}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ) : null}
 
@@ -3928,7 +3973,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAppliedRadius("200");
                           }}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {appliedFilters.condition.map((item) => (
@@ -3942,7 +3989,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.make.map((item) => (
@@ -3972,7 +4021,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.trim.map((item) => (
@@ -3986,7 +4037,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.year.map((item) => (
@@ -4000,7 +4053,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("year", item)}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.bodyStyle.map((item) => (
@@ -4014,7 +4069,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("bodyStyle", item)}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {(() => {
@@ -4125,7 +4182,9 @@ export default function MySQLVehiclesOriginalStyle() {
                               });
                             }}
                             className="ml-1 text-white hover:text-gray-300"
-                          ><X className="w-3 h-3 inline" /></button>
+                          >
+                            <X className="w-3 h-3 inline" />
+                          </button>
                         </span>
                       ));
                     })()}
@@ -4140,7 +4199,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {(() => {
@@ -4187,7 +4248,9 @@ export default function MySQLVehiclesOriginalStyle() {
                               });
                             }}
                             className="ml-1 text-white hover:text-gray-300"
-                          ><X className="w-3 h-3 inline" /></button>
+                          >
+                            <X className="w-3 h-3 inline" />
+                          </button>
                         </span>
                       ));
                     })()}
@@ -4209,7 +4272,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             removeAppliedFilter("engineCylinders", item)
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.displacementLiters.map((item) => (
@@ -4224,7 +4289,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             removeAppliedFilter("displacementLiters", item)
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
 
@@ -4243,7 +4310,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             removeAppliedFilter("exteriorColor", item)
                           }
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.sellerType.map((item) => (
@@ -4259,7 +4328,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             removeAppliedFilter("sellerType", item)
                           }
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.mileage && (
@@ -4293,7 +4364,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             }))
                           }
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {(appliedFilters.priceMin || appliedFilters.priceMax) && (
@@ -4323,7 +4396,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setPriceMax("50000");
                           }}
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {(appliedFilters.paymentMin ||
@@ -4350,7 +4425,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             }))
                           }
                           className="ml-1 text-white hover:text-gray-300"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                   </div>
@@ -4905,51 +4982,71 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="space-y-3">
                   {/* ACF-backed Payment Filter (New) */}
                   <div className="border rounded p-3 bg-gray-50">
-                    <div className="text-sm font-medium text-gray-700 mb-2">Payments</div>
+                    <div className="text-sm font-medium text-gray-700 mb-2">
+                      Payments
+                    </div>
                     <div className="flex gap-2 mb-2">
                       <div className="relative flex-1">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                          $
+                        </span>
                         <input
                           type="text"
                           inputMode="numeric"
                           placeholder="Min"
-                          value={acfPaymentMin ? formatPrice(acfPaymentMin) : ""}
+                          value={
+                            acfPaymentMin ? formatPrice(acfPaymentMin) : ""
+                          }
                           onChange={(e) => {
                             const v = unformatPrice(e.target.value);
                             setAcfPaymentMin(v);
                           }}
                           className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
                         />
-                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
+                          /mo
+                        </span>
                       </div>
                       <div className="relative flex-1">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                          $
+                        </span>
                         <input
                           type="text"
                           inputMode="numeric"
                           placeholder="Max"
-                          value={acfPaymentMax ? formatPrice(acfPaymentMax) : ""}
+                          value={
+                            acfPaymentMax ? formatPrice(acfPaymentMax) : ""
+                          }
                           onChange={(e) => {
                             const v = unformatPrice(e.target.value);
                             setAcfPaymentMax(v);
                           }}
                           className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
                         />
-                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
+                          /mo
+                        </span>
                       </div>
                     </div>
                     <div className="relative">
                       {acfDownPayment ? (
-                        <div className="mb-1 text-sm font-medium text-gray-700">Down Payment: ${formatPrice(acfDownPayment)}</div>
+                        <div className="mb-1 text-sm font-medium text-gray-700">
+                          Down Payment: ${formatPrice(acfDownPayment)}
+                        </div>
                       ) : null}
 
                       <div className="relative">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                          $
+                        </span>
                         <input
                           type="text"
                           inputMode="numeric"
                           placeholder="Enter your down payment."
-                          value={acfDownPayment ? formatPrice(acfDownPayment) : ""}
+                          value={
+                            acfDownPayment ? formatPrice(acfDownPayment) : ""
+                          }
                           onChange={(e) => {
                             const v = unformatPrice(e.target.value);
                             setAcfDownPayment(v);
@@ -4959,9 +5056,11 @@ export default function MySQLVehiclesOriginalStyle() {
                         />
                       </div>
                     </div>
-                  {paymentRangeError && (
-                    <p className="text-red-600 text-sm mt-2">{paymentRangeError}</p>
-                  )}
+                    {paymentRangeError && (
+                      <p className="text-red-600 text-sm mt-2">
+                        {paymentRangeError}
+                      </p>
+                    )}
                   </div>
 
                   {/* Filters update live as selections change - no Apply button */}
@@ -6479,7 +6578,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setUnifiedSearch("");
                           }}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ) : null}
                     {appliedLocation && appliedRadius !== "nationwide" && (
@@ -6493,7 +6594,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAppliedRadius("200");
                           }}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {appliedFilters.condition.map((item) => (
@@ -6506,7 +6609,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.make.map((item) => (
@@ -6519,7 +6624,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.model.map((item) => (
@@ -6532,7 +6639,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.trim.map((item) => (
@@ -6545,7 +6654,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.year.map((item) => (
@@ -6558,7 +6669,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("year", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.bodyStyle.map((item) => (
@@ -6571,7 +6684,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("bodyStyle", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {(() => {
@@ -6703,7 +6818,9 @@ export default function MySQLVehiclesOriginalStyle() {
                               });
                             }}
                             className="ml-1 text-white"
-                          ><X className="w-3 h-3 inline" /></button>
+                          >
+                            <X className="w-3 h-3 inline" />
+                          </button>
                         </span>
                       ));
                     })()}
@@ -6717,7 +6834,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {(() => {
@@ -6764,7 +6883,9 @@ export default function MySQLVehiclesOriginalStyle() {
                               });
                             }}
                             className="ml-1 text-white hover:text-gray-300"
-                          ><X className="w-3 h-3 inline" /></button>
+                          >
+                            <X className="w-3 h-3 inline" />
+                          </button>
                         </span>
                       ));
                     })()}
@@ -6786,7 +6907,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             removeAppliedFilter("engineCylinders", item)
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.displacementLiters.map((item) => (
@@ -6801,7 +6924,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             removeAppliedFilter("displacementLiters", item)
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
 
@@ -6817,7 +6942,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             removeAppliedFilter("exteriorColor", item)
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.sellerType.map((item) => (
@@ -6832,7 +6959,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             removeAppliedFilter("sellerType", item)
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.mileage && (
@@ -6858,7 +6987,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             }))
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {(appliedFilters.priceMin || appliedFilters.priceMax) && (
@@ -6877,7 +7008,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setPriceMax("50000");
                           }}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {(appliedFilters.paymentMin ||
@@ -6895,7 +7028,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             }))
                           }
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                   </div>
@@ -6952,7 +7087,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setUnifiedSearch("");
                           }}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ) : null}
                     {appliedLocation && appliedRadius !== "nationwide" && (
@@ -6966,7 +7103,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAppliedRadius("200");
                           }}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     )}
                     {appliedFilters.condition.map((item) => (
@@ -6979,7 +7118,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.make.map((item) => (
@@ -6992,7 +7133,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.model.map((item) => (
@@ -7005,7 +7148,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                     {appliedFilters.trim.map((item) => (
@@ -7018,7 +7163,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         <button
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
-                        ><X className="w-3 h-3 inline" /></button>
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
                       </span>
                     ))}
                   </div>
@@ -7279,8 +7426,10 @@ export default function MySQLVehiclesOriginalStyle() {
                                   if (
                                     Array.isArray(prefetchedVehicles) &&
                                     prefetchedMeta &&
-                                    typeof prefetchedMeta.currentPage === 'number' &&
-                                    prefetchedMeta.currentPage === currentPage + 1
+                                    typeof prefetchedMeta.currentPage ===
+                                      "number" &&
+                                    prefetchedMeta.currentPage ===
+                                      currentPage + 1
                                   ) {
                                     // Append prefetched results immediately (defensive)
                                     setVehicles((prev) =>
@@ -7301,7 +7450,8 @@ export default function MySQLVehiclesOriginalStyle() {
                                     setPrefetchedVehicles(null);
                                     setPrefetchedMeta(null);
                                   } else {
-                                    const totalPages = apiResponse?.meta?.totalPages || 1;
+                                    const totalPages =
+                                      apiResponse?.meta?.totalPages || 1;
                                     if (currentPage >= totalPages) return; // nothing to load
 
                                     // Request next page and let fetchVehicles append when it resolves
@@ -7309,7 +7459,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                     setCurrentPage((p) => p + 1);
                                   }
                                 } catch (err) {
-                                  console.warn('Load more error:', err);
+                                  console.warn("Load more error:", err);
                                 }
                               }}
                               disabled={loading}

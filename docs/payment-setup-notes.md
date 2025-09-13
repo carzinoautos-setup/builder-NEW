@@ -64,6 +64,6 @@ Notes & next steps
 Contact
 
 If you want I can also:
+
 - Create a short change-log entry in package.json or docs (I have added this file docs/payment-setup-notes.md),
 - Add unit tests or e2e checks around the payment recalculation and filtering.
-

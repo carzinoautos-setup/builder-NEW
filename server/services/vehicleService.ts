@@ -95,9 +95,18 @@ export class VehicleService {
     // Payment filters: support filtering by monthly payment range. If a downPayment override
     // is supplied in filters.downPayment, use it; otherwise use per-vehicle down_payment column.
     if (filters.paymentMin !== undefined || filters.paymentMax !== undefined) {
-      const minProvided = filters.paymentMin !== undefined && filters.paymentMin !== null && filters.paymentMin !== "";
-      const maxProvided = filters.paymentMax !== undefined && filters.paymentMax !== null && filters.paymentMax !== "";
-      const downProvided = (filters as any).downPayment !== undefined && (filters as any).downPayment !== null && (filters as any).downPayment !== "";
+      const minProvided =
+        filters.paymentMin !== undefined &&
+        filters.paymentMin !== null &&
+        filters.paymentMin !== "";
+      const maxProvided =
+        filters.paymentMax !== undefined &&
+        filters.paymentMax !== null &&
+        filters.paymentMax !== "";
+      const downProvided =
+        (filters as any).downPayment !== undefined &&
+        (filters as any).downPayment !== null &&
+        (filters as any).downPayment !== "";
 
       // Build monthly payment expression
       // Use parameter placeholder for provided down payment, otherwise use down_payment column
@@ -156,11 +165,17 @@ export class VehicleService {
     };
 
     // Debug: log query when payment filters are present to help troubleshooting
-    if ((filters as any).paymentMin !== undefined || (filters as any).paymentMax !== undefined) {
+    if (
+      (filters as any).paymentMin !== undefined ||
+      (filters as any).paymentMax !== undefined
+    ) {
       console.log("[VehicleService.buildQuery] SQL:", result.sql);
       console.log("[VehicleService.buildQuery] params:", result.params);
       console.log("[VehicleService.buildQuery] countSql:", result.countSql);
-      console.log("[VehicleService.buildQuery] countParams:", result.countParams);
+      console.log(
+        "[VehicleService.buildQuery] countParams:",
+        result.countParams,
+      );
     }
 
     return result;
