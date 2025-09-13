@@ -125,13 +125,36 @@ export const PaymentCalculatorDemo: React.FC = () => {
     });
   };
 
-  // Filter vehicles based on affordable price range
+  // Filter vehicles based on calculated monthly payment and the From/To selection
+  const toNumber = (v: string) => {
+    if (!v || v === "Any") return null;
+    if (v === "800+") return 800;
+    return parseFloat(v);
+  };
+
   const filteredVehicles = vehicles.filter((vehicle) => {
-    if (!affordablePriceRange) return true;
-    return (
-      vehicle.rawPrice >= affordablePriceRange.min &&
-      vehicle.rawPrice <= affordablePriceRange.max
-    );
+    // if vehicle.payment not calculated yet, include while calculating
+    if (!vehicle.payment) return true;
+    const numeric = Number(String(vehicle.payment).replace(/[^0-9.-]+/g, ""));
+    const minVal = toNumber(paymentState.paymentMin);
+    const maxVal = toNumber(paymentState.paymentMax);
+
+    if (paymentState.paymentMin === "Any" && paymentState.paymentMax === "Any") return true;
+    if (paymentState.paymentMin === "800+") {
+      // include payments >= 800 (or Any)
+      if (paymentState.paymentMax === "Any") return numeric >= 800;
+      if (paymentState.paymentMax === "800+") return numeric >= 800;
+      const max = maxVal || Number.MAX_SAFE_INTEGER;
+      return numeric >= 800 && numeric <= max;
+    }
+
+    const min = minVal || 0;
+    const max = maxVal || Number.MAX_SAFE_INTEGER;
+
+    // enforce To >= From logic
+    if (paymentState.paymentMax !== "Any" && max <= min) return false;
+
+    return numeric >= min && numeric <= max;
   });
 
   return (
