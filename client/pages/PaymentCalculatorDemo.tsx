@@ -200,46 +200,7 @@ export const PaymentCalculatorDemo: React.FC = () => {
 
               {/* Loan Parameters */}
               <div className="space-y-4 mb-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Interest Rate (APR)
-                  </label>
-                  <select
-                    value={paymentState.interestRate}
-                    onChange={(e) =>
-                      updatePaymentState({ interestRate: e.target.value })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                  >
-                    <option value="0">0% APR</option>
-                    <option value="2.9">2.9% APR</option>
-                    <option value="3.9">3.9% APR</option>
-                    <option value="4.9">4.9% APR</option>
-                    <option value="5.9">5.9% APR</option>
-                    <option value="6.9">6.9% APR</option>
-                    <option value="7.9">7.9% APR</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Loan Term
-                  </label>
-                  <select
-                    value={paymentState.loanTermMonths}
-                    onChange={(e) =>
-                      updatePaymentState({ loanTermMonths: e.target.value })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                  >
-                    <option value="36">36 months</option>
-                    <option value="48">48 months</option>
-                    <option value="60">60 months</option>
-                    <option value="72">72 months</option>
-                    <option value="84">84 months</option>
-                  </select>
-                </div>
-
+                {/* APR and Term are auto-assigned based on vehicle year/price */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Down Payment
