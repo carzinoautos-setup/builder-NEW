@@ -7,11 +7,15 @@ import {
 } from "../lib/paymentCalculator";
 
 interface PaymentFilterState {
-  paymentMin: string;
-  paymentMax: string;
-  interestRate: string;
-  loanTermMonths: string;
+  paymentMin: string; // 'Any' or numeric string or '800+'
+  paymentMax: string; // 'Any' or numeric string or '800+'
   downPayment: string;
+}
+
+interface VehicleInput {
+  id: number;
+  salePrice: number;
+  year?: number | null;
 }
 
 interface UsePaymentFiltersProps {
