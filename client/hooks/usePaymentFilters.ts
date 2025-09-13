@@ -58,13 +58,7 @@ export function usePaymentFilters({
     }, debounceMs);
 
     return () => clearTimeout(timeoutId);
-  }, [
-    paymentState.paymentMin,
-    paymentState.paymentMax,
-    paymentState.interestRate,
-    paymentState.loanTermMonths,
-    paymentState.downPayment,
-  ]);
+  }, [paymentState.paymentMin, paymentState.paymentMax, paymentState.downPayment]);
 
   // Calculate affordable price range based on payment range
   const calculateAffordablePriceRange = useCallback(async () => {
@@ -73,12 +67,17 @@ export function usePaymentFilters({
       setCalculationError(null);
 
       const downPaymentNum = parseFloat(paymentState.downPayment) || 0;
-      const interestRateNum = parseFloat(paymentState.interestRate) || 0;
-      const loanTermNum = parseInt(paymentState.loanTermMonths) || 60;
-      const paymentMinNum = parseFloat(paymentState.paymentMin) || 0;
-      const paymentMaxNum = parseFloat(paymentState.paymentMax) || 10000;
+      // allow initialState to provide defaults for interest/term (backwards compatibility)
+      const defaultInterest = parseFloat((initialState as any).interestRate || "5") || 5;
+      const defaultTerm = parseInt((initialState as any).loanTermMonths || "60") || 60;
 
-      if (paymentMinNum <= 0 || paymentMaxNum <= 0) {
+      const interestRateNum = defaultInterest;
+      const loanTermNum = defaultTerm;
+
+      const paymentMinNum = parseFloat(paymentState.paymentMin === "Any" ? "0" : paymentState.paymentMin) || 0;
+      const paymentMaxNum = parseFloat(paymentState.paymentMax === "Any" ? "10000" : (paymentState.paymentMax === "800+" ? "10000" : paymentState.paymentMax)) || 10000;
+
+      if (paymentMinNum <= 0 && paymentState.paymentMin !== "Any") {
         setAffordablePriceRange(null);
         return;
       }
@@ -115,7 +114,7 @@ export function usePaymentFilters({
     } finally {
       setIsCalculating(false);
     }
-  }, [paymentState, onPaymentRangeChange]);
+  }, [paymentState.paymentMin, paymentState.paymentMax, paymentState.downPayment, onPaymentRangeChange]);
 
   // Calculate payment for a specific vehicle
   const getPresetLoanRules = (year?: number | null, price?: number) => {
