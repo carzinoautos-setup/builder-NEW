@@ -1539,7 +1539,15 @@ export default function MySQLVehiclesOriginalStyle() {
             interest_rate: Number(acf.interest_rate) || 0,
             down_payment: Number(acf.down_payment) || 0,
             loan_term: Number(acf.loan_term) || 0,
-            payments: Number(acf.payment) || 0,
+            // New ACF payment fields (min/max) supported by API
+            payment_min: acf.payment_min !== undefined ? Number(acf.payment_min) : null,
+            payment_max: acf.payment_max !== undefined ? Number(acf.payment_max) : null,
+            // Legacy single payment field
+            payments: (acf.payment !== undefined && acf.payment !== null)
+              ? Number(acf.payment)
+              : acf.payment_min !== undefined && acf.payment_min !== null
+              ? Number(acf.payment_min)
+              : 0,
             featured_image:
               r.featured_image || acf.featured_image || r.featuredImage || null,
           } as any;
