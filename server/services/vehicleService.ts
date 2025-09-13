@@ -49,8 +49,29 @@ export class VehicleService {
     }
 
     if (filters.condition) {
-      whereConditions.push("condition = ?");
-      params.push(filters.condition);
+      // Support multiple comma-separated condition values (e.g. "New,Used")
+      if (Array.isArray(filters.condition)) {
+        const parts = filters.condition.map((p: any) => String(p).trim()).filter(Boolean);
+        if (parts.length === 1) {
+          whereConditions.push("condition = ?");
+          params.push(parts[0]);
+        } else if (parts.length > 1) {
+          whereConditions.push(`condition IN (${parts.map(() => "?").join(",")})`);
+          params.push(...parts);
+        }
+      } else if (typeof filters.condition === "string" && filters.condition.includes(",")) {
+        const parts = String(filters.condition).split(",").map((s) => s.trim()).filter(Boolean);
+        if (parts.length === 1) {
+          whereConditions.push("condition = ?");
+          params.push(parts[0]);
+        } else if (parts.length > 1) {
+          whereConditions.push(`condition IN (${parts.map(() => "?").join(",")})`);
+          params.push(...parts);
+        }
+      } else {
+        whereConditions.push("condition = ?");
+        params.push(filters.condition);
+      }
     }
 
     if (filters.maxMileage) {
