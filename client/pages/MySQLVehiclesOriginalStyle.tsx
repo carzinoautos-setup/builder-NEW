@@ -4862,6 +4862,59 @@ export default function MySQLVehiclesOriginalStyle() {
                 onToggle={() => toggleFilter("payment")}
               >
                 <div className="space-y-3">
+                  {/* ACF-backed Payment Filter (New) */}
+                  <div className="border rounded p-3 bg-gray-50">
+                    <div className="text-sm font-medium text-gray-700 mb-2">ACF Payment (New)</div>
+                    <div className="flex gap-2 mb-2">
+                      <div className="relative flex-1">
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="Min"
+                          value={acfPaymentMin ? formatPrice(acfPaymentMin) : ""}
+                          onChange={(e) => {
+                            const v = unformatPrice(e.target.value);
+                            setAcfPaymentMin(v);
+                          }}
+                          className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                        />
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                      </div>
+                      <div className="relative flex-1">
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="Max"
+                          value={acfPaymentMax ? formatPrice(acfPaymentMax) : ""}
+                          onChange={(e) => {
+                            const v = unformatPrice(e.target.value);
+                            setAcfPaymentMax(v);
+                          }}
+                          className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                        />
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="Down Payment"
+                        value={acfDownPayment ? formatPrice(acfDownPayment) : ""}
+                        onChange={(e) => {
+                          const v = unformatPrice(e.target.value);
+                          setAcfDownPayment(v);
+                        }}
+                        className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                      />
+                    </div>
+                    {paymentRangeError && (
+                      <p className="text-red-600 text-sm mt-2">{paymentRangeError}</p>
+                    )}
+                  </div>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
                       <label className="sr-only">Payment From</label>
