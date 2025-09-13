@@ -90,7 +90,7 @@ export const PaymentCalculatorDemo: React.FC = () => {
   useEffect(() => {
     const updateVehiclePayments = async () => {
       const vehiclesWithPayments = await calculateBulkPayments(
-        vehicles.map((v) => ({ id: v.id, salePrice: v.rawPrice })),
+        vehicles.map((v) => ({ id: v.id, salePrice: v.rawPrice, year: (v as any).year })),
       );
 
       setVehicles((prev) =>
