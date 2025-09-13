@@ -2746,6 +2746,7 @@ export default function MySQLVehiclesOriginalStyle() {
           : "",
       paymentMin: "",
       paymentMax: "",
+      down_payment: "",
       fuelType: [],
       certified: [],
       doors: [],
