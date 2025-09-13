@@ -148,12 +148,22 @@ export class VehicleService {
       ${whereClause}
     `;
 
-    return {
+    const result = {
       sql: sql.trim(),
       params: [...params, pagination.pageSize, offset],
       countSql: countSql.trim(),
       countParams: params,
     };
+
+    // Debug: log query when payment filters are present to help troubleshooting
+    if ((filters as any).paymentMin !== undefined || (filters as any).paymentMax !== undefined) {
+      console.log("[VehicleService.buildQuery] SQL:", result.sql);
+      console.log("[VehicleService.buildQuery] params:", result.params);
+      console.log("[VehicleService.buildQuery] countSql:", result.countSql);
+      console.log("[VehicleService.buildQuery] countParams:", result.countParams);
+    }
+
+    return result;
   }
 
   /**
