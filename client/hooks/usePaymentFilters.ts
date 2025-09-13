@@ -38,10 +38,8 @@ export function usePaymentFilters({
 }: UsePaymentFiltersProps = {}) {
   // Payment filter state
   const [paymentState, setPaymentState] = useState<PaymentFilterState>({
-    paymentMin: initialState.paymentMin || "100",
-    paymentMax: initialState.paymentMax || "2000",
-    interestRate: initialState.interestRate || "5",
-    loanTermMonths: initialState.loanTermMonths || "60",
+    paymentMin: initialState.paymentMin || "Any",
+    paymentMax: initialState.paymentMax || "Any",
     downPayment: initialState.downPayment || "2000",
   });
 
@@ -120,14 +118,32 @@ export function usePaymentFilters({
   }, [paymentState, onPaymentRangeChange]);
 
   // Calculate payment for a specific vehicle
+  const getPresetLoanRules = (year?: number | null, price?: number) => {
+    const y = year || 0;
+    const p = price || 0;
+
+    if (y >= 2023 && y <= 2025) {
+      if (p > 50000) return { interestRate: 5.5, loanTermMonths: 84 };
+      return { interestRate: 5.5, loanTermMonths: 72 };
+    }
+    if (y >= 2018 && y <= 2022) return { interestRate: 7.5, loanTermMonths: 72 };
+    if (y >= 2013 && y <= 2017) return { interestRate: 9.5, loanTermMonths: 60 };
+    if (y >= 2009 && y <= 2012) return { interestRate: 11.5, loanTermMonths: 60 };
+    if (y >= 2005 && y <= 2008) return { interestRate: 13.5, loanTermMonths: 48 };
+    if (y <= 2000) return { interestRate: 17.5, loanTermMonths: 36 };
+    // default fallback
+    return { interestRate: 13.5, loanTermMonths: 48 };
+  };
+
   const calculateVehiclePayment = useCallback(
-    (salePrice: number): PaymentResult | null => {
+    (salePrice: number, year?: number | null): PaymentResult | null => {
       try {
+        const rules = getPresetLoanRules(year, salePrice);
         const params: PaymentParams = {
           salePrice,
           downPayment: parseFloat(paymentState.downPayment) || 0,
-          interestRate: parseFloat(paymentState.interestRate) || 0,
-          loanTermMonths: parseInt(paymentState.loanTermMonths) || 60,
+          interestRate: rules.interestRate,
+          loanTermMonths: rules.loanTermMonths,
         };
 
         return calculateMonthlyPayment(params);
@@ -141,61 +157,31 @@ export function usePaymentFilters({
 
   // Calculate payments for multiple vehicles
   const calculateBulkPayments = useCallback(
-    async (vehicles: VehicleWithPayment[]): Promise<VehicleWithPayment[]> => {
+    async (vehicles: VehicleInput[]): Promise<VehicleWithPayment[]> => {
       try {
         setIsCalculating(true);
 
-        // Use server-side bulk calculation for better performance
-        const response = await fetch("/api/payments/bulk", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            vehicles: vehicles.map((v) => ({
-              id: v.id,
-              salePrice: v.salePrice,
-            })),
-            downPayment: parseFloat(paymentState.downPayment) || 0,
-            interestRate: parseFloat(paymentState.interestRate) || 0,
-            loanTermMonths: parseInt(paymentState.loanTermMonths) || 60,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to calculate bulk payments");
-        }
-
-        const result = await response.json();
-
-        if (!result.success) {
-          throw new Error(result.error || "Bulk calculation failed");
-        }
-
-        // Map results back to vehicles
-        return vehicles.map((vehicle) => {
-          const calculation = result.data.find(
-            (calc: any) => calc.vehicleId === vehicle.id,
-          );
+        // Client-side calculation using preset loan rules per vehicle
+        const results = vehicles.map((vehicle) => {
+          const payment = calculateVehiclePayment(vehicle.salePrice, (vehicle as any).year || null);
           return {
-            ...vehicle,
-            calculatedPayment: calculation
-              ? Math.round(calculation.monthlyPayment)
-              : undefined,
-            paymentError: calculation ? undefined : "Calculation failed",
-          };
+            id: vehicle.id,
+            salePrice: vehicle.salePrice,
+            calculatedPayment: payment ? Math.round(payment.monthlyPayment) : undefined,
+            paymentError: payment ? undefined : "Calculation failed",
+          } as VehicleWithPayment;
         });
+
+        return results;
       } catch (error) {
         console.error("Bulk payment calculation error:", error);
-        // Fallback to client-side calculation
-        return vehicles.map((vehicle) => {
-          const payment = calculateVehiclePayment(vehicle.salePrice);
-          return {
-            ...vehicle,
-            calculatedPayment: payment
-              ? Math.round(payment.monthlyPayment)
-              : undefined,
-            paymentError: payment ? undefined : "Calculation failed",
-          };
-        });
+        // Fallback safe path: return empty calculations
+        return vehicles.map((vehicle) => ({
+          id: vehicle.id,
+          salePrice: vehicle.salePrice,
+          calculatedPayment: undefined,
+          paymentError: "Calculation failed",
+        }));
       } finally {
         setIsCalculating(false);
       }
