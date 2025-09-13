@@ -4998,77 +4998,20 @@ export default function MySQLVehiclesOriginalStyle() {
                     </div>
                   </div>
 
-                  {/* Legacy Payment Controls: APR and Term (kept for compatibility/testing) */}
-                  <div className="flex gap-2">
-                    <select
-                      value={termLength}
-                      onChange={(e) => {
-                        setTermLength(e.target.value);
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                    >
-                      <option value="24">24 Months</option>
-                      <option value="36">36 Months</option>
-                      <option value="48">48 Months</option>
-                      <option value="60">60 Months</option>
-                      <option value="72">72 Months</option>
-                      <option value="84">84 Months</option>
-                    </select>
-                    <select
-                      value={interestRate}
-                      onChange={(e) => {
-                        setInterestRate(e.target.value);
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="carzino-dropdown-option flex-1 px-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                    >
-                      <option value="0">0% APR</option>
-                      <option value="3">3% APR</option>
-                      <option value="4">4% APR</option>
-                      <option value="5">5% APR</option>
-                      <option value="6">6% APR</option>
-                      <option value="7">7% APR</option>
-                      <option value="8">8% APR</option>
-                      <option value="9">9% APR</option>
-                      <option value="10">10% APR</option>
-                      <option value="12">12% APR</option>
-                      <option value="16">16% APR</option>
-                    </select>
-                  </div>
-
-                  {/* Down Payment */}
+                                  {/* Down Payment (ACF-backed) - instantly used for card recalculation */}
                   <div className="relative">
+                    <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
                     <input
                       type="text"
-                      placeholder={`Down Payment: ${formatCurrency(downPayment)}`}
-                      value={
-                        isEditingDownPayment
-                          ? downPayment
-                          : `Down Payment: ${formatCurrency(downPayment)}`
-                      }
-                      onFocus={(e) => {
-                        e.stopPropagation();
-                        setPrevDownPayment(downPayment);
-                        setDownPayment("");
-                        setIsEditingDownPayment(true);
-                      }}
-                      onBlur={(e) => {
-                        e.stopPropagation();
-                        setIsEditingDownPayment(false);
-                        // restore previous if left empty
-                        if (!downPayment && prevDownPayment !== null) {
-                          setDownPayment(prevDownPayment);
-                        }
-                        // Apply payment filters live when down payment editing finishes
-                        applyPaymentFilters();
-                      }}
+                      inputMode="numeric"
+                      placeholder="Down Payment"
+                      value={acfDownPayment ? formatPrice(acfDownPayment) : ""}
                       onChange={(e) => {
-                        const value = e.target.value.replace(/[^\d]/g, "");
-                        setDownPayment(value);
+                        const v = unformatPrice(e.target.value);
+                        setAcfDownPayment(v);
                       }}
                       onClick={(e) => e.stopPropagation()}
-                      className="carzino-search-input w-full px-2 py-1.5 border border-gray-300 rounded focus:outline-none text-gray-500"
+                      className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
                     />
                   </div>
 
