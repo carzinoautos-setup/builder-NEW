@@ -725,6 +725,9 @@ export default function MySQLVehiclesOriginalStyle() {
   const [downPayment, setDownPayment] = useState("2000");
   const [isEditingDownPayment, setIsEditingDownPayment] = useState(false);
   const [prevDownPayment, setPrevDownPayment] = useState<string | null>(null);
+  // Legacy payment controls state (kept for compatibility/testing)
+  const [termLength, setTermLength] = useState("60");
+  const [interestRate, setInterestRate] = useState("5");
 
   // New ACF-backed payment filter inputs (separate from existing payment dropdowns)
   const [acfPaymentMin, setAcfPaymentMin] = useState<string>(
