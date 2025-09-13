@@ -239,8 +239,36 @@ export const getVehicles: RequestHandler = async (req, res) => {
               const maxN = qPaymentMax ? Number(qPaymentMax) : null;
               const downN = qDownPayment ? Number(qDownPayment) : null;
 
+              const beforeCount = (json.data || []).length;
+
               json.data = (json.data || []).filter((item: any) => {
                 const acf = item.acf || {};
+
+                // If vehicle provides precomputed ACF payment_min/payment_max, prefer those values for filtering
+                const vehiclePaymentMin = acf.payment_min !== undefined && acf.payment_min !== null ? Number(acf.payment_min) : null;
+                const vehiclePaymentMax = acf.payment_max !== undefined && acf.payment_max !== null ? Number(acf.payment_max) : null;
+
+                // If both vehiclePaymentMin/Max are present, use them directly
+                if (vehiclePaymentMin !== null || vehiclePaymentMax !== null) {
+                  if (minN !== null && !Number.isNaN(minN)) {
+                    if (vehiclePaymentMax !== null) {
+                      // ensure vehicle's max payment is >= filter min
+                      if (vehiclePaymentMax < minN) return false;
+                    } else if (vehiclePaymentMin !== null) {
+                      if (vehiclePaymentMin < minN) return false;
+                    }
+                  }
+                  if (maxN !== null && !Number.isNaN(maxN)) {
+                    if (vehiclePaymentMin !== null) {
+                      if (vehiclePaymentMin > maxN) return false;
+                    } else if (vehiclePaymentMax !== null) {
+                      if (vehiclePaymentMax > maxN) return false;
+                    }
+                  }
+                  return true;
+                }
+
+                // Fallback: compute monthly payment from price/interest/term/down_payment
                 const price = Number(acf.price ?? item.price ?? 0) || 0;
                 const interest = Number(acf.interest_rate ?? 0) || 0;
                 const term = Number(acf.loan_term ?? 60) || 60;
@@ -263,6 +291,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 if (maxN !== null && !Number.isNaN(maxN) && monthly > maxN) return false;
                 return true;
               });
+
+              const afterCount = (json.data || []).length;
+              console.log(`[WP_PROXY_FILTER] Payment filter applied. before=${beforeCount} after=${afterCount} params={payment_min:${qPaymentMin},payment_max:${qPaymentMax},down_payment:${qDownPayment}}`);
             } catch (filterErr) {
               console.warn("Failed to apply fallback payment filtering on proxied WP response:", filterErr);
             }
