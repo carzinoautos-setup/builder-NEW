@@ -4524,12 +4524,12 @@ export default function MySQLVehiclesOriginalStyle() {
                     />
                   </div>
 
-                  <div className="flex-1">
+                  <div className="relative flex-1">
                     <select
                       value={radius}
                       onChange={(e) => setRadius(e.target.value)}
                       onClick={(e) => e.stopPropagation()}
-                      className="carzino-dropdown-option w-full px-3 py-2 border border-gray-300 rounded-md h-10 focus:outline-none appearance-none"
+                      className="carzino-dropdown-option w-full pr-8 px-3 py-2 border border-gray-300 rounded-md h-10 focus:outline-none appearance-none"
                     >
                       <option value="10">10 Miles</option>
                       <option value="25">25 Miles</option>
@@ -4539,6 +4539,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       <option value="500">500 Miles</option>
                       <option value="nationwide">Nationwide</option>
                     </select>
+                    <ChevronDown className="w-4 h-4 text-red-600 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" aria-hidden />
                   </div>
                 </div>
               </div>
