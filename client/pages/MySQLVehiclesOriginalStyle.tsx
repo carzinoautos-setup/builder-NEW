@@ -2966,7 +2966,7 @@ export default function MySQLVehiclesOriginalStyle() {
             state: result.data.state,
           };
         } else {
-          console.warn(`❌ Geocoding failed for ${zip}: ${result.message}`);
+          console.warn(`�� Geocoding failed for ${zip}: ${result.message}`);
         }
       } else if (response.status === 404) {
         try {
@@ -5637,8 +5637,45 @@ export default function MySQLVehiclesOriginalStyle() {
                   {filterOptions.transmission_speed &&
                   filterOptions.transmission_speed.length > 0 ? (
                     (() => {
+                      // Normalize and sort transmission speeds numerically (1-10 ascending) and then dedupe
+                      const transmissionRaw = filterOptions.transmission_speed || [];
+                      const transmissionList = transmissionRaw.map((it: any) =>
+                        typeof it === "string"
+                          ? { name: it, count: 0 }
+                          : { name: String(it.name ?? it.value ?? ""), count: Number(it.count ?? 0) },
+                      );
+
+                      const transmissionSort = (a: any, b: any) => {
+                        const na = normalizeTransmission(a.name || "");
+                        const nb = normalizeTransmission(b.name || "");
+
+                        const ma = (na.match(/^(\d+)/) || [null, null])[1];
+                        const mb = (nb.match(/^(\d+)/) || [null, null])[1];
+
+                        const ia = ma ? Number(ma) : NaN;
+                        const ib = mb ? Number(mb) : NaN;
+
+                        if (!Number.isNaN(ia) && !Number.isNaN(ib)) return ia - ib; // numeric ascending
+                        if (!Number.isNaN(ia)) return -1;
+                        if (!Number.isNaN(ib)) return 1;
+
+                        // keep Auto/CVT, Automatic, Manual in a friendly order
+                        const priority = ["Auto/CVT", "Automatic", "Manual"];
+                        const pa = priority.indexOf(na) >= 0 ? priority.indexOf(na) : 999;
+                        const pb = priority.indexOf(nb) >= 0 ? priority.indexOf(nb) : 999;
+                        if (pa !== pb) return pa - pb;
+
+                        // fallback to count desc then name
+                        const ac = Number(a.count || 0);
+                        const bc = Number(b.count || 0);
+                        if (ac !== bc) return bc - ac;
+                        return na.localeCompare(nb);
+                      };
+
+                      const sortedTransmission = [...transmissionList].sort(transmissionSort);
+
                       const displayed = getDisplayed(
-                        filterOptions.transmission_speed,
+                        sortedTransmission,
                         appliedFilters.transmissionSpeed,
                         showMoreTransmission,
                         8,
