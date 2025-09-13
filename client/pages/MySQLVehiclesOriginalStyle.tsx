@@ -4429,14 +4429,17 @@ export default function MySQLVehiclesOriginalStyle() {
                         {appliedFilters.paymentMin || "0"}-$
                         {appliedFilters.paymentMax || "Any"}/mo
                         <button
-                          onClick={() =>
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setAppliedFilters((prev) => ({
                               ...prev,
                               paymentMin: "",
                               paymentMax: "",
-                            }))
-                          }
+                            }));
+                          }}
                           className="ml-1 text-white hover:text-gray-300"
+                          aria-label="Remove payment filter"
                         >
                           <X className="w-3 h-3 inline" />
                         </button>
