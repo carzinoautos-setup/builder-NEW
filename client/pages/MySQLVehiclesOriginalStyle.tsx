@@ -4395,7 +4395,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         {appliedFilters.priceMin || "0"} - $
                         {appliedFilters.priceMax || "Any"}
                         <button
-                          onClick={() => {
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setAppliedFilters((prev) => ({
                               ...prev,
                               priceMin: "",
@@ -4405,6 +4407,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             setPriceMax("50000");
                           }}
                           className="ml-1 text-white hover:text-gray-300"
+                          aria-label="Remove price filter"
                         >
                           <X className="w-3 h-3 inline" />
                         </button>
