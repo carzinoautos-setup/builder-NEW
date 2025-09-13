@@ -278,11 +278,18 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // Final account type to display: prefer sellerInfo, then vehicle custom field, then seller_type
   const accountTypeSeller = sanitize(
-    (sellerInfo && (sellerInfo.accountType || sellerInfo.type)) ||
+    (sellerInfo && (sellerInfo.accountType || sellerInfo.type || sellerInfo.account_type_seller)) ||
       accountTypeField ||
       (vehicle as any).seller_type ||
       "",
   );
+
+  // Ensure the relationship key is exposed in an accessible but hidden element for Builder binding
+  const acctNumberValue =
+    (vehicle as any).seller_account_number ||
+    (vehicle as any).account_number_seller ||
+    (vehicle as any).account_number ||
+    "";
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
