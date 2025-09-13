@@ -80,10 +80,8 @@ export const PaymentCalculatorDemo: React.FC = () => {
     formattedAffordableRange,
   } = usePaymentFilters({
     initialState: {
-      paymentMin: "300",
-      paymentMax: "600",
-      interestRate: "4.9",
-      loanTermMonths: "60",
+      paymentMin: "Any",
+      paymentMax: "Any",
       downPayment: "3000",
     },
   });
