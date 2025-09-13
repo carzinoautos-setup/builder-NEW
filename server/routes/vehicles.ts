@@ -245,10 +245,19 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 const acf = item.acf || {};
 
                 // If vehicle provides precomputed ACF payment_min/payment_max, prefer those values for filtering
-                const vehiclePaymentMin = acf.payment_min !== undefined && acf.payment_min !== null ? Number(acf.payment_min) : null;
-                const vehiclePaymentMax = acf.payment_max !== undefined && acf.payment_max !== null ? Number(acf.payment_max) : null;
+                // Parse vehicle ACF payment_min/payment_max more strictly (treat empty/non-numeric as missing)
+                const rawVehPaymentMin = acf.payment_min ?? null;
+                const rawVehPaymentMax = acf.payment_max ?? null;
+                const vehiclePaymentMin =
+                  rawVehPaymentMin !== null && rawVehPaymentMin !== undefined && String(rawVehPaymentMin).trim() !== "" && !Number.isNaN(Number(rawVehPaymentMin))
+                    ? Number(rawVehPaymentMin)
+                    : null;
+                const vehiclePaymentMax =
+                  rawVehPaymentMax !== null && rawVehPaymentMax !== undefined && String(rawVehPaymentMax).trim() !== "" && !Number.isNaN(Number(rawVehPaymentMax))
+                    ? Number(rawVehPaymentMax)
+                    : null;
 
-                // If both vehiclePaymentMin/Max are present, use them directly
+                // If vehicle provides at least one of payment_min/payment_max, use those bounds when available
                 if (vehiclePaymentMin !== null || vehiclePaymentMax !== null) {
                   if (minN !== null && !Number.isNaN(minN)) {
                     if (vehiclePaymentMax !== null) {
@@ -293,7 +302,15 @@ export const getVehicles: RequestHandler = async (req, res) => {
               });
 
               const afterCount = (json.data || []).length;
-              console.log(`[WP_PROXY_FILTER] Payment filter applied. before=${beforeCount} after=${afterCount} params={payment_min:${qPaymentMin},payment_max:${qPaymentMax},down_payment:${qDownPayment}}`);
+              try {
+                // Attempt to compute IDs removed by the fallback filter for easier debugging
+                const beforeIds = (Array.isArray(json.data) ? json.data : []).slice(0, beforeCount).map((it: any) => it && it.id).filter(Boolean);
+                const afterIdsSet = new Set((json.data || []).map((it: any) => it && it.id).filter(Boolean));
+                const removedIds = beforeIds.filter((id: any) => !afterIdsSet.has(id));
+                console.log(`[WP_PROXY_FILTER] Payment filter applied. before=${beforeCount} after=${afterCount} removedSampleCount=${Math.min(removedIds.length,5)} removedSampleIds=${removedIds.slice(0,5).join(",")} params={payment_min:${qPaymentMin},payment_max:${qPaymentMax},down_payment:${qDownPayment}}`);
+              } catch (e) {
+                console.log(`[WP_PROXY_FILTER] Payment filter applied. before=${beforeCount} after=${afterCount} params={payment_min:${qPaymentMin},payment_max:${qPaymentMax},down_payment:${qDownPayment}}`);
+              }
             } catch (filterErr) {
               console.warn("Failed to apply fallback payment filtering on proxied WP response:", filterErr);
             }
