@@ -2526,10 +2526,12 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Apply payment filters handler
   const applyPaymentFilters = () => {
+    // Use ACF-backed inputs when applying filters to backend
     setAppliedFilters((prev) => ({
       ...prev,
-      paymentMin: paymentMin,
-      paymentMax: paymentMax,
+      paymentMin: acfPaymentMin || "",
+      paymentMax: acfPaymentMax || "",
+      down_payment: acfDownPayment !== undefined && acfDownPayment !== "" ? acfDownPayment : "0",
     }));
     setCurrentPage(1); // Reset to first page when applying filters
   };
