@@ -1454,18 +1454,43 @@ export default function MySQLVehiclesOriginalStyle() {
       const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
 
       // Use fewer retries and a shorter timeout for main vehicle fetch to improve UX
-      const response = await fetchWithRetry(
-        apiUrl,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        },
-        1,
-        8000,
-      );
+      let response;
+      try {
+        response = await fetchWithRetry(
+          apiUrl,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          },
+          1,
+          8000,
+        );
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status} ${response.statusText}`);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status} ${response.statusText}`);
+        }
+      } catch (err) {
+        // If the request failed and we included down_payment, retry once without it (WP plugin may reject unexpected params)
+        if (params.has("down_payment")) {
+          const fallbackParams = new URLSearchParams(params as any);
+          fallbackParams.delete("down_payment");
+          const fallbackUrl = `/api/vehicles?${fallbackParams.toString()}`;
+          console.warn("Primary vehicle fetch failed, retrying without down_payment:", fallbackUrl, err);
+          response = await fetchWithRetry(
+            fallbackUrl,
+            {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            },
+            1,
+            8000,
+          );
+          if (!response.ok) {
+            throw new Error(`API error: ${response.status} ${response.statusText}`);
+          }
+        } else {
+          throw err;
+        }
       }
 
       const data = await response.json();
@@ -3919,7 +3944,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white hover:text-gray-300"
                         >
-                          ����
+                          ������
                         </button>
                       </span>
                     ))}
