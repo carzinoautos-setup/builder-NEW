@@ -97,11 +97,9 @@ export class VehicleService {
     if (filters.bodyStyle) {
       whereConditions.push("body_style = ?");
       params.push(filters.bodyStyle);
-    } else {
-      // By default exclude Uncategorized body styles from results
-      whereConditions.push("(body_style IS NOT NULL AND body_style <> ?)");
-      params.push("Uncategorized");
     }
+    // NOTE: do NOT exclude vehicles with missing body_style by default — some new products may be missing this ACF field
+    // Excluding them caused newly uploaded items to vanish shortly after appearing in the UI.
 
     if (filters.certified !== undefined) {
       whereConditions.push("certified = ?");
