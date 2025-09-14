@@ -780,12 +780,14 @@ export default function MySQLVehiclesOriginalStyle() {
         return;
       }
 
+      // Determine effective min/max: manual entries (acf) override dropdowns; dropdown 'Any' means no restriction
+      const effectiveMin = acfPaymentMin && acfPaymentMin !== "" ? acfPaymentMin : (paymentMin && paymentMin !== "Any" ? paymentMin : "");
+      const effectiveMax = acfPaymentMax && acfPaymentMax !== "" ? acfPaymentMax : (paymentMax && paymentMax !== "Any" ? paymentMax : "");
+
       setAppliedFilters((prev) => ({
         ...prev,
-        paymentMin:
-          acfPaymentMin !== undefined ? acfPaymentMin : prev.paymentMin,
-        paymentMax:
-          acfPaymentMax !== undefined ? acfPaymentMax : prev.paymentMax,
+        paymentMin: effectiveMin || "",
+        paymentMax: effectiveMax || "",
         // Treat down payment as 0 if empty per requirement
         down_payment:
           acfDownPayment !== undefined && acfDownPayment !== ""
@@ -795,7 +797,7 @@ export default function MySQLVehiclesOriginalStyle() {
     }, 600);
 
     return () => clearTimeout(t);
-  }, [acfPaymentMin, acfPaymentMax, acfDownPayment]);
+  }, [acfPaymentMin, acfPaymentMax, acfDownPayment, paymentMin, paymentMax]);
 
   // Payment dropdown options and derived To options based on From
   const paymentNumericOptions = [
@@ -5187,10 +5189,43 @@ export default function MySQLVehiclesOriginalStyle() {
                     <div className="text-sm font-medium text-gray-700 mb-2">
                       Payments
                     </div>
+                    {/* Dropdowns for quick min/max payment selection (Any means no restriction) */}
                     <div className="flex gap-2 mb-2">
                       <div className="relative flex-1">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                          $
+                        <label className="sr-only">Min Payment</label>
+                        <select
+                          value={paymentMin}
+                          onChange={(e) => setPaymentMin(e.target.value)}
+                          className="w-full pl-3 pr-8 py-2 border border-gray-300 rounded focus:outline-none bg-white"
+                        >
+                          <option value="Any">Any</option>
+                          {paymentNumericOptions.map((n) => (
+                            <option key={n} value={String(n)}>${n}</option>
+                          ))}
+                          <option value="800+">$800+</option>
+                        </select>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                      </div>
+
+                      <div className="relative flex-1">
+                        <label className="sr-only">Max Payment</label>
+                        <select
+                          value={paymentMax}
+                          onChange={(e) => setPaymentMax(e.target.value)}
+                          className="w-full pl-3 pr-8 py-2 border border-gray-300 rounded focus:outline-none bg-white"
+                        >
+                          {allowedToOptions.map((opt) => (
+                            <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "$800+" : `$${opt}`)}</option>
+                          ))}
+                        </select>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                      </div>
+                    </div>
+
+                    {/* Manual entry boxes (users can type a specific payment range) */}
+                    <div className="flex gap-2 mb-2">
+                      <div className="relative flex-1">
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$
                         </span>
                         <input
                           type="text"
@@ -5205,13 +5240,11 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
                         />
-                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
-                          /mo
-                        </span>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
                       </div>
+
                       <div className="relative flex-1">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                          $
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$
                         </span>
                         <input
                           type="text"
@@ -5226,9 +5259,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
                         />
-                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">
-                          /mo
-                        </span>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
                       </div>
                     </div>
                     <div className="relative">
