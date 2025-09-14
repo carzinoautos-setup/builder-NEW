@@ -662,6 +662,25 @@ export default function MySQLVehiclesOriginalStyle() {
         /* ignore */
       }
 
+      // After stripping, also update the persisted sessionStorage so future reloads don't reapply payment filters
+      try {
+        const key = "carzino_applied_filters_v2";
+        const existing = sessionStorage.getItem(key);
+        if (existing) {
+          try {
+            const p = JSON.parse(existing) as any;
+            delete p.paymentMin;
+            delete p.paymentMax;
+            delete p.down_payment;
+            sessionStorage.setItem(key, JSON.stringify(p));
+          } catch (e) {
+            /* ignore */
+          }
+        }
+      } catch (e) {
+        /* ignore */
+      }
+
       // detect if current appliedFilters look empty (no user selections)
       const hasPersisted = Object.values(persisted as any).some((v: any) =>
         Array.isArray(v) ? v.length > 0 : Boolean(v),
