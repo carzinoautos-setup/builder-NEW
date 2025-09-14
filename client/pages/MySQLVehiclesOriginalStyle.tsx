@@ -1260,6 +1260,10 @@ export default function MySQLVehiclesOriginalStyle() {
   // Fetch vehicles from API
   const fetchVehicles = useCallback(async () => {
     try {
+      // Mark this request with a new sequence id
+      requestIdRef.current += 1;
+      const requestId = requestIdRef.current;
+
       setLoading(true);
       setError(null);
 
