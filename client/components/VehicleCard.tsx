@@ -207,6 +207,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   );
 
   React.useEffect(() => {
+    // If the parent already provided sellerInfo (batch), use it and skip per-card fetch
+    if ((vehicle as any).sellerInfo) {
+      setSellerInfo((vehicle as any).sellerInfo);
+      return;
+    }
+
     let mounted = true;
     // Accept either naming convention for the account number
     const acct =
@@ -278,6 +284,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     (vehicle as any).account_number_seller,
     (vehicle as any).account_number,
     sellerFetchFailed,
+    (vehicle as any).sellerInfo,
   ]);
 
   // Determine displayed city/state preferring sellerInfo (sanitize 'Unknown')
