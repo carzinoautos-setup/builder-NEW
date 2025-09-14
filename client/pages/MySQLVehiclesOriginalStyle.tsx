@@ -410,6 +410,8 @@ export default function MySQLVehiclesOriginalStyle() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Request sequencing id to prevent out-of-order responses from overwriting newer results
+  const requestIdRef = useRef(0);
 
   // Ensure vehicles without price are moved to the end when sorting by price
   useEffect(() => {
