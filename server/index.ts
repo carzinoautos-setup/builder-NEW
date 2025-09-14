@@ -101,6 +101,8 @@ export function createServer() {
 
   // Sellers endpoint (lookup by account number)
   app.get("/api/sellers/:account", getSellerByAccount);
+  // Batch sellers lookup to avoid per-card network overhead
+  app.post("/api/sellers/batch", getSellersBatch as any);
 
   // WordPress sync status endpoint
   app.get("/api/wordpress/sync-status", (_req, res) => {
