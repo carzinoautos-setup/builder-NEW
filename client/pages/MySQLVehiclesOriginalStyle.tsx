@@ -648,13 +648,18 @@ export default function MySQLVehiclesOriginalStyle() {
       const persisted = loadPersistedAppliedFilters();
       if (!persisted) return;
 
-      // Remove fuelType from persisted payload to avoid auto-applying it
-      if ((persisted as any).fuelType) {
-        try {
-          delete (persisted as any).fuelType;
-        } catch (e) {
-          /* ignore deletion errors */
-        }
+      // Remove fuelType and payment-related persisted keys to avoid auto-applying them
+      try {
+        delete (persisted as any).fuelType;
+      } catch (e) {
+        /* ignore */
+      }
+      try {
+        delete (persisted as any).paymentMin;
+        delete (persisted as any).paymentMax;
+        delete (persisted as any).down_payment;
+      } catch (e) {
+        /* ignore */
       }
 
       // detect if current appliedFilters look empty (no user selections)
