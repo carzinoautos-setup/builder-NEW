@@ -101,7 +101,17 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
   // Internal refs for fetch tracing and visibility guard
   const FETCH_PERSIST_KEY = "carzino_applied_filters_v2";
   const FILTERS_CACHE_KEY = "carzino_filter_options_v1";
-  const FILTERS_CACHE_TTL = Number(process.env.FILTERS_CACHE_TTL_MS || 5 * 60 * 1000); // 5 minutes
+  // Read TTL from Vite env on client safely; fall back to 5 minutes
+  let FILTERS_CACHE_TTL = 5 * 60 * 1000; // default 5 minutes
+  try {
+    const env = (import.meta as any)?.env;
+    if (env && env.VITE_FILTERS_CACHE_TTL_MS) {
+      const n = Number(env.VITE_FILTERS_CACHE_TTL_MS);
+      if (!Number.isNaN(n) && n > 0) FILTERS_CACHE_TTL = n;
+    }
+  } catch (e) {
+    /* ignore */
+  }
   const latestFetchIdRef = useRef(0);
   const fetchCounterRef = useRef(0);
   const visibilityChangeAtRef = useRef(0);
