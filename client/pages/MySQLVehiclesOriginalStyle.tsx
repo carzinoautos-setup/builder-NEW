@@ -1610,49 +1610,53 @@ export default function MySQLVehiclesOriginalStyle() {
 
         // Transform VehicleRecord[] to Vehicle[] for display
         const transformedVehicles = filteredRecords.map(transformVehicleRecord);
-        if (appendResults) {
-          setVehicles((prev) =>
-            reorderForPrice([...prev, ...transformedVehicles]),
+        if (requestIdRef.current === requestId) {
+          if (appendResults) {
+            setVehicles((prev) =>
+              reorderForPrice([...prev, ...transformedVehicles]),
+            );
+          } else {
+            setVehicles(reorderForPrice(transformedVehicles));
+          }
+          // reset append flag
+          setAppendResults(false);
+
+          // Build meta compatible with VehiclesApiResponse
+          const pagination = data.pagination || data.meta || {};
+          const page = pagination.page || pagination.currentPage || currentPage;
+          const perPage =
+            pagination.per_page || pagination.pageSize || resultsPerPage;
+          const total = pagination.total || pagination.totalRecords || 0;
+          const totalPages =
+            pagination.total_pages ||
+            pagination.totalPages ||
+            Math.ceil(total / perPage || 1);
+
+          const compatibleMeta = {
+            totalRecords: total,
+            totalPages,
+            currentPage: page,
+            pageSize: perPage,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1,
+          };
+
+          const compatibleResponse: VehiclesApiResponse = {
+            success: true,
+            data: transformedVehicles,
+            meta: compatibleMeta,
+            message: data.message,
+          };
+
+          setApiResponse(compatibleResponse);
+          console.log(
+            "✅ Successfully loaded and transformed",
+            transformedVehicles.length,
+            "vehicles",
           );
         } else {
-          setVehicles(reorderForPrice(transformedVehicles));
+          console.debug("Ignoring out-of-date vehicle response (stale requestId)");
         }
-        // reset append flag
-        setAppendResults(false);
-
-        // Build meta compatible with VehiclesApiResponse
-        const pagination = data.pagination || data.meta || {};
-        const page = pagination.page || pagination.currentPage || currentPage;
-        const perPage =
-          pagination.per_page || pagination.pageSize || resultsPerPage;
-        const total = pagination.total || pagination.totalRecords || 0;
-        const totalPages =
-          pagination.total_pages ||
-          pagination.totalPages ||
-          Math.ceil(total / perPage || 1);
-
-        const compatibleMeta = {
-          totalRecords: total,
-          totalPages,
-          currentPage: page,
-          pageSize: perPage,
-          hasNextPage: page < totalPages,
-          hasPreviousPage: page > 1,
-        };
-
-        const compatibleResponse: VehiclesApiResponse = {
-          success: true,
-          data: transformedVehicles,
-          meta: compatibleMeta,
-          message: data.message,
-        };
-
-        setApiResponse(compatibleResponse);
-        console.log(
-          "✅ Successfully loaded and transformed",
-          transformedVehicles.length,
-          "vehicles",
-        );
       } else {
         throw new Error(data.message || "API returned error");
       }
