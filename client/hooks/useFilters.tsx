@@ -690,16 +690,9 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
         };
 
         // Fire and forget (only run if we have items worth computing)
-        const hasItems = Object.values(finalMap).some(
-          (arr) => Array.isArray(arr) && arr.length > 0,
-        );
-        if (hasItems) {
-          setTimeout(() => {
-            backgroundCompute().catch((ex) =>
-              console.warn("backgroundCompute uncaught:", ex),
-            );
-          }, 50);
-        }
+        // Disable background authoritative counts by default to avoid flooding /api/vehicles
+        // on preview environments. We may re-enable with stricter throttling if needed.
+        const hasItems = false;
       } catch (err: any) {
         setError(err?.message || "Failed to fetch filters");
         console.warn(
