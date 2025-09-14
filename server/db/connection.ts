@@ -65,10 +65,15 @@ export async function executeQuery(sql: string, params: any[] = []) {
     // If connection lost, recreate pool and retry once
     const transientCodes = ["PROTOCOL_CONNECTION_LOST", "ECONNRESET", "ETIMEDOUT"];
     const code = err && (err.code || err.errno || "");
-    if (transientCodes.includes(String(code))) {
+    const message = err && (err.message || "");
+    if (
+      transientCodes.includes(String(code)) ||
+      String(message).toLowerCase().includes("pool is closed") ||
+      String(message).toLowerCase().includes("connection lost")
+    ) {
       console.warn(
         "Database transient error detected (attempting to recreate pool and retry):",
-        code,
+        code || message,
       );
       try {
         // Mark pool for recreation. Don't await pool.end() here to avoid blocking
@@ -86,6 +91,9 @@ export async function executeQuery(sql: string, params: any[] = []) {
       } catch (e) {
         /* ignore */
       }
+
+      // small backoff before recreating
+      await new Promise((r) => setTimeout(r, 200));
 
       // Recreate pool and retry once
       try {
