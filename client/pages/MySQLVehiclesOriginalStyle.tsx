@@ -1790,38 +1790,42 @@ export default function MySQLVehiclesOriginalStyle() {
         (err && ((err as any).name === "AbortError" || (err instanceof TypeError && err.message.includes("Failed to fetch")) || (err as any).status === 0));
 
       if (!isTransient) {
-        // clear vehicles for non-transient errors
-        setVehicles([]);
-        setApiResponse({
-          success: false,
-          data: [],
-          message: "No vehicles available",
-          pagination: {
-            page: 1,
-            pageSize: resultsPerPage,
-            total: 0,
-            totalPages: 0,
-          },
-        });
+        // clear vehicles for non-transient errors (only if this is the latest request)
+        if (requestIdRef.current === requestId) {
+          setVehicles([]);
+          setApiResponse({
+            success: false,
+            data: [],
+            message: "No vehicles available",
+            pagination: {
+              page: 1,
+              pageSize: resultsPerPage,
+              total: 0,
+              totalPages: 0,
+            },
+          });
+        }
       } else {
-        // preserve existing vehicles; mark apiResponse as stale/failed
-        setApiResponse((prev) =>
-          prev
-            ? { ...prev, success: false, message: prev.message || "Network error - results may be stale" }
-            : {
-                success: false,
-                data: vehicles,
-                message: "Network error - results may be stale",
-                meta: {
-                  totalRecords: vehicles.length,
-                  totalPages: 1,
-                  currentPage: currentPage,
-                  pageSize: resultsPerPage,
-                  hasNextPage: false,
-                  hasPreviousPage: false,
+        // preserve existing vehicles; mark apiResponse as stale/failed (only update meta if latest)
+        if (requestIdRef.current === requestId) {
+          setApiResponse((prev) =>
+            prev
+              ? { ...prev, success: false, message: prev.message || "Network error - results may be stale" }
+              : {
+                  success: false,
+                  data: vehicles,
+                  message: "Network error - results may be stale",
+                  meta: {
+                    totalRecords: vehicles.length,
+                    totalPages: 1,
+                    currentPage: currentPage,
+                    pageSize: resultsPerPage,
+                    hasNextPage: false,
+                    hasPreviousPage: false,
+                  },
                 },
-              },
-        );
+          );
+        }
       }
     } finally {
       setLoading(false);
