@@ -412,6 +412,8 @@ export default function MySQLVehiclesOriginalStyle() {
   const [error, setError] = useState<string | null>(null);
   // Request sequencing id to prevent out-of-order responses from overwriting newer results
   const requestIdRef = useRef(0);
+  // Track whether filterOptions have been loaded at least once to avoid surprise auto-applies
+  const filterOptionsInitialLoadedRef = useRef(false);
 
   // Ensure vehicles without price are moved to the end when sorting by price
   useEffect(() => {
@@ -1180,10 +1182,13 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, [filterOptions, searchTerm, unifiedSearch]);
 
-  // Ensure Gasoline is selected by default when fuel options first load and no selection exists
+  // Ensure Gasoline is selected by default when fuel options first load (only on initial load)
   useEffect(() => {
     const fuels = filterOptions?.fuel_type || [];
     if (fuels.length === 0) return;
+    // Only auto-apply default once (first time filters become available)
+    if (filterOptionsInitialLoadedRef.current) return;
+    filterOptionsInitialLoadedRef.current = true;
     if (appliedFilters.fuelType && appliedFilters.fuelType.length > 0) return;
     const hasGas = fuels.some(
       (f: any) => String(f.name).toLowerCase() === "gasoline",
