@@ -100,9 +100,12 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
   // Internal refs for fetch tracing and visibility guard
   const FETCH_PERSIST_KEY = "carzino_applied_filters_v2";
+  const FILTERS_CACHE_KEY = "carzino_filter_options_v1";
+  const FILTERS_CACHE_TTL = Number(process.env.FILTERS_CACHE_TTL_MS || 5 * 60 * 1000); // 5 minutes
   const latestFetchIdRef = useRef(0);
   const fetchCounterRef = useRef(0);
   const visibilityChangeAtRef = useRef(0);
+  const cacheLoadedRef = useRef(false);
 
   // Persist incoming appliedFilters into sessionStorage so other contexts (Builder preview)
   // can rehydrate them. We avoid overwriting if sessionStorage is not available.
@@ -116,6 +119,28 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
       // ignore quota errors
     }
   }, [appliedFilters]);
+
+  // Load cached filterOptions quickly (if within TTL) so UI can show options instantly while we refresh in background
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(FILTERS_CACHE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { ts: number; data: FilterMap } | null;
+      if (!parsed) return;
+      if (Date.now() - (parsed.ts || 0) > FILTERS_CACHE_TTL) {
+        // stale — ignore
+        return;
+      }
+      // Apply cached filters immediately
+      setFilterOptions(parsed.data || {});
+      cacheLoadedRef.current = true;
+      console.log("[filters] loaded filterOptions from cache");
+    } catch (e) {
+      // ignore parsing errors
+    }
+    // run only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Expose a helper to load persisted filters (parent can call this during reducer init)
   // Note: we keep this as a named export below as loadPersistedAppliedFilters.
