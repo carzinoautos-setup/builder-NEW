@@ -3632,7 +3632,7 @@ export default function MySQLVehiclesOriginalStyle() {
               )
             : null}
 
-          <div className="p-4 pt-5 lg:pt-6" style={{ paddingBottom: mobileFiltersOpen ? (/* action bar + safe area */ '160px') : undefined }}>
+          <div className="p-4 pt-5 lg:pt-6" style={{ paddingBottom: mobileFiltersOpen ? (/* action bar + safe area */ 'calc(15vh + 120px)') : undefined }}>
             {/* Mobile Filter Action Buttons (moved to top) */}
             <div className="hidden">
               <div className="flex gap-3 px-0">
