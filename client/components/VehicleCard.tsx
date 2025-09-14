@@ -201,6 +201,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const fallbackLocation = sanitize(vehicle.location || "");
 
   const [sellerInfo, setSellerInfo] = React.useState<any>(null);
+  const [sellerFetchFailed, setSellerFetchFailed] = React.useState(false);
   const accountTypeField = sanitize(
     (vehicle as any).account_type_seller || (vehicle as any).seller_type || "",
   );
@@ -214,6 +215,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       (vehicle as any).account_number ||
       null;
     if (!acct) return;
+    if (sellerFetchFailed) return; // avoid retrying repeatedly if it already failed
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {
@@ -228,7 +230,21 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       try {
         const url = `${window.location.origin}/api/sellers/${encodeURIComponent(acct)}`;
         const resp = await fetch(url, { signal: controller.signal });
-        if (!resp || !resp.ok) return;
+        if (!resp) {
+          setSellerFetchFailed(true);
+          return;
+        }
+        if (!resp.ok) {
+          // mark failed to avoid repeated retries and log the status
+          setSellerFetchFailed(true);
+          try {
+            const text = await resp.text().catch(() => "");
+            console.warn(`VehicleCard: seller fetch failed status=${resp.status} body=${text}`);
+          } catch (e) {
+            // ignore
+          }
+          return;
+        }
         // If the request was aborted before json parsing, avoid parsing
         if (controller.signal.aborted) return;
         const json = await resp.json().catch(() => null);
@@ -236,11 +252,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           setSellerInfo(json.data);
         }
       } catch (e: any) {
-        // Ignore AbortError silently, log others
+        // Ignore AbortError silently, log others and mark failure to avoid retry storm
         if (e && e.name === "AbortError") {
           // request was aborted (timeout or unmount) - no-op
         } else {
           console.warn("VehicleCard: seller fetch error:", e);
+          setSellerFetchFailed(true);
         }
       } finally {
         clearTimeout(timeout);
@@ -260,6 +277,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     (vehicle as any).seller_account_number,
     (vehicle as any).account_number_seller,
     (vehicle as any).account_number,
+    sellerFetchFailed,
   ]);
 
   // Determine displayed city/state preferring sellerInfo (sanitize 'Unknown')
