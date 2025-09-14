@@ -1771,19 +1771,44 @@ export default function MySQLVehiclesOriginalStyle() {
         );
       }
 
-      // Set empty vehicles array
-      setVehicles([]);
-      setApiResponse({
-        success: false,
-        data: [],
-        message: "No vehicles available",
-        pagination: {
-          page: 1,
-          pageSize: resultsPerPage,
-          total: 0,
-          totalPages: 0,
-        },
-      });
+      // On transient network/abort errors, preserve existing vehicles to avoid UI flicker.
+      const isTransient =
+        (err && ((err as any).name === "AbortError" || (err instanceof TypeError && err.message.includes("Failed to fetch")) || (err as any).status === 0));
+
+      if (!isTransient) {
+        // clear vehicles for non-transient errors
+        setVehicles([]);
+        setApiResponse({
+          success: false,
+          data: [],
+          message: "No vehicles available",
+          pagination: {
+            page: 1,
+            pageSize: resultsPerPage,
+            total: 0,
+            totalPages: 0,
+          },
+        });
+      } else {
+        // preserve existing vehicles; mark apiResponse as stale/failed
+        setApiResponse((prev) =>
+          prev
+            ? { ...prev, success: false, message: prev.message || "Network error - results may be stale" }
+            : {
+                success: false,
+                data: vehicles,
+                message: "Network error - results may be stale",
+                meta: {
+                  totalRecords: vehicles.length,
+                  totalPages: 1,
+                  currentPage: currentPage,
+                  pageSize: resultsPerPage,
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                },
+              },
+        );
+      }
     } finally {
       setLoading(false);
     }
