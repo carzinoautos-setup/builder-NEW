@@ -2686,8 +2686,8 @@ export default function MySQLVehiclesOriginalStyle() {
     });
     setPriceMin("1000");
     setPriceMax("50000");
-    setPaymentMin("100");
-    setPaymentMax("2000");
+    setPaymentMin("Any");
+    setPaymentMax("Any");
     // Reset year range selects
     setYearFrom("");
     setYearTo("");
