@@ -978,7 +978,7 @@ export default function MySQLVehiclesOriginalStyle() {
   // UI: fuel type show more and default selection
   const [showMoreFuel, setShowMoreFuel] = useState(false);
 
-  // Suggestion computation depends on filterOptions × compute with useMemo to avoid TDZ
+  // Suggestion computation depends on filterOptions �� compute with useMemo to avoid TDZ
   const {
     computedInventorySuggestions,
     computedQuickFilterSuggestions,
@@ -2289,8 +2289,11 @@ export default function MySQLVehiclesOriginalStyle() {
     // lazy import builder to avoid errors when no key is present
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const { builder, BUILDER_MODELS } = require("@/lib/builder");
-      if (!builder || !BUILDER_MODELS) return;
+      const lib = require("@/lib/builder");
+      const BUILDER_ENABLED = lib && lib.BUILDER_ENABLED;
+      const builder = lib && lib.builder;
+      const BUILDER_MODELS = lib && lib.BUILDER_MODELS;
+      if (!BUILDER_ENABLED || !builder || !BUILDER_MODELS) return;
 
       const fetchBuilderContent = async () => {
         try {
