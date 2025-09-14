@@ -561,6 +561,16 @@ export const getVehicles: RequestHandler = async (req, res) => {
     // Otherwise use the configured service (MySQL or Mock)
     const result = await vehicleService.getVehicles(filters, pagination);
 
+    // Debug: log IDs returned and pagination to help trace disappearing items
+    try {
+      const ids = Array.isArray(result.data)
+        ? result.data.map((v: any) => (v && (v.id || v.ID || v.post_id) ? (v.id || v.ID || v.post_id) : null)).filter(Boolean)
+        : [];
+      console.log(`[SERVER] /api/vehicles -> returned ${ids.length} items page=${page} pageSize=${pageSize} ids_sample=${ids.slice(0,10).join(',')}`);
+    } catch (e) {
+      console.log('[SERVER] /api/vehicles -> unable to log ids', e && e.message ? e.message : e);
+    }
+
     // Return response
     res.status(200).json(result);
   } catch (error) {
