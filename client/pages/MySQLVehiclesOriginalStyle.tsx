@@ -1654,6 +1654,40 @@ export default function MySQLVehiclesOriginalStyle() {
             transformedVehicles.length,
             "vehicles",
           );
+
+          // Batch fetch seller details to avoid per-card requests
+          (async () => {
+            try {
+              const accounts = Array.from(
+                new Set(
+                  transformedVehicles
+                    .map((v: any) => v.seller_account_number)
+                    .filter((a: any) => a && String(a).trim()),
+                ),
+              ).slice(0, 200); // limit to reasonable size
+
+              if (accounts.length === 0) return;
+
+              const batchRes = await fetch(`/api/sellers/batch`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ accounts }),
+              });
+              if (!batchRes.ok) return;
+              const batchJson = await batchRes.json();
+              if (!batchJson.success || !batchJson.data) return;
+              const sellersMap = batchJson.data as Record<string, any>;
+
+              // Merge sellers into vehicles if still the latest response
+              if (requestIdRef.current === requestId) {
+                setVehicles((prev) =>
+                  prev.map((v) => ({ ...v, sellerInfo: sellersMap[v.seller_account_number] || null })),
+                );
+              }
+            } catch (e) {
+              /* ignore */
+            }
+          })();
         } else {
           console.debug("Ignoring out-of-date vehicle response (stale requestId)");
         }
