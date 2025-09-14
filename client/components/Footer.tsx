@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BuilderComponent } from "@builder.io/react";
-import { builder } from "../lib/builder";
+import { builder, BUILDER_ENABLED } from "../lib/builder";
 import { useNavigate } from "react-router-dom";
 
 export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (href: string) => void }) {
