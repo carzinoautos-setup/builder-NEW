@@ -2474,19 +2474,37 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, []);
 
-  // Load available dealers from normalized filterOptions (prefer WP ACF data)
+  // Load available dealers from normalized filterOptions (prefer WP ACF data),
+  // but merge any dealer names present in current vehicles (API v5.4 may now populate acf.account_name_seller)
   useEffect(() => {
-    if (filterOptions && Array.isArray(filterOptions.account_name_seller)) {
-      setAvailableDealers(
-        filterOptions.account_name_seller.map((v: any) => ({
-          name: v.name,
-          count: v.count,
-        })),
-      );
-    } else {
+    try {
+      const dealersFromFilters: { name: string; count: number }[] = Array.isArray(
+        filterOptions?.account_name_seller,
+      )
+        ? filterOptions!.account_name_seller.map((v: any) => ({ name: v.name, count: v.count }))
+        : [];
+
+      // Build a map for quick lookup
+      const map: Record<string, number> = {};
+      for (const d of dealersFromFilters) {
+        map[String(d.name).trim()] = Number(d.count) || 0;
+      }
+
+      // Merge sellers found in current vehicles (ensure names that appear on vehicles are visible in filters)
+      for (const v of vehicles || []) {
+        const name = String((v as any).dealer || "").trim();
+        if (!name) continue;
+        if (!map[name]) map[name] = 1; // if missing, add with count=1 (approx)
+      }
+
+      const merged = Object.keys(map).map((k) => ({ name: k, count: map[k] }));
+      // Sort alphabetically (or keep WP ordering if preferred)
+      merged.sort((a, b) => a.name.localeCompare(b.name));
+      setAvailableDealers(merged);
+    } catch (e) {
       setAvailableDealers([]);
     }
-  }, [filterOptions]);
+  }, [filterOptions, vehicles]);
 
   // Load available vehicle types from normalized filterOptions (prefer WP ACF data)
   useEffect(() => {
