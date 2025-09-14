@@ -3579,8 +3579,11 @@ export default function MySQLVehiclesOriginalStyle() {
             </button>
           </div>
 
-          {/* Mobile Filter - top sticky action bar (Cancel/Apply moved here) */}
-          <div className="lg:hidden sticky top-0 z-[140] bg-white border-b border-gray-200 px-4 pt-4 pb-3 lg:pt-3">
+          {/* Mobile Filter - top action bar (fixed while mobile filters open to avoid scrolling away) */}
+          <div
+            className={"lg:hidden bg-white border-b border-gray-200 px-4 pt-4 pb-3 lg:pt-3 " + (mobileFiltersOpen ? "fixed top-0 left-0 right-0 z-[999]" : "sticky top-0 z-[140]")}
+            style={{ backdropFilter: mobileFiltersOpen ? "saturate(120%) blur(4px)" : undefined }}
+          >
             <div className="flex gap-3">
               <button
                 type="button"
@@ -3601,7 +3604,7 @@ export default function MySQLVehiclesOriginalStyle() {
             </div>
           </div>
 
-          <div className="p-4 pt-5 lg:pt-6">
+          <div className="p-4 pt-5 lg:pt-6" style={{ paddingTop: mobileFiltersOpen ?  (/* action bar + safe area */ '88px') : undefined }}>
             {/* Mobile Filter Action Buttons (moved to top) */}
             <div className="hidden">
               <div className="flex gap-3 px-0">
