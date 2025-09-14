@@ -1494,8 +1494,8 @@ export default function MySQLVehiclesOriginalStyle() {
             method: "GET",
             headers: { "Content-Type": "application/json" },
           },
-          1,
-          8000,
+          2,
+          15000,
         );
 
         if (!response.ok) {
@@ -1520,8 +1520,8 @@ export default function MySQLVehiclesOriginalStyle() {
               method: "GET",
               headers: { "Content-Type": "application/json" },
             },
-            1,
-            8000,
+            2,
+            15000,
           );
           if (!response.ok) {
             throw new Error(
@@ -1598,8 +1598,8 @@ export default function MySQLVehiclesOriginalStyle() {
 
         // Remove any 'Uncategorized' body styles before transforming
         const filteredRecords = mappedRecords.filter((r: any) => {
-          const body = (r.body_style || r.bodyType || "").toString().trim();
-          return body !== "" && body.toLowerCase() !== "uncategorized";
+          const body = (r.body_style || r.bodyType || "").toString().trim().toLowerCase();
+          return body !== "uncategorized";
         });
 
         // Transform VehicleRecord[] to Vehicle[] for display
@@ -1700,8 +1700,8 @@ export default function MySQLVehiclesOriginalStyle() {
 
             // Filter out uncategorized
             mapped = mapped.filter((r: any) => {
-              const body = (r.body_style || "").toString().trim();
-              return body !== "" && body.toLowerCase() !== "uncategorized";
+              const body = (r.body_style || "").toString().trim().toLowerCase();
+              return body !== "uncategorized";
             });
 
             const transformedVehicles = mapped.map(transformVehicleRecord);
@@ -2126,9 +2126,9 @@ export default function MySQLVehiclesOriginalStyle() {
             } as any;
           });
           const filteredRecords = mappedRecords.filter((r: any) => {
-            const body = (r.body_style || r.bodyType || "").toString().trim();
-            return body !== "" && body.toLowerCase() !== "uncategorized";
-          });
+          const body = (r.body_style || r.bodyType || "").toString().trim().toLowerCase();
+          return body !== "uncategorized";
+        });
           const transformedVehicles = filteredRecords.map(
             transformVehicleRecord,
           );
