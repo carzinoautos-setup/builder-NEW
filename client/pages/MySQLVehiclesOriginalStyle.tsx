@@ -4621,7 +4621,14 @@ export default function MySQLVehiclesOriginalStyle() {
             )}
 
             {/* Distance */}
-            {!filtersLoading && (!filterOptions || Object.keys(filterOptions).length === 0) && (
+            {/* Filters loading / unavailable state */}
+            {filtersLoading ? (
+              <div className="mb-4 space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
+                <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse" />
+                <div className="h-3 bg-gray-200 rounded w-5/6 animate-pulse" />
+              </div>
+            ) : (!filterOptions || Object.keys(filterOptions).length === 0) ? (
               <div className="mb-4 p-3 border border-yellow-300 rounded bg-yellow-50 text-sm">
                 Filters unavailable — <button
                   type="button"
@@ -4629,7 +4636,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   className="underline text-red-600"
                 >Retry</button>
               </div>
-            )}
+            ) : null}
             <div className="mb-4 pb-4 border border-gray-200 rounded-lg p-3">
               <label className="carzino-location-label block mb-2">
                 Distance
