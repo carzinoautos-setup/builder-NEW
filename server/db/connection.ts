@@ -71,10 +71,13 @@ export async function executeQuery(sql: string, params: any[] = []) {
         code,
       );
       try {
-        // Close existing pool if present
+        // Mark pool for recreation. Don't await pool.end() here to avoid blocking
+        // concurrent handlers that may still be using the old pool. Attempt to
+        // end the old pool asynchronously while allowing a new one to be created.
         if (pool) {
           try {
-            await pool.end();
+            // Fire-and-forget close; ignore errors
+            pool.end().catch(() => {});
           } catch (e) {
             /* ignore */
           }
