@@ -576,6 +576,15 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
 
         setFilterOptions(finalMap);
         console.log(`[filters][commit] id=${localId} ts=${Date.now()}`);
+        // Persist finalMap to sessionStorage cache for instant loads next time
+        try {
+          sessionStorage.setItem(
+            FILTERS_CACHE_KEY,
+            JSON.stringify({ ts: Date.now(), data: finalMap }),
+          );
+        } catch (e) {
+          // ignore quota errors
+        }
 
         // For certain filter categories where WP counts may be unreliable (seller/dealer),
         // compute authoritative counts in the background (non-blocking) by querying /api/vehicles
