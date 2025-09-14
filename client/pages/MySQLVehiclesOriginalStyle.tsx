@@ -1715,37 +1715,41 @@ export default function MySQLVehiclesOriginalStyle() {
             });
 
             const transformedVehicles = mapped.map(transformVehicleRecord);
-            if (appendResults) {
-              setVehicles((prev) =>
-                reorderForPrice([...prev, ...transformedVehicles]),
-              );
+            if (requestIdRef.current === requestId) {
+              if (appendResults) {
+                setVehicles((prev) =>
+                  reorderForPrice([...prev, ...transformedVehicles]),
+                );
+              } else {
+                setVehicles(reorderForPrice(transformedVehicles));
+              }
+              // reset append flag
+              setAppendResults(false);
+              setApiResponse({
+                success: true,
+                data: transformedVehicles,
+                meta: {
+                  totalRecords:
+                    fallbackJson.meta?.total ||
+                    fallbackJson.meta?.totalRecords ||
+                    transformedVehicles.length,
+                  totalPages:
+                    fallbackJson.meta?.total_pages ||
+                    Math.ceil(
+                      (fallbackJson.meta?.total || transformedVehicles.length) /
+                        resultsPerPage,
+                    ),
+                  currentPage: fallbackJson.meta?.page || 1,
+                  pageSize: resultsPerPage,
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                },
+              });
+              setLoading(false);
+              return;
             } else {
-              setVehicles(reorderForPrice(transformedVehicles));
+              console.debug("Ignoring out-of-date fallback response (stale requestId)");
             }
-            // reset append flag
-            setAppendResults(false);
-            setApiResponse({
-              success: true,
-              data: transformedVehicles,
-              meta: {
-                totalRecords:
-                  fallbackJson.meta?.total ||
-                  fallbackJson.meta?.totalRecords ||
-                  transformedVehicles.length,
-                totalPages:
-                  fallbackJson.meta?.total_pages ||
-                  Math.ceil(
-                    (fallbackJson.meta?.total || transformedVehicles.length) /
-                      resultsPerPage,
-                  ),
-                currentPage: fallbackJson.meta?.page || 1,
-                pageSize: resultsPerPage,
-                hasNextPage: false,
-                hasPreviousPage: false,
-              },
-            });
-            setLoading(false);
-            return;
           }
         }
       } catch (fallbackErr) {
