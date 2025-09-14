@@ -3627,6 +3627,22 @@ export default function MySQLVehiclesOriginalStyle() {
                       Apply
                     </button>
                   </div>
+                  {/* Reset All Filters link beneath buttons, centered and red */}
+                  <div className="w-full text-center mt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        try {
+                          clearAllFilters();
+                        } catch (e) {
+                          /* ignore */
+                        }
+                      }}
+                      className="text-red-600 text-sm font-medium underline"
+                    >
+                      Reset All Filters
+                    </button>
+                  </div>
                 </div>,
                 document.body,
               )
