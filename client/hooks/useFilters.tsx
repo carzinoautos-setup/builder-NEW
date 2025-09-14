@@ -224,7 +224,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           scopedUrl,
           { method: "GET", signal: controller.signal },
           2,
-          15000,
+          8000,
         );
         if (!scopedRes.ok) throw new Error(`Filters error ${scopedRes.status}`);
         const scopedJson = await scopedRes.json();
@@ -245,7 +245,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           unscopedUrl,
           { method: "GET", signal: controller.signal },
           2,
-          15000,
+          8000,
         );
         if (!unscopedRes.ok)
           throw new Error(`Filters error ${unscopedRes.status}`);
@@ -751,7 +751,11 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
   );
 
   useEffect(() => {
-    fetchFilters();
+    // Debounce filter fetches to avoid flood when appliedFilters changes rapidly
+    const t = setTimeout(() => {
+      fetchFilters();
+    }, 200);
+    return () => clearTimeout(t);
     // We intentionally do not include fetchFilters in deps to avoid double-calls; rely on appliedFilters changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appliedFilters]);
