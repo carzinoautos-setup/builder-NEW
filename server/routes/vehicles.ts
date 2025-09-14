@@ -785,6 +785,20 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
 
     const options = await vehicleService.getFilterOptions();
 
+    // Debug: log sizes of filter option arrays to help trace missing filters
+    try {
+      const counts: Record<string, number> = {};
+      if (options && typeof options === 'object') {
+        for (const k of Object.keys(options)) {
+          const v = (options as any)[k];
+          counts[k] = Array.isArray(v) ? v.length : 0;
+        }
+      }
+      console.log(`[SERVER] /api/vehicles/filters -> option counts: ${JSON.stringify(counts)}`);
+    } catch (e) {
+      console.log('[SERVER] /api/vehicles/filters -> unable to log option counts', e && e.message ? e.message : e);
+    }
+
     res.status(200).json({
       success: true,
       data: options,
