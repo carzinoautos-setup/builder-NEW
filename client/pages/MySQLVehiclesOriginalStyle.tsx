@@ -1828,7 +1828,8 @@ export default function MySQLVehiclesOriginalStyle() {
         }
       }
     } finally {
-      setLoading(false);
+      // Only clear loading flag if this is the latest request to avoid races
+      if (requestIdRef.current === requestId) setLoading(false);
     }
   }, [
     currentPage,
