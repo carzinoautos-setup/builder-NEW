@@ -201,30 +201,13 @@ export const getVehicles: RequestHandler = async (req, res) => {
         // Remove uncategorized vehicles from proxied data responses
         if (Array.isArray(json.data)) {
           const before = json.data.length;
-          json.data = json.data.filter((item: any) => {
-            const acf = item.acf || item || {};
-            const bodyStyle = (
-              acf.body_style ||
-              acf.bodyStyle ||
-              item.body_style ||
-              item.body_type ||
-              ""
-            ).toString();
-            return (
-              bodyStyle.trim() !== "" &&
-              bodyStyle.toLowerCase() !== "uncategorized"
-            );
-          });
-          const removed = before - json.data.length;
-          // Adjust pagination counts if present
+          // Preserve vehicles that may not have a body_style defined. Previously we removed
+          // items with empty or "uncategorized" body styles which caused newly uploaded
+          // vehicles to disappear from Builder previews. Do not filter json.data here.
+          const removed = 0;
+          // Keep existing pagination if present
           const pagination = json.pagination || json.meta || {};
           if (pagination && typeof pagination.total === "number") {
-            pagination.total = Math.max(0, pagination.total - removed);
-            if (pagination.total_pages && pagination.pageSize) {
-              pagination.total_pages = Math.ceil(
-                pagination.total / pagination.pageSize,
-              );
-            }
             json.pagination = pagination;
             json.meta = pagination;
           }
