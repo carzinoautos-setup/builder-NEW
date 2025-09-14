@@ -20,20 +20,23 @@ export function createDatabaseConnection(): mysql.Pool {
     return pool;
   }
 
-  const config: DatabaseConfig = {
+  const config: any = {
     host: process.env.DB_HOST || "localhost",
     port: parseInt(process.env.DB_PORT || "3306"),
     user: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || "",
     database: process.env.DB_NAME || "wordpress",
-    connectionLimit: 10,
+    waitForConnections: true,
+    connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || "10"),
+    queueLimit: 0,
     acquireTimeout: 60000,
-    timeout: 60000,
-  };
+    connectTimeout: 10000,
+  } as DatabaseConfig & Record<string, any>;
 
   try {
     pool = mysql.createPool(config);
     console.log("✅ Database connection pool created successfully");
+
     return pool;
   } catch (error) {
     console.error("❌ Failed to create database connection pool:", error);
@@ -47,6 +50,53 @@ export function getDatabase(): mysql.Pool {
     return createDatabaseConnection();
   }
   return pool;
+}
+
+/**
+ * Execute a query with a single retry on recoverable connection errors.
+ * This helps handle transient PROTOCOL_CONNECTION_LOST errors from the MySQL server
+ * by recreating the pool and retrying once.
+ */
+export async function executeQuery(sql: string, params: any[] = []) {
+  try {
+    const db = getDatabase();
+    return await db.execute(sql, params);
+  } catch (err: any) {
+    // If connection lost, recreate pool and retry once
+    const transientCodes = ["PROTOCOL_CONNECTION_LOST", "ECONNRESET", "ETIMEDOUT"];
+    const code = err && (err.code || err.errno || "");
+    if (transientCodes.includes(String(code))) {
+      console.warn(
+        "Database transient error detected (attempting to recreate pool and retry):",
+        code,
+      );
+      try {
+        // Close existing pool if present
+        if (pool) {
+          try {
+            await pool.end();
+          } catch (e) {
+            /* ignore */
+          }
+          pool = null;
+        }
+      } catch (e) {
+        /* ignore */
+      }
+
+      // Recreate pool and retry once
+      try {
+        const newDb = createDatabaseConnection();
+        return await newDb.execute(sql, params);
+      } catch (retryErr) {
+        console.error("Database retry failed:", retryErr);
+        throw retryErr;
+      }
+    }
+
+    // Non-transient error - rethrow
+    throw err;
+  }
 }
 
 // Test database connection
