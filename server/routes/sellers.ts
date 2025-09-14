@@ -10,6 +10,12 @@ export const getSellerByAccount: RequestHandler = async (req, res) => {
   if (!account)
     return res.status(400).json({ success: false, message: "Missing account" });
   try {
+    // Check cache first
+    const cached = sellerCache.get(account);
+    if (cached && Date.now() - cached.ts < SELLER_CACHE_TTL_MS) {
+      return res.json({ success: true, data: cached.data });
+    }
+
     const [rows] = (await executeQuery(
       `SELECT account_number as accountNumber, name, type as accountType, phone, email, city, state, zip, latitude, longitude FROM sellers WHERE account_number = ? LIMIT 1`,
       [account],
@@ -17,6 +23,14 @@ export const getSellerByAccount: RequestHandler = async (req, res) => {
     const result: any = (rows as any[])[0] || null;
     if (!result)
       return res.status(404).json({ success: false, message: "Not found" });
+
+    // Update cache
+    try {
+      sellerCache.set(account, { data: result, ts: Date.now() });
+    } catch (e) {
+      // ignore cache errors
+    }
+
     return res.json({ success: true, data: result });
   } catch (err: any) {
     console.error("/api/sellers/:account error", err && err.message ? err.message : err);
