@@ -741,8 +741,8 @@ export default function MySQLVehiclesOriginalStyle() {
   // Price and payment filter states
   const [priceMin, setPriceMin] = useState("1000");
   const [priceMax, setPriceMax] = useState("50000");
-  const [paymentMin, setPaymentMin] = useState("100");
-  const [paymentMax, setPaymentMax] = useState("2000");
+  const [paymentMin, setPaymentMin] = useState("Any");
+  const [paymentMax, setPaymentMax] = useState("Any");
   // Legacy payment controls removed; using ACF-backed inputs instead
 
   // New ACF-backed payment filter inputs (separate from existing payment dropdowns)
