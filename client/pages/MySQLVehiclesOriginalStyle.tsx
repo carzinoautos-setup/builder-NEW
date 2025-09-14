@@ -1779,6 +1779,37 @@ export default function MySQLVehiclesOriginalStyle() {
                   hasPreviousPage: false,
                 },
               });
+
+              // Batch fetch sellers for fallback results
+              (async () => {
+                try {
+                  const accounts = Array.from(
+                    new Set(
+                      transformedVehicles
+                        .map((v: any) => v.seller_account_number)
+                        .filter((a: any) => a && String(a).trim()),
+                    ),
+                  ).slice(0, 200);
+                  if (accounts.length === 0) return;
+                  const batchRes = await fetch(`/api/sellers/batch`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ accounts }),
+                  });
+                  if (!batchRes.ok) return;
+                  const batchJson = await batchRes.json();
+                  if (!batchJson.success || !batchJson.data) return;
+                  const sellersMap = batchJson.data as Record<string, any>;
+                  if (requestIdRef.current === requestId) {
+                    setVehicles((prev) =>
+                      prev.map((v) => ({ ...v, sellerInfo: sellersMap[v.seller_account_number] || null })),
+                    );
+                  }
+                } catch (e) {
+                  /* ignore */
+                }
+              })();
+
               setLoading(false);
               return;
             } else {
