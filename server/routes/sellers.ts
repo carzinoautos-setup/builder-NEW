@@ -56,13 +56,32 @@ export const getSellersBatch: RequestHandler = async (req, res) => {
       return res.json({ success: true, data: {} });
 
     // Build placeholders
-    const placeholders = cleaned.map(() => "?").join(",");
-    const sql = `SELECT account_number as accountNumber, name, type as accountType, phone, email, city, state, zip, latitude, longitude FROM sellers WHERE account_number IN (${placeholders})`;
-    const [rows] = (await executeQuery(sql, cleaned)) as any;
-
+    // For batch, first satisfy from cache where possible
     const map: Record<string, any> = {};
-    for (const r of (rows as any[])) {
-      if (r && r.accountNumber) map[String(r.accountNumber)] = r;
+    const toQuery: string[] = [];
+    for (const acct of cleaned) {
+      const cached = sellerCache.get(acct);
+      if (cached && Date.now() - cached.ts < SELLER_CACHE_TTL_MS) {
+        map[acct] = cached.data;
+      } else {
+        toQuery.push(acct);
+      }
+    }
+
+    if (toQuery.length > 0) {
+      const placeholders = toQuery.map(() => "?").join(",");
+      const sql = `SELECT account_number as accountNumber, name, type as accountType, phone, email, city, state, zip, latitude, longitude FROM sellers WHERE account_number IN (${placeholders})`;
+      const [rows] = (await executeQuery(sql, toQuery)) as any;
+      for (const r of (rows as any[])) {
+        if (r && r.accountNumber) {
+          map[String(r.accountNumber)] = r;
+          try {
+            sellerCache.set(String(r.accountNumber), { data: r, ts: Date.now() });
+          } catch (e) {
+            /* ignore */
+          }
+        }
+      }
     }
 
     return res.json({ success: true, data: map });
