@@ -1,6 +1,10 @@
 import { RequestHandler } from "express";
 import { executeQuery } from "../db/connection.js";
 
+// Simple in-memory cache for seller lookups to reduce DB pressure in preview mode
+const SELLER_CACHE_TTL_MS = Number(process.env.SELLER_CACHE_TTL_MS || 60 * 1000); // default 60s
+const sellerCache: Map<string, { data: any; ts: number }> = new Map();
+
 export const getSellerByAccount: RequestHandler = async (req, res) => {
   const account = req.params.account;
   if (!account)
