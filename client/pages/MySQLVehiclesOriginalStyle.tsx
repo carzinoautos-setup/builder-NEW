@@ -1696,7 +1696,7 @@ export default function MySQLVehiclesOriginalStyle() {
           "/api/vehicles",
           "/api/simple-vehicles",
         );
-        console.log("🔁 Attempting fallback fetch to:", fallbackUrl);
+        console.log("���� Attempting fallback fetch to:", fallbackUrl);
         const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
         const fallbackRes = await fetchWithRetry(fallbackUrl, {
           method: "GET",
@@ -5195,7 +5195,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         <select
                           value={paymentMin}
                           onChange={(e) => setPaymentMin(e.target.value)}
-                          className="w-full pl-3 pr-12 py-2 border border-gray-300 rounded focus:outline-none bg-white"
+                          className="w-full pl-3 pr-8 py-2 border border-gray-300 rounded focus:outline-none bg-white"
                         >
                           <option value="Any">Any</option>
                           {paymentNumericOptions.map((n) => (
@@ -5203,8 +5203,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           ))}
                           <option value="800+">$800+</option>
                         </select>
-                        <svg width="20" height="20" className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        <span className="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
                       </div>
 
                       <div className="relative flex-1">
@@ -5212,14 +5211,13 @@ export default function MySQLVehiclesOriginalStyle() {
                         <select
                           value={paymentMax}
                           onChange={(e) => setPaymentMax(e.target.value)}
-                          className="w-full pl-3 pr-12 py-2 border border-gray-300 rounded focus:outline-none bg-white"
+                          className="w-full pl-3 pr-8 py-2 border border-gray-300 rounded focus:outline-none bg-white"
                         >
                           {allowedToOptions.map((opt) => (
                             <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "$800+" : `$${opt}`)}</option>
                           ))}
                         </select>
-                        <svg width="20" height="20" className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        <span className="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
                       </div>
                     </div>
 
