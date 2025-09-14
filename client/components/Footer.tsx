@@ -163,10 +163,14 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
         <div className="max-w-[1280px] mx-auto">
           <div className="py-3 px-4 flex items-center justify-center">
             <div className="w-full footer-promo">
-              <BuilderComponent
-                model="footer-promo"
-                options={{ includeRefs: true }}
-              />
+              {BUILDER_ENABLED ? (
+                <BuilderComponent
+                  model="footer-promo"
+                  options={{ includeRefs: true }}
+                />
+              ) : (
+                <></>
+              )}
               {/* Fallback static content (visible when Builder model not present) */}
               <div className="footer-promo-fallback">
                 <div className="text-center">
@@ -230,7 +234,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
                   {s.links ? (
                     s.title === "Links" || s.title === "Popular Searches" ? (
                       <nav className="mt-0 opacity-95 flex flex-col gap-3">
-                        <BuilderComponent model="footer-links" options={{ includeRefs: true }} />
+                        {BUILDER_ENABLED ? <BuilderComponent model="footer-links" options={{ includeRefs: true }} /> : null}
 
                       {/* Static fallback when Builder model not present */}
                       {s.links.map((item) => {
@@ -359,7 +363,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
 
               <div className="text-center text-sm opacity-90">
                 {/* Editable paragraph in Design tab */}
-                <BuilderComponent model="footer-fullwidth" options={{ includeRefs: true }} />
+                {BUILDER_ENABLED ? <BuilderComponent model="footer-fullwidth" options={{ includeRefs: true }} /> : null}
 
                 {/* Static fallback when builder model missing */}
                 <div className="mt-2">
