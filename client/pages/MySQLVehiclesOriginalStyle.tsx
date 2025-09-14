@@ -769,59 +769,33 @@ export default function MySQLVehiclesOriginalStyle() {
   const [paymentMax, setPaymentMax] = useState("Any");
   // Legacy payment controls removed; using ACF-backed inputs instead
 
-  // New ACF-backed payment filter inputs (separate from existing payment dropdowns)
-  const [acfPaymentMin, setAcfPaymentMin] = useState<string>(
-    (appliedFilters.paymentMin as string) || "",
-  );
-  const [acfPaymentMax, setAcfPaymentMax] = useState<string>(
-    (appliedFilters.paymentMax as string) || "",
-  );
+  // ACF-backed down payment input (keep this as manual)
   const [acfDownPayment, setAcfDownPayment] = useState<string>(
     ((appliedFilters as any).down_payment as string) || "",
   );
-  const [paymentRangeError, setPaymentRangeError] = useState<string | null>(
-    null,
-  );
 
-  // Sync local ACF inputs when appliedFilters changes (persist values across drawer open/close)
+  // Sync down payment when appliedFilters changes (persist value across drawer open/close)
   React.useEffect(() => {
-    setAcfPaymentMin((appliedFilters.paymentMin as string) || "");
-    setAcfPaymentMax((appliedFilters.paymentMax as string) || "");
     setAcfDownPayment(((appliedFilters as any).down_payment as string) || "");
   }, [appliedFilters]);
 
-  // Debounce ACF input changes before merging into appliedFilters (600ms)
+  // When dropdowns or down payment change, merge into appliedFilters (debounced)
   React.useEffect(() => {
-    setPaymentRangeError(null);
     const t = setTimeout(() => {
-      // validation: if both provided and min > max, show inline error and don't apply
-      const minN = acfPaymentMin ? Number(acfPaymentMin) : null;
-      const maxN = acfPaymentMax ? Number(acfPaymentMax) : null;
-      if (minN !== null && maxN !== null && minN > maxN) {
-        setPaymentRangeError(
-          "Minimum payment cannot be greater than maximum payment.",
-        );
-        return;
-      }
-
-      // Determine effective min/max: manual entries (acf) override dropdowns; dropdown 'Any' means no restriction
-      const effectiveMin = acfPaymentMin && acfPaymentMin !== "" ? acfPaymentMin : (paymentMin && paymentMin !== "Any" ? paymentMin : "");
-      const effectiveMax = acfPaymentMax && acfPaymentMax !== "" ? acfPaymentMax : (paymentMax && paymentMax !== "Any" ? paymentMax : "");
-
+      const effectiveMin = paymentMin && paymentMin !== "Any" ? paymentMin : "";
+      const effectiveMax = paymentMax && paymentMax !== "Any" ? paymentMax : "";
       setAppliedFilters((prev) => ({
         ...prev,
         paymentMin: effectiveMin || "",
         paymentMax: effectiveMax || "",
-        // Treat down payment as 0 if empty per requirement
         down_payment:
           acfDownPayment !== undefined && acfDownPayment !== ""
             ? acfDownPayment
             : "0",
       }));
-    }, 600);
-
+    }, 200);
     return () => clearTimeout(t);
-  }, [acfPaymentMin, acfPaymentMax, acfDownPayment, paymentMin, paymentMax]);
+  }, [paymentMin, paymentMax, acfDownPayment]);
 
   // Payment dropdown options and derived To options based on From
   const paymentNumericOptions = [
@@ -2727,13 +2701,14 @@ export default function MySQLVehiclesOriginalStyle() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Apply payment filters handler
+  // Apply payment filters handler (dropdown-only: Any means no restriction)
   const applyPaymentFilters = () => {
-    // Use ACF-backed inputs when applying filters to backend
+    const effectiveMin = paymentMin && paymentMin !== "Any" ? paymentMin : "";
+    const effectiveMax = paymentMax && paymentMax !== "Any" ? paymentMax : "";
     setAppliedFilters((prev) => ({
       ...prev,
-      paymentMin: acfPaymentMin || "",
-      paymentMax: acfPaymentMax || "",
+      paymentMin: effectiveMin || "",
+      paymentMax: effectiveMax || "",
       down_payment:
         acfDownPayment !== undefined && acfDownPayment !== ""
           ? acfDownPayment
@@ -5246,46 +5221,6 @@ export default function MySQLVehiclesOriginalStyle() {
                       </div>
                     </div>
 
-                    {/* Manual entry boxes (users can type a specific payment range) */}
-                    <div className="flex gap-2 mb-2">
-                      <div className="relative flex-1">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$
-                        </span>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          placeholder="Min"
-                          value={
-                            acfPaymentMin ? formatPrice(acfPaymentMin) : ""
-                          }
-                          onChange={(e) => {
-                            const v = unformatPrice(e.target.value);
-                            setAcfPaymentMin(v);
-                          }}
-                          className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                        />
-                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
-                      </div>
-
-                      <div className="relative flex-1">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$
-                        </span>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          placeholder="Max"
-                          value={
-                            acfPaymentMax ? formatPrice(acfPaymentMax) : ""
-                          }
-                          onChange={(e) => {
-                            const v = unformatPrice(e.target.value);
-                            setAcfPaymentMax(v);
-                          }}
-                          className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
-                        />
-                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
-                      </div>
-                    </div>
                     <div className="relative">
                       {acfDownPayment ? (
                         <div className="mb-1 text-sm font-medium text-gray-700">
@@ -5313,11 +5248,6 @@ export default function MySQLVehiclesOriginalStyle() {
                         />
                       </div>
                     </div>
-                    {paymentRangeError && (
-                      <p className="text-red-600 text-sm mt-2">
-                        {paymentRangeError}
-                      </p>
-                    )}
                   </div>
 
                   {/* Filters update live as selections change - no Apply button */}
