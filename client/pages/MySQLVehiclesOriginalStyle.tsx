@@ -3598,35 +3598,40 @@ export default function MySQLVehiclesOriginalStyle() {
             </button>
           </div>
 
-          {/* Mobile Filter - bottom action bar (fixed while mobile filters open so it floats above device UI) */}
-          <div
-            className={"lg:hidden bg-white border-t border-gray-200 px-4 pt-3 pb-4 lg:pt-3 " + (mobileFiltersOpen ? "fixed left-0 right-0 z-[999]" : "sticky top-0 z-[140]")}
-            style={{
-              backdropFilter: mobileFiltersOpen ? "saturate(120%) blur(4px)" : undefined,
-              bottom: mobileFiltersOpen ? "15vh" : undefined,
-            }}
-          >
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => setMobileFiltersOpen(false)}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileFiltersOpen(false);
-                }}
-                className="flex-1 px-4 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors"
-              >
-                Apply
-              </button>
-            </div>
-          </div>
+          {/* Mobile Filter - bottom action bar is rendered into document.body via portal so it stays fixed to viewport */}
+          {typeof document !== "undefined" && mobileFiltersOpen
+            ? createPortal(
+                <div
+                  className="lg:hidden fixed left-0 right-0 z-[999] bg-white border-t border-gray-200 px-4 pt-3 pb-4 lg:pt-3"
+                  style={{
+                    backdropFilter: "saturate(120%) blur(4px)",
+                    bottom: "15vh",
+                  }}
+                >
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setMobileFiltersOpen(false)}
+                      className="flex-1 px-4 py-3 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileFiltersOpen(false);
+                      }}
+                      className="flex-1 px-4 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>,
+                document.body,
+              )
+            : null}
 
-          <div className="p-4 pt-5 lg:pt-6" style={{ paddingBottom: mobileFiltersOpen ? (/* action bar + safe area */ '120px') : undefined }}>
+          <div className="p-4 pt-5 lg:pt-6" style={{ paddingBottom: mobileFiltersOpen ? (/* action bar + safe area */ '160px') : undefined }}>
             {/* Mobile Filter Action Buttons (moved to top) */}
             <div className="hidden">
               <div className="flex gap-3 px-0">
