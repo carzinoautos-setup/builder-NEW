@@ -640,12 +640,23 @@ export default function MySQLVehiclesOriginalStyle() {
     displacementLiters: [] as string[],
   });
 
-  // Rehydrate appliedFilters from sessionStorage when available (one-time). This helps Builder.io preview
-  // and other contexts where we expect persisted state to be restored.
+  // Rehydrate appliedFilters from sessionStorage when available (one-time).
+  // Do NOT rehydrate fuelType to avoid applying default fuel filters (e.g., Gasoline)
+  // that may have been persisted previously. We still allow other persisted filters.
   useEffect(() => {
     try {
       const persisted = loadPersistedAppliedFilters();
       if (!persisted) return;
+
+      // Remove fuelType from persisted payload to avoid auto-applying it
+      if ((persisted as any).fuelType) {
+        try {
+          delete (persisted as any).fuelType;
+        } catch (e) {
+          /* ignore deletion errors */
+        }
+      }
+
       // detect if current appliedFilters look empty (no user selections)
       const hasPersisted = Object.values(persisted as any).some((v: any) =>
         Array.isArray(v) ? v.length > 0 : Boolean(v),
@@ -658,7 +669,7 @@ export default function MySQLVehiclesOriginalStyle() {
           ...(prev as any),
           ...(persisted as any),
         }));
-        console.log("[filters] Rehydrated appliedFilters from sessionStorage");
+        console.log("[filters] Rehydrated appliedFilters from sessionStorage (fuelType excluded)");
       }
     } catch (e) {
       /* ignore */
