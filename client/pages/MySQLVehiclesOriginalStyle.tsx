@@ -1609,7 +1609,7 @@ export default function MySQLVehiclesOriginalStyle() {
         // Transform VehicleRecord[] to Vehicle[] for display
         const transformedVehicles = filteredRecords.map(transformVehicleRecord);
         // If we fetched an expanded first page, remove/de-prioritize vehicles with the specific featured image
-        const FEATURED_ID_TO_DEPRIORITIZE = "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx";
+        const FEATURED_IDS_TO_DEPRIORITIZE = ["LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx", "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A"];
         const containsFeaturedId = (v: any) => {
           try {
             const imgs = Array.isArray(v.images) ? v.images : [];
@@ -1617,7 +1617,7 @@ export default function MySQLVehiclesOriginalStyle() {
               if (img && String(img).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
             }
             const alt = v.featured_image || v.featuredImage || v.featured_image_url || "";
-            if (alt && String(alt).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
+            if (alt && FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) => String(alt).includes(id))) return true;
           } catch (e) {
             /* ignore */
           }
@@ -2643,7 +2643,7 @@ export default function MySQLVehiclesOriginalStyle() {
     const group3 = base.filter((v) => !hasPrice(v));
 
     // De-prioritize vehicles whose featured image contains the specified identifier
-    const FEATURED_ID_TO_DEPRIORITIZE = "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx";
+    const FEATURED_IDS_TO_DEPRIORITIZE = ["LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx", "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A"];
     const result = [...group1, ...group2, ...group3];
 
     const containsFeaturedId = (v: Vehicle) => {
@@ -2653,13 +2653,13 @@ export default function MySQLVehiclesOriginalStyle() {
         if (imgs.length > 0) {
           for (const img of imgs) {
             if (!img) continue;
-            if (String(img).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
+            if (FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) => String(img).includes(id))) return true;
           }
         }
 
         // Check known alternative fields that might hold featured image URLs
         const alt = (v as any).featured_image || (v as any).featuredImage || (v as any).featured_image_url || "";
-        if (alt && String(alt).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
+        if (alt && FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) => String(alt).includes(id))) return true;
       } catch (e) {
         // ignore
       }
