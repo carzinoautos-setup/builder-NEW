@@ -60,7 +60,7 @@ const DOORS = ["2 doors", "4 doors"];
 const SELLER_TYPES = ["Dealer", "Private Seller"];
 
 // Valid body styles - excludes "Uncategorized" per validation rules
-import { ALLOWED_BODY_STYLES_SET } from "../config/allowedBodyStyles.js";
+import { ALLOWED_BODY_STYLES_SET, normalizeBodyStyle } from "../config/allowedBodyStyles.js";
 
 const VALID_BODY_STYLES = [
   "Sedan",
