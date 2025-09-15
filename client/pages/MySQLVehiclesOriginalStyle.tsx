@@ -1614,10 +1614,11 @@ export default function MySQLVehiclesOriginalStyle() {
           } as any;
         });
 
-        // Remove any 'Uncategorized' body styles before transforming
+        // Remove any 'Uncategorized' or empty body styles before transforming
         const filteredRecords = mappedRecords.filter((r: any) => {
-          const body = (r.body_style || r.bodyType || "").toString().trim().toLowerCase();
-          return body !== "uncategorized";
+          const body = (r.body_style || r.bodyType || "").toString().trim();
+          if (!body) return false;
+          return body.toLowerCase() !== "uncategorized";
         });
 
         // Transform VehicleRecord[] to Vehicle[] for display
@@ -1792,10 +1793,11 @@ export default function MySQLVehiclesOriginalStyle() {
               featured_image: r.featured_image || null,
             }));
 
-            // Filter out uncategorized
+            // Filter out uncategorized and empty body types
             mapped = mapped.filter((r: any) => {
-              const body = (r.body_style || "").toString().trim().toLowerCase();
-              return body !== "uncategorized";
+              const body = (r.body_style || "").toString().trim();
+              if (!body) return false;
+              return body.toLowerCase() !== "uncategorized";
             });
 
             const transformedVehicles = mapped.map(transformVehicleRecord);
