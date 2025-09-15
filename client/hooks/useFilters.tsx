@@ -220,14 +220,29 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           scopedUrl,
           `id=${localId}`,
         );
-        const scopedRes = await fetchWithRetry(
-          scopedUrl,
-          { method: "GET", signal: controller.signal },
-          2,
-          8000,
-        );
-        if (!scopedRes.ok) throw new Error(`Filters error ${scopedRes.status}`);
-        const scopedJson = await scopedRes.json();
+        let scopedJson: any = { success: true, filters: {} };
+        try {
+          const scopedRes = await fetchWithRetry(
+            scopedUrl,
+            { method: "GET", signal: controller.signal },
+            2,
+            8000,
+          );
+          if (scopedRes && scopedRes.ok) {
+            try {
+              scopedJson = await scopedRes.json();
+            } catch (e) {
+              console.warn("[filters] failed to parse scoped filters JSON", e);
+              scopedJson = { success: true, filters: {} };
+            }
+          } else {
+            console.warn("[filters] scoped filters fetch failed", scopedRes && scopedRes.status);
+            scopedJson = { success: true, filters: {} };
+          }
+        } catch (e) {
+          console.warn("[filters] scoped filters exception", e);
+          scopedJson = { success: true, filters: {} };
+        }
 
         // Fetch unscoped make list (keep models/trims and other categories scoped).
         const unscopedFilters: any = { ...(filters || {}) };
@@ -241,15 +256,29 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
           unscopedUrl,
           `id=${localId}`,
         );
-        const unscopedRes = await fetchWithRetry(
-          unscopedUrl,
-          { method: "GET", signal: controller.signal },
-          2,
-          8000,
-        );
-        if (!unscopedRes.ok)
-          throw new Error(`Filters error ${unscopedRes.status}`);
-        const unscopedJson = await unscopedRes.json();
+        let unscopedJson: any = { success: true, filters: {} };
+        try {
+          const unscopedRes = await fetchWithRetry(
+            unscopedUrl,
+            { method: "GET", signal: controller.signal },
+            2,
+            8000,
+          );
+          if (unscopedRes && unscopedRes.ok) {
+            try {
+              unscopedJson = await unscopedRes.json();
+            } catch (e) {
+              console.warn("[filters] failed to parse unscoped filters JSON", e);
+              unscopedJson = { success: true, filters: {} };
+            }
+          } else {
+            console.warn("[filters] unscoped filters fetch failed", unscopedRes && unscopedRes.status);
+            unscopedJson = { success: true, filters: {} };
+          }
+        } catch (e) {
+          console.warn("[filters] unscoped filters exception", e);
+          unscopedJson = { success: true, filters: {} };
+        }
 
         // Parse helper to convert WP plugin json.filters or json.data into a FilterMap
         const parseJsonToMap = (json: any): FilterMap => {
