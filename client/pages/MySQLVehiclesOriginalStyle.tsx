@@ -1788,7 +1788,7 @@ export default function MySQLVehiclesOriginalStyle() {
           "/api/vehicles",
           "/api/simple-vehicles",
         );
-        console.log("���� Attempting fallback fetch to:", fallbackUrl);
+        console.log("������ Attempting fallback fetch to:", fallbackUrl);
         const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
         const fallbackRes = await fetchWithRetry(fallbackUrl, {
           method: "GET",
@@ -4125,65 +4125,6 @@ export default function MySQLVehiclesOriginalStyle() {
                 </>
               ) : null}
             </div>
-
-            {/* Price and Payment pills (mobile) */}
-            {(appliedFilters.priceMin || appliedFilters.priceMax) && (
-              <span
-                onClick={() => {
-                  setAppliedFilters((prev) => ({ ...prev, priceMin: "", priceMax: "" }));
-                  setPriceMin("1000");
-                  setPriceMax("50000");
-                }}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800 mr-2"
-              >
-                <Check className="w-3 h-3 text-red-600" />
-                {appliedFilters.priceMin || "0"} - {appliedFilters.priceMax || "Any"}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setAppliedFilters((prev) => ({ ...prev, priceMin: "", priceMax: "" }));
-                    setPriceMin("1000");
-                    setPriceMax("50000");
-                  }}
-                  className="ml-1 text-white hover:text-gray-300"
-                  aria-label="Remove price filter"
-                >
-                  <X className="w-3 h-3 inline-block" />
-                </button>
-              </span>
-            )}
-
-            {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (() => {
-              const pmin = String(appliedFilters.paymentMin || "").trim();
-              const pmax = String(appliedFilters.paymentMax || "").trim();
-              const both = pmin && pmax;
-              const label = both
-                ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
-                : pmin
-                ? `${formatCurrency(pmin)}/mo`
-                : `${formatCurrency(pmax)}/mo`;
-              return (
-                <span
-                  onClick={() => setAppliedFilters((prev) => ({ ...prev, paymentMin: "", paymentMax: "" }))}
-                  className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                >
-                  <Check className="w-3 h-3 text-red-600" />
-                  {label}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAppliedFilters((prev) => ({ ...prev, paymentMin: "", paymentMax: "" }));
-                    }}
-                    className="ml-1 text-white hover:text-gray-300"
-                    aria-label="Remove payment filter"
-                  >
-                    <X className="w-3 h-3 inline-block" />
-                  </button>
-                </span>
-              );
-            })()}
 
             {/* Desktop Search Section */}
             <div className="hidden lg:block mb-4 pb-4 bg-white">
