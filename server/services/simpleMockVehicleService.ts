@@ -215,7 +215,8 @@ export class SimpleMockVehicleService {
         const v = vehicle.body_type && String(vehicle.body_type).trim();
         if (!v) return false;
         if (v.toLowerCase() === "uncategorized") return false;
-        return ALLOWED_BODY_STYLES_SET.has(v.toLowerCase());
+        const base = normalizeBodyStyle(v);
+        return Boolean(base);
       } catch (e) {
         return false;
       }
