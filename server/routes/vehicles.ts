@@ -201,7 +201,7 @@ export const getVehicles: RequestHandler = async (req, res) => {
         // Remove vehicles explicitly marked as 'uncategorized' to avoid showing them in results/filters
         if (Array.isArray(json.data)) {
           const before = json.data.length;
-          // Only remove items whose body style is explicitly set to 'uncategorized'.
+          // Remove items whose body style is explicitly set to 'uncategorized' OR whose body is empty/null
           json.data = json.data.filter((item: any) => {
             try {
               const body =
@@ -210,9 +210,11 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 item.bodyClass ||
                 item.body_class ||
                 "";
-              return String(body).trim().toLowerCase() !== "uncategorized";
+              const trimmed = String(body).trim();
+              if (!trimmed) return false; // exclude empty body types
+              return trimmed.toLowerCase() !== "uncategorized";
             } catch (e) {
-              return true; // keep item if unsure
+              return false; // be conservative and exclude if unsure
             }
           });
           const removed = before - json.data.length;
