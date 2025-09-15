@@ -3736,7 +3736,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   className="lg:hidden fixed left-0 right-0 z-[999] bg-white border-t border-gray-200 px-4 pt-3 pb-4 lg:pt-3"
                   style={{
                     backdropFilter: "saturate(120%) blur(4px)",
-                    bottom: "15vh",
+                    // Move action bar closer to bottom: use smaller viewport offset and account for safe area
+                    bottom: "6vh",
                   }}
                 >
                   <div className="flex gap-3">
