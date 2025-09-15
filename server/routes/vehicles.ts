@@ -198,13 +198,24 @@ export const getVehicles: RequestHandler = async (req, res) => {
         // If UI sort was requested, we will sort and paginate server-side after fetching an expanded set
         const requestedSort = uiSort;
 
-        // Remove uncategorized vehicles from proxied data responses
+        // Remove vehicles explicitly marked as 'uncategorized' to avoid showing them in results/filters
         if (Array.isArray(json.data)) {
           const before = json.data.length;
-          // Preserve vehicles that may not have a body_style defined. Previously we removed
-          // items with empty or "uncategorized" body styles which caused newly uploaded
-          // vehicles to disappear from Builder previews. Do not filter json.data here.
-          const removed = 0;
+          // Only remove items whose body style is explicitly set to 'uncategorized'.
+          json.data = json.data.filter((item: any) => {
+            try {
+              const body =
+                (item.acf && (item.acf.body_style || item.acf.bodyClass || item.acf.body_class)) ||
+                item.body_style ||
+                item.bodyClass ||
+                item.body_class ||
+                "";
+              return String(body).trim().toLowerCase() !== "uncategorized";
+            } catch (e) {
+              return true; // keep item if unsure
+            }
+          });
+          const removed = before - json.data.length;
           // Keep existing pagination if present
           const pagination = json.pagination || json.meta || {};
           if (pagination && typeof pagination.total === "number") {
@@ -608,6 +619,26 @@ export const getVehicles: RequestHandler = async (req, res) => {
       };
 
       if (result && Array.isArray(result.data)) {
+        // First remove items explicitly marked as 'uncategorized'
+        try {
+          result.data = result.data.filter((item: any) => {
+            try {
+              const body =
+                (item.acf && (item.acf.body_style || item.acf.bodyClass || item.acf.body_class)) ||
+                item.body_style ||
+                item.bodyClass ||
+                item.body_class ||
+                "";
+              return String(body).trim().toLowerCase() !== "uncategorized";
+            } catch (e) {
+              return true;
+            }
+          });
+        } catch (e) {
+          /* ignore */
+        }
+
+        // Then reorder deprioritized images
         result.data = reorderDeprioritized(result.data);
       }
     } catch (e) {
