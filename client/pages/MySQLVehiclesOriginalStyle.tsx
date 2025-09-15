@@ -5325,7 +5325,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           {paymentNumericOptions.map((n) => (
                             <option key={n} value={String(n)}>{n}</option>
                           ))}
-                          <option value="800+">$800+</option>
+                          <option value="800+">800+</option>
                         </select>
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 text-sm">$</span>
                         <span className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
