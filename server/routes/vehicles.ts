@@ -509,7 +509,43 @@ export const getVehicles: RequestHandler = async (req, res) => {
                   parseInt(
                     String(req.query.per_page || req.query.pageSize || "20"),
                   ) || 20;
-                const total = json.data.length;
+                // De-prioritize vehicles whose featured image contains certain IDs so they appear at the end of the inventory
+              try {
+                const DEPRIORITIZE_IMAGE_IDS = [
+                  "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx",
+                  "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A",
+                ];
+
+                const reorderDeprioritized = (arr: any[]) => {
+                  const normal: any[] = [];
+                  const deprio: any[] = [];
+                  for (const item of arr) {
+                    try {
+                      const imgs = Array.isArray(item.images) ? item.images : [];
+                      const featured =
+                        item.featured_image || (item.acf && item.acf.featured_image) || item.featuredImage || "";
+
+                      const hasDeprioritized = imgs.some((img: any) =>
+                        DEPRIORITIZE_IMAGE_IDS.some((id) => String(img).includes(id)),
+                      ) || DEPRIORITIZE_IMAGE_IDS.some((id) => String(featured).includes(id));
+
+                      if (hasDeprioritized) deprio.push(item);
+                      else normal.push(item);
+                    } catch (e) {
+                      normal.push(item);
+                    }
+                  }
+                  return [...normal, ...deprio];
+                };
+
+                if (Array.isArray(json.data) && json.data.length > 0) {
+                  json.data = reorderDeprioritized(json.data);
+                }
+              } catch (e) {
+                // ignore reorder errors
+              }
+
+              const total = json.data.length;
                 const totalPages = Math.max(1, Math.ceil(total / origPer));
                 const start = (origPage - 1) * origPer;
                 const end = start + origPer;
@@ -543,6 +579,40 @@ export const getVehicles: RequestHandler = async (req, res) => {
 
     // Otherwise use the configured service (MySQL or Mock)
     const result = await vehicleService.getVehicles(filters, pagination);
+
+    // Server-side de-prioritization: move vehicles with specific featured image identifiers to the end
+    try {
+      const DEPRIORITIZE_IMAGE_IDS = [
+        "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx",
+        "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A",
+      ];
+
+      const reorderDeprioritized = (arr: any[]) => {
+        const normal: any[] = [];
+        const deprio: any[] = [];
+        for (const item of arr) {
+          try {
+            const imgs = Array.isArray(item.images) ? item.images : [];
+            const featured = item.featured_image || (item.acf && item.acf.featured_image) || item.featuredImage || "";
+            const hasDeprioritized = imgs.some((img: any) =>
+              DEPRIORITIZE_IMAGE_IDS.some((id) => String(img).includes(id)),
+            ) || DEPRIORITIZE_IMAGE_IDS.some((id) => String(featured).includes(id));
+
+            if (hasDeprioritized) deprio.push(item);
+            else normal.push(item);
+          } catch (e) {
+            normal.push(item);
+          }
+        }
+        return [...normal, ...deprio];
+      };
+
+      if (result && Array.isArray(result.data)) {
+        result.data = reorderDeprioritized(result.data);
+      }
+    } catch (e) {
+      // ignore
+    }
 
     // Debug: log IDs returned and pagination to help trace disappearing items
     try {
