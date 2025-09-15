@@ -8044,7 +8044,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     ? `${favoritesCount} Vehicles`
                     : !loading && !error && displayedVehicles.length === 0
                       ? "No results found. Search by year, make, model, or use filters."
-                      : `${totalResults.toLocaleString()} Matches${appliedLocation && (appliedLocation.city || appliedLocation.state) ? ` by ${appliedLocation.city || ""}${appliedLocation.city && appliedLocation.state ? ", " : ""}${appliedLocation.state || ""}` : ""}`}
+                      : `${totalResults.toLocaleString()} Results${appliedLocation && (appliedLocation.city || appliedLocation.state) ? ` by ${appliedLocation.city || ""}${appliedLocation.city && appliedLocation.state ? ", " : ""}${appliedLocation.state || ""}` : ""}`}
                 </p>
               </div>
 
