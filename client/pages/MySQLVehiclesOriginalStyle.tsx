@@ -5383,7 +5383,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       ) : null}
 
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 text-base">
+                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
                           $
                         </span>
                         <input
@@ -5398,7 +5398,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAcfDownPayment(v);
                           }}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-full pl-12 pr-3 h-10 text-sm border border-gray-300 rounded focus:outline-none bg-white"
+                          className="carzino-search-input w-full pl-6 pr-3 h-10 border border-gray-300 rounded focus:outline-none bg-white"
                         />
                       </div>
                     </div>
