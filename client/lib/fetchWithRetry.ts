@@ -159,16 +159,17 @@ export async function fetchWithRetry(
       if (attempt === retries) {
         // Normalize abort errors
         if (err && err.name === "AbortError") {
-          const abortErr = new Error("Request aborted or timed out");
-          abortErr.name = "AbortError";
+          // Try to extract a reason from the underlying signal if available
+          const reason = (err && (err as any).reason) || (controller && (controller as any).signal && ((controller as any).signal as any).reason) || "Request aborted or timed out";
+          const abortMsg = typeof reason === "string" && reason.length > 0 ? reason : "Request aborted or timed out";
           // Return a graceful response-like object so callers can handle failures
-          console.warn("fetchWithRetry: final abort/timeout", abortErr.message);
+          console.warn("fetchWithRetry: final abort/timeout", abortMsg);
           return {
             ok: false,
             status: 0,
-            statusText: abortErr.message,
-            json: async () => ({ success: false, message: abortErr.message }),
-            text: async () => abortErr.message,
+            statusText: abortMsg,
+            json: async () => ({ success: false, message: abortMsg }),
+            text: async () => abortMsg,
           } as any;
         }
 
