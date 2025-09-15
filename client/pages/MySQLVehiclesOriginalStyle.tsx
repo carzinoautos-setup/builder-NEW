@@ -5386,7 +5386,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
                           >
                             {allowedToOptions.map((opt) => (
-                              <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+/mo" : `$${opt}/mo`)}</option>
+                              <option key={opt} value={opt === "Any" ? "" : opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+/mo" : `$${opt}/mo`)}</option>
                             ))}
                           </select>
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-600 pointer-events-none">
