@@ -320,8 +320,7 @@ export class VehicleService {
     sellerTypes: string[];
   }> {
     try {
-      // Use allowed list when computing filter options
-      import { ALLOWED_BODY_STYLES } from "../config/allowedBodyStyles.js";
+      // Use allowed list when computing filter options (ALLOWED_BODY_STYLES is imported at module top)
       const allowedVals = ALLOWED_BODY_STYLES.map((s) => s.replace(/'/g, "''")).map((s) => s.toLowerCase());
       const allowedClause = allowedVals.length > 0 ? `AND LOWER(TRIM(body_style)) IN (${allowedVals.map(v => `'${v}'`).join(",")})` : "";
       const baseWhere =
