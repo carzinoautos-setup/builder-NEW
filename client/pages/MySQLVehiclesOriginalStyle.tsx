@@ -800,12 +800,17 @@ export default function MySQLVehiclesOriginalStyle() {
       const pmin = (appliedFilters as any).paymentMin;
       const pmax = (appliedFilters as any).paymentMax;
       // Use 'Any' if empty
-      setPaymentMin(pmin && String(pmin).trim() !== "" ? String(pmin) : "Any");
-      setPaymentMax(pmax && String(pmax).trim() !== "" ? String(pmax) : "Any");
+      // Don't overwrite local UI while the user is actively interacting with the dropdowns
+      if (!paymentMinOpen) {
+        setPaymentMin(pmin && String(pmin).trim() !== "" ? String(pmin) : "Any");
+      }
+      if (!paymentMaxOpen) {
+        setPaymentMax(pmax && String(pmax).trim() !== "" ? String(pmax) : "Any");
+      }
     } catch (e) {
       // ignore
     }
-  }, [appliedFilters]);
+  }, [appliedFilters, paymentMinOpen, paymentMaxOpen]);
 
   // When dropdowns or down payment change, merge into appliedFilters (debounced)
   React.useEffect(() => {
