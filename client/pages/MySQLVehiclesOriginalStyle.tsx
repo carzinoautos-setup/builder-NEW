@@ -5418,7 +5418,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAcfDownPayment(v);
                           }}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-full pl-10 pr-2 h-11 border border-gray-300 rounded focus:outline-none bg-white"
+                          className="w-full pl-12 pr-3 h-11 text-lg border border-gray-300 rounded focus:outline-none bg-white"
                         />
                       </div>
                     </div>
