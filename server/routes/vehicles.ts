@@ -621,7 +621,7 @@ export const getVehicles: RequestHandler = async (req, res) => {
       };
 
       if (result && Array.isArray(result.data)) {
-        // First remove items explicitly marked as 'uncategorized'
+        // First remove items explicitly marked as 'uncategorized' or with empty body types
         try {
           result.data = result.data.filter((item: any) => {
             try {
@@ -631,9 +631,11 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 item.bodyClass ||
                 item.body_class ||
                 "";
-              return String(body).trim().toLowerCase() !== "uncategorized";
+              const trimmed = String(body).trim();
+              if (!trimmed) return false; // exclude empty body types
+              return trimmed.toLowerCase() !== "uncategorized";
             } catch (e) {
-              return true;
+              return false;
             }
           });
         } catch (e) {
