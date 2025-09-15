@@ -5354,7 +5354,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           ))}
                           <option value="800+">800+</option>
                         </select>
-                        <span className="absolute left-14 right-14 top-1/2 transform -translate-y-1/2 text-left text-gray-900 pointer-events-none">
+                        <span className="absolute left-14 right-14 top-1/2 transform -translate-y-1/2 text-left text-gray-900 pointer-events-none truncate font-semibold px-2">
                           {paymentMin === "Any" ? "Any" : paymentMin}
                         </span>
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 text-base pointer-events-none">$</span>
@@ -5383,7 +5383,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+" : `${opt}`)}</option>
                           ))}
                         </select>
-                        <span className="absolute left-14 right-14 top-1/2 transform -translate-y-1/2 text-left text-gray-900 pointer-events-none">
+                        <span className="absolute left-14 right-14 top-1/2 transform -translate-y-1/2 text-left text-gray-900 pointer-events-none truncate font-semibold px-2">
                           {paymentMax === "Any" ? "Any" : paymentMax}
                         </span>
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 text-base pointer-events-none">$</span>
@@ -5569,7 +5569,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     <option value="">All Miles (default)</option>
                     <option value="25000">Under 25,000 Miles</option>
                     <option value="25000-50000">25,000–50,000 Miles</option>
-                    <option value="50000-75000">50,000–75,000 Miles</option>
+                    <option value="50000-75000">50,000��75,000 Miles</option>
                     <option value="75000-100000">75,000–100,000 Miles</option>
                     <option value="100000-150000">100,000–150,000 Miles</option>
                     <option value="150000+">150,000+ Miles</option>
