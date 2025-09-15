@@ -75,8 +75,8 @@ export async function fetchWithRetry(
 
       // If this is an AbortError, return a graceful response-like object immediately
       if (err && (err.name === "AbortError" || String(err.message || "").toLowerCase().includes("aborted"))) {
-        const msg = (err && err.message) || "Request aborted";
-        console.warn("fetchWithRetry: request aborted", msg);
+        const msg = "Request aborted";
+        console.warn("fetchWithRetry: request aborted", err && err.message ? err.message : "");
         return {
           ok: false,
           status: 0,
