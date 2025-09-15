@@ -726,7 +726,7 @@ export default function MySQLVehiclesOriginalStyle() {
     trim: true,
     year: true,
     price: false,
-    payment: true,
+    payment: false,
     driveType: true,
     transmission: true,
     transmissionSpeed: true,
@@ -5255,7 +5255,7 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Price Filter */}
             {((appliedFilters.priceMin && appliedFilters.priceMin.length > 0) ||
               (appliedFilters.priceMax && appliedFilters.priceMax.length > 0) ||
-              vehicles.length > 0) && (
+              vehicles.length > 0 || true) && (
               <FilterSection
                 title="Price"
                 isCollapsed={collapsedFilters.price}
@@ -5327,7 +5327,7 @@ export default function MySQLVehiclesOriginalStyle() {
               appliedFilters.paymentMin.length > 0) ||
               (appliedFilters.paymentMax &&
                 appliedFilters.paymentMax.length > 0) ||
-              vehicles.length > 0) && (
+              vehicles.length > 0 || true) && (
               <FilterSection
                 title="Payment"
                 isCollapsed={collapsedFilters.payment}
