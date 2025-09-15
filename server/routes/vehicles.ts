@@ -214,8 +214,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
               const trimmed = String(body).trim();
               if (!trimmed) return false; // exclude empty body types
               if (trimmed.toLowerCase() === "uncategorized") return false;
-              // enforce allowed list
-              if (!ALLOWED_BODY_STYLES_SET.has(trimmed.toLowerCase())) return false;
+              // enforce allowed list using normalization
+              const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+              const normalized = normalizeBodyStyle(trimmed);
+              if (!normalized) return false;
               return true;
             } catch (e) {
               return false; // be conservative and exclude if unsure
