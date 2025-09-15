@@ -324,6 +324,20 @@ const reorderForPrice = (arr: Vehicle[], sortByVal?: string) => {
 };
 
 export default function MySQLVehiclesOriginalStyle() {
+  // Clear stale client-side filter caches that may include incorrect 'Uncategorized' entries
+  // This helps ensure filters/results are loaded fresh from the server on first render.
+  try {
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      sessionStorage.removeItem("carzino_filter_options_v1");
+      sessionStorage.removeItem("carzino_applied_filters_v2");
+      // also clear any persisted vehicle lists to avoid stale demo data
+      sessionStorage.removeItem("carzino_vehicle_list_v1");
+      localStorage.removeItem("carzino_favorites");
+      console.log("[init] cleared stale filter/session caches");
+    }
+  } catch (e) {
+    /* ignore storage errors */
+  }
   // React Router hooks
   const location = useLocation();
   const navigate = useNavigate();
