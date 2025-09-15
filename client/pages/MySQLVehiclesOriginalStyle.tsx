@@ -5382,7 +5382,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               setPaymentMax(v);
                               setAppliedFilters(prev => ({ ...prev, paymentMax: v === 'Any' ? '' : v }));
                             }}
-                            className="w-full h-11 pl-4 pr-10 text-left border border-gray-300 rounded bg-white text-lg font-semibold"
+                            className="w-full h-11 pl-4 pr-10 text-left border border-gray-300 rounded bg-white text-base font-semibold appearance-none"
                           >
                             {allowedToOptions.map((opt) => (
                               <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+/mo" : `$${opt}/mo`)}</option>
