@@ -92,8 +92,11 @@ export async function fetchWithRetry(
 
       // If this is an AbortError, return a graceful response-like object immediately
       if (err && (err.name === "AbortError" || String(err.message || "").toLowerCase().includes("aborted"))) {
-        const msg = "Request aborted";
-        console.warn("fetchWithRetry: request aborted", err && err.message ? err.message : "");
+        // Attempt to extract a reason from the controller signal if present
+        const reason = (controller && (controller as any).signal && ((controller as any).signal as any).reason) || (err && (err as any).reason) || (err && err.message) || "Request aborted";
+        const msg = typeof reason === "string" && reason.length > 0 ? reason : "Request aborted";
+        // Do not log full stack in production - normalized warning only
+        console.warn("fetchWithRetry: request aborted", msg);
         return {
           ok: false,
           status: 0,
