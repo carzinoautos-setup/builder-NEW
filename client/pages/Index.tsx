@@ -2944,7 +2944,7 @@ export default function Index() {
                 <p className="text-gray-600 text-sm mt-1">
                   {viewMode === "favorites"
                     ? `${favoritesCount} Vehicles`
-                    : `${totalResults.toLocaleString()} Matches`}
+                    : `${totalResults.toLocaleString()} Results`}
                 </p>
               </div>
 
