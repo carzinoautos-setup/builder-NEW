@@ -14,11 +14,18 @@ export async function fetchWithRetry(
     // If caller passed a signal, forward its abort to our controller so caller can cancel
     if (init && (init as any).signal) {
       const parentSignal = (init as any).signal as AbortSignal;
+      // If parent was already aborted, propagate a reason-aware abort asynchronously
       if (parentSignal.aborted) {
-        // Schedule async abort to avoid throwing synchronously in some environments
         setTimeout(() => {
           try {
-            controller.abort();
+            // If environment supports abort reason, forward it; otherwise just abort
+            const reason = (parentSignal as any).reason || "parent-aborted";
+            // Some environments accept a reason param, but wrap in try/catch
+            try {
+              (controller as any).abort && (controller as any).abort(reason);
+            } catch (inner) {
+              controller.abort();
+            }
           } catch (e) {
             console.warn(
               "fetchWithRetry: controller.abort() threw during immediate abort:",
@@ -31,7 +38,12 @@ export async function fetchWithRetry(
           // Abort asynchronously to prevent event-handler synchronous exceptions
           setTimeout(() => {
             try {
-              controller.abort();
+              const reason = (parentSignal as any).reason || "parent-aborted";
+              try {
+                (controller as any).abort && (controller as any).abort(reason);
+              } catch (inner) {
+                controller.abort();
+              }
             } catch (e) {
               console.warn(
                 "fetchWithRetry: controller.abort() threw in parent handler:",
@@ -46,7 +58,12 @@ export async function fetchWithRetry(
 
     const id = setTimeout(() => {
       try {
-        controller.abort();
+        // Use a reason when aborting due to timeout to make debugging clearer
+        try {
+          (controller as any).abort && (controller as any).abort("timeout");
+        } catch (inner) {
+          controller.abort();
+        }
       } catch (e) {
         console.warn("fetchWithRetry: controller.abort() threw on timeout:", e);
       }
