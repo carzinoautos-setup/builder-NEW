@@ -73,6 +73,19 @@ export async function fetchWithRetry(
         }
       }
 
+      // If this is an AbortError, return a graceful response-like object immediately
+      if (err && (err.name === "AbortError" || String(err.message || "").toLowerCase().includes("aborted"))) {
+        const msg = (err && err.message) || "Request aborted";
+        console.warn("fetchWithRetry: request aborted", msg);
+        return {
+          ok: false,
+          status: 0,
+          statusText: msg,
+          json: async () => ({ success: false, message: msg }),
+          text: async () => msg,
+        } as any;
+      }
+
       // If this looks like a network-level failure for a relative path, try absolute origin once
       const isNetworkError =
         err && (err.message === "Failed to fetch" || err.name === "TypeError");
