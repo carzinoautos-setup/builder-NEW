@@ -7687,6 +7687,60 @@ export default function MySQLVehiclesOriginalStyle() {
                         </button>
                       </span>
                     ))}
+
+                    {/* Price pill (mobile sticky) */}
+                    {(appliedFilters.priceMin || appliedFilters.priceMax) && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />$
+                        {appliedFilters.priceMin || "0"} - $
+                        {appliedFilters.priceMax || "Any"}
+                        <button
+                          onClick={() => {
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              priceMin: "",
+                              priceMax: "",
+                            }));
+                            setPriceMin("1000");
+                            setPriceMax("50000");
+                          }}
+                          className="ml-1 text-white"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    )}
+
+                    {/* Payment pill (mobile sticky) */}
+                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (() => {
+                      const pmin = String(appliedFilters.paymentMin || "").trim();
+                      const pmax = String(appliedFilters.paymentMax || "").trim();
+                      const both = pmin && pmax;
+                      const label = both
+                        ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
+                        : pmin
+                        ? `${formatCurrency(pmin)}/mo`
+                        : `${formatCurrency(pmax)}/mo`;
+                      return (
+                        <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                          <Check className="w-3 h-3 text-red-600" />
+                          {label}
+                          <button
+                            onClick={() =>
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                paymentMin: "",
+                                paymentMax: "",
+                              }))
+                            }
+                            className="ml-1 text-white"
+                          >
+                            <X className="w-3 h-3 inline-block" />
+                          </button>
+                        </span>
+                      );
+                    })()}
+
                   </div>
                 )}
                 {/* Filter, Sort, Favorites Bar */}
