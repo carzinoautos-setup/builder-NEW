@@ -210,12 +210,16 @@ export class SimpleMockVehicleService {
     );
     this.generateMockData();
     // Apply validation rule to ensure no invalid body_type vehicles
-    this.vehicles = this.vehicles.filter(
-      (vehicle) =>
-        vehicle.body_type &&
-        vehicle.body_type !== "Uncategorized" &&
-        vehicle.body_type.trim() !== "",
-    );
+    this.vehicles = this.vehicles.filter((vehicle) => {
+      try {
+        const v = vehicle.body_type && String(vehicle.body_type).trim();
+        if (!v) return false;
+        if (v.toLowerCase() === "uncategorized") return false;
+        return ALLOWED_BODY_STYLES_SET.has(v.toLowerCase());
+      } catch (e) {
+        return false;
+      }
+    });
     console.log(
       `✅ SimpleMockVehicleService: ${this.vehicles.length} vehicles generated (invalid body_type excluded)`,
     );
