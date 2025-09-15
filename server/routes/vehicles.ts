@@ -203,7 +203,6 @@ export const getVehicles: RequestHandler = async (req, res) => {
         if (Array.isArray(json.data)) {
           const before = json.data.length;
           // Remove items whose body style is explicitly set to 'uncategorized', empty/null, or not in allowed list
-          import { ALLOWED_BODY_STYLES_SET } from "../config/allowedBodyStyles.js";
           json.data = json.data.filter((item: any) => {
             try {
               const body =
