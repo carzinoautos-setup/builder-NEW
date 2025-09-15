@@ -236,7 +236,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     (async () => {
       try {
         const url = `${window.location.origin}/api/sellers/${encodeURIComponent(acct)}`;
-        const resp = await fetchWithRetry(url, { signal: controller.signal }, 0, 5000);
+        const resp = await fetchWithRetry(
+          url,
+          { signal: controller.signal },
+          0,
+          5000,
+        );
         if (!resp) {
           setSellerFetchFailed(true);
           return;
@@ -246,7 +251,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           setSellerFetchFailed(true);
           try {
             const text = await resp.text().catch(() => "");
-            console.warn(`VehicleCard: seller fetch failed status=${resp.status} body=${text}`);
+            console.warn(
+              `VehicleCard: seller fetch failed status=${resp.status} body=${text}`,
+            );
           } catch (e) {
             // ignore
           }

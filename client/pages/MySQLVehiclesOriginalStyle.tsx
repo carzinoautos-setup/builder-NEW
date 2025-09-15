@@ -709,7 +709,9 @@ export default function MySQLVehiclesOriginalStyle() {
           ...(prev as any),
           ...(persisted as any),
         }));
-        console.log("[filters] Rehydrated appliedFilters from sessionStorage (fuelType excluded)");
+        console.log(
+          "[filters] Rehydrated appliedFilters from sessionStorage (fuelType excluded)",
+        );
       }
     } catch (e) {
       /* ignore */
@@ -816,16 +818,16 @@ export default function MySQLVehiclesOriginalStyle() {
   React.useEffect(() => {
     const t = setTimeout(() => {
       const effectiveMin = paymentMin && paymentMin !== "" ? paymentMin : "";
-    const effectiveMax = paymentMax && paymentMax !== "" ? paymentMax : "";
-    setAppliedFilters((prev) => ({
-      ...prev,
-      paymentMin: effectiveMin || "",
-      paymentMax: effectiveMax || "",
-      down_payment:
-        acfDownPayment !== undefined && acfDownPayment !== ""
-          ? acfDownPayment
-          : "0",
-    }));
+      const effectiveMax = paymentMax && paymentMax !== "" ? paymentMax : "";
+      setAppliedFilters((prev) => ({
+        ...prev,
+        paymentMin: effectiveMin || "",
+        paymentMax: effectiveMax || "",
+        down_payment:
+          acfDownPayment !== undefined && acfDownPayment !== ""
+            ? acfDownPayment
+            : "0",
+      }));
     }, 200);
     return () => clearTimeout(t);
   }, [paymentMin, paymentMax, acfDownPayment]);
@@ -1224,7 +1226,6 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, [filterOptions, searchTerm, unifiedSearch]);
 
-
   // When mobile filter panel opens, ensure Vehicle Type section is collapsed by default
   useEffect(() => {
     if (mobileFiltersOpen && isMobile) {
@@ -1296,12 +1297,18 @@ export default function MySQLVehiclesOriginalStyle() {
       // Build query parameters (map to WordPress plugin expectations)
       // When loading the first page, fetch extra items so we can filter/de-prioritize unwanted matches
       const EXPANSION_FACTOR = 3;
-      const expandedPerPage = currentPage === 1 ? Math.min(resultsPerPage * EXPANSION_FACTOR, 1000) : resultsPerPage;
+      const expandedPerPage =
+        currentPage === 1
+          ? Math.min(resultsPerPage * EXPANSION_FACTOR, 1000)
+          : resultsPerPage;
       const params = new URLSearchParams({
         page: currentPage.toString(),
         per_page: String(expandedPerPage),
       });
-      if (currentPage === 1) console.log(`[vehicles] Requesting expanded per_page=${expandedPerPage} to deprioritize featured images on first page`);
+      if (currentPage === 1)
+        console.log(
+          `[vehicles] Requesting expanded per_page=${expandedPerPage} to deprioritize featured images on first page`,
+        );
 
       // Add search term -- but DO NOT send free-text search when explicit make/model/trim are present
       const hasExplicitFilter =
@@ -1537,7 +1544,12 @@ export default function MySQLVehiclesOriginalStyle() {
         if (!response.ok) {
           // If the request was aborted or timed out, treat as a harmless cancelation and stop processing
           const statusText = String(response.statusText || "").toLowerCase();
-          if (response.status === 0 && (statusText.includes("aborted") || statusText.includes("timed out") || statusText.includes("request aborted"))) {
+          if (
+            response.status === 0 &&
+            (statusText.includes("aborted") ||
+              statusText.includes("timed out") ||
+              statusText.includes("request aborted"))
+          ) {
             console.warn("Vehicle fetch aborted or timed out, skipping update");
             setLoading(false);
             return;
@@ -1568,18 +1580,25 @@ export default function MySQLVehiclesOriginalStyle() {
             15000,
           );
           if (!response.ok) {
-          // If the request was aborted or timed out, treat as a harmless cancelation and stop processing
-          const statusText = String(response.statusText || "").toLowerCase();
-          if (response.status === 0 && (statusText.includes("aborted") || statusText.includes("timed out") || statusText.includes("request aborted"))) {
-            console.warn("Vehicle fetch aborted or timed out, skipping update");
-            setLoading(false);
-            return;
-          }
+            // If the request was aborted or timed out, treat as a harmless cancelation and stop processing
+            const statusText = String(response.statusText || "").toLowerCase();
+            if (
+              response.status === 0 &&
+              (statusText.includes("aborted") ||
+                statusText.includes("timed out") ||
+                statusText.includes("request aborted"))
+            ) {
+              console.warn(
+                "Vehicle fetch aborted or timed out, skipping update",
+              );
+              setLoading(false);
+              return;
+            }
 
-          throw new Error(
-            `API error: ${response.status} ${response.statusText}`,
-          );
-        }
+            throw new Error(
+              `API error: ${response.status} ${response.statusText}`,
+            );
+          }
         } else {
           throw err;
         }
@@ -1658,15 +1677,26 @@ export default function MySQLVehiclesOriginalStyle() {
         // Transform VehicleRecord[] to Vehicle[] for display
         const transformedVehicles = filteredRecords.map(transformVehicleRecord);
         // If we fetched an expanded first page, remove/de-prioritize vehicles with the specific featured image
-        const FEATURED_IDS_TO_DEPRIORITIZE = ["LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx", "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A"];
+        const FEATURED_IDS_TO_DEPRIORITIZE = [
+          "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx",
+          "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A",
+        ];
         const containsFeaturedId = (v: any) => {
           try {
             const imgs = Array.isArray(v.images) ? v.images : [];
             for (const img of imgs) {
-              if (img && String(img).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
+              if (img && String(img).includes(FEATURED_ID_TO_DEPRIORITIZE))
+                return true;
             }
-            const alt = v.featured_image || v.featuredImage || v.featured_image_url || "";
-            if (alt && FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) => String(alt).includes(id))) return true;
+            const alt =
+              v.featured_image || v.featuredImage || v.featured_image_url || "";
+            if (
+              alt &&
+              FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) =>
+                String(alt).includes(id),
+              )
+            )
+              return true;
           } catch (e) {
             /* ignore */
           }
@@ -1674,9 +1704,17 @@ export default function MySQLVehiclesOriginalStyle() {
         };
 
         let finalVehicles = transformedVehicles;
-        if (currentPage === 1 && typeof expandedPerPage !== "undefined" && expandedPerPage > resultsPerPage) {
-          const prioritized = finalVehicles.filter((r) => !containsFeaturedId(r));
-          const deprioritized = finalVehicles.filter((r) => containsFeaturedId(r));
+        if (
+          currentPage === 1 &&
+          typeof expandedPerPage !== "undefined" &&
+          expandedPerPage > resultsPerPage
+        ) {
+          const prioritized = finalVehicles.filter(
+            (r) => !containsFeaturedId(r),
+          );
+          const deprioritized = finalVehicles.filter((r) =>
+            containsFeaturedId(r),
+          );
           finalVehicles = [...prioritized, ...deprioritized];
           // Only keep resultsPerPage items for the first page view
           finalVehicles = finalVehicles.slice(0, resultsPerPage);
@@ -1763,7 +1801,10 @@ export default function MySQLVehiclesOriginalStyle() {
                 // Merge sellers into vehicles if still the latest response
                 if (requestIdRef.current === requestId) {
                   setVehicles((prev) =>
-                    prev.map((v) => ({ ...v, sellerInfo: sellersMap[v.seller_account_number] || null })),
+                    prev.map((v) => ({
+                      ...v,
+                      sellerInfo: sellersMap[v.seller_account_number] || null,
+                    })),
                   );
                 }
               } catch (e) {
@@ -1774,7 +1815,9 @@ export default function MySQLVehiclesOriginalStyle() {
             }
           })();
         } else {
-          console.debug("Ignoring out-of-date vehicle response (stale requestId)");
+          console.debug(
+            "Ignoring out-of-date vehicle response (stale requestId)",
+          );
         }
       } else {
         throw new Error(data.message || "API returned error");
@@ -1895,7 +1938,11 @@ export default function MySQLVehiclesOriginalStyle() {
                     const sellersMap = batchJson.data as Record<string, any>;
                     if (requestIdRef.current === requestId) {
                       setVehicles((prev) =>
-                        prev.map((v) => ({ ...v, sellerInfo: sellersMap[v.seller_account_number] || null })),
+                        prev.map((v) => ({
+                          ...v,
+                          sellerInfo:
+                            sellersMap[v.seller_account_number] || null,
+                        })),
                       );
                     }
                   } catch (e) {
@@ -1909,7 +1956,9 @@ export default function MySQLVehiclesOriginalStyle() {
               setLoading(false);
               return;
             } else {
-              console.debug("Ignoring out-of-date fallback response (stale requestId)");
+              console.debug(
+                "Ignoring out-of-date fallback response (stale requestId)",
+              );
             }
           }
         }
@@ -1948,7 +1997,11 @@ export default function MySQLVehiclesOriginalStyle() {
 
       // On transient network/abort errors, preserve existing vehicles to avoid UI flicker.
       const isTransient =
-        (err && ((err as any).name === "AbortError" || (err instanceof TypeError && err.message.includes("Failed to fetch")) || (err as any).status === 0));
+        err &&
+        ((err as any).name === "AbortError" ||
+          (err instanceof TypeError &&
+            err.message.includes("Failed to fetch")) ||
+          (err as any).status === 0);
 
       if (!isTransient) {
         // clear vehicles for non-transient errors (only if this is the latest request)
@@ -1971,7 +2024,12 @@ export default function MySQLVehiclesOriginalStyle() {
         if (requestIdRef.current === requestId) {
           setApiResponse((prev) =>
             prev
-              ? { ...prev, success: false, message: prev.message || "Network error - results may be stale" }
+              ? {
+                  ...prev,
+                  success: false,
+                  message:
+                    prev.message || "Network error - results may be stale",
+                }
               : {
                   success: false,
                   data: vehicles,
@@ -2331,10 +2389,10 @@ export default function MySQLVehiclesOriginalStyle() {
             } as any;
           });
           const filteredRecords = mappedRecords.filter((r: any) => {
-          const body = (r.body_style || r.bodyType || "").toString().trim();
-          if (!body) return false;
-          return body.toLowerCase() !== "uncategorized";
-        });
+            const body = (r.body_style || r.bodyType || "").toString().trim();
+            if (!body) return false;
+            return body.toLowerCase() !== "uncategorized";
+          });
           const transformedVehicles = filteredRecords.map(
             transformVehicleRecord,
           );
@@ -2582,11 +2640,13 @@ export default function MySQLVehiclesOriginalStyle() {
   // but merge any dealer names present in current vehicles (API v5.4 may now populate acf.account_name_seller)
   useEffect(() => {
     try {
-      const dealersFromFilters: { name: string; count: number }[] = Array.isArray(
-        filterOptions?.account_name_seller,
-      )
-        ? filterOptions!.account_name_seller.map((v: any) => ({ name: v.name, count: v.count }))
-        : [];
+      const dealersFromFilters: { name: string; count: number }[] =
+        Array.isArray(filterOptions?.account_name_seller)
+          ? filterOptions!.account_name_seller.map((v: any) => ({
+              name: v.name,
+              count: v.count,
+            }))
+          : [];
 
       // Build a map for quick lookup
       const map: Record<string, number> = {};
@@ -2694,7 +2754,10 @@ export default function MySQLVehiclesOriginalStyle() {
     const group3 = base.filter((v) => !hasPrice(v));
 
     // De-prioritize vehicles whose featured image contains the specified identifier
-    const FEATURED_IDS_TO_DEPRIORITIZE = ["LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx", "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A"];
+    const FEATURED_IDS_TO_DEPRIORITIZE = [
+      "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx",
+      "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A",
+    ];
     const result = [...group1, ...group2, ...group3];
 
     const containsFeaturedId = (v: Vehicle) => {
@@ -2704,13 +2767,28 @@ export default function MySQLVehiclesOriginalStyle() {
         if (imgs.length > 0) {
           for (const img of imgs) {
             if (!img) continue;
-            if (FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) => String(img).includes(id))) return true;
+            if (
+              FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) =>
+                String(img).includes(id),
+              )
+            )
+              return true;
           }
         }
 
         // Check known alternative fields that might hold featured image URLs
-        const alt = (v as any).featured_image || (v as any).featuredImage || (v as any).featured_image_url || "";
-        if (alt && FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) => String(alt).includes(id))) return true;
+        const alt =
+          (v as any).featured_image ||
+          (v as any).featuredImage ||
+          (v as any).featured_image_url ||
+          "";
+        if (
+          alt &&
+          FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) =>
+            String(alt).includes(id),
+          )
+        )
+          return true;
       } catch (e) {
         // ignore
       }
@@ -3778,7 +3856,14 @@ export default function MySQLVehiclesOriginalStyle() {
               )
             : null}
 
-          <div className="p-4 pt-5 lg:pt-6" style={{ paddingBottom: mobileFiltersOpen ? (/* action bar + safe area */ 'calc(15vh + 120px)') : undefined }}>
+          <div
+            className="p-4 pt-5 lg:pt-6"
+            style={{
+              paddingBottom: mobileFiltersOpen
+                ? /* action bar + safe area */ "calc(15vh + 120px)"
+                : undefined,
+            }}
+          >
             {/* Mobile Filter Action Buttons (moved to top) */}
             <div className="hidden">
               <div className="flex gap-3 px-0">
@@ -4065,19 +4150,28 @@ export default function MySQLVehiclesOriginalStyle() {
                     {(appliedFilters.priceMin || appliedFilters.priceMax) && (
                       <span
                         onClick={() => {
-                          setAppliedFilters((prev) => ({ ...prev, priceMin: "", priceMax: "" }));
+                          setAppliedFilters((prev) => ({
+                            ...prev,
+                            priceMin: "",
+                            priceMax: "",
+                          }));
                           setPriceMin("1000");
                           setPriceMax("50000");
                         }}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800 mr-2"
                       >
                         <Check className="w-3 h-3 text-red-600" />
-                        {appliedFilters.priceMin || "0"} - {appliedFilters.priceMax || "Any"}
+                        {appliedFilters.priceMin || "0"} -{" "}
+                        {appliedFilters.priceMax || "Any"}
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setAppliedFilters((prev) => ({ ...prev, priceMin: "", priceMax: "" }));
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              priceMin: "",
+                              priceMax: "",
+                            }));
                             setPriceMin("1000");
                             setPriceMax("50000");
                           }}
@@ -4090,37 +4184,51 @@ export default function MySQLVehiclesOriginalStyle() {
                     )}
 
                     {/* Payment pill(s) (mobile) */}
-                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (() => {
-                      const pmin = String(appliedFilters.paymentMin || "").trim();
-                      const pmax = String(appliedFilters.paymentMax || "").trim();
-                      const both = pmin && pmax;
-                      const label = both
-                        ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
-                        : pmin
-                        ? `${formatCurrency(pmin)}/mo`
-                        : `${formatCurrency(pmax)}/mo`;
-                      return (
-                        <span
-                          onClick={() => setAppliedFilters((prev) => ({ ...prev, paymentMin: "", paymentMax: "" }))}
-                          className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                        >
-                          <Check className="w-3 h-3 text-red-600" />
-                          {label}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setAppliedFilters((prev) => ({ ...prev, paymentMin: "", paymentMax: "" }));
-                            }}
-                            className="ml-1 text-white hover:text-gray-300"
-                            aria-label="Remove payment filter"
+                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) &&
+                      (() => {
+                        const pmin = String(
+                          appliedFilters.paymentMin || "",
+                        ).trim();
+                        const pmax = String(
+                          appliedFilters.paymentMax || "",
+                        ).trim();
+                        const both = pmin && pmax;
+                        const label = both
+                          ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
+                          : pmin
+                            ? `${formatCurrency(pmin)}/mo`
+                            : `${formatCurrency(pmax)}/mo`;
+                        return (
+                          <span
+                            onClick={() =>
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                paymentMin: "",
+                                paymentMax: "",
+                              }))
+                            }
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                           >
-                            <X className="w-3 h-3 inline-block" />
-                          </button>
-                        </span>
-                      );
-                    })()}
-
+                            <Check className="w-3 h-3 text-red-600" />
+                            {label}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setAppliedFilters((prev) => ({
+                                  ...prev,
+                                  paymentMin: "",
+                                  paymentMax: "",
+                                }));
+                              }}
+                              className="ml-1 text-white hover:text-gray-300"
+                              aria-label="Remove payment filter"
+                            >
+                              <X className="w-3 h-3 inline-block" />
+                            </button>
+                          </span>
+                        );
+                      })()}
                   </div>
                 </>
               ) : null}
@@ -4130,19 +4238,28 @@ export default function MySQLVehiclesOriginalStyle() {
             {(appliedFilters.priceMin || appliedFilters.priceMax) && (
               <span
                 onClick={() => {
-                  setAppliedFilters((prev) => ({ ...prev, priceMin: "", priceMax: "" }));
+                  setAppliedFilters((prev) => ({
+                    ...prev,
+                    priceMin: "",
+                    priceMax: "",
+                  }));
                   setPriceMin("1000");
                   setPriceMax("50000");
                 }}
                 className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800 mr-2"
               >
                 <Check className="w-3 h-3 text-red-600" />
-                {appliedFilters.priceMin || "0"} - {appliedFilters.priceMax || "Any"}
+                {appliedFilters.priceMin || "0"} -{" "}
+                {appliedFilters.priceMax || "Any"}
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setAppliedFilters((prev) => ({ ...prev, priceMin: "", priceMax: "" }));
+                    setAppliedFilters((prev) => ({
+                      ...prev,
+                      priceMin: "",
+                      priceMax: "",
+                    }));
                     setPriceMin("1000");
                     setPriceMax("50000");
                   }}
@@ -4154,36 +4271,47 @@ export default function MySQLVehiclesOriginalStyle() {
               </span>
             )}
 
-            {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (() => {
-              const pmin = String(appliedFilters.paymentMin || "").trim();
-              const pmax = String(appliedFilters.paymentMax || "").trim();
-              const both = pmin && pmax;
-              const label = both
-                ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
-                : pmin
-                ? `${formatCurrency(pmin)}/mo`
-                : `${formatCurrency(pmax)}/mo`;
-              return (
-                <span
-                  onClick={() => setAppliedFilters((prev) => ({ ...prev, paymentMin: "", paymentMax: "" }))}
-                  className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                >
-                  <Check className="w-3 h-3 text-red-600" />
-                  {label}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAppliedFilters((prev) => ({ ...prev, paymentMin: "", paymentMax: "" }));
-                    }}
-                    className="ml-1 text-white hover:text-gray-300"
-                    aria-label="Remove payment filter"
+            {(appliedFilters.paymentMin || appliedFilters.paymentMax) &&
+              (() => {
+                const pmin = String(appliedFilters.paymentMin || "").trim();
+                const pmax = String(appliedFilters.paymentMax || "").trim();
+                const both = pmin && pmax;
+                const label = both
+                  ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
+                  : pmin
+                    ? `${formatCurrency(pmin)}/mo`
+                    : `${formatCurrency(pmax)}/mo`;
+                return (
+                  <span
+                    onClick={() =>
+                      setAppliedFilters((prev) => ({
+                        ...prev,
+                        paymentMin: "",
+                        paymentMax: "",
+                      }))
+                    }
+                    className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                   >
-                    <X className="w-3 h-3 inline-block" />
-                  </button>
-                </span>
-              );
-            })()}
+                    <Check className="w-3 h-3 text-red-600" />
+                    {label}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          paymentMin: "",
+                          paymentMax: "",
+                        }));
+                      }}
+                      className="ml-1 text-white hover:text-gray-300"
+                      aria-label="Remove payment filter"
+                    >
+                      <X className="w-3 h-3 inline-block" />
+                    </button>
+                  </span>
+                );
+              })()}
 
             {/* Desktop Search Section */}
             <div className="hidden lg:block mb-4 pb-4 bg-white">
@@ -4859,46 +4987,51 @@ export default function MySQLVehiclesOriginalStyle() {
                         </button>
                       </span>
                     )}
-                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (() => {
-                      const pmin = String(appliedFilters.paymentMin || "").trim();
-                      const pmax = String(appliedFilters.paymentMax || "").trim();
-                      const both = pmin && pmax;
-                      const label = both
-                        ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
-                        : pmin
-                        ? `${formatCurrency(pmin)}/mo`
-                        : `${formatCurrency(pmax)}/mo`;
-                      return (
-                        <span
-                          onClick={() =>
-                            setAppliedFilters((prev) => ({
-                              ...prev,
-                              paymentMin: "",
-                              paymentMax: "",
-                            }))
-                          }
-                          className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                        >
-                          <Check className="w-3 h-3 text-red-600" />
-                          {label}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
+                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) &&
+                      (() => {
+                        const pmin = String(
+                          appliedFilters.paymentMin || "",
+                        ).trim();
+                        const pmax = String(
+                          appliedFilters.paymentMax || "",
+                        ).trim();
+                        const both = pmin && pmax;
+                        const label = both
+                          ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
+                          : pmin
+                            ? `${formatCurrency(pmin)}/mo`
+                            : `${formatCurrency(pmax)}/mo`;
+                        return (
+                          <span
+                            onClick={() =>
                               setAppliedFilters((prev) => ({
                                 ...prev,
                                 paymentMin: "",
                                 paymentMax: "",
-                              }));
-                            }}
-                            className="ml-1 text-white hover:text-gray-300"
-                            aria-label="Remove payment filter"
+                              }))
+                            }
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                           >
-                            <X className="w-3 h-3 inline-block" />
-                          </button>
-                        </span>
-                      );
-                    })()}
+                            <Check className="w-3 h-3 text-red-600" />
+                            {label}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setAppliedFilters((prev) => ({
+                                  ...prev,
+                                  paymentMin: "",
+                                  paymentMax: "",
+                                }));
+                              }}
+                              className="ml-1 text-white hover:text-gray-300"
+                              aria-label="Remove payment filter"
+                            >
+                              <X className="w-3 h-3 inline-block" />
+                            </button>
+                          </span>
+                        );
+                      })()}
                   </div>
                 </div>
               </div>
@@ -4912,13 +5045,16 @@ export default function MySQLVehiclesOriginalStyle() {
                 <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse" />
                 <div className="h-3 bg-gray-200 rounded w-5/6 animate-pulse" />
               </div>
-            ) : (!filterOptions || Object.keys(filterOptions).length === 0) ? (
+            ) : !filterOptions || Object.keys(filterOptions).length === 0 ? (
               <div className="mb-4 p-3 border border-yellow-300 rounded bg-yellow-50 text-sm">
-                Filters unavailable — <button
+                Filters unavailable —{" "}
+                <button
                   type="button"
                   onClick={() => (refetch as any)(undefined, { force: true })}
                   className="underline text-red-600"
-                >Retry</button>
+                >
+                  Retry
+                </button>
               </div>
             ) : null}
             <div className="mb-4 pb-4 border border-gray-200 rounded-lg p-3">
@@ -5390,7 +5526,8 @@ export default function MySQLVehiclesOriginalStyle() {
             {/* Price Filter */}
             {((appliedFilters.priceMin && appliedFilters.priceMin.length > 0) ||
               (appliedFilters.priceMax && appliedFilters.priceMax.length > 0) ||
-              vehicles.length > 0 || true) && (
+              vehicles.length > 0 ||
+              true) && (
               <FilterSection
                 title="Price"
                 isCollapsed={collapsedFilters.price}
@@ -5462,7 +5599,8 @@ export default function MySQLVehiclesOriginalStyle() {
               appliedFilters.paymentMin.length > 0) ||
               (appliedFilters.paymentMax &&
                 appliedFilters.paymentMax.length > 0) ||
-              vehicles.length > 0 || true) && (
+              vehicles.length > 0 ||
+              true) && (
               <FilterSection
                 title="Payment"
                 isCollapsed={collapsedFilters.payment}
@@ -5481,7 +5619,13 @@ export default function MySQLVehiclesOriginalStyle() {
                         <div className="relative">
                           <PaymentSelect
                             value={paymentMin}
-                            onChange={(v) => { setPaymentMin(v); setAppliedFilters(prev => ({ ...prev, paymentMin: v })); }}
+                            onChange={(v) => {
+                              setPaymentMin(v);
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                paymentMin: v,
+                              }));
+                            }}
                             options={paymentNumericOptions}
                             allowAny
                             ariaLabel="Min payment"
@@ -5494,8 +5638,16 @@ export default function MySQLVehiclesOriginalStyle() {
                         <div className="relative">
                           <PaymentSelect
                             value={paymentMax}
-                            onChange={(v) => { setPaymentMax(v); setAppliedFilters(prev => ({ ...prev, paymentMax: v })); }}
-                            options={allowedToOptions.filter(o => o !== 'Any').map(o => o === '800+' ? '800+' : String(o))}
+                            onChange={(v) => {
+                              setPaymentMax(v);
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                paymentMax: v,
+                              }));
+                            }}
+                            options={allowedToOptions
+                              .filter((o) => o !== "Any")
+                              .map((o) => (o === "800+" ? "800+" : String(o)))}
                             allowAny
                             ariaLabel="Max payment"
                           />
@@ -7712,35 +7864,39 @@ export default function MySQLVehiclesOriginalStyle() {
                     )}
 
                     {/* Payment pill (mobile sticky) */}
-                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (() => {
-                      const pmin = String(appliedFilters.paymentMin || "").trim();
-                      const pmax = String(appliedFilters.paymentMax || "").trim();
-                      const both = pmin && pmax;
-                      const label = both
-                        ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
-                        : pmin
-                        ? `${formatCurrency(pmin)}/mo`
-                        : `${formatCurrency(pmax)}/mo`;
-                      return (
-                        <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
-                          <Check className="w-3 h-3 text-red-600" />
-                          {label}
-                          <button
-                            onClick={() =>
-                              setAppliedFilters((prev) => ({
-                                ...prev,
-                                paymentMin: "",
-                                paymentMax: "",
-                              }))
-                            }
-                            className="ml-1 text-white"
-                          >
-                            <X className="w-3 h-3 inline-block" />
-                          </button>
-                        </span>
-                      );
-                    })()}
-
+                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) &&
+                      (() => {
+                        const pmin = String(
+                          appliedFilters.paymentMin || "",
+                        ).trim();
+                        const pmax = String(
+                          appliedFilters.paymentMax || "",
+                        ).trim();
+                        const both = pmin && pmax;
+                        const label = both
+                          ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
+                          : pmin
+                            ? `${formatCurrency(pmin)}/mo`
+                            : `${formatCurrency(pmax)}/mo`;
+                        return (
+                          <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                            <Check className="w-3 h-3 text-red-600" />
+                            {label}
+                            <button
+                              onClick={() =>
+                                setAppliedFilters((prev) => ({
+                                  ...prev,
+                                  paymentMin: "",
+                                  paymentMax: "",
+                                }))
+                              }
+                              className="ml-1 text-white"
+                            >
+                              <X className="w-3 h-3 inline-block" />
+                            </button>
+                          </span>
+                        );
+                      })()}
                   </div>
                 )}
                 {/* Filter, Sort, Favorites Bar */}

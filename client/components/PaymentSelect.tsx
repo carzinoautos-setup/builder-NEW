@@ -30,7 +30,12 @@ export const PaymentSelect: React.FC<PaymentSelectProps> = ({
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
 
-  const display = value === "" || value === null || value === undefined ? placeholder : (String(value).endsWith("+") ? `${String(value)}/mo` : `$${String(value)}/mo`);
+  const display =
+    value === "" || value === null || value === undefined
+      ? placeholder
+      : String(value).endsWith("+")
+        ? `${String(value)}/mo`
+        : `$${String(value)}/mo`;
 
   return (
     <div ref={ref} className="relative">
@@ -48,20 +53,45 @@ export const PaymentSelect: React.FC<PaymentSelectProps> = ({
           ) : (
             <>
               <span className="text-gray-700">$</span>
-              <span className="font-semibold text-gray-900">{String(value).endsWith("+") ? String(value) : String(value)}</span>
+              <span className="font-semibold text-gray-900">
+                {String(value).endsWith("+") ? String(value) : String(value)}
+              </span>
               <span className="text-gray-500 text-sm">/mo</span>
             </>
           )}
         </span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-red-600 pointer-events-none">
-          <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="text-red-600 pointer-events-none"
+        >
+          <path
+            d="M6 9l6 6 6-6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
 
       {open && (
-        <ul role="listbox" tabIndex={-1} className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded shadow max-h-60 overflow-auto">
+        <ul
+          role="listbox"
+          tabIndex={-1}
+          className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded shadow max-h-60 overflow-auto"
+        >
           {allowAny && (
-            <li className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { onChange(""); setOpen(false); }}>
+            <li
+              className="px-3 py-2 hover:bg-gray-50 cursor-pointer"
+              onClick={() => {
+                onChange("");
+                setOpen(false);
+              }}
+            >
               Any
             </li>
           )}
@@ -74,7 +104,9 @@ export const PaymentSelect: React.FC<PaymentSelectProps> = ({
                 setOpen(false);
               }}
             >
-              {String(opt).endsWith("+") ? `${String(opt)}` : `$${String(opt)}/mo`}
+              {String(opt).endsWith("+")
+                ? `${String(opt)}`
+                : `$${String(opt)}/mo`}
             </li>
           ))}
         </ul>

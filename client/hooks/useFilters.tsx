@@ -236,7 +236,10 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
               scopedJson = { success: true, filters: {} };
             }
           } else {
-            console.warn("[filters] scoped filters fetch failed", scopedRes && scopedRes.status);
+            console.warn(
+              "[filters] scoped filters fetch failed",
+              scopedRes && scopedRes.status,
+            );
             scopedJson = { success: true, filters: {} };
           }
         } catch (e) {
@@ -268,11 +271,17 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             try {
               unscopedJson = await unscopedRes.json();
             } catch (e) {
-              console.warn("[filters] failed to parse unscoped filters JSON", e);
+              console.warn(
+                "[filters] failed to parse unscoped filters JSON",
+                e,
+              );
               unscopedJson = { success: true, filters: {} };
             }
           } else {
-            console.warn("[filters] unscoped filters fetch failed", unscopedRes && unscopedRes.status);
+            console.warn(
+              "[filters] unscoped filters fetch failed",
+              unscopedRes && unscopedRes.status,
+            );
             unscopedJson = { success: true, filters: {} };
           }
         } catch (e) {
