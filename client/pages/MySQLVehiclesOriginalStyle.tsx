@@ -3760,7 +3760,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     </button>
                   </div>
                   {/* Reset All Filters link beneath buttons, centered and red */}
-                  <div className="w-full text-center mt-2">
+                  <div className="w-full text-center mt-2" style={{ paddingBottom: '10px' }}>
                     <button
                       type="button"
                       onClick={() => {
