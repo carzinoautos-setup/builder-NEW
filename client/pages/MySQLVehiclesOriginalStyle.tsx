@@ -780,8 +780,8 @@ export default function MySQLVehiclesOriginalStyle() {
   // Price and payment filter states
   const [priceMin, setPriceMin] = useState("1000");
   const [priceMax, setPriceMax] = useState("50000");
-  const [paymentMin, setPaymentMin] = useState("Any");
-  const [paymentMax, setPaymentMax] = useState("Any");
+  const [paymentMin, setPaymentMin] = useState("");
+  const [paymentMax, setPaymentMax] = useState("");
   const [paymentMinOpen, setPaymentMinOpen] = React.useState(false);
   const [paymentMaxOpen, setPaymentMaxOpen] = React.useState(false);
   // Legacy payment controls removed; using ACF-backed inputs instead
