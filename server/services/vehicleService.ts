@@ -167,7 +167,7 @@ export class VehicleService {
     // Base query parts
     // Enforce exclusion of vehicles with blank/uncategorized body_style and restrict to allowed list
     // Allowed list is populated from server/config/allowedBodyStyles.ts
-    import { ALLOWED_BODY_STYLES } from "../config/allowedBodyStyles.js"; // dynamic import fallback handled below
+    // Allowed list is imported at module top
     let allowedListSql = "";
     try {
       const vals = ALLOWED_BODY_STYLES.map((s) => s.replace(/'/g, "''"));
