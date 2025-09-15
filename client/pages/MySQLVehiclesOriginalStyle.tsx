@@ -814,17 +814,17 @@ export default function MySQLVehiclesOriginalStyle() {
   // When dropdowns or down payment change, merge into appliedFilters (debounced)
   React.useEffect(() => {
     const t = setTimeout(() => {
-      const effectiveMin = paymentMin && paymentMin !== "Any" ? paymentMin : "";
-      const effectiveMax = paymentMax && paymentMax !== "Any" ? paymentMax : "";
-      setAppliedFilters((prev) => ({
-        ...prev,
-        paymentMin: effectiveMin || "",
-        paymentMax: effectiveMax || "",
-        down_payment:
-          acfDownPayment !== undefined && acfDownPayment !== ""
-            ? acfDownPayment
-            : "0",
-      }));
+      const effectiveMin = paymentMin && paymentMin !== "" ? paymentMin : "";
+    const effectiveMax = paymentMax && paymentMax !== "" ? paymentMax : "";
+    setAppliedFilters((prev) => ({
+      ...prev,
+      paymentMin: effectiveMin || "",
+      paymentMax: effectiveMax || "",
+      down_payment:
+        acfDownPayment !== undefined && acfDownPayment !== ""
+          ? acfDownPayment
+          : "0",
+    }));
     }, 200);
     return () => clearTimeout(t);
   }, [paymentMin, paymentMax, acfDownPayment]);
@@ -2833,8 +2833,8 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Apply payment filters handler (dropdown-only: Any means no restriction)
   const applyPaymentFilters = () => {
-    const effectiveMin = paymentMin && paymentMin !== "Any" ? paymentMin : "";
-    const effectiveMax = paymentMax && paymentMax !== "Any" ? paymentMax : "";
+    const effectiveMin = paymentMin && paymentMin !== "" ? paymentMin : "";
+    const effectiveMax = paymentMax && paymentMax !== "" ? paymentMax : "";
     setAppliedFilters((prev) => ({
       ...prev,
       paymentMin: effectiveMin || "",
