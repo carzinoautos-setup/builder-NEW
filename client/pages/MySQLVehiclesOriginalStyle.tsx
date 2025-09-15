@@ -5358,7 +5358,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               setPaymentMin(v);
                               setAppliedFilters(prev => ({ ...prev, paymentMin: v === 'Any' ? '' : v }));
                             }}
-                            className="w-full h-11 pl-4 pr-10 text-left border border-gray-300 rounded bg-white text-lg font-semibold"
+                            className="w-full h-11 pl-4 pr-10 text-left border border-gray-300 rounded bg-white text-base font-semibold appearance-none"
                           >
                             <option value="Any">Any</option>
                             {paymentNumericOptions.map((n) => (
