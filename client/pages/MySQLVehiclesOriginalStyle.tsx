@@ -5350,7 +5350,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           className="w-full pl-12 pr-12 py-2 border border-gray-300 rounded focus:outline-none bg-white appearance-none text-lg"
                         >
                           {allowedToOptions.map((opt) => (
-                            <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "$800+" : `$${opt}`)}</option>
+                            <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+" : `${opt}`)}</option>
                           ))}
                         </select>
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 text-sm">$</span>
