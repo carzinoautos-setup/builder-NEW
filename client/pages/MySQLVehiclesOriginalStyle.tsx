@@ -3737,7 +3737,8 @@ export default function MySQLVehiclesOriginalStyle() {
                   style={{
                     backdropFilter: "saturate(120%) blur(4px)",
                     // Move action bar closer to bottom: use smaller viewport offset and account for safe area
-                    bottom: "6vh",
+                    // Shift up ~30px so Reset text beneath buttons remains visible
+                    bottom: "calc(6vh + 30px)",
                   }}
                 >
                   <div className="flex gap-3">
