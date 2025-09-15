@@ -3204,7 +3204,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
       return null;
     } catch (error) {
-      console.error("��� Geocoding network error:", error);
+      console.error("❌ Geocoding network error:", error);
 
       // Always use fallback for any network error
       if (
@@ -5323,7 +5323,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         >
                           <option value="Any">Any</option>
                           {paymentNumericOptions.map((n) => (
-                            <option key={n} value={String(n)}>${n}</option>
+                            <option key={n} value={String(n)}>{n}</option>
                           ))}
                           <option value="800+">$800+</option>
                         </select>
