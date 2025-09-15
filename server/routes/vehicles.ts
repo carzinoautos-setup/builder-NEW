@@ -21,7 +21,7 @@ if (useMock) {
 // Prefer WP_API proxy when configured
 if (hasWpApi && !useMock) {
   console.log(
-    "🔁 WP_API_BASE detected — proxying /api/vehicles to WordPress plugin API at:",
+    "🔁 WP_API_BASE detected �� proxying /api/vehicles to WordPress plugin API at:",
     process.env.WP_API_BASE,
   );
 } else if (hasDbEnv && !useMock) {
@@ -417,7 +417,16 @@ export const getVehicles: RequestHandler = async (req, res) => {
             json.filters.model = toArray(modelsMap);
             json.filters.fuel_type = toArray(fuelMap);
             // Ensure body_style filter array only contains allowed values
-            json.filters.body_style = toArray(bodyMap).filter((it) => ALLOWED_BODY_STYLES_SET.has(String(it.name).toLowerCase()));
+            // Ensure body_style filter array only contains allowed values (after normalization)
+            const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+            json.filters.body_style = toArray(bodyMap).filter((it) => {
+              try {
+                const n = normalizeBodyStyle(String(it.name || "").toLowerCase());
+                return Boolean(n);
+              } catch (e) {
+                return false;
+              }
+            });
             json.filters.account_type_seller = toArray(sellerTypeMap);
             json.filters.account_name_seller = toArray(dealerMap);
             json.filters.state_seller = toArray(statesMap);
