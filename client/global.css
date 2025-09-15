@@ -110,6 +110,11 @@
     padding-right: 3rem; /* leave space for custom chevron */
     display: inline-block;
     vertical-align: middle;
+    font-size: var(--carzino-search-input) !important;
+    line-height: 1.1 !important;
+  }
+  .payment-select option {
+    font-size: var(--carzino-search-input) !important;
   }
   .payment-select::-ms-expand {
     display: none; /* hide IE/Edge native arrow */
