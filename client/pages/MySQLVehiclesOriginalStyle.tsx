@@ -1662,21 +1662,34 @@ export default function MySQLVehiclesOriginalStyle() {
 
               if (accounts.length === 0) return;
 
-              const batchRes = await fetch(`/api/sellers/batch`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ accounts }),
-              });
-              if (!batchRes.ok) return;
-              const batchJson = await batchRes.json();
-              if (!batchJson.success || !batchJson.data) return;
-              const sellersMap = batchJson.data as Record<string, any>;
-
-              // Merge sellers into vehicles if still the latest response
-              if (requestIdRef.current === requestId) {
-                setVehicles((prev) =>
-                  prev.map((v) => ({ ...v, sellerInfo: sellersMap[v.seller_account_number] || null })),
+              try {
+                const batchRes = await fetchWithRetry(
+                  `/api/sellers/batch`,
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ accounts }),
+                    signal: controller.signal,
+                  },
+                  2,
+                  10000,
                 );
+                if (!batchRes || !batchRes.ok) {
+                  console.warn("/api/sellers/batch failed or returned non-ok");
+                  return;
+                }
+                const batchJson = await batchRes.json();
+                if (!batchJson.success || !batchJson.data) return;
+                const sellersMap = batchJson.data as Record<string, any>;
+
+                // Merge sellers into vehicles if still the latest response
+                if (requestIdRef.current === requestId) {
+                  setVehicles((prev) =>
+                    prev.map((v) => ({ ...v, sellerInfo: sellersMap[v.seller_account_number] || null })),
+                  );
+                }
+              } catch (e) {
+                console.warn("/api/sellers/batch error:", e);
               }
             } catch (e) {
               /* ignore */
@@ -1785,19 +1798,29 @@ export default function MySQLVehiclesOriginalStyle() {
                     ),
                   ).slice(0, 200);
                   if (accounts.length === 0) return;
-                  const batchRes = await fetch(`/api/sellers/batch`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ accounts }),
-                  });
-                  if (!batchRes.ok) return;
-                  const batchJson = await batchRes.json();
-                  if (!batchJson.success || !batchJson.data) return;
-                  const sellersMap = batchJson.data as Record<string, any>;
-                  if (requestIdRef.current === requestId) {
-                    setVehicles((prev) =>
-                      prev.map((v) => ({ ...v, sellerInfo: sellersMap[v.seller_account_number] || null })),
+                  try {
+                    const batchRes = await fetchWithRetry(
+                      `/api/sellers/batch`,
+                      {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ accounts }),
+                        signal: controller.signal,
+                      },
+                      2,
+                      10000,
                     );
+                    if (!batchRes || !batchRes.ok) return;
+                    const batchJson = await batchRes.json();
+                    if (!batchJson.success || !batchJson.data) return;
+                    const sellersMap = batchJson.data as Record<string, any>;
+                    if (requestIdRef.current === requestId) {
+                      setVehicles((prev) =>
+                        prev.map((v) => ({ ...v, sellerInfo: sellersMap[v.seller_account_number] || null })),
+                      );
+                    }
+                  } catch (e) {
+                    console.warn("/api/sellers/batch (fallback) error:", e);
                   }
                 } catch (e) {
                   /* ignore */
