@@ -5375,30 +5375,22 @@ export default function MySQLVehiclesOriginalStyle() {
                       <div className="relative flex-1 min-w-0">
                         <label className="sr-only">Max Payment</label>
                         <div className="relative">
-                          <button
-                            type="button"
-                            onClick={() => setPaymentMaxOpen((p) => !p)}
-                            aria-haspopup="listbox"
-                            aria-expanded={paymentMaxOpen}
-                            className="w-full h-11 pl-4 pr-10 text-left border border-gray-300 rounded bg-white flex items-center"
+                          <select
+                            value={paymentMax}
+                            onChange={(e) => {
+                              const v = e.target.value;
+                              setPaymentMax(v);
+                              setAppliedFilters(prev => ({ ...prev, paymentMax: v === 'Any' ? '' : v }));
+                            }}
+                            className="w-full h-11 pl-4 pr-10 text-left border border-gray-300 rounded bg-white text-lg font-semibold"
                           >
-                            <span className="text-gray-700 ml-2 mr-3">$</span>
-                            <span className="flex-1 text-gray-900 font-semibold truncate">{paymentMax === "Any" ? "Any" : `$${paymentMax}`}</span>
-                            <span className="text-sm text-gray-500 mr-3">/mo</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-red-600">
-                              <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          </button>
-
-                          {paymentMaxOpen && (
-                            <ul role="listbox" tabIndex={-1} className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded shadow max-h-60 overflow-auto">
-                              {allowedToOptions.map((opt) => (
-                                <li key={opt} className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMax(opt); setPaymentMaxOpen(false); setAppliedFilters(prev => ({ ...prev, paymentMax: opt === 'Any' ? '' : opt })); }}>
-                                  {opt === "Any" ? "Any" : (opt === "800+" ? "800+" : `$${opt}`)}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
+                            {allowedToOptions.map((opt) => (
+                              <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+/mo" : `$${opt}/mo`)}</option>
+                            ))}
+                          </select>
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-600 pointer-events-none">
+                            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
                         </div>
                       </div>
                     </div>
