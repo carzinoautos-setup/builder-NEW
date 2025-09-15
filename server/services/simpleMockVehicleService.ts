@@ -439,12 +439,16 @@ export class SimpleMockVehicleService {
 
   async getVehicleTypeCounts(): Promise<{ name: string; count: number }[]> {
     // Only count vehicles with valid body_type
-    const validVehicles = this.vehicles.filter(
-      (v) =>
-        v.body_type &&
-        v.body_type !== "Uncategorized" &&
-        v.body_type.trim() !== "",
-    );
+    const validVehicles = this.vehicles.filter((v) => {
+     try {
+       const b = v.body_type && String(v.body_type).trim();
+       if (!b) return false;
+       if (b.toLowerCase() === "uncategorized") return false;
+       return ALLOWED_BODY_STYLES_SET.has(b.toLowerCase());
+     } catch (e) {
+       return false;
+     }
+   });
 
     // Count vehicles per body type
     const typeCounts = new Map<string, number>();
@@ -468,12 +472,16 @@ export class SimpleMockVehicleService {
     sellerTypes: string[];
   }> {
     // Only include options from vehicles with valid body_type
-    const validVehicles = this.vehicles.filter(
-      (v) =>
-        v.body_type &&
-        v.body_type !== "Uncategorized" &&
-        v.body_type.trim() !== "",
-    );
+    const validVehicles = this.vehicles.filter((v) => {
+     try {
+       const b = v.body_type && String(v.body_type).trim();
+       if (!b) return false;
+       if (b.toLowerCase() === "uncategorized") return false;
+       return ALLOWED_BODY_STYLES_SET.has(b.toLowerCase());
+     } catch (e) {
+       return false;
+     }
+   });
 
     // Extract makes from vehicle titles
     const makes = Array.from(
