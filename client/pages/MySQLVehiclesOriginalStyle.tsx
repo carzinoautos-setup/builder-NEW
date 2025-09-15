@@ -2621,15 +2621,27 @@ export default function MySQLVehiclesOriginalStyle() {
     // Allowed body styles (keep in sync with server config)
     const ALLOWED = new Set(["sedan","suv","truck","coupe","hatchback","wagon","convertible","van"]);
 
+    const normalizeToBase = (raw: string) => {
+      const s = raw.toLowerCase().trim();
+      if (/\b(cab|crew|extended|regular|pickup|pickup truck|crew-cab|extended-cab)\b/.test(s) || /truck/.test(s)) return "truck";
+      if (/\b(suv|crossover)\b/.test(s) || /suv/.test(s)) return "suv";
+      if (/van/.test(s)) return "van";
+      if (/sedan|saloon/.test(s)) return "sedan";
+      if (/coupe/.test(s)) return "coupe";
+      if (/hatchback/.test(s)) return "hatchback";
+      if (/wagon/.test(s)) return "wagon";
+      if (/convertible|cabriolet/.test(s)) return "convertible";
+      return ALLOWED.has(s) ? s : "";
+    };
+
     if (filterOptions && Array.isArray(filterOptions.body_style)) {
       const filtered = filterOptions.body_style
         .filter((v: any) => {
           try {
             const name = String(v.name || "").trim();
             if (!name) return false;
-            const key = name.toLowerCase();
-            if (key === "uncategorized") return false;
-            return ALLOWED.has(key);
+            const normalized = normalizeToBase(name);
+            return Boolean(normalized);
           } catch (e) {
             return false;
           }
