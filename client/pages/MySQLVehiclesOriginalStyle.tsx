@@ -5319,7 +5319,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         <select
                           value={paymentMin}
                           onChange={(e) => setPaymentMin(e.target.value)}
-                          className="w-full pl-3 pr-8 py-2 border border-gray-300 rounded focus:outline-none bg-white"
+                          className="w-full pl-8 pr-10 py-2 border border-gray-300 rounded focus:outline-none bg-white appearance-none"
                         >
                           <option value="Any">Any</option>
                           {paymentNumericOptions.map((n) => (
