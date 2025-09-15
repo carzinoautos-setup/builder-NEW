@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { VehicleCard } from "@/components/VehicleCard";
 import { FilterSection } from "@/components/FilterSection";
+import { PaymentSelect } from "@/components/PaymentSelect";
 import { VehicleTypeCard } from "@/components/VehicleTypeCard";
 import { Pagination } from "@/components/Pagination";
 import { NavigationHeader } from "@/components/NavigationHeader";
@@ -5350,48 +5351,26 @@ export default function MySQLVehiclesOriginalStyle() {
                       <div className="relative flex-1 min-w-0">
                         <label className="sr-only">Min Payment</label>
                         <div className="relative">
-                          <select
+                          <PaymentSelect
                             value={paymentMin}
-                            onChange={(e) => {
-                              const v = e.target.value;
-                              setPaymentMin(v);
-                              setAppliedFilters(prev => ({ ...prev, paymentMin: v }));
-                            }}
-                            className="w-full h-10 pl-4 pr-14 text-left border border-gray-300 rounded bg-white carzino-search-input payment-select appearance-none"
-                            style={{ WebkitAppearance: 'none', MozAppearance: 'none', backgroundImage: 'none' }}
-                          >
-                            <option value="">Any</option>
-                            {paymentNumericOptions.map((n) => (
-                              <option key={n} value={String(n)}>{`$${n}/mo`}</option>
-                            ))}
-                            <option value="800+">800+/mo</option>
-                          </select>
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute right-1 top-1/2 transform -translate-y-1/2 text-red-600 pointer-events-none bg-transparent">
-                            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
+                            onChange={(v) => { setPaymentMin(v); setAppliedFilters(prev => ({ ...prev, paymentMin: v })); }}
+                            options={paymentNumericOptions}
+                            allowAny
+                            ariaLabel="Min payment"
+                          />
                         </div>
                       </div>
 
                       <div className="relative flex-1 min-w-0">
                         <label className="sr-only">Max Payment</label>
                         <div className="relative">
-                          <select
+                          <PaymentSelect
                             value={paymentMax}
-                            onChange={(e) => {
-                              const v = e.target.value;
-                              setPaymentMax(v);
-                              setAppliedFilters(prev => ({ ...prev, paymentMax: v }));
-                            }}
-                            className="w-full h-10 pl-4 pr-14 text-left border border-gray-300 rounded bg-white carzino-search-input payment-select appearance-none"
-                            style={{ WebkitAppearance: 'none', MozAppearance: 'none', backgroundImage: 'none' }}
-                          >
-                            {allowedToOptions.map((opt) => (
-                              <option key={opt} value={opt === "Any" ? "" : opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+/mo" : `$${opt}/mo`)}</option>
-                            ))}
-                          </select>
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute right-1 top-1/2 transform -translate-y-1/2 text-red-600 pointer-events-none bg-transparent">
-                            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
+                            onChange={(v) => { setPaymentMax(v); setAppliedFilters(prev => ({ ...prev, paymentMax: v })); }}
+                            options={allowedToOptions.filter(o => o !== 'Any').map(o => o === '800+' ? '800+' : String(o))}
+                            allowAny
+                            ariaLabel="Max payment"
+                          />
                         </div>
                       </div>
                     </div>
