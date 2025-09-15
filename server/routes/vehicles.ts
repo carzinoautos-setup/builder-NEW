@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { VehicleService } from "../services/vehicleService.js";
 import { MockVehicleService } from "../services/mockVehicleService.js";
 import { PaginationParams, VehicleFilters } from "../types/vehicle.js";
+import { ALLOWED_BODY_STYLES_SET } from "../config/allowedBodyStyles.js";
 
 // Decide whether to use the real VehicleService (MySQL), a WordPress proxy, or MockVehicleService
 const useMock = process.env.USE_MOCK === "true";
