@@ -2297,8 +2297,9 @@ export default function MySQLVehiclesOriginalStyle() {
             } as any;
           });
           const filteredRecords = mappedRecords.filter((r: any) => {
-          const body = (r.body_style || r.bodyType || "").toString().trim().toLowerCase();
-          return body !== "uncategorized";
+          const body = (r.body_style || r.bodyType || "").toString().trim();
+          if (!body) return false;
+          return body.toLowerCase() !== "uncategorized";
         });
           const transformedVehicles = filteredRecords.map(
             transformVehicleRecord,
