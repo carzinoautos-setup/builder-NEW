@@ -5357,7 +5357,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               setPaymentMin(v);
                               setAppliedFilters(prev => ({ ...prev, paymentMin: v }));
                             }}
-                            className="w-full h-10 pl-4 pr-12 text-left border border-gray-300 rounded bg-white text-sm font-semibold payment-select appearance-none"
+                            className="w-full h-10 pl-4 pr-14 text-left border border-gray-300 rounded bg-white text-sm font-semibold payment-select appearance-none"
                             style={{ WebkitAppearance: 'none', MozAppearance: 'none', backgroundImage: 'none' }}
                           >
                             <option value="">Any</option>
@@ -5382,7 +5382,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               setPaymentMax(v);
                               setAppliedFilters(prev => ({ ...prev, paymentMax: v }));
                             }}
-                            className="w-full h-10 pl-4 pr-12 text-left border border-gray-300 rounded bg-white text-sm font-semibold payment-select appearance-none"
+                            className="w-full h-10 pl-4 pr-14 text-left border border-gray-300 rounded bg-white text-sm font-semibold payment-select appearance-none"
                             style={{ WebkitAppearance: 'none', MozAppearance: 'none', backgroundImage: 'none' }}
                           >
                             {allowedToOptions.map((opt) => (
