@@ -836,7 +836,7 @@ export default function MySQLVehiclesOriginalStyle() {
   ];
   const fromValue = paymentMin;
   const allowedToOptions: string[] = (() => {
-    if (fromValue === "Any")
+    if (!fromValue || fromValue === "Any")
       return ["Any", ...paymentNumericOptions.map(String), "800+"];
     if (fromValue === "800+") return ["Any", "800+"];
     const fromNum = parseFloat(fromValue);
@@ -844,7 +844,7 @@ export default function MySQLVehiclesOriginalStyle() {
       "Any",
       ...paymentNumericOptions.filter((v) => v >= fromNum).map(String),
     ];
-    if (fromNum <= 800) opts.push("800+");
+    if (!Number.isNaN(fromNum) && fromNum <= 800) opts.push("800+");
     return opts;
   })();
 
