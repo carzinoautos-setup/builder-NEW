@@ -1,4 +1,75 @@
-import { VehicleRecord, VehiclesApiResponse, VehicleFilters, FilterOptions } from "./vehicleApi.types";
+// Frontend types for API responses
+export interface VehicleRecord {
+  id: number;
+  year: number;
+  make: string;
+  model: string;
+  trim: string;
+  body_style: string;
+  engine_cylinders: number;
+  fuel_type: string;
+  transmission: string;
+  transmission_speed: string;
+  drivetrain: string;
+  exterior_color_generic: string;
+  interior_color_generic: string;
+  doors: number;
+  price: number;
+  mileage: number;
+  title_status: string;
+  highway_mpg: number;
+  condition: string;
+  certified: boolean;
+  seller_account_number: string;
+  seller_type: string;
+  interest_rate: number;
+  down_payment: number;
+  loan_term: number;
+  payments: number;
+}
+
+export interface PaginationMeta {
+  totalRecords: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface VehiclesApiResponse {
+  data: VehicleRecord[];
+  meta: PaginationMeta;
+  success: boolean;
+  message?: string;
+}
+
+export interface VehicleFilters {
+  make?: string;
+  model?: string;
+  year?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  condition?: string;
+  maxMileage?: number;
+  fuelType?: string;
+  transmission?: string;
+  drivetrain?: string;
+  bodyStyle?: string;
+  certified?: boolean;
+  sellerType?: string;
+}
+
+export interface FilterOptions {
+  makes: string[];
+  models: string[];
+  conditions: string[];
+  fuelTypes: string[];
+  transmissions: string[];
+  drivetrains: string[];
+  bodyStyles: string[];
+  sellerTypes: string[];
+}
 import { fetchWithRetry } from "./fetchWithRetry";
 
 // If project doesn't provide a VITE_API_URL, keep base empty so relative paths are used
