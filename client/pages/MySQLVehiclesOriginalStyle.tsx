@@ -5368,15 +5368,15 @@ export default function MySQLVehiclesOriginalStyle() {
 
                           {paymentMinOpen && (
                             <ul role="listbox" tabIndex={-1} className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded shadow max-h-60 overflow-auto">
-                              <li className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMin("Any"); setPaymentMinOpen(false); }}>
+                              <li className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMin("Any"); setPaymentMinOpen(false); setAppliedFilters(prev => ({ ...prev, paymentMin: "" })); }}>
                                 Any
                               </li>
                               {paymentNumericOptions.map((n) => (
-                                <li key={n} className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMin(String(n)); setPaymentMinOpen(false); }}>
+                                <li key={n} className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { const val = String(n); setPaymentMin(val); setPaymentMinOpen(false); setAppliedFilters(prev => ({ ...prev, paymentMin: val })); }}>
                                   {`$${n}`}
                                 </li>
                               ))}
-                              <li className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMin("800+"); setPaymentMinOpen(false); }}>
+                              <li className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMin("800+"); setPaymentMinOpen(false); setAppliedFilters(prev => ({ ...prev, paymentMin: "800+" })); }}>
                                 800+
                               </li>
                             </ul>
