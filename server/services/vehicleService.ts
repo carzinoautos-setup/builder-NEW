@@ -308,7 +308,7 @@ export class VehicleService {
   }> {
     try {
       const baseWhere =
-        "WHERE body_style IS NOT NULL AND body_style <> 'Uncategorized'";
+        "WHERE body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized'";
       const [makesResult] = await this.db.execute<RowDataPacket[]>(
         `SELECT DISTINCT make FROM vehicles ${baseWhere} ORDER BY make`,
       );
