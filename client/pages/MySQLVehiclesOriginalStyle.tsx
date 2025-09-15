@@ -5345,33 +5345,38 @@ export default function MySQLVehiclesOriginalStyle() {
                     <div className="flex gap-2 mb-2">
                       <div className="relative flex-1">
                         <label className="sr-only">Min Payment</label>
-                        <select
-                          value={paymentMin}
-                          onChange={(e) => setPaymentMin(e.target.value)}
-                          className="w-full h-11 pl-14 pr-14 text-lg text-transparent border border-gray-300 rounded focus:outline-none bg-white appearance-none leading-6"
-                        >
-                          <option value="Any">Any</option>
-                          {paymentNumericOptions.map((n) => (
-                            <option key={n} value={String(n)}>{n}</option>
-                          ))}
-                          <option value="800+">800+</option>
-                        </select>
-                        <span className="absolute left-14 right-14 top-1/2 transform -translate-y-1/2 text-left text-gray-900 pointer-events-none truncate font-semibold px-2">
-                          {paymentMin === "Any" ? "Any" : paymentMin}
-                        </span>
-                        <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 text-base pointer-events-none">$</span>
-                        <span className="absolute right-9 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none">/mo</span>
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-600 pointer-events-none"
-                          aria-hidden
-                        >
-                          <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                        <div className="relative">
+                          <button
+                            type="button"
+                            onClick={() => setPaymentMinOpen((p) => !p)}
+                            aria-haspopup="listbox"
+                            aria-expanded={paymentMinOpen}
+                            className="w-full h-11 pl-4 pr-10 text-left border border-gray-300 rounded bg-white flex items-center"
+                          >
+                            <span className="text-gray-700 ml-2 mr-3">$</span>
+                            <span className="flex-1 text-gray-900 font-semibold truncate">{paymentMin === "Any" ? "Any" : `$${paymentMin}`}</span>
+                            <span className="text-sm text-gray-500 mr-3">/mo</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-red-600">
+                              <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </button>
+
+                          {paymentMinOpen && (
+                            <ul role="listbox" tabIndex={-1} className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded shadow max-h-60 overflow-auto">
+                              <li className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMin("Any"); setPaymentMinOpen(false); }}>
+                                Any
+                              </li>
+                              {paymentNumericOptions.map((n) => (
+                                <li key={n} className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMin(String(n)); setPaymentMinOpen(false); }}>
+                                  {`$${n}`}
+                                </li>
+                              ))}
+                              <li className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMin("800+"); setPaymentMinOpen(false); }}>
+                                800+
+                              </li>
+                            </ul>
+                          )}
+                        </div>
                       </div>
 
                       <div className="relative flex-1">
