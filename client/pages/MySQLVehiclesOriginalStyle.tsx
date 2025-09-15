@@ -1608,6 +1608,31 @@ export default function MySQLVehiclesOriginalStyle() {
 
         // Transform VehicleRecord[] to Vehicle[] for display
         const transformedVehicles = filteredRecords.map(transformVehicleRecord);
+        // If we fetched an expanded first page, remove/de-prioritize vehicles with the specific featured image
+        const FEATURED_ID_TO_DEPRIORITIZE = "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx";
+        const containsFeaturedId = (v: any) => {
+          try {
+            const imgs = Array.isArray(v.images) ? v.images : [];
+            for (const img of imgs) {
+              if (img && String(img).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
+            }
+            const alt = v.featured_image || v.featuredImage || v.featured_image_url || "";
+            if (alt && String(alt).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
+          } catch (e) {
+            /* ignore */
+          }
+          return false;
+        };
+
+        let finalVehicles = transformedVehicles;
+        if (currentPage === 1 && typeof expandedPerPage !== "undefined" && expandedPerPage > resultsPerPage) {
+          const prioritized = finalVehicles.filter((r) => !containsFeaturedId(r));
+          const deprioritized = finalVehicles.filter((r) => containsFeaturedId(r));
+          finalVehicles = [...prioritized, ...deprioritized];
+          // Only keep resultsPerPage items for the first page view
+          finalVehicles = finalVehicles.slice(0, resultsPerPage);
+        }
+
         if (requestIdRef.current === requestId) {
           if (appendResults) {
             setVehicles((prev) =>
