@@ -4739,38 +4739,46 @@ export default function MySQLVehiclesOriginalStyle() {
                         </button>
                       </span>
                     )}
-                    {(appliedFilters.paymentMin ||
-                      appliedFilters.paymentMax) && (
-                      <span
-                        onClick={() =>
-                          setAppliedFilters((prev) => ({
-                            ...prev,
-                            paymentMin: "",
-                            paymentMax: "",
-                          }))
-                        }
-                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
-                      >
-                        <Check className="w-3 h-3 text-red-600" />$
-                        {appliedFilters.paymentMin || "0"}-$
-                        {appliedFilters.paymentMax || "Any"}/mo
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
+                    {(appliedFilters.paymentMin || appliedFilters.paymentMax) && (() => {
+                      const pmin = String(appliedFilters.paymentMin || "").trim();
+                      const pmax = String(appliedFilters.paymentMax || "").trim();
+                      const both = pmin && pmax;
+                      const label = both
+                        ? `${formatCurrency(pmin)} - ${formatCurrency(pmax)}/mo`
+                        : pmin
+                        ? `${formatCurrency(pmin)}/mo`
+                        : `${formatCurrency(pmax)}/mo`;
+                      return (
+                        <span
+                          onClick={() =>
                             setAppliedFilters((prev) => ({
                               ...prev,
                               paymentMin: "",
                               paymentMax: "",
-                            }));
-                          }}
-                          className="ml-1 text-white hover:text-gray-300"
-                          aria-label="Remove payment filter"
+                            }))
+                          }
+                          className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
                         >
-                          <X className="w-3 h-3 inline-block" />
-                        </button>
-                      </span>
-                    )}
+                          <Check className="w-3 h-3 text-red-600" />
+                          {label}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAppliedFilters((prev) => ({
+                                ...prev,
+                                paymentMin: "",
+                                paymentMax: "",
+                              }));
+                            }}
+                            className="ml-1 text-white hover:text-gray-300"
+                            aria-label="Remove payment filter"
+                          >
+                            <X className="w-3 h-3 inline-block" />
+                          </button>
+                        </span>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>
