@@ -5377,7 +5377,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       ) : null}
 
                       <div className="relative">
-                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 text-base">
                           $
                         </span>
                         <input
@@ -5392,7 +5392,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             setAcfDownPayment(v);
                           }}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none bg-white"
+                          className="w-full pl-10 pr-2 h-11 border border-gray-300 rounded focus:outline-none bg-white"
                         />
                       </div>
                     </div>
