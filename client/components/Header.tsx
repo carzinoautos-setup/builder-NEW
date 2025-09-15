@@ -296,7 +296,7 @@ export default function Header({ topTemplate }: HeaderProps) {
 
               <div className="border-t border-gray-100 my-2" />
               <a
-                href="#"
+                href="https://env-uploadbackup62225-czdev.kinsta.cloud/sign-in/"
                 onClick={() => setMobileOpen(false)}
                 className="py-2 text-red-600 font-bold"
               >
