@@ -1262,10 +1262,14 @@ export default function MySQLVehiclesOriginalStyle() {
       setError(null);
 
       // Build query parameters (map to WordPress plugin expectations)
+      // When loading the first page, fetch extra items so we can filter/de-prioritize unwanted matches
+      const EXPANSION_FACTOR = 3;
+      const expandedPerPage = currentPage === 1 ? Math.min(resultsPerPage * EXPANSION_FACTOR, 1000) : resultsPerPage;
       const params = new URLSearchParams({
         page: currentPage.toString(),
-        per_page: resultsPerPage.toString(),
+        per_page: String(expandedPerPage),
       });
+      if (currentPage === 1) console.log(`[vehicles] Requesting expanded per_page=${expandedPerPage} to deprioritize featured images on first page`);
 
       // Add search term -- but DO NOT send free-text search when explicit make/model/trim are present
       const hasExplicitFilter =
