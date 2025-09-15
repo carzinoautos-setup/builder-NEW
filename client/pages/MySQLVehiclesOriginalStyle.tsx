@@ -2618,14 +2618,28 @@ export default function MySQLVehiclesOriginalStyle() {
         .replace(/[\s\/]+/g, "-")
         .replace(/[^a-z0-9\-]/g, "");
 
+    // Allowed body styles (keep in sync with server config)
+    const ALLOWED = new Set(["sedan","suv","truck","coupe","hatchback","wagon","convertible","van"]);
+
     if (filterOptions && Array.isArray(filterOptions.body_style)) {
-      setVehicleTypes(
-        filterOptions.body_style.map((v: any) => ({
+      const filtered = filterOptions.body_style
+        .filter((v: any) => {
+          try {
+            const name = String(v.name || "").trim();
+            if (!name) return false;
+            const key = name.toLowerCase();
+            if (key === "uncategorized") return false;
+            return ALLOWED.has(key);
+          } catch (e) {
+            return false;
+          }
+        })
+        .map((v: any) => ({
           name: v.name,
           slug: normalize(String(v.name || "")),
           count: v.count,
-        })),
-      );
+        }));
+      setVehicleTypes(filtered);
     } else {
       setVehicleTypes([]);
     }
