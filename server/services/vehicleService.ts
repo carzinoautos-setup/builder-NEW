@@ -170,9 +170,31 @@ export class VehicleService {
     // Allowed list is imported at module top
     let allowedListSql = "";
     try {
-      const vals = ALLOWED_BODY_STYLES.map((s) => s.replace(/'/g, "''"));
-      if (vals.length > 0) {
-        allowedListSql = `AND LOWER(TRIM(body_style)) IN (${vals.map((v) => "'" + v.toLowerCase() + "'").join(",")})`;
+      const clauses: string[] = [];
+      for (const s of ALLOWED_BODY_STYLES) {
+        const key = String(s).toLowerCase();
+        if (key === "truck") {
+          clauses.push("(LOWER(TRIM(body_style)) LIKE '%truck%' OR LOWER(TRIM(body_style)) LIKE '%cab%' OR LOWER(TRIM(body_style)) LIKE '%pickup%')");
+        } else if (key === "suv") {
+          clauses.push("(LOWER(TRIM(body_style)) LIKE '%suv%' OR LOWER(TRIM(body_style)) LIKE '%crossover%')");
+        } else if (key === "van") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%van%'");
+        } else if (key === "sedan") {
+          clauses.push("(LOWER(TRIM(body_style)) LIKE '%sedan%' OR LOWER(TRIM(body_style)) LIKE '%saloon%')");
+        } else if (key === "coupe") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%coupe%'");
+        } else if (key === "hatchback") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%hatchback%'");
+        } else if (key === "wagon") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%wagon%'");
+        } else if (key === "convertible") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%convertible%'");
+        } else {
+          clauses.push(`LOWER(TRIM(body_style)) = '${key.replace(/'/g, "''")}'`);
+        }
+      }
+      if (clauses.length > 0) {
+        allowedListSql = `AND (${clauses.join(" OR ")})`;
       }
     } catch (e) {
       allowedListSql = "";
