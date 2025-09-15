@@ -716,7 +716,9 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
                       0;
                     (item as any).count = Number(total) || 0;
                     if (cat.respKey === "condition") {
-                      console.log(`[filters][background-count] condition=${item.name} -> ${(item as any).count} (url=${url})`);
+                      console.log(
+                        `[filters][background-count] condition=${item.name} -> ${(item as any).count} (url=${url})`,
+                      );
                     }
                   } catch (e) {
                     console.warn(

@@ -4721,7 +4721,10 @@ export default function MySQLVehiclesOriginalStyle() {
                       <option value="500">500 Miles</option>
                       <option value="nationwide">Nationwide</option>
                     </select>
-                    <ChevronDown className="w-4 h-4 text-red-600 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" aria-hidden />
+                    <ChevronDown
+                      className="w-4 h-4 text-red-600 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                      aria-hidden
+                    />
                   </div>
                 </div>
               </div>
@@ -5805,11 +5808,15 @@ export default function MySQLVehiclesOriginalStyle() {
                   filterOptions.transmission_speed.length > 0 ? (
                     (() => {
                       // Normalize and sort transmission speeds numerically (1-10 ascending) and then dedupe
-                      const transmissionRaw = filterOptions.transmission_speed || [];
+                      const transmissionRaw =
+                        filterOptions.transmission_speed || [];
                       const transmissionList = transmissionRaw.map((it: any) =>
                         typeof it === "string"
                           ? { name: it, count: 0 }
-                          : { name: String(it.name ?? it.value ?? ""), count: Number(it.count ?? 0) },
+                          : {
+                              name: String(it.name ?? it.value ?? ""),
+                              count: Number(it.count ?? 0),
+                            },
                       );
 
                       const transmissionSort = (a: any, b: any) => {
@@ -5822,14 +5829,21 @@ export default function MySQLVehiclesOriginalStyle() {
                         const ia = ma ? Number(ma) : NaN;
                         const ib = mb ? Number(mb) : NaN;
 
-                        if (!Number.isNaN(ia) && !Number.isNaN(ib)) return ia - ib; // numeric ascending
+                        if (!Number.isNaN(ia) && !Number.isNaN(ib))
+                          return ia - ib; // numeric ascending
                         if (!Number.isNaN(ia)) return -1;
                         if (!Number.isNaN(ib)) return 1;
 
                         // keep Auto/CVT, Automatic, Manual in a friendly order
                         const priority = ["Auto/CVT", "Automatic", "Manual"];
-                        const pa = priority.indexOf(na) >= 0 ? priority.indexOf(na) : 999;
-                        const pb = priority.indexOf(nb) >= 0 ? priority.indexOf(nb) : 999;
+                        const pa =
+                          priority.indexOf(na) >= 0
+                            ? priority.indexOf(na)
+                            : 999;
+                        const pb =
+                          priority.indexOf(nb) >= 0
+                            ? priority.indexOf(nb)
+                            : 999;
                         if (pa !== pb) return pa - pb;
 
                         // fallback to count desc then name
@@ -5839,7 +5853,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         return na.localeCompare(nb);
                       };
 
-                      const sortedTransmission = [...transmissionList].sort(transmissionSort);
+                      const sortedTransmission = [...transmissionList].sort(
+                        transmissionSort,
+                      );
 
                       const displayed = getDisplayed(
                         sortedTransmission,

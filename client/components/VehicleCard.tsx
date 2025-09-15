@@ -303,7 +303,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // Final account type to display: prefer sellerInfo, then vehicle custom field, then seller_type
   const accountTypeSeller = sanitize(
-    (sellerInfo && (sellerInfo.accountType || sellerInfo.type || sellerInfo.account_type_seller)) ||
+    (sellerInfo &&
+      (sellerInfo.accountType ||
+        sellerInfo.type ||
+        sellerInfo.account_type_seller)) ||
       accountTypeField ||
       (vehicle as any).seller_type ||
       "",
@@ -528,7 +531,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             />
 
             {/* Hidden relationship field (not shown to users) - kept for binding */}
-            <input type="hidden" value={acctNumberValue} data-seller-account-hidden />
+            <input
+              type="hidden"
+              value={acctNumberValue}
+              data-seller-account-hidden
+            />
           </div>
 
           <div className="flex-shrink-0 text-right">
