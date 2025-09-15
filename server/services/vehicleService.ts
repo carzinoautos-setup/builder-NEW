@@ -164,10 +164,13 @@ export class VehicleService {
     }
 
     // Base query parts
+    // Enforce exclusion of vehicles with blank/uncategorized body_style by default
+    const baseBodyFilter = "body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized'";
+
     const whereClause =
       whereConditions.length > 0
-        ? `WHERE ${whereConditions.join(" AND ")}`
-        : "";
+        ? `WHERE ${baseBodyFilter} AND ${whereConditions.join(" AND ")}`
+        : `WHERE ${baseBodyFilter}`;
     const sortBy = pagination.sortBy || "id";
     const sortOrder = pagination.sortOrder || "DESC";
     const offset = (pagination.page - 1) * pagination.pageSize;
