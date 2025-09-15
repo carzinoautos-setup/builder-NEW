@@ -5405,7 +5405,7 @@ export default function MySQLVehiclesOriginalStyle() {
                           {paymentMaxOpen && (
                             <ul role="listbox" tabIndex={-1} className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded shadow max-h-60 overflow-auto">
                               {allowedToOptions.map((opt) => (
-                                <li key={opt} className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMax(opt); setPaymentMaxOpen(false); }}>
+                                <li key={opt} className="px-3 py-2 hover:bg-gray-50 cursor-pointer" onClick={() => { setPaymentMax(opt); setPaymentMaxOpen(false); setAppliedFilters(prev => ({ ...prev, paymentMax: opt === 'Any' ? '' : opt })); }}>
                                   {opt === "Any" ? "Any" : (opt === "800+" ? "800+" : `$${opt}`)}
                                 </li>
                               ))}
