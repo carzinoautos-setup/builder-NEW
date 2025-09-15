@@ -99,6 +99,26 @@
 }
 
 @layer base {
+  /* Payment select fixes: hide native arrows across browsers and style chevron */
+  .payment-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none !important;
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 3rem; /* leave space for custom chevron */
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .payment-select::-ms-expand {
+    display: none; /* hide IE/Edge native arrow */
+  }
+  .payment-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(241, 78, 64, 0.12);
+  }
+
   * {
     @apply border-border;
   }
