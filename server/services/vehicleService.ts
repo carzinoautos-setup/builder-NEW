@@ -8,6 +8,7 @@ import {
   VehicleFilters,
   SqlQuery,
 } from "../types/vehicle.js";
+import { ALLOWED_BODY_STYLES } from "../config/allowedBodyStyles.js";
 
 export class VehicleService {
   private db = getDatabase();
