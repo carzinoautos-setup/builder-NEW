@@ -1517,6 +1517,14 @@ export default function MySQLVehiclesOriginalStyle() {
         );
 
         if (!response.ok) {
+          // If the request was aborted or timed out, treat as a harmless cancelation and stop processing
+          const statusText = String(response.statusText || "").toLowerCase();
+          if (response.status === 0 && (statusText.includes("aborted") || statusText.includes("timed out") || statusText.includes("request aborted"))) {
+            console.warn("Vehicle fetch aborted or timed out, skipping update");
+            setLoading(false);
+            return;
+          }
+
           throw new Error(
             `API error: ${response.status} ${response.statusText}`,
           );
@@ -1542,10 +1550,18 @@ export default function MySQLVehiclesOriginalStyle() {
             15000,
           );
           if (!response.ok) {
-            throw new Error(
-              `API error: ${response.status} ${response.statusText}`,
-            );
+          // If the request was aborted or timed out, treat as a harmless cancelation and stop processing
+          const statusText = String(response.statusText || "").toLowerCase();
+          if (response.status === 0 && (statusText.includes("aborted") || statusText.includes("timed out") || statusText.includes("request aborted"))) {
+            console.warn("Vehicle fetch aborted or timed out, skipping update");
+            setLoading(false);
+            return;
           }
+
+          throw new Error(
+            `API error: ${response.status} ${response.statusText}`,
+          );
+        }
         } else {
           throw err;
         }
