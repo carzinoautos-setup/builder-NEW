@@ -201,7 +201,8 @@ export const getVehicles: RequestHandler = async (req, res) => {
         // Remove vehicles explicitly marked as 'uncategorized' to avoid showing them in results/filters
         if (Array.isArray(json.data)) {
           const before = json.data.length;
-          // Remove items whose body style is explicitly set to 'uncategorized' OR whose body is empty/null
+          // Remove items whose body style is explicitly set to 'uncategorized', empty/null, or not in allowed list
+          import { ALLOWED_BODY_STYLES_SET } from "../config/allowedBodyStyles.js";
           json.data = json.data.filter((item: any) => {
             try {
               const body =
@@ -212,7 +213,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 "";
               const trimmed = String(body).trim();
               if (!trimmed) return false; // exclude empty body types
-              return trimmed.toLowerCase() !== "uncategorized";
+              if (trimmed.toLowerCase() === "uncategorized") return false;
+              // enforce allowed list
+              if (!ALLOWED_BODY_STYLES_SET.has(trimmed.toLowerCase())) return false;
+              return true;
             } catch (e) {
               return false; // be conservative and exclude if unsure
             }
@@ -406,7 +410,8 @@ export const getVehicles: RequestHandler = async (req, res) => {
             json.filters.models = toArray(modelsMap);
             json.filters.model = toArray(modelsMap);
             json.filters.fuel_type = toArray(fuelMap);
-            json.filters.body_style = toArray(bodyMap);
+            // Ensure body_style filter array only contains allowed values
+            json.filters.body_style = toArray(bodyMap).filter((it) => ALLOWED_BODY_STYLES_SET.has(String(it.name).toLowerCase()));
             json.filters.account_type_seller = toArray(sellerTypeMap);
             json.filters.account_name_seller = toArray(dealerMap);
             json.filters.state_seller = toArray(statesMap);

@@ -164,8 +164,20 @@ export class VehicleService {
     }
 
     // Base query parts
-    // Enforce exclusion of vehicles with blank/uncategorized body_style by default
-    const baseBodyFilter = "body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized'";
+    // Enforce exclusion of vehicles with blank/uncategorized body_style and restrict to allowed list
+    // Allowed list is populated from server/config/allowedBodyStyles.ts
+    import { ALLOWED_BODY_STYLES } from "../config/allowedBodyStyles.js"; // dynamic import fallback handled below
+    let allowedListSql = "";
+    try {
+      const vals = ALLOWED_BODY_STYLES.map((s) => s.replace(/'/g, "''"));
+      if (vals.length > 0) {
+        allowedListSql = `AND LOWER(TRIM(body_style)) IN (${vals.map((v) => "'" + v.toLowerCase() + "'").join(",")})`;
+      }
+    } catch (e) {
+      allowedListSql = "";
+    }
+
+    const baseBodyFilter = `body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized' ${allowedListSql}`;
 
     const whereClause =
       whereConditions.length > 0
@@ -307,8 +319,12 @@ export class VehicleService {
     sellerTypes: string[];
   }> {
     try {
+      // Use allowed list when computing filter options
+      import { ALLOWED_BODY_STYLES } from "../config/allowedBodyStyles.js";
+      const allowedVals = ALLOWED_BODY_STYLES.map((s) => s.replace(/'/g, "''")).map((s) => s.toLowerCase());
+      const allowedClause = allowedVals.length > 0 ? `AND LOWER(TRIM(body_style)) IN (${allowedVals.map(v => `'${v}'`).join(",")})` : "";
       const baseWhere =
-        "WHERE body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized'";
+        `WHERE body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized' ${allowedClause}`;
       const [makesResult] = await this.db.execute<RowDataPacket[]>(
         `SELECT DISTINCT make FROM vehicles ${baseWhere} ORDER BY make`,
       );
