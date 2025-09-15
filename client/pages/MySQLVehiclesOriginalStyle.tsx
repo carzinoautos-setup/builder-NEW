@@ -2613,7 +2613,34 @@ export default function MySQLVehiclesOriginalStyle() {
     const group2 = base.filter((v) => !hasImage(v) && hasPrice(v));
     const group3 = base.filter((v) => !hasPrice(v));
 
-    return [...group1, ...group2, ...group3];
+    // De-prioritize vehicles whose featured image contains the specified identifier
+    const FEATURED_ID_TO_DEPRIORITIZE = "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx";
+    const result = [...group1, ...group2, ...group3];
+
+    const containsFeaturedId = (v: Vehicle) => {
+      try {
+        // Check images array first
+        const imgs = Array.isArray(v.images) ? v.images : [];
+        if (imgs.length > 0) {
+          for (const img of imgs) {
+            if (!img) continue;
+            if (String(img).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
+          }
+        }
+
+        // Check known alternative fields that might hold featured image URLs
+        const alt = (v as any).featured_image || (v as any).featuredImage || (v as any).featured_image_url || "";
+        if (alt && String(alt).includes(FEATURED_ID_TO_DEPRIORITIZE)) return true;
+      } catch (e) {
+        // ignore
+      }
+      return false;
+    };
+
+    const prioritized = result.filter((v) => !containsFeaturedId(v));
+    const deprioritized = result.filter((v) => containsFeaturedId(v));
+
+    return [...prioritized, ...deprioritized];
   };
 
   const toggleFilter = (filterName: string) => {
