@@ -3204,7 +3204,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
       return null;
     } catch (error) {
-      console.error("❌ Geocoding network error:", error);
+      console.error("��� Geocoding network error:", error);
 
       // Always use fallback for any network error
       if (
@@ -5319,7 +5319,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         <select
                           value={paymentMin}
                           onChange={(e) => setPaymentMin(e.target.value)}
-                          className="w-full pl-8 pr-10 py-2 border border-gray-300 rounded focus:outline-none bg-white appearance-none"
+                          className="w-full pl-12 pr-12 py-2 border border-gray-300 rounded focus:outline-none bg-white appearance-none text-lg"
                         >
                           <option value="Any">Any</option>
                           {paymentNumericOptions.map((n) => (
@@ -5347,7 +5347,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         <select
                           value={paymentMax}
                           onChange={(e) => setPaymentMax(e.target.value)}
-                          className="w-full pl-8 pr-10 py-2 border border-gray-300 rounded focus:outline-none bg-white appearance-none"
+                          className="w-full pl-12 pr-12 py-2 border border-gray-300 rounded focus:outline-none bg-white appearance-none text-lg"
                         >
                           {allowedToOptions.map((opt) => (
                             <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "$800+" : `$${opt}`)}</option>
