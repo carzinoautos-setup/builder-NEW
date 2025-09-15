@@ -5354,6 +5354,9 @@ export default function MySQLVehiclesOriginalStyle() {
                           ))}
                           <option value="800+">800+</option>
                         </select>
+                        <span className="absolute left-14 right-14 top-1/2 transform -translate-y-1/2 text-left text-gray-900 pointer-events-none">
+                          {paymentMin === "Any" ? "Any" : paymentMin}
+                        </span>
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 text-base pointer-events-none">$</span>
                         <span className="absolute right-9 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none">/mo</span>
                         <svg
@@ -5380,6 +5383,9 @@ export default function MySQLVehiclesOriginalStyle() {
                             <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+" : `${opt}`)}</option>
                           ))}
                         </select>
+                        <span className="absolute left-14 right-14 top-1/2 transform -translate-y-1/2 text-left text-gray-900 pointer-events-none">
+                          {paymentMax === "Any" ? "Any" : paymentMax}
+                        </span>
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 text-base pointer-events-none">$</span>
                         <span className="absolute right-9 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none">/mo</span>
                         <svg
