@@ -6598,7 +6598,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             }
                           }}
                         />
-                        <span className="carzino-filter-option">{s.name}</span>
+                        <span className="carzino-filter-option">{String(s.name).charAt(0).toUpperCase() + String(s.name).slice(1)}</span>
                         <span className="carzino-filter-count ml-1">
                           ({s.count ?? 0})
                         </span>
