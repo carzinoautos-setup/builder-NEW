@@ -5360,7 +5360,7 @@ export default function MySQLVehiclesOriginalStyle() {
                             className="w-full h-10 pl-4 pr-8 text-left border border-gray-300 rounded bg-white text-sm font-semibold appearance-none"
                             style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
                           >
-                            <option value="Any">Any</option>
+                            <option value="">Any</option>
                             {paymentNumericOptions.map((n) => (
                               <option key={n} value={String(n)}>{`$${n}/mo`}</option>
                             ))}
