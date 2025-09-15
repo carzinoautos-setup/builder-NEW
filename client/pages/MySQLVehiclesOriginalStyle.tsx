@@ -4794,7 +4794,7 @@ export default function MySQLVehiclesOriginalStyle() {
               </label>
               <div className="space-y-3">
                 <div className="flex gap-2">
-                  <div className="relative flex-1">
+                  <div className="relative flex-1 min-w-0">
                     <input
                       type="text"
                       placeholder="Enter Zip Code"
@@ -4808,7 +4808,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     />
                   </div>
 
-                  <div className="relative flex-1">
+                  <div className="relative flex-1 min-w-0">
                     <select
                       value={radius}
                       onChange={(e) => setRadius(e.target.value)}
@@ -5265,7 +5265,7 @@ export default function MySQLVehiclesOriginalStyle() {
               >
                 <div className="space-y-3">
                   <div className="flex gap-2">
-                    <div className="relative flex-1">
+                    <div className="relative flex-1 min-w-0">
                       <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
                         $
                       </span>
@@ -5292,7 +5292,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         className="carzino-search-input w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded focus:outline-none"
                       />
                     </div>
-                    <div className="relative flex-1">
+                    <div className="relative flex-1 min-w-0">
                       <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
                         $
                       </span>
@@ -5343,7 +5343,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     </div>
                     {/* Dropdowns for quick min/max payment selection (Any means no restriction) */}
                     <div className="flex gap-2 mb-2">
-                      <div className="relative flex-1">
+                      <div className="relative flex-1 min-w-0">
                         <label className="sr-only">Min Payment</label>
                         <div className="relative">
                           <button
@@ -5379,7 +5379,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         </div>
                       </div>
 
-                      <div className="relative flex-1">
+                      <div className="relative flex-1 min-w-0">
                         <label className="sr-only">Max Payment</label>
                         <div className="relative">
                           <button
