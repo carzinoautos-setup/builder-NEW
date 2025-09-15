@@ -850,7 +850,7 @@ export default function MySQLVehiclesOriginalStyle() {
   // Ensure paymentMax stays valid for selected From
   React.useEffect(() => {
     if (!allowedToOptions.includes(paymentMax)) {
-      setPaymentMax("Any");
+      setPaymentMax("");
     }
   }, [paymentMin]);
 
