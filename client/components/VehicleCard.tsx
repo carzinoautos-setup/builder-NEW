@@ -1,5 +1,6 @@
 import React from "react";
 import { Gauge, Settings, ChevronDown, Heart, Check } from "lucide-react";
+import { fetchWithRetry } from "@/lib/fetchWithRetry";
 
 interface Vehicle {
   id: number;
@@ -235,7 +236,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     (async () => {
       try {
         const url = `${window.location.origin}/api/sellers/${encodeURIComponent(acct)}`;
-        const resp = await fetch(url, { signal: controller.signal });
+        const resp = await fetchWithRetry(url, { signal: controller.signal }, 0, 5000);
         if (!resp) {
           setSellerFetchFailed(true);
           return;
