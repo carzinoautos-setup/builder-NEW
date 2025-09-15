@@ -789,9 +789,20 @@ export default function MySQLVehiclesOriginalStyle() {
     ((appliedFilters as any).down_payment as string) || "",
   );
 
-  // Sync down payment when appliedFilters changes (persist value across drawer open/close)
+  // Sync down payment and payment dropdowns when appliedFilters changes (persist values across drawer open/close)
   React.useEffect(() => {
     setAcfDownPayment(((appliedFilters as any).down_payment as string) || "");
+
+    // Sync payment dropdown UI from appliedFilters if present
+    try {
+      const pmin = (appliedFilters as any).paymentMin;
+      const pmax = (appliedFilters as any).paymentMax;
+      // Use 'Any' if empty
+      setPaymentMin(pmin && String(pmin).trim() !== "" ? String(pmin) : "Any");
+      setPaymentMax(pmax && String(pmax).trim() !== "" ? String(pmax) : "Any");
+    } catch (e) {
+      // ignore
+    }
   }, [appliedFilters]);
 
   // When dropdowns or down payment change, merge into appliedFilters (debounced)
