@@ -799,13 +799,12 @@ export default function MySQLVehiclesOriginalStyle() {
     try {
       const pmin = (appliedFilters as any).paymentMin;
       const pmax = (appliedFilters as any).paymentMax;
-      // Use 'Any' if empty
       // Don't overwrite local UI while the user is actively interacting with the dropdowns
       if (!paymentMinOpen) {
-        setPaymentMin(pmin && String(pmin).trim() !== "" ? String(pmin) : "Any");
+        setPaymentMin(pmin && String(pmin).trim() !== "" ? String(pmin) : "");
       }
       if (!paymentMaxOpen) {
-        setPaymentMax(pmax && String(pmax).trim() !== "" ? String(pmax) : "Any");
+        setPaymentMax(pmax && String(pmax).trim() !== "" ? String(pmax) : "");
       }
     } catch (e) {
       // ignore
