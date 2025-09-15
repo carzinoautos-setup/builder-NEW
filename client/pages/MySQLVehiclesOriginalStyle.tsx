@@ -5358,7 +5358,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               setAppliedFilters(prev => ({ ...prev, paymentMin: v }));
                             }}
                             className="w-full h-10 pl-4 pr-8 text-left border border-gray-300 rounded bg-white text-sm font-semibold appearance-none"
-                            style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                            style={{ WebkitAppearance: 'none', MozAppearance: 'none', backgroundImage: 'none' }}
                           >
                             <option value="">Any</option>
                             {paymentNumericOptions.map((n) => (
@@ -5383,7 +5383,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               setAppliedFilters(prev => ({ ...prev, paymentMax: v }));
                             }}
                             className="w-full h-10 pl-4 pr-8 text-left border border-gray-300 rounded bg-white text-sm font-semibold appearance-none"
-                            style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                            style={{ WebkitAppearance: 'none', MozAppearance: 'none', backgroundImage: 'none' }}
                           >
                             {allowedToOptions.map((opt) => (
                               <option key={opt} value={opt === "Any" ? "" : opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+/mo" : `$${opt}/mo`)}</option>
