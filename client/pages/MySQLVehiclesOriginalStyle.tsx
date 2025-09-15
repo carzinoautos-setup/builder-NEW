@@ -5346,7 +5346,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         <select
                           value={paymentMin}
                           onChange={(e) => setPaymentMin(e.target.value)}
-                          className="w-full h-11 pl-14 pr-14 text-lg border border-gray-300 rounded focus:outline-none bg-white appearance-none leading-6"
+                          className="w-full h-11 pl-14 pr-14 text-lg text-gray-900 border border-gray-300 rounded focus:outline-none bg-white appearance-none leading-6"
                         >
                           <option value="Any">Any</option>
                           {paymentNumericOptions.map((n) => (
@@ -5374,7 +5374,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         <select
                           value={paymentMax}
                           onChange={(e) => setPaymentMax(e.target.value)}
-                          className="w-full h-11 pl-14 pr-14 text-lg border border-gray-300 rounded focus:outline-none bg-white appearance-none leading-6"
+                          className="w-full h-11 pl-14 pr-14 text-lg text-gray-900 border border-gray-300 rounded focus:outline-none bg-white appearance-none leading-6"
                         >
                           {allowedToOptions.map((opt) => (
                             <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "800+" : `${opt}`)}</option>
