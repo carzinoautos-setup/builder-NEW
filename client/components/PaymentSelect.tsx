@@ -40,7 +40,7 @@ export const PaymentSelect: React.FC<PaymentSelectProps> = ({
         aria-expanded={open}
         aria-label={ariaLabel}
         onClick={() => setOpen((s) => !s)}
-        className="w-full h-10 pl-3 pr-10 flex items-center justify-between border border-gray-300 rounded bg-white text-left"
+        className="w-full h-10 pl-3 pr-10 flex items-center justify-between border border-gray-300 rounded bg-white text-left carzino-search-input"
       >
         <span className="inline-flex items-baseline gap-1">
           {display === placeholder ? (
