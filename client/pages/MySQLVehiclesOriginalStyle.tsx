@@ -5327,7 +5327,19 @@ export default function MySQLVehiclesOriginalStyle() {
                           ))}
                           <option value="800+">$800+</option>
                         </select>
-                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 text-sm">$</span>
+                        <span className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">/mo</span>
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-600"
+                          aria-hidden
+                        >
+                          <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
                       </div>
 
                       <div className="relative flex-1">
