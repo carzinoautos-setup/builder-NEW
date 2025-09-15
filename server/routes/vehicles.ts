@@ -378,7 +378,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 if (!name) continue;
                 const lower = name.toLowerCase();
                 if (lower === "uncategorized") continue;
-                if (!ALLOWED_BODY_STYLES_SET.has(lower)) continue;
+                // Normalize to base allowed style using helper
+                const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+                const baseStyle = normalizeBodyStyle(lower);
+                if (!baseStyle) continue;
                 m.set(name, (m.get(name) || 0) + 1);
               }
               return m;
@@ -796,7 +799,10 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
                 if (!name) continue;
                 const lower = name.toLowerCase();
                 if (lower === "uncategorized") continue;
-                if (!ALLOWED_BODY_STYLES_SET.has(lower)) continue;
+                // Normalize to base allowed style using helper
+                const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+                const baseStyle = normalizeBodyStyle(lower);
+                if (!baseStyle) continue;
                 m.set(name, (m.get(name) || 0) + 1);
               }
               return m;
