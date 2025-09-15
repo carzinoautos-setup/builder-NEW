@@ -63,23 +63,23 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
       ],
     },
     {
-      title: "Dealer Sign up",
+      title: "Get online with Carzino",
       content: (
         <div>
           <div className="opacity-95 text-sm">
-            Stay on top of the latest car trends, tips, and tricks for selling
-            your car.
+            <p>
+              Get your first 3-6 months for FREE and stop being over charged
+              from other lead providers.
+            </p>
           </div>
           <div className="mt-5">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="w-full h-12 rounded-lg px-4 bg-white/5 text-white placeholder:text-white/70 border-none"
-            />
+            <a
+              href="https://env-uploadbackup62225-czdev.kinsta.cloud/dealers/"
+              className="w-full inline-block mt-4 h-12 bg-[#E82121] rounded-lg text-white font-medium text-center px-4 leading-[48px]"
+            >
+              Learn More
+            </a>
           </div>
-          <button className="w-full mt-4 h-12 bg-[#E82121] rounded-lg text-white font-medium">
-            Send
-          </button>
         </div>
       ),
     },
