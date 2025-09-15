@@ -5347,7 +5347,7 @@ export default function MySQLVehiclesOriginalStyle() {
                         <select
                           value={paymentMax}
                           onChange={(e) => setPaymentMax(e.target.value)}
-                          className="w-full pl-3 pr-8 py-2 border border-gray-300 rounded focus:outline-none bg-white"
+                          className="w-full pl-8 pr-10 py-2 border border-gray-300 rounded focus:outline-none bg-white appearance-none"
                         >
                           {allowedToOptions.map((opt) => (
                             <option key={opt} value={opt}>{opt === "Any" ? "Any" : (opt === "800+" ? "$800+" : `$${opt}`)}</option>
