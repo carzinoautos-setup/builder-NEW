@@ -385,9 +385,7 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 const lower = name.toLowerCase();
                 if (lower === "uncategorized") continue;
                 // Normalize to base allowed style using helper
-                const { normalizeBodyStyle } = await import(
-                  "../config/allowedBodyStyles.js"
-                );
+
                 const baseStyle = normalizeBodyStyle(lower);
                 if (!baseStyle) continue;
                 m.set(name, (m.get(name) || 0) + 1);
@@ -854,9 +852,7 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
                 const lower = name.toLowerCase();
                 if (lower === "uncategorized") continue;
                 // Normalize to base allowed style using helper
-                const { normalizeBodyStyle } = await import(
-                  "../config/allowedBodyStyles.js"
-                );
+
                 const baseStyle = normalizeBodyStyle(lower);
                 if (!baseStyle) continue;
                 m.set(name, (m.get(name) || 0) + 1);
