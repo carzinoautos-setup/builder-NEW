@@ -3907,7 +3907,7 @@ export default function MySQLVehiclesOriginalStyle() {
             className="p-4 pt-5 lg:pt-6"
             style={{
               paddingBottom: mobileFiltersOpen
-                ? /* action bar + safe area */ "calc(6vh + 150px)"
+                ? /* action bar + safe area */ "calc(15vh + 120px)"
                 : undefined,
             }}
           >

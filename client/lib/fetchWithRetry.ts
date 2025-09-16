@@ -98,18 +98,13 @@ export async function fetchWithRetry(
             .toLowerCase()
             .includes("aborted"))
       ) {
-        // Attempt to extract a reason from the controller signal if present
+        // Attempt to extract a reason from the controller signal or the error
         const reason =
-          (controller &&
-            (controller as any).signal &&
-            ((controller as any).signal as any).reason) ||
+          (controller && (controller as any).signal && ((controller as any).signal as any).reason) ||
           (err && (err as any).reason) ||
           (err && err.message) ||
           "Request aborted";
-        const msg =
-          typeof reason === "string" && reason.length > 0
-            ? reason
-            : "Request aborted";
+        const msg = typeof reason === "string" && reason.length > 0 ? reason : "Request aborted";
         // Do not log full stack in production - normalized warning only
         console.warn("fetchWithRetry: request aborted", msg);
         return {
