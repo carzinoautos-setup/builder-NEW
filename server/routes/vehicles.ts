@@ -46,10 +46,11 @@ try {
     vehicleService = new VehicleService();
     console.log("✅ Using VehicleService (MySQL) for real data");
   } else {
+    // No WP API and no DB configured — do not use demo/mock data automatically.
     console.log(
-      "⚠️ No data backend configured (no WP_API_BASE and no DB_*). Falling back to MockVehicleService",
+      "⚠️ No data backend configured (no WP_API_BASE and no DB_*). Mock/demo data is disabled",
     );
-    vehicleService = new MockVehicleService();
+    vehicleService = null;
   }
 } catch (err) {
   console.error(
