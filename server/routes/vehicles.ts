@@ -194,7 +194,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
         console.log("[WP_PROXY_RESPONSE] /vehicles -> (unable to log body)");
       }
 
-      // Try to parse JSON, otherwise proxy raw
+      // Forward WP response directly to client (bypass local transformations)
+      res.setHeader("Content-Type", "application/json");
+      return res.status(wpResponse && wpResponse.status ? wpResponse.status : 200).send(body);
       try {
         const json = JSON.parse(body);
 
