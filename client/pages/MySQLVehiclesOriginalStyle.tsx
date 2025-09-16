@@ -4094,6 +4094,394 @@ export default function MySQLVehiclesOriginalStyle() {
                       </span>
                     ))}
 
+                    {appliedFilters.trim.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("trim", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button onClick={() => removeAppliedFilter("trim", item)} className="ml-1 text-white hover:text-gray-300"><X className="w-3 h-3 inline-block" /></button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.year.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("year", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button onClick={() => removeAppliedFilter("year", item)} className="ml-1 text-white hover:text-gray-300"><X className="w-3 h-3 inline-block" /></button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.bodyStyle.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("bodyStyle", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button onClick={() => removeAppliedFilter("bodyStyle", item)} className="ml-1 text-white hover:text-gray-300"><X className="w-3 h-3 inline-block" /></button>
+                      </span>
+                    ))}
+
+                    {(() => {
+                      const normalizeSlug = (v: string) =>
+                        String(v || "")
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/^-+|-+$/g, "");
+
+                      const isTruckSlug = (s: string) =>
+                        /truck|pickup|cab|van/.test(s);
+                      const carChildSlugs = (vehicleTypes || [])
+                        .map((t) => String((t && (t as any).slug) || ""))
+                        .filter((s) => s && !isTruckSlug(s));
+                      const truckChildSlugs = (vehicleTypes || [])
+                        .map((t) => String((t && (t as any).slug) || ""))
+                        .filter((s) => s && isTruckSlug(s));
+
+                      const selectedNorm = new Set(
+                        (appliedFilters.vehicleType || []).map((v) =>
+                          normalizeSlug(v),
+                        ),
+                      );
+
+                      const carAll =
+                        carChildSlugs.length > 0 &&
+                        carChildSlugs.every((s) => selectedNorm.has(s));
+                      const truckAll =
+                        truckChildSlugs.length > 0 &&
+                        truckChildSlugs.every((s) => selectedNorm.has(s));
+
+                      const chips: string[] = [];
+                      if (carAll) chips.push("car");
+                      else
+                        carChildSlugs.forEach(
+                          (s) => selectedNorm.has(s) && chips.push(s),
+                        );
+                      if (truckAll) chips.push("truck");
+                      else
+                        truckChildSlugs.forEach(
+                          (s) => selectedNorm.has(s) && chips.push(s),
+                        );
+
+                      for (const s of Array.from(selectedNorm)) {
+                        if (
+                          !carChildSlugs.includes(s) &&
+                          !truckChildSlugs.includes(s) &&
+                          s !== "car" &&
+                          s !== "truck"
+                        ) {
+                          chips.push(s);
+                        }
+                      }
+
+                      return chips.map((item) => (
+                        <span
+                          key={sanitizeLabel(item)}
+                          onClick={() => {
+                            setAppliedFilters((prev) => {
+                              const nextArr = (prev.vehicleType || []).filter(
+                                (v) => {
+                                  const n = normalizeSlug(v);
+                                  if (item === "car")
+                                    return !carChildSlugs.includes(n);
+                                  if (item === "truck")
+                                    return !truckChildSlugs.includes(n);
+                                  return n !== item;
+                                },
+                              );
+                              const next = {
+                                ...prev,
+                                vehicleType: Array.from(new Set(nextArr)),
+                              };
+                              updateURLFromFilters(next);
+                              return next;
+                            });
+                          }}
+                          className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                        >
+                          <Check className="w-3 h-3 text-red-600" />
+                          {item === "car"
+                            ? "All Cars"
+                            : item === "truck"
+                              ? "All Trucks"
+                              : normalizeFilterValue(item)}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAppliedFilters((prev) => {
+                                const nextArr = (prev.vehicleType || []).filter(
+                                  (v) => {
+                                    const n = normalizeSlug(v);
+                                    if (item === "car")
+                                      return !carChildSlugs.includes(n);
+                                    if (item === "truck")
+                                      return !truckChildSlugs.includes(n);
+                                    return n !== item;
+                                  },
+                                );
+                                const next = {
+                                  ...prev,
+                                  vehicleType: Array.from(new Set(nextArr)),
+                                };
+                                updateURLFromFilters(next);
+                                return next;
+                              });
+                            }}
+                            className="ml-1 text-white hover:text-gray-300"
+                          >
+                            <X className="w-3 h-3 inline-block" />
+                          </button>
+                        </span>
+                      ));
+                    })()}
+
+                    {appliedFilters.driveType.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("driveType", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button
+                          onClick={() => removeAppliedFilter("driveType", item)}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.fuelType.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("fuelType", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("fuelType", item);
+                          }}
+                          aria-label={`Remove filter ${sanitizeLabel(item)}`}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.transmission.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("transmission", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("transmission", item);
+                          }}
+                          aria-label={`Remove filter ${sanitizeLabel(item)}`}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {(() => {
+                      const unique = Array.from(
+                        new Set(
+                          appliedFilters.transmissionSpeed.map((v) =>
+                            normalizeTransmission(v),
+                          ),
+                        ),
+                      );
+                      return unique.map((label) => (
+                        <span
+                          key={label}
+                          onClick={() => {
+                            setAppliedFilters((prev) => {
+                              const next = {
+                                ...prev,
+                                transmissionSpeed:
+                                  prev.transmissionSpeed.filter(
+                                    (v) => normalizeTransmission(v) !== label,
+                                  ),
+                              };
+                              updateURLFromFilters(next);
+                              return next;
+                            });
+                          }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                        >
+                          <Check className="w-3 h-3 text-red-600" />
+                          {label}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAppliedFilters((prev) => {
+                                const next = {
+                                  ...prev,
+                                  transmissionSpeed:
+                                    prev.transmissionSpeed.filter(
+                                      (v) => normalizeTransmission(v) !== label,
+                                    ),
+                                };
+                                updateURLFromFilters(next);
+                                return next;
+                              });
+                            }}
+                            className="ml-1 text-white hover:text-gray-300"
+                          >
+                            <X className="w-3 h-3 inline-block" />
+                          </button>
+                        </span>
+                      ));
+                    })()}
+
+                    {appliedFilters.engineCylinders.map((item) => (
+                      <span
+                        key={"engine-" + item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {(() => {
+                          const n = Number(item);
+                          return Number.isNaN(n)
+                            ? item
+                            : `${n} ${n === 1 ? "Cylinder" : "Cylinders"}`;
+                        })()}
+                        <button
+                          onClick={() =>
+                            removeAppliedFilter("engineCylinders", item)
+                          }
+                          className="ml-1 text-white"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.displacementLiters.map((item) => (
+                      <span
+                        key={"disp-" + item}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)} L
+                        <button
+                          onClick={() =>
+                            removeAppliedFilter("displacementLiters", item)
+                          }
+                          className="ml-1 text-white"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.exteriorColor.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() =>
+                          removeAppliedFilter("exteriorColor", item)
+                        }
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)} Color
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("exteriorColor", item);
+                          }}
+                          className="ml-1 text-white hover:text-gray-300"
+                          aria-label={`Remove ${sanitizeLabel(item)}`}>
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.sellerType.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("sellerType", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("sellerType", item);
+                          }}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.certified.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("certified", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("certified", item);
+                          }}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.doors.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("doors", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("doors", item);
+                          }}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
                     {/* Price pill (mobile) */}
                     {(appliedFilters.priceMin || appliedFilters.priceMax) && (
                       <span
