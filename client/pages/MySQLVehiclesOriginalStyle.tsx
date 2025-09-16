@@ -2775,6 +2775,7 @@ export default function MySQLVehiclesOriginalStyle() {
         "year",
         "bodyStyle",
         "transmission",
+        "fuelType",
       ].includes(category)
     ) {
       updateURLFromFilters(newFilters);
@@ -4622,6 +4623,50 @@ export default function MySQLVehiclesOriginalStyle() {
                         {sanitizeLabel(item)}
                         <button
                           onClick={() => removeAppliedFilter("driveType", item)}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.fuelType.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("fuelType", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("fuelType", item);
+                          }}
+                          aria-label={`Remove filter ${sanitizeLabel(item)}`}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    ))}
+
+                    {appliedFilters.transmission.map((item) => (
+                      <span
+                        key={sanitizeLabel(item)}
+                        onClick={() => removeAppliedFilter("transmission", item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      >
+                        <Check className="w-3 h-3 text-red-600" />
+                        {sanitizeLabel(item)}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAppliedFilter("transmission", item);
+                          }}
+                          aria-label={`Remove filter ${sanitizeLabel(item)}`}
                           className="ml-1 text-white hover:text-gray-300"
                         >
                           <X className="w-3 h-3 inline-block" />
