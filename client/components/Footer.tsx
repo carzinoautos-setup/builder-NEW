@@ -139,7 +139,7 @@ export default function Footer({
       ],
     },
     {
-      title: "Get online with Carzino",
+      title: "Dealer's get online with Carzino",
       content: (
         <div>
           <div className="opacity-95 text-sm">
