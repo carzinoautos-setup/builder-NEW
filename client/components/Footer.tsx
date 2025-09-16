@@ -379,46 +379,6 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <div className="text-sm">© 2025 Carzino. All rights reserved</div>
 
-          <div className="flex items-center gap-3">
-            <a
-              href="#"
-              aria-label="facebook"
-              className="flex items-center justify-center bg-white/8 rounded-full h-10 w-10"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0z"
-                  fill="#fff"
-                  fillOpacity="0.08"
-                />
-              </svg>
-            </a>
-            <a
-              href="#"
-              aria-label="twitter"
-              className="flex items-center justify-center bg-white/8 rounded-full h-10 w-10"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0z"
-                  fill="#fff"
-                  fillOpacity="0.08"
-                />
-              </svg>
-            </a>
-          </div>
         </div>
       </div>
     </footer>
