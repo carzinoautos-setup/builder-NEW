@@ -420,9 +420,6 @@ export const getVehicles: RequestHandler = async (req, res) => {
             json.filters.fuel_type = toArray(fuelMap);
             // Ensure body_style filter array only contains allowed values
             // Ensure body_style filter array only contains allowed values (after normalization)
-            const { normalizeBodyStyle } = await import(
-              "../config/allowedBodyStyles.js"
-            );
             json.filters.body_style = toArray(bodyMap).filter((it) => {
               try {
                 const n = normalizeBodyStyle(
