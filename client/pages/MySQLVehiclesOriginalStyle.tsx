@@ -754,8 +754,8 @@ export default function MySQLVehiclesOriginalStyle() {
   // Mobile detection (used to collapse certain filters on small screens)
   const isMobile = useIsMobile();
 
-  // Ensure the Make filter stays open when the user selects/deselects makes.
-  // Some interactions can accidentally toggle sections; explicitly keep Make expanded.
+  // Ensure the Make, Model and Trim filters stay open when the user selects/deselects items.
+  // Some interactions can accidentally toggle sections; explicitly keep these expanded.
   useEffect(() => {
     try {
       setCollapsedFilters((prev) => ({ ...prev, make: false }));
@@ -764,6 +764,22 @@ export default function MySQLVehiclesOriginalStyle() {
     }
     // Use a stable stringified dependency so effect runs when the selection changes
   }, [appliedFilters.make.join(",")]);
+
+  useEffect(() => {
+    try {
+      setCollapsedFilters((prev) => ({ ...prev, model: false }));
+    } catch (e) {
+      /* ignore */
+    }
+  }, [appliedFilters.model.join(",")]);
+
+  useEffect(() => {
+    try {
+      setCollapsedFilters((prev) => ({ ...prev, trim: false }));
+    } catch (e) {
+      /* ignore */
+    }
+  }, [appliedFilters.trim.join(",")]);
 
   const hasAppliedFilters =
     (appliedLocation && appliedRadius !== "nationwide") ||
