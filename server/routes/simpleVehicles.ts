@@ -150,6 +150,10 @@ export const getSimpleVehicleById: RequestHandler = async (req, res) => {
       });
     }
 
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled." });
+    }
+
     const vehicle = await vehicleService.getVehicleById(id);
 
     if (!vehicle) {
