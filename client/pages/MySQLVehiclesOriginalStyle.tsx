@@ -1534,20 +1534,11 @@ export default function MySQLVehiclesOriginalStyle() {
       const TIMEOUT_MS = 30000;
       let response;
       try {
-        // Try local proxy first (same-origin, avoids CORS)
-        try {
-          response = await fetchWithRetry(
-            localUrl,
-            { method: "GET", headers: { "Content-Type": "application/json" } },
-            3,
-            TIMEOUT_MS,
-          );
-        } catch (localErr) {
-          console.warn("Local proxy fetch failed, will try WP absolute URL:", localErr);
-        }
+        // If a VITE_WP_URL is configured, prefer calling the absolute WP API first because
+        // the local proxy (dev server) may be down or blocked by CORS/Cloudflare.
+        const preferWp = Boolean((import.meta as any).env && (import.meta as any).env.VITE_WP_URL);
 
-        // If local proxy failed at network level or returned non-ok, try WP absolute URL as fallback
-        if (!response || !response.ok) {
+        if (preferWp) {
           try {
             response = await fetchWithRetry(
               wpUrl,
@@ -1556,7 +1547,61 @@ export default function MySQLVehiclesOriginalStyle() {
               TIMEOUT_MS,
             );
           } catch (wpErr) {
-            console.warn("WP absolute fetch failed:", wpErr);
+            console.warn("WP absolute fetch failed, will try local proxy:", wpErr);
+          }
+
+          // If WP returned an HTML error page (Cloudflare 5xx) treat as non-ok and fall back
+          if (response && response.ok) {
+            try {
+              const ct = String(response.headers && (response.headers as any).get ? (response.headers as any).get("content-type") : "").toLowerCase();
+              if (ct.includes("text/html")) {
+                const sample = await (response as any).text().catch(() => "");
+                console.warn("WP absolute fetch returned HTML (possible Cloudflare/origin 5xx):", sample.substring(0, 200));
+                response = null;
+              }
+            } catch (e) {
+              /* ignore header parse errors */
+            }
+          }
+
+          // If WP failed or returned non-ok, try local proxy as fallback
+          if (!response || !response.ok) {
+            try {
+              response = await fetchWithRetry(
+                localUrl,
+                { method: "GET", headers: { "Content-Type": "application/json" } },
+                3,
+                TIMEOUT_MS,
+              );
+            } catch (localErr) {
+              console.warn("Local proxy fetch failed after WP fallback:", localErr);
+            }
+          }
+        } else {
+          // No VITE_WP_URL — try local proxy first as before
+          try {
+            response = await fetchWithRetry(
+              localUrl,
+              { method: "GET", headers: { "Content-Type": "application/json" } },
+              3,
+              TIMEOUT_MS,
+            );
+          } catch (localErr) {
+            console.warn("Local proxy fetch failed, will try WP absolute URL:", localErr);
+          }
+
+          // If local proxy failed at network level or returned non-ok, try WP absolute URL as fallback
+          if (!response || !response.ok) {
+            try {
+              response = await fetchWithRetry(
+                wpUrl,
+                { method: "GET", headers: { "Content-Type": "application/json" } },
+                3,
+                TIMEOUT_MS,
+              );
+            } catch (wpErr) {
+              console.warn("WP absolute fetch failed:", wpErr);
+            }
           }
         }
 
