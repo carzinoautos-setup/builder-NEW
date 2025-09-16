@@ -182,6 +182,9 @@ export const getSimpleVehicleById: RequestHandler = async (req, res) => {
  */
 export const getSimpleFilterOptions: RequestHandler = async (req, res) => {
   try {
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled.", data: { makes: [], conditions: [], driveTypes: [], sellerTypes: [] } });
+    }
     const options = await vehicleService.getFilterOptions();
 
     res.status(200).json({
@@ -209,6 +212,9 @@ export const getSimpleFilterOptions: RequestHandler = async (req, res) => {
  */
 export const getDealers: RequestHandler = async (req, res) => {
   try {
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled.", data: [] });
+    }
     const dealers = await vehicleService.getDealers();
 
     res.status(200).json({
@@ -231,6 +237,9 @@ export const getDealers: RequestHandler = async (req, res) => {
  */
 export const getVehicleTypes: RequestHandler = async (req, res) => {
   try {
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled.", data: [] });
+    }
     const vehicleTypes = await vehicleService.getVehicleTypeCounts();
 
     res.status(200).json({
@@ -253,6 +262,9 @@ export const getVehicleTypes: RequestHandler = async (req, res) => {
  */
 export const simpleHealthCheck: RequestHandler = async (req, res) => {
   try {
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled.", serviceConnected: false, usingMockData: false });
+    }
     // Test service connectivity
     const testResult = await vehicleService.getVehicles(
       {},
