@@ -5,9 +5,14 @@ import {
   SimpleVehicleFilters,
 } from "../types/simpleVehicle.js";
 
-// Use simplified mock service for testing
-console.log("🚀 Using SimpleMockVehicleService with original demo format");
-const vehicleService = new SimpleMockVehicleService();
+// Use simplified mock service for testing only when explicitly enabled via USE_MOCK
+let vehicleService: any = null;
+if (String(process.env.USE_MOCK || "").toLowerCase() === "true") {
+  console.log("🚀 USE_MOCK is true — using SimpleMockVehicleService (demo data)");
+  vehicleService = new SimpleMockVehicleService();
+} else {
+  console.log("⚠️ SimpleMockVehicleService disabled — set USE_MOCK=true to enable demo data");
+}
 
 /**
  * GET /api/simple-vehicles
