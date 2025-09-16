@@ -36,22 +36,27 @@ if (hasWpApi && !useMock) {
 
 let vehicleService: any = null;
 try {
-  if (!useMock && hasWpApi) {
+  if (useMock) {
+    console.log("🚀 USE_MOCK is true — using MockVehicleService");
+    vehicleService = new MockVehicleService();
+  } else if (hasWpApi) {
     // WP proxy mode — routes will forward requests to WP API directly
     vehicleService = null;
-  } else if (!useMock && hasDbEnv) {
+  } else if (hasDbEnv) {
     vehicleService = new VehicleService();
     console.log("✅ Using VehicleService (MySQL) for real data");
   } else {
-    // No WP API and no DB configured — do not use demo/mock data automatically.
-    vehicleService = null;
+    console.log(
+      "⚠️ No data backend configured (no WP_API_BASE and no DB_*). Falling back to MockVehicleService",
+    );
+    vehicleService = new MockVehicleService();
   }
 } catch (err) {
   console.error(
     "Failed to initialize VehicleService:",
     err,
   );
-  // If initialization fails, do not use mock automatically. Keep vehicleService null so proxy/DB decisions remain explicit.
+  // If initialization fails, keep vehicleService null so proxy/DB decisions remain explicit.
   vehicleService = null;
 }
 
