@@ -139,9 +139,33 @@ class VehicleApiClient {
         params.append(k, String(v));
     });
 
-    return this.request<VehiclesApiResponse>(
-      `/api/vehicles?${params.toString()}`,
-    );
+    // Prefer calling the WordPress API directly (VITE_WP_URL) when available
+    // because the local proxy/dev server may be down. Do NOT fall back to demo/mock data.
+    try {
+      const env = (import.meta as any)?.env || {};
+      const wpBaseRaw = env.VITE_WP_URL || "";
+      const wpBase = String(wpBaseRaw).replace(/\/$/, "");
+      if (wpBase) {
+        const wpUrl = `${wpBase}/wp-json/custom/v1/vehicles?${params.toString()}`;
+        try {
+          const res = await fetchWithRetry(wpUrl, {}, 2, 15000);
+          if (res && (res as any).ok !== false) {
+            const data = await (res as any).json();
+            // If the WP API returned a top-level array or an object matching our expected shape, return it
+            return data as VehiclesApiResponse;
+          }
+          console.warn("vehicleApi: direct WP fetch returned non-ok, falling back to local /api/vehicles", res && (res as any).statusText);
+        } catch (wpFetchErr) {
+          console.warn("vehicleApi: direct WP fetch failed, falling back to local /api/vehicles", wpFetchErr && wpFetchErr.message ? wpFetchErr.message : wpFetchErr);
+        }
+      }
+    } catch (e) {
+      // swallow env read errors and continue to local proxy
+      console.warn("vehicleApi: error while attempting direct WP fetch", e && (e as any).message ? (e as any).message : e);
+    }
+
+    // Last-resort: use configured base (likely relative /api/vehicles) which may be a local proxy
+    return this.request<VehiclesApiResponse>(`/api/vehicles?${params.toString()}`);
   }
 
   async getVehicleById(id: number) {
