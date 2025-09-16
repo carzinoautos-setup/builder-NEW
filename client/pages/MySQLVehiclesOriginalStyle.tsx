@@ -1531,7 +1531,8 @@ export default function MySQLVehiclesOriginalStyle() {
       // Use fetchWithRetry to avoid noisy failures for transient network issues
       const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
 
-      // Use fewer retries and a shorter timeout for main vehicle fetch to improve UX
+      // Use a slightly higher timeout and retries for main vehicle fetch
+      const TIMEOUT_MS = 30000;
       let response;
       try {
         response = await fetchWithRetry(
@@ -1540,9 +1541,25 @@ export default function MySQLVehiclesOriginalStyle() {
             method: "GET",
             headers: { "Content-Type": "application/json" },
           },
-          2,
-          15000,
+          3,
+          TIMEOUT_MS,
         );
+
+        // If absolute WP URL failed at network level (status 0), try local proxy as fallback
+        if (!response.ok && response.status === 0) {
+          const fallbackLocal = `/api/vehicles?${params.toString()}`;
+          console.warn("Primary vehicle fetch failed (network). Trying local proxy fallback:", fallbackLocal);
+          try {
+            response = await fetchWithRetry(
+              fallbackLocal,
+              { method: "GET", headers: { "Content-Type": "application/json" } },
+              2,
+              TIMEOUT_MS,
+            );
+          } catch (fallbackErr) {
+            console.warn("Local proxy fallback also failed:", fallbackErr);
+          }
+        }
 
         if (!response.ok) {
           // If the request was aborted or timed out, treat as a harmless cancelation and stop processing
