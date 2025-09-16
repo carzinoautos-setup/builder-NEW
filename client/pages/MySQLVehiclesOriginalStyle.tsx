@@ -4176,43 +4176,50 @@ export default function MySQLVehiclesOriginalStyle() {
                       setActiveSuggestionIndex(-1);
                     }}
                     onKeyDown={(e) => {
-                      if (!suggestionsOpen) return;
-                      if (e.key === "ArrowDown") {
+                    if (!suggestionsOpen) {
+                      if (e.key === "Enter") {
+                        // submit when suggestions closed
                         e.preventDefault();
-                        setActiveSuggestionIndex((i) =>
-                          Math.min(i + 1, filteredSuggestions.length - 1),
-                        );
-                      } else if (e.key === "ArrowUp") {
+                        handleUnifiedSearchSubmit(e as any);
+                      }
+                      return;
+                    }
+                    if (e.key === "ArrowDown") {
+                      e.preventDefault();
+                      setActiveSuggestionIndex((i) =>
+                        Math.min(i + 1, filteredSuggestions.length - 1),
+                      );
+                    } else if (e.key === "ArrowUp") {
+                      e.preventDefault();
+                      setActiveSuggestionIndex((i) => Math.max(i - 1, 0));
+                    } else if (e.key === "Enter") {
+                      if (
+                        activeSuggestionIndex >= 0 &&
+                        filteredSuggestions[activeSuggestionIndex]
+                      ) {
                         e.preventDefault();
-                        setActiveSuggestionIndex((i) => Math.max(i - 1, 0));
-                      } else if (e.key === "Enter") {
-                        if (
-                          activeSuggestionIndex >= 0 &&
-                          filteredSuggestions[activeSuggestionIndex]
-                        ) {
-                          e.preventDefault();
-                          const s = filteredSuggestions[activeSuggestionIndex];
-                          setUnifiedSearch(sanitizeLabel(s));
-                          setPanelSearch(sanitizeLabel(s));
-                          setSuggestionsOpen(false);
-                          setActiveSuggestionIndex(-1);
-                          setTimeout(
-                            () =>
-                              handleUnifiedSearchSubmit(
-                                new Event("submit") as any,
-                              ),
-                            0,
-                          );
-                        } else {
-                          // No suggestion selected — submit the form
-                          e.preventDefault();
-                          handleUnifiedSearchSubmit(e as any);
-                        }
-                      } else if (e.key === "Escape") {
+                        const s = filteredSuggestions[activeSuggestionIndex];
+                        setUnifiedSearch(sanitizeLabel(s));
+                        setPanelSearch(sanitizeLabel(s));
                         setSuggestionsOpen(false);
                         setActiveSuggestionIndex(-1);
+                        setTimeout(
+                          () =>
+                            handleUnifiedSearchSubmit(
+                              new Event("submit") as any,
+                            ),
+                          0,
+                        );
+                      } else {
+                        // No suggestion selected — submit the form
+                        e.preventDefault();
+                        handleUnifiedSearchSubmit(e as any);
                       }
-                    }}
+                    } else if (e.key === "Escape") {
+                      setSuggestionsOpen(false);
+                      setActiveSuggestionIndex(-1);
+                    }
+                  }}
                     className="carzino-search-input w-full px-3 py-2 pr-14 border border-gray-300 rounded-md focus:outline-none focus:border-red-600"
                   />
                   {suggestionsOpen &&
