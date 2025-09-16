@@ -1523,10 +1523,9 @@ export default function MySQLVehiclesOriginalStyle() {
       }
 
       const paramsStr = params.toString();
-      const apiUrl = import.meta.env.VITE_WP_URL
-        ? `${getApiBaseUrl()}/vehicles${paramsStr ? `?${paramsStr}` : ""}`
-        : `/api/vehicles?${paramsStr}`;
-      console.log("Fetching vehicles from:", apiUrl);
+      const localUrl = `/api/vehicles?${paramsStr}`;
+      const wpUrl = `${getApiBaseUrl()}/vehicles${paramsStr ? `?${paramsStr}` : ""}`;
+      console.log("Fetching vehicles (local proxy preferred) from:", localUrl, "then WP fallback:", wpUrl);
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
       const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
@@ -1535,49 +1534,45 @@ export default function MySQLVehiclesOriginalStyle() {
       const TIMEOUT_MS = 30000;
       let response;
       try {
-        response = await fetchWithRetry(
-          apiUrl,
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          },
-          3,
-          TIMEOUT_MS,
-        );
+        // Try local proxy first (same-origin, avoids CORS)
+        try {
+          response = await fetchWithRetry(
+            localUrl,
+            { method: "GET", headers: { "Content-Type": "application/json" } },
+            3,
+            TIMEOUT_MS,
+          );
+        } catch (localErr) {
+          console.warn("Local proxy fetch failed, will try WP absolute URL:", localErr);
+        }
 
-        // If absolute WP URL failed at network level (status 0), try local proxy as fallback
-        if (!response.ok && response.status === 0) {
-          const fallbackLocal = `/api/vehicles?${params.toString()}`;
-          console.warn("Primary vehicle fetch failed (network). Trying local proxy fallback:", fallbackLocal);
+        // If local proxy failed at network level or returned non-ok, try WP absolute URL as fallback
+        if (!response || !response.ok) {
           try {
             response = await fetchWithRetry(
-              fallbackLocal,
+              wpUrl,
               { method: "GET", headers: { "Content-Type": "application/json" } },
-              2,
+              3,
               TIMEOUT_MS,
             );
-          } catch (fallbackErr) {
-            console.warn("Local proxy fallback also failed:", fallbackErr);
+          } catch (wpErr) {
+            console.warn("WP absolute fetch failed:", wpErr);
           }
         }
 
-        if (!response.ok) {
-          // If the request was aborted or timed out, treat as a harmless cancelation and stop processing
-          const statusText = String(response.statusText || "").toLowerCase();
+        if (!response || !response.ok) {
+          // If aborted or timed out
+          const statusText = response ? String(response.statusText || "").toLowerCase() : "";
           if (
-            response.status === 0 &&
-            (statusText.includes("aborted") ||
-              statusText.includes("timed out") ||
-              statusText.includes("request aborted"))
+            !response ||
+            (response.status === 0 && (statusText.includes("aborted") || statusText.includes("timed out") || statusText.includes("request aborted")))
           ) {
             console.warn("Vehicle fetch aborted or timed out, skipping update");
             setLoading(false);
             return;
           }
 
-          throw new Error(
-            `API error: ${response.status} ${response.statusText}`,
-          );
+          throw new Error(`API error: ${response ? response.status : 0} ${response ? response.statusText : "Network error"}`);
         }
       } catch (err) {
         // If the request failed and we included down_payment, retry once without it (WP plugin may reject unexpected params)
