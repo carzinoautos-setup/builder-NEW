@@ -1522,7 +1522,10 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("status", (appliedFilters as any).status.join(","));
       }
 
-      const apiUrl = `/api/vehicles?${params.toString()}`;
+      const paramsStr = params.toString();
+      const apiUrl = import.meta.env.VITE_WP_URL
+        ? `${getApiBaseUrl()}/vehicles${paramsStr ? `?${paramsStr}` : ""}`
+        : `/api/vehicles?${paramsStr}`;
       console.log("Fetching vehicles from:", apiUrl);
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
