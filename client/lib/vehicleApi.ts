@@ -88,22 +88,34 @@ class VehicleApiClient {
     return `${this.baseUrl}${path}`;
   }
 
-  private async request<T>(path: string, init: RequestInit = {}, retries = 2, timeout = 15000): Promise<T> {
+  private async request<T>(
+    path: string,
+    init: RequestInit = {},
+    retries = 2,
+    timeout = 15000,
+  ): Promise<T> {
     const url = this.buildUrl(path);
     try {
       const res = await fetchWithRetry(url, init, retries, timeout);
 
       // fetchWithRetry returns a graceful response-like object on final failure
       if (!res || (res as any).ok === false) {
-        const text = res && typeof res.text === "function" ? await (res as any).text() : "";
-        const message = text || ((res as any).statusText || "Network error");
+        const text =
+          res && typeof res.text === "function"
+            ? await (res as any).text()
+            : "";
+        const message = text || (res as any).statusText || "Network error";
         throw new Error(`Request failed: ${message}`);
       }
 
       const data = await (res as any).json();
       return data as T;
     } catch (err) {
-      console.error("vehicleApi.request error", path, err && (err as any).message ? (err as any).message : err);
+      console.error(
+        "vehicleApi.request error",
+        path,
+        err && (err as any).message ? (err as any).message : err,
+      );
       throw err;
     }
   }
@@ -123,17 +135,22 @@ class VehicleApiClient {
     });
 
     Object.entries(filters).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== "") params.append(k, String(v));
+      if (v !== undefined && v !== null && v !== "")
+        params.append(k, String(v));
     });
 
-    return this.request<VehiclesApiResponse>(`/api/vehicles?${params.toString()}`);
+    return this.request<VehiclesApiResponse>(
+      `/api/vehicles?${params.toString()}`,
+    );
   }
 
   async getVehicleById(id: number) {
     return this.request(`/api/vehicles/${id}`);
   }
 
-  async getFilterOptions(): Promise<{ success: boolean; data: FilterOptions } | any> {
+  async getFilterOptions(): Promise<
+    { success: boolean; data: FilterOptions } | any
+  > {
     return this.request(`/api/vehicles/filters`);
   }
 
@@ -163,15 +180,19 @@ export function getVehicleTitle(vehicle: VehicleRecord): string {
 }
 
 export function getVehicleImageUrl(vehicle: VehicleRecord): string {
-  const featured = (vehicle as any).featured_image || (vehicle as any).featuredImage;
+  const featured =
+    (vehicle as any).featured_image || (vehicle as any).featuredImage;
   if (featured) return String(featured);
   const images = (vehicle as any).images;
   if (images && Array.isArray(images) && images.length > 0) {
-    const first = typeof images[0] === "string" ? images[0] : images[0].src || images[0].url;
+    const first =
+      typeof images[0] === "string"
+        ? images[0]
+        : images[0].src || images[0].url;
     if (first) return String(first);
   }
   return (
-    (import.meta as any)?.env?.VITE_PLACEHOLDER_IMAGE || 
+    (import.meta as any)?.env?.VITE_PLACEHOLDER_IMAGE ||
     "/assets/fallback-image-450.webp" ||
     "/placeholder.svg"
   );

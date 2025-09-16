@@ -9,7 +9,9 @@ export const ALLOWED_BODY_STYLES = [
   "Van",
 ];
 
-export const ALLOWED_BODY_STYLES_SET = new Set(ALLOWED_BODY_STYLES.map((s) => s.toLowerCase()));
+export const ALLOWED_BODY_STYLES_SET = new Set(
+  ALLOWED_BODY_STYLES.map((s) => s.toLowerCase()),
+);
 
 // Normalize various vendor/body names into base allowed categories.
 export function normalizeBodyStyle(raw: string | null | undefined): string {
@@ -18,7 +20,12 @@ export function normalizeBodyStyle(raw: string | null | undefined): string {
   if (!s) return "";
 
   // Map common variants to base categories
-  if (/\b(cab|crew|extended|regular|pickup|pickup truck|crew-cab|extended-cab)\b/.test(s) || /truck/.test(s)) {
+  if (
+    /\b(cab|crew|extended|regular|pickup|pickup truck|crew-cab|extended-cab)\b/.test(
+      s,
+    ) ||
+    /truck/.test(s)
+  ) {
     return "truck";
   }
   if (/\b(suv|crossover|crossover\/)\b/.test(s) || /suv/.test(s)) return "suv";

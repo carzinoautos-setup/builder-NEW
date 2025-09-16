@@ -206,7 +206,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
           json.data = json.data.filter((item: any) => {
             try {
               const body =
-                (item.acf && (item.acf.body_style || item.acf.bodyClass || item.acf.body_class)) ||
+                (item.acf &&
+                  (item.acf.body_style ||
+                    item.acf.bodyClass ||
+                    item.acf.body_class)) ||
                 item.body_style ||
                 item.bodyClass ||
                 item.body_class ||
@@ -215,7 +218,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
               if (!trimmed) return false; // exclude empty body types
               if (trimmed.toLowerCase() === "uncategorized") return false;
               // enforce allowed list using normalization
-              const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+              const { normalizeBodyStyle } = await import(
+                "../config/allowedBodyStyles.js"
+              );
               const normalized = normalizeBodyStyle(trimmed);
               if (!normalized) return false;
               return true;
@@ -379,7 +384,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
                 const lower = name.toLowerCase();
                 if (lower === "uncategorized") continue;
                 // Normalize to base allowed style using helper
-                const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+                const { normalizeBodyStyle } = await import(
+                  "../config/allowedBodyStyles.js"
+                );
                 const baseStyle = normalizeBodyStyle(lower);
                 if (!baseStyle) continue;
                 m.set(name, (m.get(name) || 0) + 1);
@@ -418,10 +425,14 @@ export const getVehicles: RequestHandler = async (req, res) => {
             json.filters.fuel_type = toArray(fuelMap);
             // Ensure body_style filter array only contains allowed values
             // Ensure body_style filter array only contains allowed values (after normalization)
-            const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+            const { normalizeBodyStyle } = await import(
+              "../config/allowedBodyStyles.js"
+            );
             json.filters.body_style = toArray(bodyMap).filter((it) => {
               try {
-                const n = normalizeBodyStyle(String(it.name || "").toLowerCase());
+                const n = normalizeBodyStyle(
+                  String(it.name || "").toLowerCase(),
+                );
                 return Boolean(n);
               } catch (e) {
                 return false;
@@ -543,42 +554,53 @@ export const getVehicles: RequestHandler = async (req, res) => {
                     String(req.query.per_page || req.query.pageSize || "20"),
                   ) || 20;
                 // De-prioritize vehicles whose featured image contains certain IDs so they appear at the end of the inventory
-              try {
-                const DEPRIORITIZE_IMAGE_IDS = [
-                  "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx",
-                  "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A",
-                ];
+                try {
+                  const DEPRIORITIZE_IMAGE_IDS = [
+                    "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx",
+                    "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A",
+                  ];
 
-                const reorderDeprioritized = (arr: any[]) => {
-                  const normal: any[] = [];
-                  const deprio: any[] = [];
-                  for (const item of arr) {
-                    try {
-                      const imgs = Array.isArray(item.images) ? item.images : [];
-                      const featured =
-                        item.featured_image || (item.acf && item.acf.featured_image) || item.featuredImage || "";
+                  const reorderDeprioritized = (arr: any[]) => {
+                    const normal: any[] = [];
+                    const deprio: any[] = [];
+                    for (const item of arr) {
+                      try {
+                        const imgs = Array.isArray(item.images)
+                          ? item.images
+                          : [];
+                        const featured =
+                          item.featured_image ||
+                          (item.acf && item.acf.featured_image) ||
+                          item.featuredImage ||
+                          "";
 
-                      const hasDeprioritized = imgs.some((img: any) =>
-                        DEPRIORITIZE_IMAGE_IDS.some((id) => String(img).includes(id)),
-                      ) || DEPRIORITIZE_IMAGE_IDS.some((id) => String(featured).includes(id));
+                        const hasDeprioritized =
+                          imgs.some((img: any) =>
+                            DEPRIORITIZE_IMAGE_IDS.some((id) =>
+                              String(img).includes(id),
+                            ),
+                          ) ||
+                          DEPRIORITIZE_IMAGE_IDS.some((id) =>
+                            String(featured).includes(id),
+                          );
 
-                      if (hasDeprioritized) deprio.push(item);
-                      else normal.push(item);
-                    } catch (e) {
-                      normal.push(item);
+                        if (hasDeprioritized) deprio.push(item);
+                        else normal.push(item);
+                      } catch (e) {
+                        normal.push(item);
+                      }
                     }
+                    return [...normal, ...deprio];
+                  };
+
+                  if (Array.isArray(json.data) && json.data.length > 0) {
+                    json.data = reorderDeprioritized(json.data);
                   }
-                  return [...normal, ...deprio];
-                };
-
-                if (Array.isArray(json.data) && json.data.length > 0) {
-                  json.data = reorderDeprioritized(json.data);
+                } catch (e) {
+                  // ignore reorder errors
                 }
-              } catch (e) {
-                // ignore reorder errors
-              }
 
-              const total = json.data.length;
+                const total = json.data.length;
                 const totalPages = Math.max(1, Math.ceil(total / origPer));
                 const start = (origPage - 1) * origPer;
                 const end = start + origPer;
@@ -626,10 +648,18 @@ export const getVehicles: RequestHandler = async (req, res) => {
         for (const item of arr) {
           try {
             const imgs = Array.isArray(item.images) ? item.images : [];
-            const featured = item.featured_image || (item.acf && item.acf.featured_image) || item.featuredImage || "";
-            const hasDeprioritized = imgs.some((img: any) =>
-              DEPRIORITIZE_IMAGE_IDS.some((id) => String(img).includes(id)),
-            ) || DEPRIORITIZE_IMAGE_IDS.some((id) => String(featured).includes(id));
+            const featured =
+              item.featured_image ||
+              (item.acf && item.acf.featured_image) ||
+              item.featuredImage ||
+              "";
+            const hasDeprioritized =
+              imgs.some((img: any) =>
+                DEPRIORITIZE_IMAGE_IDS.some((id) => String(img).includes(id)),
+              ) ||
+              DEPRIORITIZE_IMAGE_IDS.some((id) =>
+                String(featured).includes(id),
+              );
 
             if (hasDeprioritized) deprio.push(item);
             else normal.push(item);
@@ -646,7 +676,10 @@ export const getVehicles: RequestHandler = async (req, res) => {
           result.data = result.data.filter((item: any) => {
             try {
               const body =
-                (item.acf && (item.acf.body_style || item.acf.bodyClass || item.acf.body_class)) ||
+                (item.acf &&
+                  (item.acf.body_style ||
+                    item.acf.bodyClass ||
+                    item.acf.body_class)) ||
                 item.body_style ||
                 item.bodyClass ||
                 item.body_class ||
@@ -672,11 +705,22 @@ export const getVehicles: RequestHandler = async (req, res) => {
     // Debug: log IDs returned and pagination to help trace disappearing items
     try {
       const ids = Array.isArray(result.data)
-        ? result.data.map((v: any) => (v && (v.id || v.ID || v.post_id) ? (v.id || v.ID || v.post_id) : null)).filter(Boolean)
+        ? result.data
+            .map((v: any) =>
+              v && (v.id || v.ID || v.post_id)
+                ? v.id || v.ID || v.post_id
+                : null,
+            )
+            .filter(Boolean)
         : [];
-      console.log(`[SERVER] /api/vehicles -> returned ${ids.length} items page=${page} pageSize=${pageSize} ids_sample=${ids.slice(0,10).join(',')}`);
+      console.log(
+        `[SERVER] /api/vehicles -> returned ${ids.length} items page=${page} pageSize=${pageSize} ids_sample=${ids.slice(0, 10).join(",")}`,
+      );
     } catch (e) {
-      console.log('[SERVER] /api/vehicles -> unable to log ids', e && e.message ? e.message : e);
+      console.log(
+        "[SERVER] /api/vehicles -> unable to log ids",
+        e && e.message ? e.message : e,
+      );
     }
 
     // Return response
@@ -809,7 +853,9 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
                 const lower = name.toLowerCase();
                 if (lower === "uncategorized") continue;
                 // Normalize to base allowed style using helper
-                const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+                const { normalizeBodyStyle } = await import(
+                  "../config/allowedBodyStyles.js"
+                );
                 const baseStyle = normalizeBodyStyle(lower);
                 if (!baseStyle) continue;
                 m.set(name, (m.get(name) || 0) + 1);
@@ -900,15 +946,20 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
     // Debug: log sizes of filter option arrays to help trace missing filters
     try {
       const counts: Record<string, number> = {};
-      if (options && typeof options === 'object') {
+      if (options && typeof options === "object") {
         for (const k of Object.keys(options)) {
           const v = (options as any)[k];
           counts[k] = Array.isArray(v) ? v.length : 0;
         }
       }
-      console.log(`[SERVER] /api/vehicles/filters -> option counts: ${JSON.stringify(counts)}`);
+      console.log(
+        `[SERVER] /api/vehicles/filters -> option counts: ${JSON.stringify(counts)}`,
+      );
     } catch (e) {
-      console.log('[SERVER] /api/vehicles/filters -> unable to log option counts', e && e.message ? e.message : e);
+      console.log(
+        "[SERVER] /api/vehicles/filters -> unable to log option counts",
+        e && e.message ? e.message : e,
+      );
     }
 
     res.status(200).json({

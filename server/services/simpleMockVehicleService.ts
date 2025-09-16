@@ -60,7 +60,10 @@ const DOORS = ["2 doors", "4 doors"];
 const SELLER_TYPES = ["Dealer", "Private Seller"];
 
 // Valid body styles - excludes "Uncategorized" per validation rules
-import { ALLOWED_BODY_STYLES_SET, normalizeBodyStyle } from "../config/allowedBodyStyles.js";
+import {
+  ALLOWED_BODY_STYLES_SET,
+  normalizeBodyStyle,
+} from "../config/allowedBodyStyles.js";
 
 const VALID_BODY_STYLES = [
   "Sedan",
@@ -441,15 +444,15 @@ export class SimpleMockVehicleService {
   async getVehicleTypeCounts(): Promise<{ name: string; count: number }[]> {
     // Only count vehicles with valid body_type
     const validVehicles = this.vehicles.filter((v) => {
-     try {
-       const b = v.body_type && String(v.body_type).trim();
-       if (!b) return false;
-       if (b.toLowerCase() === "uncategorized") return false;
-       return ALLOWED_BODY_STYLES_SET.has(b.toLowerCase());
-     } catch (e) {
-       return false;
-     }
-   });
+      try {
+        const b = v.body_type && String(v.body_type).trim();
+        if (!b) return false;
+        if (b.toLowerCase() === "uncategorized") return false;
+        return ALLOWED_BODY_STYLES_SET.has(b.toLowerCase());
+      } catch (e) {
+        return false;
+      }
+    });
 
     // Count vehicles per body type
     const typeCounts = new Map<string, number>();
@@ -474,15 +477,15 @@ export class SimpleMockVehicleService {
   }> {
     // Only include options from vehicles with valid body_type
     const validVehicles = this.vehicles.filter((v) => {
-     try {
-       const b = v.body_type && String(v.body_type).trim();
-       if (!b) return false;
-       if (b.toLowerCase() === "uncategorized") return false;
-       return ALLOWED_BODY_STYLES_SET.has(b.toLowerCase());
-     } catch (e) {
-       return false;
-     }
-   });
+      try {
+        const b = v.body_type && String(v.body_type).trim();
+        if (!b) return false;
+        if (b.toLowerCase() === "uncategorized") return false;
+        return ALLOWED_BODY_STYLES_SET.has(b.toLowerCase());
+      } catch (e) {
+        return false;
+      }
+    });
 
     // Extract makes from vehicle titles
     const makes = Array.from(

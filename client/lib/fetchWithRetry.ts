@@ -91,10 +91,25 @@ export async function fetchWithRetry(
       }
 
       // If this is an AbortError, return a graceful response-like object immediately
-      if (err && (err.name === "AbortError" || String(err.message || "").toLowerCase().includes("aborted"))) {
+      if (
+        err &&
+        (err.name === "AbortError" ||
+          String(err.message || "")
+            .toLowerCase()
+            .includes("aborted"))
+      ) {
         // Attempt to extract a reason from the controller signal if present
-        const reason = (controller && (controller as any).signal && ((controller as any).signal as any).reason) || (err && (err as any).reason) || (err && err.message) || "Request aborted";
-        const msg = typeof reason === "string" && reason.length > 0 ? reason : "Request aborted";
+        const reason =
+          (controller &&
+            (controller as any).signal &&
+            ((controller as any).signal as any).reason) ||
+          (err && (err as any).reason) ||
+          (err && err.message) ||
+          "Request aborted";
+        const msg =
+          typeof reason === "string" && reason.length > 0
+            ? reason
+            : "Request aborted";
         // Do not log full stack in production - normalized warning only
         console.warn("fetchWithRetry: request aborted", msg);
         return {
@@ -160,8 +175,16 @@ export async function fetchWithRetry(
         // Normalize abort errors
         if (err && err.name === "AbortError") {
           // Try to extract a reason from the underlying signal if available
-          const reason = (err && (err as any).reason) || (controller && (controller as any).signal && ((controller as any).signal as any).reason) || "Request aborted or timed out";
-          const abortMsg = typeof reason === "string" && reason.length > 0 ? reason : "Request aborted or timed out";
+          const reason =
+            (err && (err as any).reason) ||
+            (controller &&
+              (controller as any).signal &&
+              ((controller as any).signal as any).reason) ||
+            "Request aborted or timed out";
+          const abortMsg =
+            typeof reason === "string" && reason.length > 0
+              ? reason
+              : "Request aborted or timed out";
           // Return a graceful response-like object so callers can handle failures
           console.warn("fetchWithRetry: final abort/timeout", abortMsg);
           return {

@@ -174,13 +174,19 @@ export class VehicleService {
       for (const s of ALLOWED_BODY_STYLES) {
         const key = String(s).toLowerCase();
         if (key === "truck") {
-          clauses.push("(LOWER(TRIM(body_style)) LIKE '%truck%' OR LOWER(TRIM(body_style)) LIKE '%cab%' OR LOWER(TRIM(body_style)) LIKE '%pickup%')");
+          clauses.push(
+            "(LOWER(TRIM(body_style)) LIKE '%truck%' OR LOWER(TRIM(body_style)) LIKE '%cab%' OR LOWER(TRIM(body_style)) LIKE '%pickup%')",
+          );
         } else if (key === "suv") {
-          clauses.push("(LOWER(TRIM(body_style)) LIKE '%suv%' OR LOWER(TRIM(body_style)) LIKE '%crossover%')");
+          clauses.push(
+            "(LOWER(TRIM(body_style)) LIKE '%suv%' OR LOWER(TRIM(body_style)) LIKE '%crossover%')",
+          );
         } else if (key === "van") {
           clauses.push("LOWER(TRIM(body_style)) LIKE '%van%'");
         } else if (key === "sedan") {
-          clauses.push("(LOWER(TRIM(body_style)) LIKE '%sedan%' OR LOWER(TRIM(body_style)) LIKE '%saloon%')");
+          clauses.push(
+            "(LOWER(TRIM(body_style)) LIKE '%sedan%' OR LOWER(TRIM(body_style)) LIKE '%saloon%')",
+          );
         } else if (key === "coupe") {
           clauses.push("LOWER(TRIM(body_style)) LIKE '%coupe%'");
         } else if (key === "hatchback") {
@@ -190,7 +196,9 @@ export class VehicleService {
         } else if (key === "convertible") {
           clauses.push("LOWER(TRIM(body_style)) LIKE '%convertible%'");
         } else {
-          clauses.push(`LOWER(TRIM(body_style)) = '${key.replace(/'/g, "''")}'`);
+          clauses.push(
+            `LOWER(TRIM(body_style)) = '${key.replace(/'/g, "''")}'`,
+          );
         }
       }
       if (clauses.length > 0) {
@@ -343,10 +351,14 @@ export class VehicleService {
   }> {
     try {
       // Use allowed list when computing filter options (ALLOWED_BODY_STYLES is imported at module top)
-      const allowedVals = ALLOWED_BODY_STYLES.map((s) => s.replace(/'/g, "''")).map((s) => s.toLowerCase());
-      const allowedClause = allowedVals.length > 0 ? `AND LOWER(TRIM(body_style)) IN (${allowedVals.map(v => `'${v}'`).join(",")})` : "";
-      const baseWhere =
-        `WHERE body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized' ${allowedClause}`;
+      const allowedVals = ALLOWED_BODY_STYLES.map((s) =>
+        s.replace(/'/g, "''"),
+      ).map((s) => s.toLowerCase());
+      const allowedClause =
+        allowedVals.length > 0
+          ? `AND LOWER(TRIM(body_style)) IN (${allowedVals.map((v) => `'${v}'`).join(",")})`
+          : "";
+      const baseWhere = `WHERE body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized' ${allowedClause}`;
       const [makesResult] = await this.db.execute<RowDataPacket[]>(
         `SELECT DISTINCT make FROM vehicles ${baseWhere} ORDER BY make`,
       );

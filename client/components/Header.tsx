@@ -124,7 +124,18 @@ export default function Header({ topTemplate }: HeaderProps) {
                   href="https://env-uploadbackup62225-czdev.kinsta.cloud/sign-in/"
                   className="flex items-center gap-2 px-2 py-1 rounded-[8px]"
                 >
-                  <img src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fcf2a246c5266451a92f5e139c493af71?format=webp&width=800" alt="Login" className="w-6 h-6 transform" style={{ filter: 'brightness(0)', fontWeight: '200', height: '24px', width: '24px', transform: 'matrix(1.15, 0, 0, 1.15, 0, 0)' }} />
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fcf2a246c5266451a92f5e139c493af71?format=webp&width=800"
+                    alt="Login"
+                    className="w-6 h-6 transform"
+                    style={{
+                      filter: "brightness(0)",
+                      fontWeight: "200",
+                      height: "24px",
+                      width: "24px",
+                      transform: "matrix(1.15, 0, 0, 1.15, 0, 0)",
+                    }}
+                  />
                   <span className="text-black font-medium">Login</span>
                   <span className="text-black font-medium"> / </span>
                   <span className="text-red-600 font-medium">Signup</span>
@@ -217,79 +228,103 @@ export default function Header({ topTemplate }: HeaderProps) {
                   onClick={() => setVehiclesOpen((s) => !s)}
                   className="w-full flex items-center justify-between py-2 px-0 mt-1"
                 >
-                  <span className="text-gray-800 font-medium">Search by Vehicle Type</span>
+                  <span className="text-gray-800 font-medium">
+                    Search by Vehicle Type
+                  </span>
                   <svg
                     className={`w-4 h-4 transform transition-transform text-red-600 ${vehiclesOpen ? "rotate-180" : ""}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M6 9l6 6 6-6"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </button>
 
                 {vehiclesOpen && (
                   <div className="grid grid-cols-3 gap-3 pt-3 pb-2">
                     {(() => {
-                    const vehicleImages: Record<string, string> = {
-                      Convertible: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F064c51214995430a9384ae9f1722bee9",
-                      Coupe: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F1d042ebb458842a8a468794ae563fcc6",
-                      Sedans: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
-                      Hatchback: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fb06dd82e2c564b7eb30b1d5fa14e0562",
-                      "Crossover/SUV": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F98d1869674c64e419bf7ca7da66e25b8",
-                      Vans: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff0d0c6c20e02423dad8eefa6f0ef508a",
-                      Wagons: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F24bf3ece0537462bbd1edd12a2485c0a",
-                      "Shop Used": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F30f147c94e904a5ba1b1ce7ce9ebd89b",
-                      "Used Trucks": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fd19800dca9084c47b346aae3c1681942",
-                      Trucks: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
-                      "Ext Cabs": "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
-                      ELECTRIC: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
-                    };
+                      const vehicleImages: Record<string, string> = {
+                        Convertible:
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F064c51214995430a9384ae9f1722bee9",
+                        Coupe:
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F1d042ebb458842a8a468794ae563fcc6",
+                        Sedans:
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+                        Hatchback:
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fb06dd82e2c564b7eb30b1d5fa14e0562",
+                        "Crossover/SUV":
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F98d1869674c64e419bf7ca7da66e25b8",
+                        Vans: "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff0d0c6c20e02423dad8eefa6f0ef508a",
+                        Wagons:
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F24bf3ece0537462bbd1edd12a2485c0a",
+                        "Shop Used":
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F30f147c94e904a5ba1b1ce7ce9ebd89b",
+                        "Used Trucks":
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fd19800dca9084c47b346aae3c1681942",
+                        Trucks:
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fa24133306df2416881f9ea266e4f65c1",
+                        "Ext Cabs":
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
+                        ELECTRIC:
+                          "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F87eaf3866c0e482c912cb9c0ca83d44a",
+                      };
 
-                    const displayMap: Record<string, React.ReactNode> = {
-                      Convertible: "Convertible",
-                      Coupe: "Coupe",
-                      Sedans: "Sedans",
-                      Hatchback: "Hatchback",
-                      "Crossover/SUV": "Crossover/SUV",
-                      Vans: "Vans/Minivans",
-                      Wagons: "Wagons",
-                      "Shop Used": "Truck",
-                      "Used Trucks": "Extended Cab",
-                      Trucks: "Crew Cab",
-                      "Ext Cabs": "All Cars",
-                      ELECTRIC: "All Trucks",
-                    };
+                      const displayMap: Record<string, React.ReactNode> = {
+                        Convertible: "Convertible",
+                        Coupe: "Coupe",
+                        Sedans: "Sedans",
+                        Hatchback: "Hatchback",
+                        "Crossover/SUV": "Crossover/SUV",
+                        Vans: "Vans/Minivans",
+                        Wagons: "Wagons",
+                        "Shop Used": "Truck",
+                        "Used Trucks": "Extended Cab",
+                        Trucks: "Crew Cab",
+                        "Ext Cabs": "All Cars",
+                        ELECTRIC: "All Trucks",
+                      };
 
-                    const labels = Object.keys(displayMap);
+                      const labels = Object.keys(displayMap);
 
-                    return labels.map((label) => {
-                      const display = String(displayMap[label] || label);
-                      const slug = display.toLowerCase().replace(/\s+/g, "-");
-                      const url = `/cars-for-sale/${slug}/`;
+                      return labels.map((label) => {
+                        const display = String(displayMap[label] || label);
+                        const slug = display.toLowerCase().replace(/\s+/g, "-");
+                        const url = `/cars-for-sale/${slug}/`;
 
-                      return (
-                        <a
-                          key={label}
-                          href={url}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setMobileOpen(false);
-                            // Navigate to filtered inventory URL for this vehicle type
-                            window.location.href = url;
-                          }}
-                          className="block text-center bg-white border border-gray-200 rounded-md p-2 text-sm hover:shadow-sm"
-                        >
-                          <img
-                            src={vehicleImages[label] || import.meta.env.VITE_PLACEHOLDER_IMAGE}
-                            alt={display}
-                            className="w-full h-12 object-contain mb-1"
-                          />
-                          <div className="text-xs font-medium text-gray-800">{display}</div>
-                        </a>
-                      );
-                    });
-                  })()}
+                        return (
+                          <a
+                            key={label}
+                            href={url}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setMobileOpen(false);
+                              // Navigate to filtered inventory URL for this vehicle type
+                              window.location.href = url;
+                            }}
+                            className="block text-center bg-white border border-gray-200 rounded-md p-2 text-sm hover:shadow-sm"
+                          >
+                            <img
+                              src={
+                                vehicleImages[label] ||
+                                import.meta.env.VITE_PLACEHOLDER_IMAGE
+                              }
+                              alt={display}
+                              className="w-full h-12 object-contain mb-1"
+                            />
+                            <div className="text-xs font-medium text-gray-800">
+                              {display}
+                            </div>
+                          </a>
+                        );
+                      });
+                    })()}
                   </div>
                 )}
               </div>
