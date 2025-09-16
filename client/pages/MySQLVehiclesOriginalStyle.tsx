@@ -1522,7 +1522,18 @@ export default function MySQLVehiclesOriginalStyle() {
         params.append("status", (appliedFilters as any).status.join(","));
       }
 
-      const apiUrl = `/api/vehicles?${params.toString()}`;
+      const qs = params.toString();
+      let apiUrl = `/api/vehicles?${qs}`;
+      try {
+        const wpBase = (import.meta as any).env.VITE_WP_URL || (import.meta as any).env.VITE_WP_URL || "";
+        if (wpBase && String((import.meta as any).env.USE_MOCK || "") !== "true") {
+          const clean = String(wpBase).replace(/\/$/, "");
+          apiUrl = `${clean}/vehicles${qs ? `?${qs}` : ""}`;
+        }
+      } catch (e) {
+        // ignore and use local proxy
+      }
+
       console.log("Fetching vehicles from:", apiUrl);
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
