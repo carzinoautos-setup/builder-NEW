@@ -1525,7 +1525,7 @@ export default function MySQLVehiclesOriginalStyle() {
       const paramsStr = params.toString();
       const localUrl = `/api/vehicles?${paramsStr}`;
       const wpUrl = `${getApiBaseUrl()}/vehicles${paramsStr ? `?${paramsStr}` : ""}`;
-      console.log("Fetching vehicles (local proxy preferred) from:", localUrl, "then WP fallback:", wpUrl);
+      console.log("Fetching vehicles (preferring WP absolute URL first) from:", wpUrl, "then local proxy fallback:", localUrl);
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
       const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
