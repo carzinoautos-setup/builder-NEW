@@ -88,7 +88,7 @@ export const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
     "all-cars":
       "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F21c7ad9abb364e3296adcf6602743f58?format=webp",
     "all-trucks":
-      "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Fdbaef8998606495998742f0fa5139679?format=webp",
+      "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2Ff9227ce83e9f4408ba69cd48fb4e615b?format=webp",
     car:
       "https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F0eccbe1eccb94b3b8eee4d8cfb611864",
     truck:
