@@ -628,24 +628,7 @@ export const getVehicles: RequestHandler = async (req, res) => {
       }
     }
 
-    // Otherwise use the configured service (MySQL). Do NOT fall back to demo/mock data.
-    if (!vehicleService) {
-      console.error("No data backend configured for /api/vehicles; refusing to use demo/mock data.");
-      return res.status(502).json({
-        success: false,
-        message: "No data backend configured (no WP_API_BASE and no DB_*) — demo/mock data disabled",
-        data: [],
-        meta: {
-          totalRecords: 0,
-          totalPages: 0,
-          currentPage: page,
-          pageSize,
-          hasNextPage: false,
-          hasPreviousPage: false,
-        },
-      });
-    }
-
+    // Otherwise use the configured service (MySQL or Mock)
     const result = await vehicleService.getVehicles(filters, pagination);
 
     // Server-side de-prioritization: move vehicles with specific featured image identifiers to the end
@@ -769,11 +752,6 @@ export const getVehicleById: RequestHandler = async (req, res) => {
         success: false,
         message: "Invalid vehicle ID",
       });
-    }
-
-    if (!vehicleService) {
-      console.error("No data backend configured for /api/vehicles/:id; refusing to use demo/mock data.");
-      return res.status(502).json({ success: false, message: "No data backend configured (no WP_API_BASE and no DB_*); demo/mock data disabled" });
     }
 
     const vehicle = await vehicleService.getVehicleById(id);
@@ -957,24 +935,6 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       }
     }
 
-    if (!vehicleService) {
-      console.error("No data backend configured for /api/vehicles/filters; refusing to use demo/mock data.");
-      return res.status(502).json({
-        success: false,
-        message: "No data backend configured (no WP_API_BASE and no DB_*); demo/mock data disabled",
-        data: {
-          makes: [],
-          models: [],
-          conditions: [],
-          fuelTypes: [],
-          transmissions: [],
-          drivetrains: [],
-          bodyStyles: [],
-          sellerTypes: [],
-        },
-      });
-    }
-
     const options = await vehicleService.getFilterOptions();
 
     // Debug: log sizes of filter option arrays to help trace missing filters
@@ -1025,79 +985,30 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
  */
 export const healthCheck: RequestHandler = async (req, res) => {
   try {
-    // If WP proxy configured, try a lightweight WP endpoint to confirm availability
-    if (process.env.WP_API_BASE && process.env.USE_MOCK !== "true") {
-      const wpBase = String(process.env.WP_API_BASE).replace(/\/$/, "");
-      try {
-        const headers: Record<string, string> = { Accept: "application/json" };
-        if (process.env.WP_CONSUMER_KEY && process.env.WP_CONSUMER_SECRET) {
-          const creds = `${process.env.WP_CONSUMER_KEY}:${process.env.WP_CONSUMER_SECRET}`;
-          headers["Authorization"] = `Basic ${Buffer.from(creds).toString("base64")}`;
-        }
-        const checkUrl = `${wpBase}/vehicles?page=1&per_page=1`;
-        const wpRes = await fetch(checkUrl, { method: "GET", headers });
-        const text = await wpRes.text().catch(() => "");
-        const ok = wpRes && wpRes.status >= 200 && wpRes.status < 300;
-        return res.status(ok ? 200 : 502).json({
-          success: ok,
-          message: ok ? "WordPress API proxy available" : "WordPress API proxy unreachable",
-          timestamp: new Date().toISOString(),
-          serviceConnected: ok,
-          usingMockData: false,
-          wpStatus: wpRes.status,
-          wpBodySample: text ? (text.length > 200 ? text.substring(0, 200) + "..." : text) : undefined,
-        });
-      } catch (e) {
-        console.error("healthCheck: WP proxy check failed", e);
-        return res.status(502).json({
-          success: false,
-          message: "WordPress API proxy unreachable",
-          timestamp: new Date().toISOString(),
-          serviceConnected: false,
-          usingMockData: false,
-        });
-      }
-    }
+    // Test service connectivity
+    const testResult = await vehicleService.getVehicles(
+      {},
+      { page: 1, pageSize: 1 },
+    );
 
-    // If a VehicleService (MySQL) is available, query it
-    if (vehicleService) {
-      try {
-        const testResult = await vehicleService.getVehicles({}, { page: 1, pageSize: 1 });
-        return res.status(200).json({
-          success: true,
-          message: "VehicleService (MySQL) available",
-          timestamp: new Date().toISOString(),
-          serviceConnected: Boolean(testResult && testResult.success),
-          usingMockData: false,
-          totalRecords: testResult.meta?.totalRecords || 0,
-        });
-      } catch (e) {
-        console.error("healthCheck: VehicleService check failed", e);
-        return res.status(502).json({
-          success: false,
-          message: "VehicleService unreachable or error during query",
-          timestamp: new Date().toISOString(),
-          serviceConnected: false,
-          usingMockData: false,
-        });
-      }
-    }
-
-    // No backend configured and mock explicitly disabled
-    console.error("healthCheck: no backend configured and mock disabled");
-    return res.status(502).json({
-      success: false,
-      message: "No data backend configured (no WP_API_BASE and no DB_*); demo/mock data disabled",
+    res.status(200).json({
+      success: true,
+      message:
+        "Mock service healthy - 50,000 sample vehicles ready for testing",
       timestamp: new Date().toISOString(),
-      serviceConnected: false,
-      usingMockData: false,
+      serviceConnected: testResult.success,
+      usingMockData: true,
+      totalRecords: testResult.meta?.totalRecords || 0,
+      note: "Switch to VehicleService in routes/vehicles.ts when ready for real MySQL",
     });
   } catch (error) {
     console.error("Service health check failed:", error);
     res.status(500).json({
       success: false,
-      message: "Internal server error during health check",
+      message: "Mock service connection failed",
       timestamp: new Date().toISOString(),
+      serviceConnected: false,
+      usingMockData: true,
     });
   }
 };
