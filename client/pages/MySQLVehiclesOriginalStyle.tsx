@@ -1722,7 +1722,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
           setApiResponse(compatibleResponse);
           console.log(
-            "✅ Successfully loaded and transformed",
+            "�� Successfully loaded and transformed",
             transformedVehicles.length,
             "vehicles",
           );
@@ -3829,6 +3829,74 @@ export default function MySQLVehiclesOriginalStyle() {
                 </button>
               </div>
             </div>
+
+            {/* When mobile filters panel is open, show currently applied filters at the top for context */}
+            {mobileFiltersOpen && (
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="carzino-filter-title">Current Selections</h3>
+                  <button
+                    onClick={() => clearAllFilters()}
+                    className="text-sm text-red-600 underline"
+                    type="button"
+                  >
+                    Clear All
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {(appliedLocation && appliedRadius !== "nationwide") && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap">
+                      <Check className="w-3 h-3 text-red-600" />
+                      <MapPin className="w-3 h-3" />
+                      {appliedRadius} miles
+                      <button onClick={() => { setAppliedLocation(null); setAppliedRadius('200'); }} className="ml-1 text-white"><X className="w-3 h-3 inline-block" /></button>
+                    </span>
+                  )}
+
+                  {appliedFilters.condition.map((item) => (
+                    <span key={sanitizeLabel(item)} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {sanitizeLabel(item)}
+                      <button onClick={() => removeAppliedFilter("condition", item)} className="ml-1 text-white"><X className="w-3 h-3 inline-block" /></button>
+                    </span>
+                  ))}
+
+                  {appliedFilters.make.map((item) => (
+                    <span key={sanitizeLabel(item)} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {sanitizeLabel(item)}
+                      <button onClick={() => removeAppliedFilter("make", item)} className="ml-1 text-white"><X className="w-3 h-3 inline-block" /></button>
+                    </span>
+                  ))}
+
+                  {appliedFilters.model.map((item) => (
+                    <span key={sanitizeLabel(item)} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {sanitizeLabel(item)}
+                      <button onClick={() => removeAppliedFilter("model", item)} className="ml-1 text-white"><X className="w-3 h-3 inline-block" /></button>
+                    </span>
+                  ))}
+
+                  {appliedFilters.fuelType.map((item) => (
+                    <span key={sanitizeLabel(item)} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {sanitizeLabel(item)}
+                      <button type="button" onClick={(e) => { e.stopPropagation(); removeAppliedFilter("fuelType", item); }} className="ml-1 text-white"><X className="w-3 h-3 inline-block" /></button>
+                    </span>
+                  ))}
+
+                  {appliedFilters.transmission.map((item) => (
+                    <span key={sanitizeLabel(item)} className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {sanitizeLabel(item)}
+                      <button type="button" onClick={(e) => { e.stopPropagation(); removeAppliedFilter("transmission", item); }} className="ml-1 text-white"><X className="w-3 h-3 inline-block" /></button>
+                    </span>
+                  ))}
+
+                </div>
+              </div>
+            )}
+
             {/* Search Section - Mobile Only */}
             {!mobileFiltersOpen && (
               <div className="lg:hidden mb-4">
