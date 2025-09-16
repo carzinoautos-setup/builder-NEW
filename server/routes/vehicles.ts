@@ -43,14 +43,16 @@ try {
     vehicleService = new VehicleService();
     console.log("✅ Using VehicleService (MySQL) for real data");
   } else {
-    vehicleService = new MockVehicleService();
+    // No WP API and no DB configured — do not use demo/mock data automatically.
+    vehicleService = null;
   }
 } catch (err) {
   console.error(
-    "Failed to initialize VehicleService, falling back to MockVehicleService:",
+    "Failed to initialize VehicleService:",
     err,
   );
-  vehicleService = new MockVehicleService();
+  // If initialization fails, do not use mock automatically. Keep vehicleService null so proxy/DB decisions remain explicit.
+  vehicleService = null;
 }
 
 /**
