@@ -74,7 +74,7 @@ export default function Footer({ onResetAndNavigate }: { onResetAndNavigate?: (h
           </div>
           <div className="mt-5">
             <a
-              href="https://env-uploadbackup62225-czdev.kinsta.cloud/dealers/"
+              href="https://env-uploadbackup62225-czdev.kinsta.cloud/sell-your-car/"
               className="w-full inline-block mt-4 h-12 bg-[#E82121] rounded-lg text-white font-medium text-center px-4 leading-[48px]"
             >
               Learn More
