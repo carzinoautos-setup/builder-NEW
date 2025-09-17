@@ -1362,6 +1362,7 @@ export default function MySQLVehiclesOriginalStyle() {
   // Fetch vehicles from API
   const fetchVehicles = useCallback(async () => {
     try {
+      console.log("[debug] fetchVehicles start", { currentPage, searchTerm, appliedFilters, appliedLocation, appliedRadius, sortBy });
       // Mark this request with a new sequence id
       requestIdRef.current += 1;
       const requestId = requestIdRef.current;
