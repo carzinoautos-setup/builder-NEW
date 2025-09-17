@@ -7259,7 +7259,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 onToggle={() => toggleFilter("exteriorColor")}
               >
                 <div className="space-y-0.5">
-                  {exteriorColors.map((color, index) => (
+                  {displayedExteriorColors.map((color, index) => (
                     <ColorSwatch
                       key={index}
                       color={color.color}
@@ -7268,6 +7268,20 @@ export default function MySQLVehiclesOriginalStyle() {
                       filter="exteriorColor"
                     />
                   ))}
+
+                  {exteriorColors.length > displayedExteriorColors.length && (
+                    <div className="pt-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowMoreExteriorColors((s) => !s);
+                        }}
+                        className="text-red-600 text-sm font-medium"
+                      >
+                        {showMoreExteriorColors ? "Show Less" : `Show More (${exteriorColors.length - displayedExteriorColors.length})`}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </FilterSection>
             )}
