@@ -6169,39 +6169,34 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             </FilterSection>
 
-            {/* Mileage (separate filter placed directly under Condition) */}
-            {((appliedFilters.mileage && appliedFilters.mileage.length > 0) ||
-              (appliedFilters.condition &&
-                (appliedFilters.condition.includes("Used") ||
-                  appliedFilters.condition.includes("used")))) && (
-              <FilterSection
-                title="Mileage"
-                isCollapsed={collapsedFilters.mileage}
-                onToggle={() => toggleFilter("mileage")}
-              >
-                <div className="space-y-0.5">
-                  <select
-                    className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md h-10 focus:outline-none bg-white appearance-none"
-                    value={appliedFilters.mileage}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) =>
-                      setAppliedFilters((prev) => ({
-                        ...prev,
-                        mileage: e.target.value,
-                      }))
-                    }
-                  >
-                    <option value="">All Miles (default)</option>
-                    <option value="25000">Under 25,000 Miles</option>
-                    <option value="25000-50000">25,000–50,000 Miles</option>
-                    <option value="50000-75000">50,000–75,000 Miles</option>
-                    <option value="75000-100000">75,000–100,000 Miles</option>
-                    <option value="100000-150000">100,000–150,000 Miles</option>
-                    <option value="150000+">150,000+ Miles</option>
-                  </select>
-                </div>
-              </FilterSection>
-            )}
+            {/* Mileage (separate filter placed directly under Certified) */}
+            <FilterSection
+              title="Mileage"
+              isCollapsed={collapsedFilters.mileage}
+              onToggle={() => toggleFilter("mileage")}
+            >
+              <div className="space-y-0.5">
+                <select
+                  className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md h-10 focus:outline-none bg-white appearance-none"
+                  value={appliedFilters.mileage}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) =>
+                    setAppliedFilters((prev) => ({
+                      ...prev,
+                      mileage: e.target.value,
+                    }))
+                  }
+                >
+                  <option value="">All Miles (default)</option>
+                  <option value="25000">Under 25,000 Miles</option>
+                  <option value="25000-50000">25,000–50,000 Miles</option>
+                  <option value="50000-75000">50,000–75,000 Miles</option>
+                  <option value="75000-100000">75,000–100,000 Miles</option>
+                  <option value="100000-150000">100,000–150,000 Miles</option>
+                  <option value="150000+">150,000+ Miles</option>
+                </select>
+              </div>
+            </FilterSection>
 
 
             {/* Search by Vehicle Type */}
