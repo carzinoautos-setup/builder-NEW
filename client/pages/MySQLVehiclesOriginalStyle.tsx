@@ -8970,8 +8970,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   {viewMode === "all" && apiResponse?.meta && (
                     <>
                       <div className="md:hidden">
-                        {apiResponse.meta.currentPage <
-                          apiResponse.meta.totalPages && (
+                        {hasMore && (
                           <div className="flex justify-center my-4">
                             <button
                               onClick={() => {
