@@ -2986,6 +2986,9 @@ export default function MySQLVehiclesOriginalStyle() {
     setYearFrom("");
     setYearTo("");
     setCurrentPage(1);
+    // Reset color show-more states
+    setShowMoreExteriorColors(false);
+    setShowMoreInteriorColors(false);
 
     // Reset URL to base cars-for-sale path
     if (location.pathname.startsWith("/cars-for-sale")) {
