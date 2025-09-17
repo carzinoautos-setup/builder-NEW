@@ -8826,7 +8826,7 @@ export default function MySQLVehiclesOriginalStyle() {
                     <Sliders className="w-4 h-4" />
                     Filter
                     {activeFilterCount > 0 && (
-                      <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                      <span className="mobile-filter-badge bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
                         {appliedFilters.condition.length +
                           appliedFilters.make.length +
                           appliedFilters.model.length +
