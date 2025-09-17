@@ -3266,8 +3266,9 @@ export default function MySQLVehiclesOriginalStyle() {
   const handleUnifiedSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const q = unifiedSearch.trim();
-    if (!q) return;
+    // Accept either unifiedSearch (desktop) or panelSearch (mobile) so Enter works in both places
+  const q = (unifiedSearch || panelSearch || "").trim();
+  if (!q) return;
 
     // Parse the unified search query
     const parsedFilters = parseUnifiedSearch(q);
