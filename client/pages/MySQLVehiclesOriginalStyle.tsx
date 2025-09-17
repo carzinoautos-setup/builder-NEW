@@ -4615,6 +4615,34 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
 
                     {/* Price pill (mobile) */}
+                    {appliedFilters.mileage && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {(() => {
+                          const m = appliedFilters.mileage;
+                          if (!m) return null;
+                          if (m.includes("-")) {
+                            const [min, max] = m.split("-");
+                            return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                          }
+                          if (m.endsWith("+")) {
+                            return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
+                          }
+                          return `Under ${Number(m).toLocaleString()} Miles`;
+                        })()}
+                        <button
+                          onClick={() =>
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              mileage: "",
+                            }))
+                          }
+                          className="ml-1 text-white"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    )}
                     {(appliedFilters.priceMin || appliedFilters.priceMax) && (
                       <span
                         onClick={() => {
@@ -5389,6 +5417,34 @@ export default function MySQLVehiclesOriginalStyle() {
                           }}
                           className="ml-1 text-white hover:text-gray-300"
                           aria-label="Remove mileage filter"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    )}
+                    {appliedFilters.mileage && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {(() => {
+                          const m = appliedFilters.mileage;
+                          if (!m) return null;
+                          if (m.includes("-")) {
+                            const [min, max] = m.split("-");
+                            return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                          }
+                          if (m.endsWith("+")) {
+                            return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
+                          }
+                          return `Under ${Number(m).toLocaleString()} Miles`;
+                        })()}
+                        <button
+                          onClick={() =>
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              mileage: "",
+                            }))
+                          }
+                          className="ml-1 text-white"
                         >
                           <X className="w-3 h-3 inline-block" />
                         </button>
@@ -8101,6 +8157,34 @@ export default function MySQLVehiclesOriginalStyle() {
                         </button>
                       </span>
                     )}
+                    {appliedFilters.mileage && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {(() => {
+                          const m = appliedFilters.mileage;
+                          if (!m) return null;
+                          if (m.includes("-")) {
+                            const [min, max] = m.split("-");
+                            return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                          }
+                          if (m.endsWith("+")) {
+                            return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
+                          }
+                          return `Under ${Number(m).toLocaleString()} Miles`;
+                        })()}
+                        <button
+                          onClick={() =>
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              mileage: "",
+                            }))
+                          }
+                          className="ml-1 text-white"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    )}
                     {(appliedFilters.priceMin || appliedFilters.priceMax) && (
                       <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
                         <Check className="w-3 h-3 text-red-600" />$
@@ -8529,6 +8613,34 @@ export default function MySQLVehiclesOriginalStyle() {
                     ))}
 
                     {/* Price pill (mobile sticky) */}
+                    {appliedFilters.mileage && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
+                        <Check className="w-3 h-3 text-red-600" />
+                        {(() => {
+                          const m = appliedFilters.mileage;
+                          if (!m) return null;
+                          if (m.includes("-")) {
+                            const [min, max] = m.split("-");
+                            return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                          }
+                          if (m.endsWith("+")) {
+                            return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
+                          }
+                          return `Under ${Number(m).toLocaleString()} Miles`;
+                        })()}
+                        <button
+                          onClick={() =>
+                            setAppliedFilters((prev) => ({
+                              ...prev,
+                              mileage: "",
+                            }))
+                          }
+                          className="ml-1 text-white"
+                        >
+                          <X className="w-3 h-3 inline-block" />
+                        </button>
+                      </span>
+                    )}
                     {(appliedFilters.priceMin || appliedFilters.priceMax) && (
                       <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0">
                         <Check className="w-3 h-3 text-red-600" />$
