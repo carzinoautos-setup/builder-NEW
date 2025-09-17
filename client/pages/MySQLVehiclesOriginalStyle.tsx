@@ -6241,12 +6241,19 @@ export default function MySQLVehiclesOriginalStyle() {
                   className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md h-10 focus:outline-none bg-white appearance-none"
                   value={appliedFilters.mileage}
                   onClick={(e) => e.stopPropagation()}
-                  onChange={(e) =>
-                    setAppliedFilters((prev) => ({
-                      ...prev,
+                  onChange={(e) => {
+                    const newFilters = {
+                      ...appliedFilters,
                       mileage: e.target.value,
-                    }))
-                  }
+                    };
+                    setAppliedFilters(newFilters);
+                    try {
+                      // keep URL in sync for navigable filter changes
+                      updateURLFromFilters(newFilters);
+                    } catch (err) {
+                      // ignore
+                    }
+                  }}
                 >
                   <option value="">All Miles (default)</option>
                   <option value="25000">Under 25,000 Miles</option>
