@@ -9074,6 +9074,8 @@ export default function MySQLVehiclesOriginalStyle() {
                                     setCurrentPage(prefetchedMeta.currentPage);
                                     setPrefetchedVehicles(null);
                                     setPrefetchedMeta(null);
+                                    // Ensure loading flag cleared when we append prefetched results synchronously
+                                    setLoading(false);
                                   } else {
                                     const totalPages =
                                       apiResponse?.meta?.totalPages || 1;
