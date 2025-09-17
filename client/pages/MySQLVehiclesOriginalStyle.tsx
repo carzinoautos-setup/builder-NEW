@@ -3691,16 +3691,16 @@ export default function MySQLVehiclesOriginalStyle() {
             }
           }}
         />
-        <div
-          className="w-4 h-4 rounded border border-gray-300 mr-2"
-          style={{ backgroundColor: color }}
-        ></div>
         <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">
           {name}
         </span>
         <span className="carzino-filter-count ml-1 flex-shrink-0">
           ({count})
         </span>
+        <div
+          className="w-4 h-4 rounded border border-gray-300 ml-2 flex-shrink-0"
+          style={{ backgroundColor: color }}
+        ></div>
       </label>
     );
   };
