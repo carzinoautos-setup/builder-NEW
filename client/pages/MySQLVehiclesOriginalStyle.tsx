@@ -2159,6 +2159,11 @@ export default function MySQLVehiclesOriginalStyle() {
     setFavorites(savedFavorites);
   }, []);
 
+  // DEBUG: log load/append button state to diagnose unclickable button
+  useEffect(() => {
+    console.log("[debug] loadState", { loading, appendLoading, prefetchedVehiclesLength: Array.isArray(prefetchedVehicles) ? prefetchedVehicles.length : 0, apiMeta: apiResponse?.meta });
+  }, [loading, appendLoading, prefetchedVehicles, apiResponse?.meta]);
+
   // DEBUG: log key state changes to help trace unified search issues
   useEffect(() => {
     console.log("[debug] state snapshot", {
