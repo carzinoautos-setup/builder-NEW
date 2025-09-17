@@ -2331,7 +2331,7 @@ export default function MySQLVehiclesOriginalStyle() {
           apiUrl,
           { method: "GET", headers: { "Content-Type": "application/json" } },
           1,
-          8000,
+          20000,
         );
         if (!response.ok)
           throw new Error(
