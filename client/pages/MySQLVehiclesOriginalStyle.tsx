@@ -816,6 +816,31 @@ export default function MySQLVehiclesOriginalStyle() {
       appliedFilters.model.length === 0 &&
       appliedFilters.trim.length === 0);
 
+  const activeFilterCount = React.useMemo(() => {
+    const af: any = appliedFilters as any;
+    const safeLen = (v: any) => (Array.isArray(v) ? v.length : 0);
+    const priceCount = af.priceMin && String(af.priceMin).trim().length > 0 ? 1 : af.priceMax && String(af.priceMax).trim().length > 0 ? 1 : 0;
+    const paymentCount = af.paymentMin && String(af.paymentMin).trim().length > 0 ? 1 : af.paymentMax && String(af.paymentMax).trim().length > 0 ? 1 : 0;
+    const mileageCount = af.mileage && String(af.mileage).trim().length > 0 ? 1 : 0;
+    const locationCount = appliedLocation && appliedRadius !== "nationwide" ? 1 : 0;
+    return (
+      safeLen(af.condition) +
+      safeLen(af.make) +
+      safeLen(af.model) +
+      safeLen(af.trim) +
+      safeLen(af.vehicleType) +
+      safeLen(af.driveType) +
+      safeLen(af.exteriorColor) +
+      safeLen(af.engineCylinders) +
+      safeLen(af.displacementLiters) +
+      safeLen(af.year) +
+      mileageCount +
+      priceCount +
+      paymentCount +
+      locationCount
+    );
+  }, [appliedFilters, appliedLocation, appliedRadius]);
+
   // Price and payment filter states
   const [priceMin, setPriceMin] = useState("1000");
   const [priceMax, setPriceMax] = useState("50000");
