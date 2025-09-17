@@ -7718,7 +7718,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   appliedFilters.make.length === 0 &&
                   appliedFilters.model.length === 0 &&
                   appliedFilters.trim.length === 0)) && (
-                <div className="hidden lg:block px-3 pt-3 bg-white">
+                <div className="hidden">
                   <div className="flex gap-2 overflow-x-auto pb-3">
                     <button
                       onClick={clearAllFilters}
