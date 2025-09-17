@@ -253,7 +253,7 @@ export default function Footer({
                   <img
                     src="https://cdn.builder.io/api/v1/image/assets%2F4d1f1909a98e4ebc8068632229306ce4%2F2c48de389c614655b60a7c83a7b13cc9?format=webp&width=800"
                     alt="Carzino promo"
-                    className="mx-auto h-16 mb-2 object-contain"
+                    className="mx-auto h-12 mb-2 object-contain"
                   />
                   <div className="text-sm text-gray-700">
                     "Find it. Love it. Drive it. Carzino it."
