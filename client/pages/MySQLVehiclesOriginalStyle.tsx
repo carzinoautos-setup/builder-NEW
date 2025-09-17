@@ -428,6 +428,8 @@ export default function MySQLVehiclesOriginalStyle() {
   const [error, setError] = useState<string | null>(null);
   // Request sequencing id to prevent out-of-order responses from overwriting newer results
   const requestIdRef = useRef(0);
+  // Flag ref to indicate user-initiated append requests (avoids state closure races)
+  const userRequestedAppendRef = useRef(false);
 
   // Ensure vehicles without price are moved to the end when sorting by price
   useEffect(() => {
