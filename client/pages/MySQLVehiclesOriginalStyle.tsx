@@ -489,6 +489,13 @@ export default function MySQLVehiclesOriginalStyle() {
   const totalResults = apiResponse?.meta?.totalRecords || 0;
   const resultsPerPage = 27;
 
+  // Determine if there are more results to load (even if API meta is unreliable)
+  const hasMore = Boolean(
+    (apiResponse && apiResponse.meta && apiResponse.meta.currentPage < totalPages) ||
+      (Array.isArray(prefetchedVehicles) && prefetchedVehicles.length > 0) ||
+      totalResults > (vehicles ? vehicles.length : 0),
+  );
+
   // Filter states - exactly like original
   const [searchTerm, setSearchTerm] = useState("");
 
