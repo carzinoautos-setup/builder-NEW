@@ -1725,10 +1725,17 @@ export default function MySQLVehiclesOriginalStyle() {
           // If timed out, attempt one more extended-timeout fetch (best-effort)
           if (response && response.status === 0 && statusText.includes("timed out")) {
             try {
-              console.warn("Vehicle fetch timed out — attempting one extended retry...");
-              const extended = await fetchWithRetry(urlToFetch, { method: "GET", headers: { "Content-Type": "application/json" } }, 1, TIMEOUT_MS * 2);
-              if (extended && extended.ok) {
-                response = extended;
+              console.warn("Vehicle fetch timed out — attempting one extended retry (WP then local)...");
+              try {
+                const extWp = await fetchWithRetry(wpUrl, { method: "GET", headers: { "Content-Type": "application/json" } }, 1, TIMEOUT_MS * 2);
+                if (extWp && extWp.ok) {
+                  response = extWp;
+                } else {
+                  const extLocal = await fetchWithRetry(localUrl, { method: "GET", headers: { "Content-Type": "application/json" } }, 1, TIMEOUT_MS * 2);
+                  if (extLocal && extLocal.ok) response = extLocal;
+                }
+              } catch (e) {
+                console.warn("Extended retry inner failed:", e);
               }
             } catch (e) {
               console.warn("Extended retry failed:", e);
