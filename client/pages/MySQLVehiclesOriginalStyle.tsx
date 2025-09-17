@@ -2138,6 +2138,9 @@ export default function MySQLVehiclesOriginalStyle() {
     appliedLocation,
     appliedRadius,
     sortBy,
+    appendResults,
+    allowAutoAppend,
+    resultsPerPage,
   ]);
 
   // Load favorites from localStorage
