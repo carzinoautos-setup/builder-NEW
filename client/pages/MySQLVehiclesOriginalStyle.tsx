@@ -3324,6 +3324,8 @@ export default function MySQLVehiclesOriginalStyle() {
 
     // Restore unified search input (clearAllFilters cleared it)
     setUnifiedSearch(q);
+    // Ensure mobile input reflects the same query so subsequent interactions use same value
+    setPanelSearch(q);
 
     // Only set searchTerm (used as free-text 'search' param) if the parser did not extract explicit filters
     const hasExplicit =
