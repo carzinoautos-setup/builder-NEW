@@ -226,7 +226,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             scopedUrl,
             { method: "GET", signal: controller.signal },
             2,
-            8000,
+            20000,
           );
           if (scopedRes && scopedRes.ok) {
             try {
@@ -265,7 +265,7 @@ export default function useFilters(appliedFilters: Partial<AppliedFilters>) {
             unscopedUrl,
             { method: "GET", signal: controller.signal },
             2,
-            8000,
+            20000,
           );
           if (unscopedRes && unscopedRes.ok) {
             try {
