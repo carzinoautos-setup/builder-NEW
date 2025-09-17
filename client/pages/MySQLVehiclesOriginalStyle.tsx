@@ -781,6 +781,15 @@ export default function MySQLVehiclesOriginalStyle() {
     }
   }, [appliedFilters.trim.join(",")]);
 
+  // Ensure Mileage filter stays open when a mileage value is selected so mobile panel shows the selection
+  useEffect(() => {
+    try {
+      setCollapsedFilters((prev) => ({ ...prev, mileage: false }));
+    } catch (e) {
+      /* ignore */
+    }
+  }, [appliedFilters.mileage]);
+
   const hasAppliedFilters =
     (appliedLocation && appliedRadius !== "nationwide") ||
     appliedFilters.condition.length > 0 ||
