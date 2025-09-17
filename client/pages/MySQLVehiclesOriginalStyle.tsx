@@ -3916,6 +3916,186 @@ export default function MySQLVehiclesOriginalStyle() {
                 : undefined,
             }}
           >
+            {/* Applied Filters (inside mobile filter panel) */}
+            {(appliedLocation && appliedRadius !== "nationwide") ||
+            appliedFilters.condition.length > 0 ||
+            appliedFilters.make.length > 0 ||
+            appliedFilters.model.length > 0 ||
+            appliedFilters.trim.length > 0 ||
+            appliedFilters.year.length > 0 ||
+            appliedFilters.bodyStyle.length > 0 ||
+            appliedFilters.vehicleType.length > 0 ||
+            appliedFilters.driveType.length > 0 ||
+            appliedFilters.exteriorColor.length > 0 ||
+            appliedFilters.sellerType.length > 0 ||
+            appliedFilters.mileage ||
+            appliedFilters.priceMin ||
+            appliedFilters.priceMax ||
+            appliedFilters.paymentMin ||
+            appliedFilters.paymentMax ||
+            (searchTerm && searchTerm.trim().length > 0) ||
+            (unifiedSearch &&
+              unifiedSearch.trim().length > 0 &&
+              appliedFilters.make.length === 0 &&
+              appliedFilters.model.length === 0 &&
+              appliedFilters.trim.length === 0) ? (
+              <>
+                <div className="pt-2 flex items-center justify-between mb-2">
+                  <h3 className="carzino-filter-title">Applied Filters</h3>
+                  <button
+                    onClick={clearAllFilters}
+                    className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium hover:bg-red-700"
+                  >
+                    Clear All
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {(searchTerm && searchTerm.trim().length > 0) ||
+                  (unifiedSearch &&
+                    unifiedSearch.trim().length > 0 &&
+                    appliedFilters.make.length === 0 &&
+                    appliedFilters.model.length === 0 &&
+                    appliedFilters.trim.length === 0) ? (
+                    <span
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                      onClick={() => {
+                        setSearchTerm("");
+                        setUnifiedSearch("");
+                      }}
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {searchTerm && searchTerm.trim().length > 0
+                        ? sanitizeLabel(searchTerm)
+                        : sanitizeLabel(unifiedSearch)}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSearchTerm("");
+                          setUnifiedSearch("");
+                        }}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        <X className="w-3 h-3 inline-block" />
+                      </button>
+                    </span>
+                  ) : null}
+
+                  {appliedLocation && appliedRadius !== "nationwide" && (
+                    <span
+                      onClick={() => {
+                        setAppliedLocation(null);
+                        setAppliedRadius("200");
+                      }}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      <MapPin className="w-3 h-3" />
+                      {appliedRadius} miles
+                      <button
+                        onClick={() => {
+                          setAppliedLocation(null);
+                          setAppliedRadius("200");
+                        }}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        <X className="w-3 h-3 inline-block" />
+                      </button>
+                    </span>
+                  )}
+
+                  {appliedFilters.condition.map((item) => (
+                    <span
+                      key={sanitizeLabel(item)}
+                      onClick={() => removeAppliedFilter("condition", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {sanitizeLabel(item)}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeAppliedFilter("condition", item);
+                        }}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        <X className="w-3 h-3 inline-block" />
+                      </button>
+                    </span>
+                  ))}
+
+                  {appliedFilters.make.map((item) => (
+                    <span
+                      key={sanitizeLabel(item)}
+                      onClick={() => removeAppliedFilter("make", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {sanitizeLabel(item)}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeAppliedFilter("make", item);
+                        }}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        <X className="w-3 h-3 inline-block" />
+                      </button>
+                    </span>
+                  ))}
+
+                  {appliedFilters.model.map((item) => (
+                    <span
+                      key={sanitizeLabel(item)}
+                      onClick={() => removeAppliedFilter("model", item)}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800"
+                    >
+                      <Check className="w-3 h-3 text-red-600" />
+                      {sanitizeLabel(item)}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeAppliedFilter("model", item);
+                        }}
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        <X className="w-3 h-3 inline-block" />
+                      </button>
+                    </span>
+                  ))}
+
+                  {/* Mileage chip */}
+                  {appliedFilters.mileage && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs cursor-pointer hover:bg-gray-800">
+                      <Check className="w-3 h-3 text-red-600" />
+                      {(() => {
+                        const m = appliedFilters.mileage;
+                        if (!m) return null;
+                        if (m.includes("-")) {
+                          const [min, max] = m.split("-");
+                          return `${Number(min).toLocaleString()}–${Number(max).toLocaleString()} Miles`;
+                        }
+                        if (m.endsWith("+")) {
+                          return `${m.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}+ Miles`;
+                        }
+                        return `Under ${Number(m).toLocaleString()} Miles`;
+                      })()}
+                      <button
+                        onClick={() =>
+                          setAppliedFilters((prev) => ({ ...prev, mileage: "" }))
+                        }
+                        className="ml-1 text-white hover:text-gray-300"
+                      >
+                        <X className="w-3 h-3 inline-block" />
+                      </button>
+                    </span>
+                  )}
+
+                </div>
+              </>
+            ) : null}
             {/* Mobile Filter Action Buttons (moved to top) */}
             <div className="hidden">
               <div className="flex gap-3 px-0">
