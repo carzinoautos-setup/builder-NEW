@@ -1928,8 +1928,27 @@ export default function MySQLVehiclesOriginalStyle() {
             // reset append and allow flags
             setAppendResults(false);
             setAllowAutoAppend(false);
+            // clear any prefetched cache because we've consumed it
+            setPrefetchedVehicles(null);
+            setPrefetchedMeta(null);
           } else {
-            setVehicles(reorderForPrice(transformedVehicles));
+            // Default behavior: show only up to resultsPerPage on the client to avoid auto-loading all items.
+            // If the API returned more items than resultsPerPage, keep the remainder in prefetchedVehicles
+            if (Array.isArray(transformedVehicles) && transformedVehicles.length > resultsPerPage) {
+              const firstPage = transformedVehicles.slice(0, resultsPerPage);
+              const remainder = transformedVehicles.slice(resultsPerPage);
+              setVehicles(reorderForPrice(firstPage));
+              setPrefetchedVehicles(reorderForPrice(remainder));
+
+              // Build a prefetched meta for the next page if possible (best-effort)
+              setPrefetchedMeta((prev) => ({
+                ...(prev || {}),
+                currentPage: currentPage + 1,
+              } as any));
+            } else {
+              setVehicles(reorderForPrice(transformedVehicles));
+            }
+
             // reset append flag in case it was set but not allowed
             setAppendResults(false);
           }
@@ -1963,7 +1982,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
           setApiResponse(compatibleResponse);
           console.log(
-            "�� Successfully loaded and transformed",
+            "✅ Successfully loaded and transformed",
             transformedVehicles.length,
             "vehicles",
           );
