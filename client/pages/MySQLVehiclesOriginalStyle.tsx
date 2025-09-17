@@ -2849,10 +2849,18 @@ export default function MySQLVehiclesOriginalStyle() {
   const removeAppliedFilter = (category: string, value: string) => {
     const current = (appliedFilters as any)[category];
     const currentArr = Array.isArray(current) ? current : [];
-    const newFilters = {
+
+    // Build next filters object. For most categories we treat them as arrays.
+    const newFilters: any = {
       ...appliedFilters,
       [category]: currentArr.filter((item: string) => item !== value),
     };
+
+    // Special-case mileage which is stored as a string, not an array.
+    if (category === "mileage") {
+      newFilters.mileage = "";
+    }
+
     setAppliedFilters(newFilters);
 
     // Update URL if main filter categories changed
@@ -5481,7 +5489,7 @@ export default function MySQLVehiclesOriginalStyle() {
               </div>
             ) : !filterOptions || Object.keys(filterOptions).length === 0 ? (
               <div className="mb-4 p-3 border border-yellow-300 rounded bg-yellow-50 text-sm">
-                Filters unavailable —{" "}
+                Filters unavailable ���{" "}
                 <button
                   type="button"
                   onClick={() => (refetch as any)(undefined, { force: true })}
