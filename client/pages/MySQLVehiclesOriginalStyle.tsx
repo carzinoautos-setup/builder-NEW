@@ -3382,6 +3382,19 @@ export default function MySQLVehiclesOriginalStyle() {
       setSearchTerm(q);
     }
 
+    // Debug applied filters after setting
+    console.log("[debug] applying parsed filters", sanitizedParsed);
+
+    // Trigger an immediate fetch shortly after state updates to avoid stale-closure races
+    setTimeout(() => {
+      try {
+        console.log("[debug] triggering fetchVehicles after submit", { searchTerm: (parsedFilters.search ? q : undefined), appliedFiltersSnapshot: sanitizedParsed });
+        (fetchVehicles as any)();
+      } catch (e) {
+        console.warn("[debug] fetchVehicles invocation failed:", e);
+      }
+    }, 50);
+
     // Navigate to the generated URL
     navigate(searchURL);
 
@@ -3392,7 +3405,7 @@ export default function MySQLVehiclesOriginalStyle() {
       // ignore if state not available in this scope
     }
 
-    // Let the existing debounced effect pick up the state changes and call fetchVehicles.
+    // Let the existing debounced effect pick up the state changes and call fetchVehicles as a fallback.
   };
 
   // Geocoding function to convert ZIP to lat/lng using optimized backend
