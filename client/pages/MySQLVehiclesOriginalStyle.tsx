@@ -9113,6 +9113,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                     setPrefetchedMeta(null);
                                     // Ensure loading flag cleared when we append prefetched results synchronously
                                     setLoading(false);
+                                    setAppendLoading(false);
                                   } else {
                                     const totalPages =
                                       apiResponse?.meta?.totalPages || 1;
