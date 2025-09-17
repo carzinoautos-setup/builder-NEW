@@ -2134,7 +2134,10 @@ export default function MySQLVehiclesOriginalStyle() {
       }
     } finally {
       // Only clear loading flag if this is the latest request to avoid races
-      if (requestIdRef.current === requestId) setLoading(false);
+      if (requestIdRef.current === requestId) {
+        setLoading(false);
+        setAppendLoading(false);
+      }
     }
   }, [
     currentPage,
