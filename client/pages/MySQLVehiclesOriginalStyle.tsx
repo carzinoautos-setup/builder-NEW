@@ -9136,6 +9136,7 @@ export default function MySQLVehiclesOriginalStyle() {
                               }}
                               disabled={loading || appendLoading}
                               className="bg-red-600 text-white px-6 py-3 rounded-full shadow-lg"
+                              type="button"
                             >
                               {appendLoading ? "Loading..." : "Load More Vehicles"}
                             </button>
