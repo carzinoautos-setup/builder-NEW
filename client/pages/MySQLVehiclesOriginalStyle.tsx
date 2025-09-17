@@ -2484,36 +2484,16 @@ export default function MySQLVehiclesOriginalStyle() {
   );
 
   useEffect(() => {
+    // Prefetch the next page in background (do not auto-append on scroll). This avoids
+    // any infinite-loading behavior while keeping the next page cached for instant loading
+    // when the user explicitly clicks "Load More Vehicles".
     if (!isMobile) return;
     if (!apiResponse?.meta || !apiResponse.meta.hasNextPage) return;
 
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const scrollY = window.scrollY || window.pageYOffset;
-        const vh = window.innerHeight;
-        const docH = document.documentElement.scrollHeight;
-        const threshold = docH * 0.6; // 60% down the page
-        if (scrollY + vh >= threshold) {
-          if (!prefetching && !prefetchedVehicles) {
-            prefetchNextPage();
-          }
-        }
-        ticking = false;
-      });
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [
-    isMobile,
-    apiResponse,
-    prefetching,
-    prefetchedVehicles,
-    prefetchNextPage,
-  ]);
+    if (!prefetchedVehicles && !prefetching) {
+      prefetchNextPage();
+    }
+  }, [isMobile, apiResponse?.meta?.hasNextPage, prefetchedVehicles, prefetching, prefetchNextPage]);
 
   // Geocode ZIP code when it changes (with debouncing)
   useEffect(() => {
