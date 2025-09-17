@@ -53,10 +53,7 @@ try {
     vehicleService = null;
   }
 } catch (err) {
-  console.error(
-    "Failed to initialize VehicleService:",
-    err,
-  );
+  console.error("Failed to initialize VehicleService:", err);
   // If initialization fails, keep vehicleService null so proxy/DB decisions remain explicit.
   vehicleService = null;
 }
@@ -202,7 +199,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
 
       // Forward WP response directly to client (bypass local transformations)
       res.setHeader("Content-Type", "application/json");
-      return res.status(wpResponse && wpResponse.status ? wpResponse.status : 200).send(body);
+      return res
+        .status(wpResponse && wpResponse.status ? wpResponse.status : 200)
+        .send(body);
       try {
         const json = JSON.parse(body);
 
@@ -212,7 +211,9 @@ export const getVehicles: RequestHandler = async (req, res) => {
         // Remove vehicles explicitly marked as 'uncategorized' to avoid showing them in results/filters
         if (Array.isArray(json.data)) {
           const before = json.data.length;
-          const { normalizeBodyStyle } = await import("../config/allowedBodyStyles.js");
+          const { normalizeBodyStyle } = await import(
+            "../config/allowedBodyStyles.js"
+          );
           // Remove items whose body style is explicitly set to 'uncategorized', empty/null, or not in allowed list
           json.data = json.data.filter((item: any) => {
             try {

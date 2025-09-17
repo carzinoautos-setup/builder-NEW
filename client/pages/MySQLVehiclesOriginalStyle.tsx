@@ -1552,7 +1552,12 @@ export default function MySQLVehiclesOriginalStyle() {
       const paramsStr = params.toString();
       const localUrl = `/api/vehicles?${paramsStr}`;
       const wpUrl = `${getApiBaseUrl()}/vehicles${paramsStr ? `?${paramsStr}` : ""}`;
-      console.log("Fetching vehicles (preferring WP absolute URL first) from:", wpUrl, "then local proxy fallback:", localUrl);
+      console.log(
+        "Fetching vehicles (preferring WP absolute URL first) from:",
+        wpUrl,
+        "then local proxy fallback:",
+        localUrl,
+      );
 
       // Use fetchWithRetry to avoid noisy failures for transient network issues
       const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
@@ -1563,27 +1568,42 @@ export default function MySQLVehiclesOriginalStyle() {
       try {
         // If a VITE_WP_URL is configured, prefer calling the absolute WP API first because
         // the local proxy (dev server) may be down or blocked by CORS/Cloudflare.
-        const preferWp = Boolean((import.meta as any).env && (import.meta as any).env.VITE_WP_URL);
+        const preferWp = Boolean(
+          (import.meta as any).env && (import.meta as any).env.VITE_WP_URL,
+        );
 
         if (preferWp) {
           try {
             response = await fetchWithRetry(
               wpUrl,
-              { method: "GET", headers: { "Content-Type": "application/json" } },
+              {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+              },
               3,
               TIMEOUT_MS,
             );
           } catch (wpErr) {
-            console.warn("WP absolute fetch failed, will try local proxy:", wpErr);
+            console.warn(
+              "WP absolute fetch failed, will try local proxy:",
+              wpErr,
+            );
           }
 
           // If WP returned an HTML error page (Cloudflare 5xx) treat as non-ok and fall back
           if (response && response.ok) {
             try {
-              const ct = String(response.headers && (response.headers as any).get ? (response.headers as any).get("content-type") : "").toLowerCase();
+              const ct = String(
+                response.headers && (response.headers as any).get
+                  ? (response.headers as any).get("content-type")
+                  : "",
+              ).toLowerCase();
               if (ct.includes("text/html")) {
                 const sample = await (response as any).text().catch(() => "");
-                console.warn("WP absolute fetch returned HTML (possible Cloudflare/origin 5xx):", sample.substring(0, 200));
+                console.warn(
+                  "WP absolute fetch returned HTML (possible Cloudflare/origin 5xx):",
+                  sample.substring(0, 200),
+                );
                 response = null;
               }
             } catch (e) {
@@ -1596,12 +1616,18 @@ export default function MySQLVehiclesOriginalStyle() {
             try {
               response = await fetchWithRetry(
                 localUrl,
-                { method: "GET", headers: { "Content-Type": "application/json" } },
+                {
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" },
+                },
                 3,
                 TIMEOUT_MS,
               );
             } catch (localErr) {
-              console.warn("Local proxy fetch failed after WP fallback:", localErr);
+              console.warn(
+                "Local proxy fetch failed after WP fallback:",
+                localErr,
+              );
             }
           }
         } else {
@@ -1609,12 +1635,18 @@ export default function MySQLVehiclesOriginalStyle() {
           try {
             response = await fetchWithRetry(
               localUrl,
-              { method: "GET", headers: { "Content-Type": "application/json" } },
+              {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+              },
               3,
               TIMEOUT_MS,
             );
           } catch (localErr) {
-            console.warn("Local proxy fetch failed, will try WP absolute URL:", localErr);
+            console.warn(
+              "Local proxy fetch failed, will try WP absolute URL:",
+              localErr,
+            );
           }
 
           // If local proxy failed at network level or returned non-ok, try WP absolute URL as fallback
@@ -1622,7 +1654,10 @@ export default function MySQLVehiclesOriginalStyle() {
             try {
               response = await fetchWithRetry(
                 wpUrl,
-                { method: "GET", headers: { "Content-Type": "application/json" } },
+                {
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" },
+                },
                 3,
                 TIMEOUT_MS,
               );
@@ -1634,17 +1669,24 @@ export default function MySQLVehiclesOriginalStyle() {
 
         if (!response || !response.ok) {
           // If aborted or timed out
-          const statusText = response ? String(response.statusText || "").toLowerCase() : "";
+          const statusText = response
+            ? String(response.statusText || "").toLowerCase()
+            : "";
           if (
             !response ||
-            (response.status === 0 && (statusText.includes("aborted") || statusText.includes("timed out") || statusText.includes("request aborted")))
+            (response.status === 0 &&
+              (statusText.includes("aborted") ||
+                statusText.includes("timed out") ||
+                statusText.includes("request aborted")))
           ) {
             console.warn("Vehicle fetch aborted or timed out, skipping update");
             setLoading(false);
             return;
           }
 
-          throw new Error(`API error: ${response ? response.status : 0} ${response ? response.statusText : "Network error"}`);
+          throw new Error(
+            `API error: ${response ? response.status : 0} ${response ? response.statusText : "Network error"}`,
+          );
         }
       } catch (err) {
         // If the request failed and we included down_payment, retry once without it (WP plugin may reject unexpected params)
@@ -1911,7 +1953,6 @@ export default function MySQLVehiclesOriginalStyle() {
       }
     } catch (err) {
       console.error("❌ Vehicle fetch error:", err);
-
 
       // Provide specific error messages based on error type
       if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
@@ -6135,7 +6176,8 @@ export default function MySQLVehiclesOriginalStyle() {
               onToggle={() => toggleFilter("certified")}
             >
               <div className="space-y-0.5">
-                {filterOptions.certified && filterOptions.certified.length > 0 ? (
+                {filterOptions.certified &&
+                filterOptions.certified.length > 0 ? (
                   filterOptions.certified.map((c: any) => (
                     <label
                       key={c.name}
@@ -6158,7 +6200,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         }}
                       />
                       <span className="carzino-filter-option">{c.name}</span>
-                      <span className="carzino-filter-count ml-1">({c.count ?? 0})</span>
+                      <span className="carzino-filter-count ml-1">
+                        ({c.count ?? 0})
+                      </span>
                     </label>
                   ))
                 ) : (
@@ -6197,7 +6241,6 @@ export default function MySQLVehiclesOriginalStyle() {
                 </select>
               </div>
             </FilterSection>
-
 
             {/* Search by Vehicle Type */}
             {((vehicleTypes && vehicleTypes.length > 0) ||
