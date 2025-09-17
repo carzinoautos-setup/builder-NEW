@@ -3349,6 +3349,16 @@ export default function MySQLVehiclesOriginalStyle() {
     } catch (err) {
       // ignore if state not available in this scope
     }
+
+    // Trigger an immediate fetch to reflect the new filters/search without waiting for debounced effects
+    try {
+      setTimeout(() => {
+        // fetchVehicles is a stable useCallback
+        (fetchVehicles as any)();
+      }, 50);
+    } catch (e) {
+      /* ignore */
+    }
   };
 
   // Geocoding function to convert ZIP to lat/lng using optimized backend
