@@ -9087,6 +9087,7 @@ export default function MySQLVehiclesOriginalStyle() {
 
                                     // Request next page and let fetchVehicles append when it resolves
                                     // Mark that this append is user-initiated so fetchVehicles will honor it
+                                    userRequestedAppendRef.current = true;
                                     setAllowAutoAppend(true);
                                     setAppendResults(true);
                                     setCurrentPage((p) => p + 1);
