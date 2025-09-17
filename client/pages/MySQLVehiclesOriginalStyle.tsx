@@ -851,32 +851,6 @@ export default function MySQLVehiclesOriginalStyle() {
     );
   }, [appliedFilters, appliedLocation, appliedRadius]);
 
-  // Update mobile filter-bar badge (fallback) so the badge always shows accurate count
-  React.useEffect(() => {
-    try {
-      const selector = '.mobile-filter-bar > button';
-      const btn = document.querySelector(selector) as HTMLElement | null;
-      if (!btn) return;
-      // look for existing badge
-      let badge = btn.querySelector('.mobile-filter-badge') as HTMLElement | null;
-      if (!badge) {
-        badge = document.createElement('span');
-        badge.className = 'mobile-filter-badge bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs';
-        badge.style.marginLeft = '6px';
-        badge.style.display = 'inline-flex';
-        btn.appendChild(badge);
-      }
-      if (activeFilterCount > 0) {
-        badge.textContent = String(activeFilterCount);
-        badge.style.display = 'inline-flex';
-      } else {
-        badge.textContent = '';
-        badge.style.display = 'none';
-      }
-    } catch (e) {
-      /* ignore DOM errors in non-browser env */
-    }
-  }, [activeFilterCount]);
 
   // Price and payment filter states
   const [priceMin, setPriceMin] = useState("1000");
