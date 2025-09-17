@@ -494,7 +494,9 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // Determine if there are more results to load (even if API meta is unreliable)
   const hasMore = Boolean(
-    (apiResponse && apiResponse.meta && apiResponse.meta.currentPage < totalPages) ||
+    (apiResponse &&
+      apiResponse.meta &&
+      apiResponse.meta.currentPage < totalPages) ||
       (Array.isArray(prefetchedVehicles) && prefetchedVehicles.length > 0) ||
       totalResults > (vehicles ? vehicles.length : 0),
   );
@@ -830,10 +832,22 @@ export default function MySQLVehiclesOriginalStyle() {
   const activeFilterCount = React.useMemo(() => {
     const af: any = appliedFilters as any;
     const safeLen = (v: any) => (Array.isArray(v) ? v.length : 0);
-    const priceCount = af.priceMin && String(af.priceMin).trim().length > 0 ? 1 : af.priceMax && String(af.priceMax).trim().length > 0 ? 1 : 0;
-    const paymentCount = af.paymentMin && String(af.paymentMin).trim().length > 0 ? 1 : af.paymentMax && String(af.paymentMax).trim().length > 0 ? 1 : 0;
-    const mileageCount = af.mileage && String(af.mileage).trim().length > 0 ? 1 : 0;
-    const locationCount = appliedLocation && appliedRadius !== "nationwide" ? 1 : 0;
+    const priceCount =
+      af.priceMin && String(af.priceMin).trim().length > 0
+        ? 1
+        : af.priceMax && String(af.priceMax).trim().length > 0
+          ? 1
+          : 0;
+    const paymentCount =
+      af.paymentMin && String(af.paymentMin).trim().length > 0
+        ? 1
+        : af.paymentMax && String(af.paymentMax).trim().length > 0
+          ? 1
+          : 0;
+    const mileageCount =
+      af.mileage && String(af.mileage).trim().length > 0 ? 1 : 0;
+    const locationCount =
+      appliedLocation && appliedRadius !== "nationwide" ? 1 : 0;
     return (
       safeLen(af.condition) +
       safeLen(af.make) +
@@ -851,7 +865,6 @@ export default function MySQLVehiclesOriginalStyle() {
       locationCount
     );
   }, [appliedFilters, appliedLocation, appliedRadius]);
-
 
   // Price and payment filter states
   const [priceMin, setPriceMin] = useState("1000");
@@ -1363,7 +1376,14 @@ export default function MySQLVehiclesOriginalStyle() {
   // Fetch vehicles from API
   const fetchVehicles = useCallback(async () => {
     try {
-      console.log("[debug] fetchVehicles start", { currentPage, searchTerm, appliedFilters, appliedLocation, appliedRadius, sortBy });
+      console.log("[debug] fetchVehicles start", {
+        currentPage,
+        searchTerm,
+        appliedFilters,
+        appliedLocation,
+        appliedRadius,
+        sortBy,
+      });
       // Mark this request with a new sequence id
       requestIdRef.current += 1;
       const requestId = requestIdRef.current;
@@ -1724,15 +1744,37 @@ export default function MySQLVehiclesOriginalStyle() {
             : "";
 
           // If timed out, attempt one more extended-timeout fetch (best-effort)
-          if (response && response.status === 0 && statusText.includes("timed out")) {
+          if (
+            response &&
+            response.status === 0 &&
+            statusText.includes("timed out")
+          ) {
             try {
-              console.warn("Vehicle fetch timed out — attempting one extended retry (WP then local)...");
+              console.warn(
+                "Vehicle fetch timed out — attempting one extended retry (WP then local)...",
+              );
               try {
-                const extWp = await fetchWithRetry(wpUrl, { method: "GET", headers: { "Content-Type": "application/json" } }, 1, TIMEOUT_MS * 2);
+                const extWp = await fetchWithRetry(
+                  wpUrl,
+                  {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                  },
+                  1,
+                  TIMEOUT_MS * 2,
+                );
                 if (extWp && extWp.ok) {
                   response = extWp;
                 } else {
-                  const extLocal = await fetchWithRetry(localUrl, { method: "GET", headers: { "Content-Type": "application/json" } }, 1, TIMEOUT_MS * 2);
+                  const extLocal = await fetchWithRetry(
+                    localUrl,
+                    {
+                      method: "GET",
+                      headers: { "Content-Type": "application/json" },
+                    },
+                    1,
+                    TIMEOUT_MS * 2,
+                  );
                   if (extLocal && extLocal.ok) response = extLocal;
                 }
               } catch (e) {
@@ -1925,9 +1967,14 @@ export default function MySQLVehiclesOriginalStyle() {
         }
 
         if (requestIdRef.current === requestId) {
-          if ((appendResults && allowAutoAppend) || userRequestedAppendRef.current) {
+          if (
+            (appendResults && allowAutoAppend) ||
+            userRequestedAppendRef.current
+          ) {
             // Only append results when explicitly allowed (user clicked "Load More")
-            setVehicles((prev) => reorderForPrice([...prev, ...transformedVehicles]));
+            setVehicles((prev) =>
+              reorderForPrice([...prev, ...transformedVehicles]),
+            );
             // reset append and allow flags
             setAppendResults(false);
             setAllowAutoAppend(false);
@@ -1939,17 +1986,23 @@ export default function MySQLVehiclesOriginalStyle() {
           } else {
             // Default behavior: show only up to resultsPerPage on the client to avoid auto-loading all items.
             // If the API returned more items than resultsPerPage, keep the remainder in prefetchedVehicles
-            if (Array.isArray(transformedVehicles) && transformedVehicles.length > resultsPerPage) {
+            if (
+              Array.isArray(transformedVehicles) &&
+              transformedVehicles.length > resultsPerPage
+            ) {
               const firstPage = transformedVehicles.slice(0, resultsPerPage);
               const remainder = transformedVehicles.slice(resultsPerPage);
               setVehicles(reorderForPrice(firstPage));
               setPrefetchedVehicles(reorderForPrice(remainder));
 
               // Build a prefetched meta for the next page if possible (best-effort)
-              setPrefetchedMeta((prev) => ({
-                ...(prev || {}),
-                currentPage: currentPage + 1,
-              } as any));
+              setPrefetchedMeta(
+                (prev) =>
+                  ({
+                    ...(prev || {}),
+                    currentPage: currentPage + 1,
+                  }) as any,
+              );
             } else {
               setVehicles(reorderForPrice(transformedVehicles));
             }
@@ -2161,7 +2214,14 @@ export default function MySQLVehiclesOriginalStyle() {
 
   // DEBUG: log load/append button state to diagnose unclickable button
   useEffect(() => {
-    console.log("[debug] loadState", { loading, appendLoading, prefetchedVehiclesLength: Array.isArray(prefetchedVehicles) ? prefetchedVehicles.length : 0, apiMeta: apiResponse?.meta });
+    console.log("[debug] loadState", {
+      loading,
+      appendLoading,
+      prefetchedVehiclesLength: Array.isArray(prefetchedVehicles)
+        ? prefetchedVehicles.length
+        : 0,
+      apiMeta: apiResponse?.meta,
+    });
   }, [loading, appendLoading, prefetchedVehicles, apiResponse?.meta]);
 
   // DEBUG: log key state changes to help trace unified search issues
@@ -2174,7 +2234,14 @@ export default function MySQLVehiclesOriginalStyle() {
       currentPage,
       apiResponseMeta: apiResponse?.meta,
     });
-  }, [unifiedSearch, panelSearch, searchTerm, appliedFilters, currentPage, apiResponse?.meta]);
+  }, [
+    unifiedSearch,
+    panelSearch,
+    searchTerm,
+    appliedFilters,
+    currentPage,
+    apiResponse?.meta,
+  ]);
 
   // Initialize filters from URL
   useEffect(() => {
@@ -2553,7 +2620,13 @@ export default function MySQLVehiclesOriginalStyle() {
     if (!prefetchedVehicles && !prefetching) {
       prefetchNextPage();
     }
-  }, [isMobile, apiResponse?.meta?.hasNextPage, prefetchedVehicles, prefetching, prefetchNextPage]);
+  }, [
+    isMobile,
+    apiResponse?.meta?.hasNextPage,
+    prefetchedVehicles,
+    prefetching,
+    prefetchNextPage,
+  ]);
 
   // Geocode ZIP code when it changes (with debouncing)
   useEffect(() => {
@@ -3288,9 +3361,12 @@ export default function MySQLVehiclesOriginalStyle() {
     e.preventDefault();
 
     // Accept either unifiedSearch (desktop) or panelSearch (mobile) so Enter works in both places
-  const q = (unifiedSearch || panelSearch || "").trim();
-  console.log("[debug] handleUnifiedSearchSubmit q=", q, { unifiedSearch, panelSearch });
-  if (!q) return;
+    const q = (unifiedSearch || panelSearch || "").trim();
+    console.log("[debug] handleUnifiedSearchSubmit q=", q, {
+      unifiedSearch,
+      panelSearch,
+    });
+    if (!q) return;
 
     // Parse the unified search query
     const parsedFilters = parseUnifiedSearch(q);
@@ -3397,7 +3473,10 @@ export default function MySQLVehiclesOriginalStyle() {
     // Trigger an immediate fetch shortly after state updates to avoid stale-closure races
     setTimeout(() => {
       try {
-        console.log("[debug] triggering fetchVehicles after submit", { searchTerm: (parsedFilters.search ? q : undefined), appliedFiltersSnapshot: sanitizedParsed });
+        console.log("[debug] triggering fetchVehicles after submit", {
+          searchTerm: parsedFilters.search ? q : undefined,
+          appliedFiltersSnapshot: sanitizedParsed,
+        });
         (fetchVehicles as any)();
       } catch (e) {
         console.warn("[debug] fetchVehicles invocation failed:", e);
@@ -7353,7 +7432,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         }}
                         className="text-red-600 text-sm font-medium"
                       >
-                        {showMoreExteriorColors ? "Show Less" : `Show More (${exteriorColors.length - displayedExteriorColors.length})`}
+                        {showMoreExteriorColors
+                          ? "Show Less"
+                          : `Show More (${exteriorColors.length - displayedExteriorColors.length})`}
                       </button>
                     </div>
                   )}
@@ -7390,7 +7471,9 @@ export default function MySQLVehiclesOriginalStyle() {
                         }}
                         className="text-red-600 text-sm font-medium"
                       >
-                        {showMoreInteriorColors ? "Show Less" : `Show More (${interiorColors.length - displayedInteriorColors.length})`}
+                        {showMoreInteriorColors
+                          ? "Show Less"
+                          : `Show More (${interiorColors.length - displayedInteriorColors.length})`}
                       </button>
                     </div>
                   )}
@@ -9096,7 +9179,16 @@ export default function MySQLVehiclesOriginalStyle() {
                               onClick={() => {
                                 try {
                                   if (appendLoading) return;
-                                  console.log('[debug] LoadMore clicked', { loading, appendLoading, currentPage, prefetchedVehicles: Array.isArray(prefetchedVehicles) ? prefetchedVehicles.length : 0 });
+                                  console.log("[debug] LoadMore clicked", {
+                                    loading,
+                                    appendLoading,
+                                    currentPage,
+                                    prefetchedVehicles: Array.isArray(
+                                      prefetchedVehicles,
+                                    )
+                                      ? prefetchedVehicles.length
+                                      : 0,
+                                  });
 
                                   // If we have a valid prefetched page that matches the expected next page, append it.
                                   if (
@@ -9149,7 +9241,9 @@ export default function MySQLVehiclesOriginalStyle() {
                               className="bg-red-600 text-white px-6 py-3 rounded-full shadow-lg"
                               type="button"
                             >
-                              {appendLoading ? "Loading..." : "Load More Vehicles"}
+                              {appendLoading
+                                ? "Loading..."
+                                : "Load More Vehicles"}
                             </button>
                           </div>
                         )}
