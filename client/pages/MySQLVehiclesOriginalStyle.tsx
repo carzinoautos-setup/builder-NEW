@@ -8733,23 +8733,7 @@ export default function MySQLVehiclesOriginalStyle() {
                   >
                     <Sliders className="w-4 h-4" />
                     Filter
-                    {appliedFilters.condition.length +
-                      appliedFilters.make.length +
-                      appliedFilters.model.length +
-                      appliedFilters.trim.length +
-                      appliedFilters.vehicleType.length +
-                      appliedFilters.driveType.length +
-                      appliedFilters.exteriorColor.length +
-                      appliedFilters.engineCylinders.length +
-                      appliedFilters.displacementLiters.length +
-                      (appliedFilters.mileage ? 1 : 0) +
-                      (appliedFilters.priceMin || appliedFilters.priceMax
-                        ? 1
-                        : 0) +
-                      (appliedFilters.paymentMin || appliedFilters.paymentMax
-                        ? 1
-                        : 0) >
-                      0 && (
+                    {activeFilterCount > 0 && (
                       <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
                         {appliedFilters.condition.length +
                           appliedFilters.make.length +
