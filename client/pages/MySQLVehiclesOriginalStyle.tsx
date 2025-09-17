@@ -425,6 +425,7 @@ export default function MySQLVehiclesOriginalStyle() {
   // API state
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [appendLoading, setAppendLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Request sequencing id to prevent out-of-order responses from overwriting newer results
   const requestIdRef = useRef(0);
