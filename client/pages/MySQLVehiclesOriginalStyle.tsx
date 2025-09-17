@@ -3669,38 +3669,43 @@ export default function MySQLVehiclesOriginalStyle() {
       : [];
     const checked = currentArr.includes(name);
     return (
-      <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
-        <input
-          type="checkbox"
-          className="mr-2"
-          checked={checked}
-          onChange={(e) => {
-            e.stopPropagation();
-            if ((e.target as HTMLInputElement).checked) {
-              setAppliedFilters((prev) => {
-                const prevArr = Array.isArray((prev as any)[filter])
-                  ? (prev as any)[filter]
-                  : [];
-                return {
-                  ...prev,
-                  [filter]: [...prevArr, name],
-                };
-              });
-            } else {
-              removeAppliedFilter(filter, name);
-            }
-          }}
-        />
-        <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">
-          {name}
-        </span>
-        <span className="carzino-filter-count ml-1 flex-shrink-0">
-          ({count})
-        </span>
+      <label className="w-full flex items-center justify-between text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded">
+        <div className="flex items-center min-w-0">
+          <input
+            type="checkbox"
+            className="mr-2 flex-shrink-0"
+            checked={checked}
+            onChange={(e) => {
+              e.stopPropagation();
+              if ((e.target as HTMLInputElement).checked) {
+                setAppliedFilters((prev) => {
+                  const prevArr = Array.isArray((prev as any)[filter])
+                    ? (prev as any)[filter]
+                    : [];
+                  return {
+                    ...prev,
+                    [filter]: [...prevArr, name],
+                  };
+                });
+              } else {
+                removeAppliedFilter(filter, name);
+              }
+            }}
+          />
+
+          <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">
+            {name}
+          </span>
+
+          <span className="carzino-filter-count ml-2 flex-shrink-0">
+            ({count})
+          </span>
+        </div>
+
         <div
-          className="w-4 h-4 rounded border border-gray-300 ml-2 flex-shrink-0"
+          className="w-4 h-4 rounded border border-gray-300 ml-4 flex-shrink-0"
           style={{ backgroundColor: color }}
-        ></div>
+        />
       </label>
     );
   };
