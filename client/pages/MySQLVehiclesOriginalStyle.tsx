@@ -9144,7 +9144,7 @@ export default function MySQLVehiclesOriginalStyle() {
                       className={`w-5 h-5 ${favoritesCount > 0 ? "text-red-600 fill-red-600" : "text-red-600"}`}
                     />
                     {favoritesCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      <span className="hidden lg:flex absolute -top-1 -right-1 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                         {favoritesCount}
                       </span>
                     )}
