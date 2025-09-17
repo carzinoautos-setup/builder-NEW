@@ -3569,6 +3569,20 @@ export default function MySQLVehiclesOriginalStyle() {
   }, [filterOptions.interior_color]);
 
   // Color swatch component
+  const displayedExteriorColors = getDisplayed(
+    exteriorColors,
+    appliedFilters.exteriorColor,
+    showMoreExteriorColors,
+    10,
+  );
+
+  const displayedInteriorColors = getDisplayed(
+    interiorColors,
+    (appliedFilters as any).interiorColor || [],
+    showMoreInteriorColors,
+    10,
+  );
+
   const ColorSwatch = ({
     color,
     name,
