@@ -9004,6 +9004,8 @@ export default function MySQLVehiclesOriginalStyle() {
                                     if (currentPage >= totalPages) return; // nothing to load
 
                                     // Request next page and let fetchVehicles append when it resolves
+                                    // Mark that this append is user-initiated so fetchVehicles will honor it
+                                    setAllowAutoAppend(true);
                                     setAppendResults(true);
                                     setCurrentPage((p) => p + 1);
                                   }
