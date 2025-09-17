@@ -9124,6 +9124,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                     userRequestedAppendRef.current = true;
                                     setAllowAutoAppend(true);
                                     setAppendResults(true);
+                                    setAppendLoading(true);
                                     setCurrentPage((p) => p + 1);
                                   }
                                 } catch (err) {
