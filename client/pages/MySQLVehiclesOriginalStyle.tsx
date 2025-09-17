@@ -9090,7 +9090,8 @@ export default function MySQLVehiclesOriginalStyle() {
                             <button
                               onClick={() => {
                                 try {
-                                  if (loading) return;
+                                  if (appendLoading) return;
+                                  console.log('[debug] LoadMore clicked', { loading, appendLoading, currentPage, prefetchedVehicles: Array.isArray(prefetchedVehicles) ? prefetchedVehicles.length : 0 });
 
                                   // If we have a valid prefetched page that matches the expected next page, append it.
                                   if (
