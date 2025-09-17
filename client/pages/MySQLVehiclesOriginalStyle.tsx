@@ -7296,7 +7296,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 onToggle={() => toggleFilter("interiorColor")}
               >
                 <div className="space-y-0.5">
-                  {interiorColors.map((color, index) => (
+                  {displayedInteriorColors.map((color, index) => (
                     <ColorSwatch
                       key={index}
                       color={color.color}
@@ -7305,6 +7305,20 @@ export default function MySQLVehiclesOriginalStyle() {
                       filter="interiorColor"
                     />
                   ))}
+
+                  {interiorColors.length > displayedInteriorColors.length && (
+                    <div className="pt-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowMoreInteriorColors((s) => !s);
+                        }}
+                        className="text-red-600 text-sm font-medium"
+                      >
+                        {showMoreInteriorColors ? "Show Less" : `Show More (${interiorColors.length - displayedInteriorColors.length})`}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </FilterSection>
             )}
