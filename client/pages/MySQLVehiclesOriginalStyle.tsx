@@ -1121,6 +1121,9 @@ export default function MySQLVehiclesOriginalStyle() {
   const [showMoreTransmission, setShowMoreTransmission] = useState(false);
   // UI: fuel type show more and default selection
   const [showMoreFuel, setShowMoreFuel] = useState(false);
+  // UI: show more for color lists (exterior/interior) - default collapsed
+  const [showMoreExteriorColors, setShowMoreExteriorColors] = useState(false);
+  const [showMoreInteriorColors, setShowMoreInteriorColors] = useState(false);
 
   // Suggestion computation depends on filterOptions �� compute with useMemo to avoid TDZ
   const {
