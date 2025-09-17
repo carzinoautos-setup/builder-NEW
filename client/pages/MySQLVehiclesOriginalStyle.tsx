@@ -1721,12 +1721,30 @@ export default function MySQLVehiclesOriginalStyle() {
           const statusText = response
             ? String(response.statusText || "").toLowerCase()
             : "";
+
+          // If timed out, attempt one more extended-timeout fetch (best-effort)
+          if (response && response.status === 0 && statusText.includes("timed out")) {
+            try {
+              console.warn("Vehicle fetch timed out — attempting one extended retry...");
+              const extended = await fetchWithRetry(urlToFetch, { method: "GET", headers: { "Content-Type": "application/json" } }, 1, TIMEOUT_MS * 2);
+              if (extended && extended.ok) {
+                response = extended;
+              }
+            } catch (e) {
+              console.warn("Extended retry failed:", e);
+            }
+          }
+
+          const finalStatusText = response
+            ? String(response.statusText || "").toLowerCase()
+            : "";
+
           if (
             !response ||
             (response.status === 0 &&
-              (statusText.includes("aborted") ||
-                statusText.includes("timed out") ||
-                statusText.includes("request aborted")))
+              (finalStatusText.includes("aborted") ||
+                finalStatusText.includes("timed out") ||
+                finalStatusText.includes("request aborted")))
           ) {
             console.warn("Vehicle fetch aborted or timed out, skipping update");
             setLoading(false);
