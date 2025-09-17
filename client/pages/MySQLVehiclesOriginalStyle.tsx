@@ -3242,10 +3242,12 @@ export default function MySQLVehiclesOriginalStyle() {
 
     // Accept either unifiedSearch (desktop) or panelSearch (mobile) so Enter works in both places
   const q = (unifiedSearch || panelSearch || "").trim();
+  console.log("[debug] handleUnifiedSearchSubmit q=", q, { unifiedSearch, panelSearch });
   if (!q) return;
 
     // Parse the unified search query
     const parsedFilters = parseUnifiedSearch(q);
+    console.log("[debug] parsedFilters=", parsedFilters);
 
     // Sanitize parsed values to avoid corrupted characters being applied to pills
     const sanitizedParsed = {
