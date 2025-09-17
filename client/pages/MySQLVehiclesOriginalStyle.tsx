@@ -1924,7 +1924,7 @@ export default function MySQLVehiclesOriginalStyle() {
         }
 
         if (requestIdRef.current === requestId) {
-          if (appendResults && allowAutoAppend) {
+          if ((appendResults && allowAutoAppend) || userRequestedAppendRef.current) {
             // Only append results when explicitly allowed (user clicked "Load More")
             setVehicles((prev) => reorderForPrice([...prev, ...transformedVehicles]));
             // reset append and allow flags
