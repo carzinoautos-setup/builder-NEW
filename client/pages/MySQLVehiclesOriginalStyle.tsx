@@ -9140,7 +9140,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                   console.warn("Load more error:", err);
                                 }
                               }}
-                              disabled={loading || appendLoading}
+                              disabled={appendLoading}
                               className="bg-red-600 text-white px-6 py-3 rounded-full shadow-lg"
                               type="button"
                             >
