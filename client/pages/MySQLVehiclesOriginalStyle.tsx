@@ -2130,6 +2130,18 @@ export default function MySQLVehiclesOriginalStyle() {
     setFavorites(savedFavorites);
   }, []);
 
+  // DEBUG: log key state changes to help trace unified search issues
+  useEffect(() => {
+    console.log("[debug] state snapshot", {
+      unifiedSearch,
+      panelSearch,
+      searchTerm,
+      appliedFilters,
+      currentPage,
+      apiResponseMeta: apiResponse?.meta,
+    });
+  }, [unifiedSearch, panelSearch, searchTerm, appliedFilters, currentPage, apiResponse?.meta]);
+
   // Initialize filters from URL
   useEffect(() => {
     const urlFilters = parseFiltersFromURL(location.pathname, location.search);
