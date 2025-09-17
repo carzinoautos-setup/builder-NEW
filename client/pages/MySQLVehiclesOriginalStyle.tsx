@@ -477,6 +477,7 @@ export default function MySQLVehiclesOriginalStyle() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [appendResults, setAppendResults] = useState(false);
+  const [allowAutoAppend, setAllowAutoAppend] = useState(false); // only true when user clicks Load More
   const [prefetchedVehicles, setPrefetchedVehicles] = useState<
     Vehicle[] | null
   >(null);
