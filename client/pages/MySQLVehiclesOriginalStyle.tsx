@@ -9134,7 +9134,7 @@ export default function MySQLVehiclesOriginalStyle() {
                                   console.warn("Load more error:", err);
                                 }
                               }}
-                              disabled={appendLoading}
+                              disabled={loading || appendLoading}
                               className="bg-red-600 text-white px-6 py-3 rounded-full shadow-lg"
                             >
                               {appendLoading ? "Loading..." : "Load More Vehicles"}
