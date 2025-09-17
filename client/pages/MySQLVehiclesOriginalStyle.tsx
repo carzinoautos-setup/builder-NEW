@@ -1912,15 +1912,17 @@ export default function MySQLVehiclesOriginalStyle() {
         }
 
         if (requestIdRef.current === requestId) {
-          if (appendResults) {
-            setVehicles((prev) =>
-              reorderForPrice([...prev, ...transformedVehicles]),
-            );
+          if (appendResults && allowAutoAppend) {
+            // Only append results when explicitly allowed (user clicked "Load More")
+            setVehicles((prev) => reorderForPrice([...prev, ...transformedVehicles]));
+            // reset append and allow flags
+            setAppendResults(false);
+            setAllowAutoAppend(false);
           } else {
             setVehicles(reorderForPrice(transformedVehicles));
+            // reset append flag in case it was set but not allowed
+            setAppendResults(false);
           }
-          // reset append flag
-          setAppendResults(false);
 
           // Build meta compatible with VehiclesApiResponse
           const pagination = data.pagination || data.meta || {};
