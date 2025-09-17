@@ -1933,6 +1933,8 @@ export default function MySQLVehiclesOriginalStyle() {
             // clear any prefetched cache because we've consumed it
             setPrefetchedVehicles(null);
             setPrefetchedMeta(null);
+            // Clear imperative flag after consuming
+            userRequestedAppendRef.current = false;
           } else {
             // Default behavior: show only up to resultsPerPage on the client to avoid auto-loading all items.
             // If the API returned more items than resultsPerPage, keep the remainder in prefetchedVehicles
