@@ -386,7 +386,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             />
             {keeperMessage === vehicle.id && (
               <span className="text-xs text-gray-600 ml-1 animate-pulse">
-                That's a Keeper!
+                It's a Keeper!
               </span>
             )}
           </div>
