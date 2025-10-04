@@ -30,6 +30,8 @@ interface Vehicle {
   dealer: string;
   location: string;
   phone: string;
+  seller_type: string;
+  seller_account_number: string;
 }
 
 export default function Index() {
@@ -45,6 +47,7 @@ export default function Index() {
   const [vehicleImages, setVehicleImages] = useState<{ [key: string]: string }>(
     {},
   );
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   // Persisted custom vehicle type images in localStorage key
   const VEHICLE_IMAGES_KEY = "carzino_vehicle_type_images";
@@ -72,7 +75,7 @@ export default function Index() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [sortBy, setSortBy] = useState("relevance");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
-  const [viewMode, setViewMode] = useState("all");
+  const [viewMode, setViewMode] = useState<"all" | "favorites">("all");
   const [favorites, setFavorites] = useState<{ [key: number]: Vehicle }>({});
   const [keeperMessage, setKeeperMessage] = useState<number | null>(null);
 
@@ -104,6 +107,8 @@ export default function Index() {
     priceMax: "",
     paymentMin: "",
     paymentMax: "",
+    engineCylinders: [] as string[],
+    displacementLiters: [] as string[],
   });
 
   const [collapsedFilters, setCollapsedFilters] = useState({
@@ -147,6 +152,8 @@ export default function Index() {
       dealer: "Bayside Ford",
       location: "Lakewood, WA",
       phone: "(253) 555-0123",
+      seller_type: "Dealer",
+      seller_account_number: "ACC-1001",
     },
     {
       id: 2,
@@ -166,6 +173,8 @@ export default function Index() {
       dealer: "Premium Auto Group",
       location: "Tacoma, WA",
       phone: "(253) 555-0187",
+      seller_type: "Dealer",
+      seller_account_number: "ACC-1002",
     },
     {
       id: 3,
@@ -184,6 +193,8 @@ export default function Index() {
       dealer: "Downtown Honda",
       location: "Federal Way, WA",
       phone: "(253) 555-0156",
+      seller_type: "Dealer",
+      seller_account_number: "ACC-1003",
     },
     {
       id: 4,
@@ -202,6 +213,8 @@ export default function Index() {
       dealer: "City Toyota",
       location: "Seattle, WA",
       phone: "(206) 555-0198",
+      seller_type: "Dealer",
+      seller_account_number: "ACC-1004",
     },
     {
       id: 5,
@@ -220,6 +233,8 @@ export default function Index() {
       dealer: "Luxury Motors",
       location: "Bellevue, WA",
       phone: "(425) 555-0234",
+      seller_type: "Dealer",
+      seller_account_number: "ACC-1005",
     },
     {
       id: 6,
@@ -238,8 +253,38 @@ export default function Index() {
       dealer: "Northwest Chevrolet",
       location: "Everett, WA",
       phone: "(425) 555-0267",
+      seller_type: "Dealer",
+      seller_account_number: "ACC-1006",
     },
   ];
+
+  // Load vehicles from API (if available) with safe fallback to local sample data
+  useEffect(() => {
+    let isMounted = true;
+    const loadVehicles = async () => {
+      try {
+        const response = await fetch("/api/vehicles", { method: "GET" });
+        if (!response.ok) throw new Error("Non-200 response");
+        const data = await response.json();
+        if (
+          isMounted &&
+          Array.isArray(data) &&
+          data.length > 0 &&
+          typeof data[0] === "object"
+        ) {
+          setVehicles(data as Vehicle[]);
+          return;
+        }
+      } catch (err) {
+        // Swallow and fall back to sample data
+      }
+      if (isMounted) setVehicles(sampleVehicles);
+    };
+    loadVehicles();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const savedFavorites = JSON.parse(
@@ -271,7 +316,7 @@ export default function Index() {
     if (viewMode === "favorites") {
       return Object.values(favorites);
     }
-    return sampleVehicles;
+    return vehicles.length > 0 ? vehicles : sampleVehicles;
   };
 
   const displayedVehicles = getDisplayedVehicles();
@@ -2953,13 +2998,13 @@ export default function Index() {
                 {viewMode === "favorites" ? (
                   <div className="view-switcher">
                     <button
-                      className={viewMode === "all" ? "active" : ""}
+                      className=""
                       onClick={() => setViewMode("all")}
                     >
                       All Results
                     </button>
                     <button
-                      className={viewMode === "favorites" ? "active" : ""}
+                      className="active"
                       onClick={() => setViewMode("favorites")}
                     >
                       <Heart className="w-4 h-4" />

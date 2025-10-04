@@ -175,7 +175,81 @@ class VehicleApiClient {
   async getFilterOptions(): Promise<
     { success: boolean; data: FilterOptions } | any
   > {
-    return this.request(`/api/vehicles/filters`);
+    // Try direct WordPress endpoint first if configured
+    try {
+      const env = (import.meta as any)?.env || {};
+      const wpBaseRaw = env.VITE_WP_URL || "";
+      const wpBase = String(wpBaseRaw).replace(/\/$/, "");
+      if (wpBase) {
+        try {
+          const wpUrl = `${wpBase}/wp-json/custom/v1/vehicles/filters`;
+          const res = await fetchWithRetry(wpUrl, {}, 2, 15000);
+          if (res && (res as any).ok !== false) {
+            const data = await (res as any).json();
+            return data;
+          }
+          console.warn(
+            "vehicleApi.getFilterOptions: direct WP fetch returned non-ok, falling back to local /api/vehicles/filters",
+            res && (res as any).statusText,
+          );
+        } catch (wpFetchErr: any) {
+          console.warn(
+            "vehicleApi.getFilterOptions: direct WP fetch failed, falling back to local /api/vehicles/filters",
+            wpFetchErr && wpFetchErr.message ? wpFetchErr.message : wpFetchErr,
+          );
+        }
+      }
+    } catch (e) {
+      // swallow env read errors and continue to local proxy
+      console.warn(
+        "vehicleApi.getFilterOptions: error while attempting direct WP fetch",
+        e && (e as any).message ? (e as any).message : e,
+      );
+    }
+
+    // Next, try local proxy
+    try {
+      return await this.request(`/api/vehicles/filters`);
+    } catch (e) {
+      console.warn(
+        "vehicleApi.getFilterOptions: local /api/vehicles/filters failed, returning dummy options",
+        e && (e as any).message ? (e as any).message : e,
+      );
+    }
+
+    // Last-resort: return a minimal but useful set of dummy options for UI rendering
+    const dummy: { success: boolean; data: FilterOptions } = {
+      success: true,
+      data: {
+        makes: ["Audi", "BMW", "Chevrolet", "Ford", "Honda", "Toyota"],
+        models: [
+          "A4",
+          "Q5",
+          "3 Series",
+          "X3",
+          "Silverado",
+          "F-150",
+          "Civic",
+          "Camry",
+        ],
+        conditions: ["New", "Used", "Certified"],
+        fuelTypes: ["Gasoline", "Diesel", "Hybrid", "Electric"],
+        transmissions: ["Auto", "Manual", "CVT"],
+        drivetrains: ["FWD", "RWD", "AWD/4WD"],
+        bodyStyles: [
+          "Sedan",
+          "SUV / Crossover",
+          "Truck",
+          "Coupe",
+          "Hatchback",
+          "Wagon",
+          "Convertible",
+          "Van / Minivan",
+        ],
+        sellerTypes: ["Dealer", "Private Seller"],
+      },
+    };
+    return dummy;
   }
 
   async healthCheck() {
