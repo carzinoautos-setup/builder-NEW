@@ -4080,12 +4080,12 @@ export default function MySQLVehiclesOriginalStyle() {
           {typeof document !== "undefined" && mobileFiltersOpen
             ? createPortal(
                 <div
-                  className="lg:hidden fixed left-0 right-0 z-[999] bg-white border-t border-gray-200 px-4 pt-3 pb-4 lg:pt-3"
+                  className="lg:hidden fixed left-0 z-[999] bg-white border-t border-gray-200 px-4 pt-3 pb-4 lg:pt-3 mobile-filter-action-bar"
                   style={{
                     backdropFilter: "saturate(120%) blur(4px)",
-                    // Move action bar closer to bottom: use smaller viewport offset and account for safe area
-                    // Shift up ~30px so Reset text beneath buttons remains visible
                     bottom: "calc(6vh + 30px)",
+                    width: "280px",
+                    maxWidth: "280px",
                   }}
                 >
                   <div className="flex gap-3">
