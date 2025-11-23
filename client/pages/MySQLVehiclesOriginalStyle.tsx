@@ -3981,9 +3981,14 @@ export default function MySQLVehiclesOriginalStyle() {
           }
         }
 
-        /* Mobile phones only: make sidebar full width */
+        /* Mobile phones only: make sidebar and action bar full width */
         @media (max-width: 640px) {
           .mobile-filter-sidebar {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+
+          .mobile-filter-action-bar {
             width: 100% !important;
             max-width: 100% !important;
           }
