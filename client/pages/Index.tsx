@@ -971,7 +971,7 @@ export default function Index() {
             visibility: hidden;
             transition: all 0.3s ease;
           }
-          
+
           .mobile-filter-overlay.open {
             opacity: 1;
             visibility: visible;
@@ -986,8 +986,8 @@ export default function Index() {
             z-index: 232;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
-            width: 100% !important;
-            max-width: 100% !important;
+            width: 280px !important;
+            max-width: 280px !important;
             height: 100vh;
             max-height: 100vh;
             overflow-y: auto !important;
@@ -995,14 +995,22 @@ export default function Index() {
             display: block !important;
             -webkit-overflow-scrolling: touch;
           }
-          
+
           .mobile-filter-sidebar.open {
             transform: translateX(0);
           }
-          
+
           .mobile-chevron {
             width: 22px !important;
             height: 22px !important;
+          }
+        }
+
+        /* Mobile phones only: make sidebar full width */
+        @media (max-width: 640px) {
+          .mobile-filter-sidebar {
+            width: 100% !important;
+            max-width: 100% !important;
           }
         }
 
