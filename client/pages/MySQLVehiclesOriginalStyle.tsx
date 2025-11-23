@@ -3966,8 +3966,8 @@ export default function MySQLVehiclesOriginalStyle() {
             z-index: 232;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
-            width: 100% !important;
-            max-width: 100% !important;
+            width: 280px !important;
+            max-width: 280px !important;
             height: 100vh;
             max-height: 100vh;
             overflow-y: auto !important;
@@ -3978,6 +3978,14 @@ export default function MySQLVehiclesOriginalStyle() {
 
           .mobile-filter-sidebar.open {
             transform: translateX(0);
+          }
+        }
+
+        /* Mobile phones only: make sidebar full width */
+        @media (max-width: 640px) {
+          .mobile-filter-sidebar {
+            width: 100% !important;
+            max-width: 100% !important;
           }
 
           /* Hide mobile filters when header mobile menu is open */
