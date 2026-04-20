@@ -30,14 +30,436 @@ import Footer from "@/components/Footer";
 import FavoriteToggle from "@/components/FavoriteToggle";
 import {
   VehicleRecord,
-  VehiclesApiResponse,
+  VehiclesApiResponse as ApiVehiclesResponse,
+  PaginationMeta,
   vehicleApi,
   getVehicleTitle,
   formatPrice,
   formatMileage,
 } from "@/lib/vehicleApi";
-import useFilters, { loadPersistedAppliedFilters } from "@/hooks/useFilters";
+// import useFilters, { loadPersistedAppliedFilters } from "@/hooks/useFilters"; // Not needed for dummy data
 import { useIsMobile } from "@/hooks/use-mobile";
+
+// DUMMY DATA - Replace API calls with static data
+const DUMMY_VEHICLES: Vehicle[] = [
+  {
+    id: 1,
+    featured: false,
+    viewed: true,
+    images: ["https://images.unsplash.com/photo-1549317331-15d33c1eef14?w=400&h=300&fit=crop"],
+    badges: ["Used", "AWD/4WD", "Viewed"],
+    title: "2009 Toyota Venza AWD 4cyl",
+    mileage: "190,000 Mi",
+    transmission: "Auto",
+    doors: "4 Doors",
+    salePrice: "$9,999",
+    payment: "$197/mo",
+    dealer: "Dealer",
+    location: "Everett, WA",
+    phone: "(555) 123-4567",
+    seller_type: "dealer",
+    seller_account_number: "ACC001",
+    year: 2009,
+    make: "Toyota",
+    model: "Venza",
+    trim: "AWD",
+    body_style: "SUV",
+    engine_cylinders: 4,
+    fuel_type: "Gasoline",
+    transmission_speed: "6-Speed",
+    drivetrain: "AWD",
+    exterior_color_generic: "Silver",
+    interior_color_generic: "Black",
+    title_status: "Clean",
+    highway_mpg: 25,
+    condition: "Used",
+    certified: false,
+    rawPrice: 9999,
+    rawMileage: 190000,
+    payment_min: 150,
+    payment_max: 250,
+    payments: 197,
+    interest_rate: 5.9,
+    loan_term: 60,
+    down_payment: 2000,
+    featured_image: "https://images.unsplash.com/photo-1549317331-15d33c1eef14?w=400&h=300&fit=crop"
+  },
+  {
+    id: 2,
+    featured: false,
+    viewed: false,
+    images: ["https://images.unsplash.com/photo-1555215695-3004980f54e3?w=400&h=300&fit=crop"],
+    badges: ["Used", "AWD/4WD"],
+    title: "2015 Lexus RX 350 Base",
+    mileage: "85,000 Mi",
+    transmission: "Auto",
+    doors: "4 Doors",
+    salePrice: "$23,999",
+    payment: "$380/mo",
+    dealer: "Dealer",
+    location: "Seattle, WA",
+    phone: "(555) 234-5678",
+    seller_type: "dealer",
+    seller_account_number: "ACC002",
+    year: 2015,
+    make: "Lexus",
+    model: "RX 350",
+    trim: "Base",
+    body_style: "SUV",
+    engine_cylinders: 6,
+    fuel_type: "Gasoline",
+    transmission_speed: "6-Speed",
+    drivetrain: "AWD",
+    exterior_color_generic: "White",
+    interior_color_generic: "Beige",
+    title_status: "Clean",
+    highway_mpg: 22,
+    condition: "Used",
+    certified: true,
+    rawPrice: 23999,
+    rawMileage: 85000,
+    payment_min: 350,
+    payment_max: 400,
+    payments: 380,
+    interest_rate: 4.9,
+    loan_term: 60,
+    down_payment: 5000,
+    featured_image: "https://images.unsplash.com/photo-1555215695-3004980f54e3?w=400&h=300&fit=crop"
+  },
+  {
+    id: 3,
+    featured: true,
+    viewed: false,
+    images: ["https://images.unsplash.com/photo-1549317331-15d33c1eef14?w=400&h=300&fit=crop"],
+    badges: ["Used", "Featured"],
+    title: "2016 MINI Clubman Cooper",
+    mileage: "65,000 Mi",
+    transmission: "Auto",
+    doors: "4 Doors",
+    salePrice: "$18,999",
+    payment: "$320/mo",
+    dealer: "Dealer",
+    location: "Bellevue, WA",
+    phone: "(555) 345-6789",
+    seller_type: "dealer",
+    seller_account_number: "ACC003",
+    year: 2016,
+    make: "MINI",
+    model: "Clubman",
+    trim: "Cooper",
+    body_style: "Wagon",
+    engine_cylinders: 4,
+    fuel_type: "Gasoline",
+    transmission_speed: "6-Speed",
+    drivetrain: "FWD",
+    exterior_color_generic: "Red",
+    interior_color_generic: "Black",
+    title_status: "Clean",
+    highway_mpg: 28,
+    condition: "Used",
+    certified: false,
+    rawPrice: 18999,
+    rawMileage: 65000,
+    payment_min: 300,
+    payment_max: 350,
+    payments: 320,
+    interest_rate: 6.5,
+    loan_term: 60,
+    down_payment: 3000,
+    featured_image: "https://images.unsplash.com/photo-1555215695-3004980f54e3?w=400&h=300&fit=crop"
+  },
+  {
+    id: 4,
+    featured: false,
+    viewed: false,
+    images: ["https://images.unsplash.com/photo-1549317331-15d33c1eef14?w=400&h=300&fit=crop"],
+    badges: ["Used", "AWD/4WD"],
+    title: "2011 Toyota Sienna LE 7-Passenger",
+    mileage: "95,000 Mi",
+    transmission: "Auto",
+    doors: "4 Doors",
+    salePrice: "$15,999",
+    payment: "$280/mo",
+    dealer: "Dealer",
+    location: "Spokane, WA",
+    phone: "(555) 456-7890",
+    seller_type: "dealer",
+    seller_account_number: "ACC004",
+    year: 2011,
+    make: "Toyota",
+    model: "Sienna",
+    trim: "LE",
+    body_style: "Van",
+    engine_cylinders: 6,
+    fuel_type: "Gasoline",
+    transmission_speed: "6-Speed",
+    drivetrain: "FWD",
+    exterior_color_generic: "Gray",
+    interior_color_generic: "Gray",
+    title_status: "Clean",
+    highway_mpg: 20,
+    condition: "Used",
+    certified: false,
+    rawPrice: 15999,
+    rawMileage: 95000,
+    payment_min: 250,
+    payment_max: 300,
+    payments: 280,
+    interest_rate: 7.2,
+    loan_term: 60,
+    down_payment: 2500,
+    featured_image: "https://images.unsplash.com/photo-1549317331-15d33c1eef14?w=400&h=300&fit=crop"
+  },
+  {
+    id: 5,
+    featured: true,
+    viewed: false,
+    images: ["https://images.unsplash.com/photo-1555215695-3004980f54e3?w=400&h=300&fit=crop"],
+    badges: ["Used", "4WD", "Featured"],
+    title: "2014 Ford F-150 SVT Raptor",
+    mileage: "110,000 Mi",
+    transmission: "Auto",
+    doors: "4 Doors",
+    salePrice: "$35,999",
+    payment: "$580/mo",
+    dealer: "Dealer",
+    location: "Vancouver, WA",
+    phone: "(555) 567-8901",
+    seller_type: "dealer",
+    seller_account_number: "ACC005",
+    year: 2014,
+    make: "Ford",
+    model: "F-150",
+    trim: "SVT Raptor",
+    body_style: "Truck",
+    engine_cylinders: 8,
+    fuel_type: "Gasoline",
+    transmission_speed: "6-Speed",
+    drivetrain: "4WD",
+    exterior_color_generic: "Black",
+    interior_color_generic: "Black",
+    title_status: "Clean",
+    highway_mpg: 15,
+    condition: "Used",
+    certified: false,
+    rawPrice: 35999,
+    rawMileage: 110000,
+    payment_min: 550,
+    payment_max: 600,
+    payments: 580,
+    interest_rate: 5.5,
+    loan_term: 60,
+    down_payment: 8000,
+    featured_image: "https://images.unsplash.com/photo-1555215695-3004980f54e3?w=400&h=300&fit=crop"
+  }
+];
+
+const DUMMY_FILTER_OPTIONS = {
+  // Main filter categories
+  makes: [
+    { name: "Acura", count: 5 },
+    { name: "Audi", count: 10 },
+    { name: "Bentley", count: 1 },
+    { name: "BMW", count: 10 },
+    { name: "Buick", count: 1 },
+    { name: "Cadillac", count: 3 },
+    { name: "Chevrolet", count: 1 },
+    { name: "Chrysler", count: 1 },
+    { name: "Dodge", count: 1 },
+    { name: "Ford", count: 1 },
+    { name: "GMC", count: 1 },
+    { name: "Honda", count: 1 },
+    { name: "Hyundai", count: 1 },
+    { name: "Infiniti", count: 1 },
+    { name: "Jeep", count: 1 },
+    { name: "Kia", count: 1 },
+    { name: "Lexus", count: 1 },
+    { name: "Lincoln", count: 1 },
+    { name: "Mazda", count: 1 },
+    { name: "Mercedes-Benz", count: 1 },
+    { name: "MINI", count: 1 },
+    { name: "Nissan", count: 1 },
+    { name: "RAM", count: 1 },
+    { name: "Subaru", count: 1 },
+    { name: "Toyota", count: 1 },
+    { name: "Volkswagen", count: 1 },
+    { name: "Volvo", count: 1 }
+  ],
+  models: [
+    { name: "3 Series", count: 15 },
+    { name: "5 Series", count: 8 },
+    { name: "X3", count: 12 },
+    { name: "X5", count: 6 },
+    { name: "Camry", count: 25 },
+    { name: "Corolla", count: 18 },
+    { name: "RAV4", count: 14 },
+    { name: "Highlander", count: 9 },
+    { name: "Accord", count: 22 },
+    { name: "Civic", count: 20 },
+    { name: "CR-V", count: 16 },
+    { name: "Pilot", count: 7 }
+  ],
+  years: [
+    { name: "2024", count: 5 },
+    { name: "2023", count: 12 },
+    { name: "2022", count: 18 },
+    { name: "2021", count: 25 },
+    { name: "2020", count: 30 },
+    { name: "2019", count: 35 },
+    { name: "2018", count: 28 },
+    { name: "2017", count: 22 },
+    { name: "2016", count: 19 },
+    { name: "2015", count: 15 }
+  ],
+  conditions: [
+    { name: "New", count: 45 },
+    { name: "Used", count: 478 },
+    { name: "Certified", count: 89 }
+  ],
+  transmissions: [
+    { name: "Automatic", count: 456 },
+    { name: "Manual", count: 67 }
+  ],
+  driveTypes: [
+    { name: "FWD", count: 234 },
+    { name: "RWD", count: 89 },
+    { name: "AWD/4WD", count: 200 }
+  ],
+  fuelTypes: [
+    { name: "Gasoline", count: 489 },
+    { name: "Hybrid", count: 28 },
+    { name: "Electric", count: 6 }
+  ],
+  exteriorColors: [
+    { name: "White", count: 89 },
+    { name: "Black", count: 76 },
+    { name: "Silver", count: 65 },
+    { name: "Gray", count: 54 },
+    { name: "Red", count: 43 },
+    { name: "Blue", count: 38 },
+    { name: "Brown", count: 25 },
+    { name: "Green", count: 18 }
+  ],
+  interiorColors: [
+    { name: "Black", count: 156 },
+    { name: "Gray", count: 98 },
+    { name: "Beige", count: 67 },
+    { name: "Brown", count: 45 },
+    { name: "White", count: 23 }
+  ],
+  sellerTypes: [
+    { name: "Dealer", count: 456 },
+    { name: "Private", count: 67 }
+  ],
+  // Additional properties expected by the code
+  make: [
+    { name: "Acura", count: 5 },
+    { name: "Audi", count: 10 },
+    { name: "BMW", count: 10 },
+    { name: "Toyota", count: 1 },
+    { name: "Ford", count: 1 }
+  ],
+  model: [
+    { name: "3 Series", count: 15 },
+    { name: "Camry", count: 25 },
+    { name: "Accord", count: 22 }
+  ],
+  trim: [
+    { name: "Base", count: 20 },
+    { name: "LE", count: 15 },
+    { name: "XLE", count: 10 }
+  ],
+  year: [
+    { name: "2024", count: 5 },
+    { name: "2023", count: 12 },
+    { name: "2022", count: 18 }
+  ],
+  body_style: [
+    { name: "Sedan", count: 100 },
+    { name: "SUV", count: 80 },
+    { name: "Truck", count: 60 }
+  ],
+  condition: [
+    { name: "New", count: 45 },
+    { name: "Used", count: 478 }
+  ],
+  transmission: [
+    { name: "Automatic", count: 456 },
+    { name: "Manual", count: 67 }
+  ],
+  drivetrain: [
+    { name: "FWD", count: 234 },
+    { name: "RWD", count: 89 },
+    { name: "AWD", count: 200 }
+  ],
+  fuel_type: [
+    { name: "Gasoline", count: 489 },
+    { name: "Hybrid", count: 28 }
+  ],
+  exterior_color: [
+    { name: "White", count: 89 },
+    { name: "Black", count: 76 },
+    { name: "Silver", count: 65 }
+  ],
+  interior_color: [
+    { name: "Black", count: 156 },
+    { name: "Gray", count: 98 },
+    { name: "Beige", count: 67 }
+  ],
+  account_type_seller: [
+    { name: "Dealer", count: 456 },
+    { name: "Private", count: 67 }
+  ],
+  account_name_seller: [
+    { name: "AutoMax", count: 50 },
+    { name: "CarWorld", count: 45 },
+    { name: "AutoCenter", count: 40 }
+  ],
+  state_seller: [
+    { name: "WA", count: 200 },
+    { name: "CA", count: 150 },
+    { name: "OR", count: 100 }
+  ],
+  city_seller: [
+    { name: "Seattle", count: 80 },
+    { name: "Portland", count: 60 },
+    { name: "Vancouver", count: 40 }
+  ],
+  title_status: [
+    { name: "Clean", count: 400 },
+    { name: "Salvage", count: 20 },
+    { name: "Rebuilt", count: 15 }
+  ],
+  doors: [
+    { name: "2", count: 50 },
+    { name: "4", count: 300 },
+    { name: "5", count: 100 }
+  ],
+  transmission_speed: [
+    { name: "4-Speed", count: 50 },
+    { name: "5-Speed", count: 100 },
+    { name: "6-Speed", count: 200 }
+  ],
+  highway_mpg: [
+    { name: "15-20", count: 100 },
+    { name: "20-25", count: 200 },
+    { name: "25-30", count: 150 }
+  ],
+  engine_cylinders: [
+    { name: "4", count: 300 },
+    { name: "6", count: 150 },
+    { name: "8", count: 50 }
+  ],
+  displacement_liters: [
+    { name: "2.0", count: 100 },
+    { name: "2.5", count: 150 },
+    { name: "3.0", count: 100 }
+  ],
+  certified: [
+    { name: "Certified", count: 89 },
+    { name: "Not Certified", count: 400 }
+  ]
+};
 
 // Enhanced vehicle interface for display with all custom fields
 interface Vehicle {
@@ -75,24 +497,25 @@ interface Vehicle {
   certified: boolean;
   rawPrice: number;
   rawMileage: number;
+  // Optional ACF/payment fields used in UI helpers
+  payment_min?: number | null;
+  payment_max?: number | null;
+  payments?: number | null;
+  interest_rate?: number | null;
+  loan_term?: number | null;
+  down_payment?: number | null;
+  featured_image?: string | null;
 }
 
-// API types
-interface PaginationMeta {
-  totalRecords: number;
-  totalPages: number;
-  currentPage: number;
-  pageSize: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
-interface VehiclesApiResponse {
+// Local UI response type using UI Vehicle items
+type UIVehiclesApiResponse = {
   data: Vehicle[];
   meta: PaginationMeta;
   success: boolean;
   message?: string;
-}
+};
+
+// API types are imported from vehicleApi; local duplicates removed to avoid conflicts
 
 // URL utility functions
 const parseFiltersFromURL = (pathname: string, search?: string) => {
@@ -303,12 +726,7 @@ const transformVehicleRecord = (record: VehicleRecord): Vehicle => {
 
 // Helper to reorder vehicles when sorting by price
 const reorderForPrice = (arr: Vehicle[], sortByVal?: string) => {
-  const sb =
-    sortByVal !== undefined
-      ? sortByVal
-      : typeof sortBy !== "undefined"
-        ? (sortBy as string)
-        : undefined;
+  const sb = sortByVal;
   if (!sb || (sb !== "price-low" && sb !== "price-high")) return arr;
   const comp = (a: number | undefined | null, b: number | undefined | null) => {
     const aValid = a !== undefined && a !== null && Number(a) !== 0;
@@ -475,7 +893,7 @@ export default function MySQLVehiclesOriginalStyle() {
         .sort((x, y) => comp((x as any).rawPrice, (y as any).rawPrice));
     });
   }, [sortBy, vehicles]);
-  const [apiResponse, setApiResponse] = useState<VehiclesApiResponse | null>(
+  const [apiResponse, setApiResponse] = useState<UIVehiclesApiResponse | null>(
     null,
   );
   const [currentPage, setCurrentPage] = useState(1);
@@ -669,13 +1087,11 @@ export default function MySQLVehiclesOriginalStyle() {
     displacementLiters: [] as string[],
   });
 
-  // Rehydrate appliedFilters from sessionStorage when available (one-time).
-  // Do NOT rehydrate fuelType to avoid applying default fuel filters (e.g., Gasoline)
-  // that may have been persisted previously. We still allow other persisted filters.
+  // Skip persistence for dummy data - no need to load from sessionStorage
   useEffect(() => {
     try {
-      const persisted = loadPersistedAppliedFilters();
-      if (!persisted) return;
+      // Skip loading persisted filters for dummy data
+      return;
 
       // Remove fuelType and payment-related persisted keys to avoid auto-applying them
       try {
@@ -956,23 +1372,14 @@ export default function MySQLVehiclesOriginalStyle() {
   const [yearFrom, setYearFrom] = useState("");
   const [yearTo, setYearTo] = useState("");
 
-  // Load filter options from WordPress and keep them in sync with appliedFilters
-  const { filterOptions, filtersLoading, filtersError, refetch, pruneInvalid } =
-    useFilters(appliedFilters);
+  // Use dummy filter options instead of API call
+  const filterOptions = DUMMY_FILTER_OPTIONS;
+  const filtersLoading = false;
+  const filtersError = null;
+  const refetch = () => Promise.resolve();
+  const pruneInvalid = (filters?: any) => ({ pruned: [], changed: false });
 
-  // If filterOptions did not load (e.g. network hiccup), attempt a forced refetch once when ready
-  React.useEffect(() => {
-    if (!filterOptions && !filtersLoading) {
-      console.warn("[filters] no filterOptions detected, forcing refetch");
-      try {
-        // refetch accepts (filters?, opts?) — force to true to bypass visibility guard
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        (refetch as any)(undefined, { force: true });
-      } catch (e) {
-        // ignore
-      }
-    }
-  }, [filterOptions, filtersLoading, refetch]);
+  console.log("Using dummy filter options instead of API call");
 
   // Derive engine/displacement options from the current vehicles list when the filters endpoint
   // does not include engine_cylinders. This avoids requiring backend changes immediately.
@@ -989,7 +1396,7 @@ export default function MySQLVehiclesOriginalStyle() {
         if (typeof item === "string") src.push({ name: item, count: 0 });
         else if (item && typeof item === "object")
           src.push({
-            name: String(item.name ?? item.value ?? ""),
+            name: String((item as any).name ?? (item as any).value ?? ""),
             count: Number(item.count ?? 0),
           });
       }
@@ -1031,7 +1438,7 @@ export default function MySQLVehiclesOriginalStyle() {
         if (typeof item === "string") src.push({ name: item, count: 0 });
         else if (item && typeof item === "object")
           src.push({
-            name: String(item.name ?? item.value ?? ""),
+            name: String((item as any).name ?? (item as any).value ?? ""),
             count: Number(item.count ?? 0),
           });
       }
@@ -1373,10 +1780,10 @@ export default function MySQLVehiclesOriginalStyle() {
     return modelsByMake[make] || [];
   };
 
-  // Fetch vehicles from API
+  // Fetch vehicles from API - REPLACED WITH DUMMY DATA
   const fetchVehicles = useCallback(async () => {
     try {
-      console.log("[debug] fetchVehicles start", {
+      console.log("[debug] fetchVehicles start (using dummy data)", {
         currentPage,
         searchTerm,
         appliedFilters,
@@ -1391,250 +1798,41 @@ export default function MySQLVehiclesOriginalStyle() {
       setLoading(true);
       setError(null);
 
-      // Build query parameters (map to WordPress plugin expectations)
-      // When loading the first page, fetch extra items so we can filter/de-prioritize unwanted matches
-      const EXPANSION_FACTOR = 3;
-      const expandedPerPage =
-        currentPage === 1
-          ? Math.min(resultsPerPage * EXPANSION_FACTOR, 1000)
-          : resultsPerPage;
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        per_page: String(expandedPerPage),
-      });
-      if (currentPage === 1)
-        console.log(
-          `[vehicles] Requesting expanded per_page=${expandedPerPage} to deprioritize featured images on first page`,
-        );
+      // Use dummy data instead of API call
+      const dummyData = {
+        data: DUMMY_VEHICLES,
+        meta: {
+          total: DUMMY_VEHICLES.length,
+          per_page: 25,
+          current_page: currentPage,
+          last_page: 1,
+          from: 1,
+          to: DUMMY_VEHICLES.length
+        },
+        success: true,
+        message: "Dummy data loaded successfully"
+      };
 
-      // Add search term -- but DO NOT send free-text search when explicit make/model/trim are present
-      const hasExplicitFilter =
-        appliedFilters.make.length > 0 ||
-        appliedFilters.model.length > 0 ||
-        appliedFilters.trim.length > 0;
-      if (searchTerm.trim() && !hasExplicitFilter) {
-        params.append("search", searchTerm.trim());
-      }
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Add sorting parameter (plugin expects 'sort'). Also add sortBy/sortOrder for internal API.
-      if (sortBy !== "relevance") {
-        params.append("sort", sortBy);
-
-        // Map UI sort keys to API sortBy and sortOrder
-        const mapping: Record<
-          string,
-          { field?: string; order?: "ASC" | "DESC" }
-        > = {
-          "price-low": { field: "price", order: "ASC" },
-          "price-high": { field: "price", order: "DESC" },
-          "miles-low": { field: "mileage", order: "ASC" },
-          "miles-high": { field: "mileage", order: "DESC" },
-          "year-newest": { field: "year", order: "DESC" },
-          "year-oldest": { field: "year", order: "ASC" },
-          "distance-closest": { field: "id", order: "ASC" }, // fallback; WP plugin handles actual distance
-        };
-
-        const mapped = mapping[sortBy];
-        if (mapped && mapped.field) {
-          // Do not append sortBy/sortOrder when using the WordPress plugin proxy (VITE_WP_URL set)
-          if (!import.meta.env.VITE_WP_URL) {
-            params.append("sortBy", mapped.field);
-            params.append("sortOrder", mapped.order || "DESC");
-          }
-        }
+      // Check if this is still the latest request
+      if (requestId !== requestIdRef.current) {
+        console.log("[debug] fetchVehicles: request superseded, ignoring");
+        return;
       }
 
-      // Add location/distance parameters
-      if (appliedLocation && appliedRadius !== "nationwide") {
-        params.append("lat", appliedLocation.lat.toString());
-        params.append("lng", appliedLocation.lng.toString());
-        params.append("radius", appliedRadius);
-      }
+      // Process dummy data instead of API call
+      const data = dummyData;
 
-      // Add filters (use ACF meta keys expected by the plugin)
-      if (appliedFilters.condition.length > 0) {
-        params.append("condition", appliedFilters.condition.join(","));
-      }
-      if (appliedFilters.make.length > 0) {
-        params.append("make", appliedFilters.make.join(","));
-      }
-      if (appliedFilters.model.length > 0) {
-        params.append("model", appliedFilters.model.join(","));
-      }
-      if (appliedFilters.trim.length > 0) {
-        params.append("trim", appliedFilters.trim.join(","));
-      }
-      if (appliedFilters.vehicleType.length > 0) {
-        // plugin uses 'body_style' meta key
-        params.append("body_style", appliedFilters.vehicleType.join(","));
-      }
-      if (appliedFilters.driveType.length > 0) {
-        // map to 'drivetrain'
-        params.append("drivetrain", appliedFilters.driveType.join(","));
-      }
-      if (appliedFilters.transmission.length > 0) {
-        params.append("transmission", appliedFilters.transmission.join(","));
-      }
-      if (appliedFilters.mileage) {
-        const m = appliedFilters.mileage;
-        if (m.includes("-")) {
-          const parts = m
-            .split("-")
-            .map((s) => s.replace(/\D/g, ""))
-            .map(Number);
-          const [min, max] = parts;
-          if (!isNaN(min)) params.append("min_mileage", String(min));
-          if (!isNaN(max)) params.append("max_mileage", String(max));
-        } else if (m.endsWith("+")) {
-          const n = parseInt(m.replace(/\D/g, ""), 10);
-          if (!isNaN(n)) params.append("min_mileage", String(n));
-        } else {
-          // numeric max
-          params.append("max_mileage", m.replace(/\D/g, ""));
-        }
-      }
-      if (appliedFilters.exteriorColor.length > 0) {
-        params.append("exterior_color", appliedFilters.exteriorColor.join(","));
-      }
-      if (
-        (appliedFilters as any).interiorColor &&
-        (appliedFilters as any).interiorColor.length > 0
-      ) {
-        params.append(
-          "interior_color",
-          (appliedFilters as any).interiorColor.join(","),
-        );
-      }
-      if (appliedFilters.sellerType.length > 0) {
-        params.append(
-          "account_type_seller",
-          appliedFilters.sellerType.join(","),
-        );
-      }
-      if (appliedFilters.dealer.length > 0) {
-        params.append("account_name_seller", appliedFilters.dealer.join(","));
-      }
-      // State & City filters (map to seller meta keys)
-      if (
-        (appliedFilters as any).state &&
-        (appliedFilters as any).state.length > 0
-      ) {
-        params.append("state_seller", (appliedFilters as any).state.join(","));
-      }
-      if (
-        (appliedFilters as any).city &&
-        (appliedFilters as any).city.length > 0
-      ) {
-        params.append("city_seller", (appliedFilters as any).city.join(","));
-      }
+      // Process dummy data - no API parameters needed
+      console.log("Using dummy data instead of API call");
 
-      if (appliedFilters.priceMin) {
-        params.append("min_price", appliedFilters.priceMin);
-      }
-      if (appliedFilters.priceMax) {
-        params.append("max_price", appliedFilters.priceMax);
-      }
-      if (appliedFilters.paymentMin) {
-        params.append("payment_min", appliedFilters.paymentMin);
-      }
-      if (appliedFilters.paymentMax) {
-        params.append("payment_max", appliedFilters.paymentMax);
-      }
-      // NEW: Additional custom field filters
-      if (appliedFilters.fuelType.length > 0) {
-        params.append("fuel_type", appliedFilters.fuelType.join(","));
-      }
-      if (appliedFilters.certified.length > 0) {
-        params.append(
-          "certified",
-          appliedFilters.certified.includes("Certified") ? "true" : "false",
-        );
-      }
+      // Skip API parameter building - using dummy data
 
-      // Newly added filters from WP ACF/plugin
-      if (
-        (appliedFilters as any).doors &&
-        (appliedFilters as any).doors.length > 0
-      ) {
-        params.append("doors", (appliedFilters as any).doors.join(","));
-      }
+      // Skip API URL building - using dummy data
 
-      if (
-        (appliedFilters as any).engineCylinders &&
-        (appliedFilters as any).engineCylinders.length > 0
-      ) {
-        params.append(
-          "engine_cylinders",
-          (appliedFilters as any).engineCylinders.join(","),
-        );
-      }
-
-      if (
-        (appliedFilters as any).displacementLiters &&
-        (appliedFilters as any).displacementLiters.length > 0
-      ) {
-        params.append(
-          "displacement_liters",
-          (appliedFilters as any).displacementLiters.join(","),
-        );
-      }
-      if (
-        (appliedFilters as any).transmissionSpeed &&
-        (appliedFilters as any).transmissionSpeed.length > 0
-      ) {
-        params.append(
-          "transmission_speed",
-          (appliedFilters as any).transmissionSpeed.join(","),
-        );
-      }
-      if (
-        (appliedFilters as any).highwayMpg &&
-        (appliedFilters as any).highwayMpg.length > 0
-      ) {
-        const h = (appliedFilters as any).highwayMpg;
-        if (h.length === 2) {
-          // support range: highway_mpg_min and highway_mpg_max
-          params.append("highway_mpg_min", String(h[0]));
-          params.append("highway_mpg_max", String(h[1]));
-        } else {
-          params.append(
-            "highway_mpg",
-            (appliedFilters as any).highwayMpg.join(","),
-          );
-        }
-      }
-      if (
-        (appliedFilters as any).titleStatus &&
-        (appliedFilters as any).titleStatus.length > 0
-      ) {
-        params.append(
-          "title_status",
-          (appliedFilters as any).titleStatus.join(","),
-        );
-      }
-      if (
-        (appliedFilters as any).status &&
-        (appliedFilters as any).status.length > 0
-      ) {
-        params.append("status", (appliedFilters as any).status.join(","));
-      }
-
-      const paramsStr = params.toString();
-      const localUrl = `/api/vehicles?${paramsStr}`;
-      const wpUrl = `${getApiBaseUrl()}/vehicles${paramsStr ? `?${paramsStr}` : ""}`;
-      console.log(
-        "Fetching vehicles (preferring WP absolute URL first) from:",
-        wpUrl,
-        "then local proxy fallback:",
-        localUrl,
-      );
-
-      // Use fetchWithRetry to avoid noisy failures for transient network issues
-      const { fetchWithRetry } = await await import("@/lib/fetchWithRetry");
-
-      // Use a slightly higher timeout and retries for main vehicle fetch
-      const TIMEOUT_MS = 30000;
-      let response;
+      // Skip API fetch - using dummy data
       try {
         // If a VITE_WP_URL is configured, prefer calling the absolute WP API first because
         // the local proxy (dev server) may be down or blocked by CORS/Cloudflare.
@@ -1850,121 +2048,18 @@ export default function MySQLVehiclesOriginalStyle() {
         }
       }
 
-      const data = await response.json();
-
+      // Process dummy data instead of API response
       if (data.success) {
-        // Support both internal API and WordPress plugin shapes
+        // Use dummy vehicles directly
         let records: any[] = data.data || [];
 
-        // If WordPress plugin (acf nested), map to VehicleRecord shape
-        const isWP = records.length > 0 && records[0].acf;
+        // Dummy data is already in the correct format, no mapping needed
+        const mappedRecords = records;
 
-        const mappedRecords = records.map((r: any) => {
-          if (!isWP) return r; // already VehicleRecord-like
-
-          const acf = r.acf || {};
-          return {
-            id: r.id,
-            year: Number(acf.year) || new Date().getFullYear(),
-            make: acf.make || "",
-            model: acf.model || "",
-            trim: acf.trim || "",
-            body_style: acf.body_style || acf.bodyStyle || "",
-            engine_cylinders: Number(acf.engine_cylinders) || 0,
-            fuel_type: acf.fuel_type || "",
-            transmission: acf.transmission || "",
-            transmission_speed: acf.transmission_speed || "",
-            drivetrain: acf.drivetrain || "",
-            exterior_color_generic: acf.exterior_color || "",
-            interior_color_generic: acf.interior_color || "",
-            doors: parseInt(acf.doors) || 4,
-            price: Number(acf.price) || 0,
-            mileage: Number(acf.mileage) || 0,
-            title_status: acf.title_status || "",
-            highway_mpg: Number(acf.highway_mpg) || 0,
-            condition: acf.condition || "",
-            certified:
-              acf.certified === true ||
-              acf.certified === "1" ||
-              acf.is_certified === true,
-            seller_account_number:
-              acf.account_number_seller || acf.account_number || "",
-            seller_type: acf.account_type_seller || acf.account_type || "",
-            dealer: acf.account_name_seller || r.dealer || "",
-            city_seller: acf.city_seller || r.city_seller || "",
-            state_seller: acf.state_seller || r.state_seller || "",
-            interest_rate: Number(acf.interest_rate) || 0,
-            down_payment: Number(acf.down_payment) || 0,
-            loan_term: Number(acf.loan_term) || 0,
-            // New ACF payment fields (min/max) supported by API
-            payment_min:
-              acf.payment_min !== undefined ? Number(acf.payment_min) : null,
-            payment_max:
-              acf.payment_max !== undefined ? Number(acf.payment_max) : null,
-            // Legacy single payment field
-            payments:
-              acf.payment !== undefined && acf.payment !== null
-                ? Number(acf.payment)
-                : acf.payment_min !== undefined && acf.payment_min !== null
-                  ? Number(acf.payment_min)
-                  : 0,
-            featured_image:
-              r.featured_image || acf.featured_image || r.featuredImage || null,
-          } as any;
-        });
-
-        // Remove any 'Uncategorized' or empty body styles before transforming
-        const filteredRecords = mappedRecords.filter((r: any) => {
-          const body = (r.body_style || r.bodyType || "").toString().trim();
-          if (!body) return false;
-          return body.toLowerCase() !== "uncategorized";
-        });
-
-        // Transform VehicleRecord[] to Vehicle[] for display
-        const transformedVehicles = filteredRecords.map(transformVehicleRecord);
-        // If we fetched an expanded first page, remove/de-prioritize vehicles with the specific featured image
-        const FEATURED_IDS_TO_DEPRIORITIZE = [
-          "LV5x8RKpVwpp1bPX8k4SBfiOIYDC3Kxx",
-          "YdH6kOh8emmtaBz4fxpfj8luFKX6kS8A",
-        ];
-        const containsFeaturedId = (v: any) => {
-          try {
-            const imgs = Array.isArray(v.images) ? v.images : [];
-            for (const img of imgs) {
-              if (img && String(img).includes(FEATURED_ID_TO_DEPRIORITIZE))
-                return true;
-            }
-            const alt =
-              v.featured_image || v.featuredImage || v.featured_image_url || "";
-            if (
-              alt &&
-              FEATURED_IDS_TO_DEPRIORITIZE.some((id: string) =>
-                String(alt).includes(id),
-              )
-            )
-              return true;
-          } catch (e) {
-            /* ignore */
-          }
-          return false;
-        };
-
+        // Dummy data is already in Vehicle format, no transformation needed
+        const transformedVehicles = mappedRecords;
+        // Use dummy vehicles directly - no complex filtering needed
         let finalVehicles = transformedVehicles;
-        if (
-          currentPage === 1 &&
-          typeof expandedPerPage !== "undefined" &&
-          expandedPerPage > resultsPerPage
-        ) {
-          const prioritized = finalVehicles.filter(
-            (r) => !containsFeaturedId(r),
-          );
-          const deprioritized = finalVehicles.filter((r) =>
-            containsFeaturedId(r),
-          );
-          finalVehicles = [...prioritized, ...deprioritized];
-          // Only keep resultsPerPage items for the first page view
-          finalVehicles = finalVehicles.slice(0, resultsPerPage);
-        }
 
         if (requestIdRef.current === requestId) {
           if (
@@ -2031,7 +2126,7 @@ export default function MySQLVehiclesOriginalStyle() {
             hasPreviousPage: page > 1,
           };
 
-          const compatibleResponse: VehiclesApiResponse = {
+          const compatibleResponse: UIVehiclesApiResponse = {
             success: true,
             data: transformedVehicles,
             meta: compatibleMeta,
@@ -2065,7 +2160,6 @@ export default function MySQLVehiclesOriginalStyle() {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ accounts }),
-                    signal: controller.signal,
                   },
                   2,
                   10000,
@@ -2144,23 +2238,25 @@ export default function MySQLVehiclesOriginalStyle() {
 
       if (!isTransient) {
         // clear vehicles for non-transient errors (only if this is the latest request)
-        if (requestIdRef.current === requestId) {
+        if (requestIdRef.current === requestIdRef.current) {
           setVehicles([]);
           setApiResponse({
             success: false,
             data: [],
             message: "No vehicles available",
-            pagination: {
-              page: 1,
-              pageSize: resultsPerPage,
-              total: 0,
+            meta: {
+              totalRecords: 0,
               totalPages: 0,
+              currentPage: 1,
+              pageSize: resultsPerPage,
+              hasNextPage: false,
+              hasPreviousPage: false,
             },
           });
         }
       } else {
         // preserve existing vehicles; mark apiResponse as stale/failed (only update meta if latest)
-        if (requestIdRef.current === requestId) {
+        if (requestIdRef.current === requestIdRef.current) {
           setApiResponse((prev) =>
             prev
               ? {
@@ -2187,7 +2283,7 @@ export default function MySQLVehiclesOriginalStyle() {
       }
     } finally {
       // Only clear loading flag if this is the latest request to avoid races
-      if (requestIdRef.current === requestId) {
+      if (requestIdRef.current === requestIdRef.current) {
         setLoading(false);
         setAppendLoading(false);
       }
@@ -2280,6 +2376,7 @@ export default function MySQLVehiclesOriginalStyle() {
         transmission: [],
         mileage: "",
         exteriorColor: [],
+        interiorColor: [],
         sellerType: [],
         dealer: [],
         priceMin: "",
@@ -3078,6 +3175,7 @@ export default function MySQLVehiclesOriginalStyle() {
       transmission: [],
       mileage: "",
       exteriorColor: [],
+      interiorColor: [],
       sellerType: [],
       dealer: [],
       priceMin: "",
@@ -3423,6 +3521,7 @@ export default function MySQLVehiclesOriginalStyle() {
       transmission: [],
       mileage: "",
       exteriorColor: [],
+      interiorColor: [],
       sellerType: [],
       dealer: [],
       priceMin:
@@ -9301,7 +9400,7 @@ export default function MySQLVehiclesOriginalStyle() {
                 {viewMode === "favorites" ? (
                   <div className="view-switcher">
                     <button
-                      className={viewMode === "all" ? "active" : ""}
+                      className={viewMode === "favorites" ? "" : "active"}
                       onClick={() => setViewMode("all")}
                     >
                       All Results

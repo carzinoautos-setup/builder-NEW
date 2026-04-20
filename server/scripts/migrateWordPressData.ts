@@ -396,5 +396,5 @@ if (isMainModule) {
     });
 }
 
-export { WordPressMigration };
+
 export default WordPressMigration;

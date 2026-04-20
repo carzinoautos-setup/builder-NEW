@@ -636,6 +636,21 @@ export const getVehicles: RequestHandler = async (req, res) => {
     }
 
     // Otherwise use the configured service (MySQL or Mock)
+    if (!vehicleService) {
+      return res.status(503).json({
+        success: false,
+        message: "Vehicle service not available",
+        data: [],
+        meta: {
+          totalRecords: 0,
+          totalPages: 0,
+          currentPage: 1,
+          pageSize: 20,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+      });
+    }
     const result = await vehicleService.getVehicles(filters, pagination);
 
     // Server-side de-prioritization: move vehicles with specific featured image identifiers to the end
@@ -761,6 +776,12 @@ export const getVehicleById: RequestHandler = async (req, res) => {
       });
     }
 
+    if (!vehicleService) {
+      return res.status(503).json({
+        success: false,
+        message: "Vehicle service not available",
+      });
+    }
     const vehicle = await vehicleService.getVehicleById(id);
 
     if (!vehicle) {
@@ -942,6 +963,22 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
       }
     }
 
+    if (!vehicleService) {
+      return res.status(503).json({
+        success: false,
+        message: "Vehicle service not available",
+        data: {
+          makes: [],
+          models: [],
+          conditions: [],
+          fuelTypes: [],
+          transmissions: [],
+          drivetrains: [],
+          bodyStyles: [],
+          sellerTypes: [],
+        },
+      });
+    }
     const options = await vehicleService.getFilterOptions();
 
     // Debug: log sizes of filter option arrays to help trace missing filters
@@ -993,6 +1030,14 @@ export const getFilterOptions: RequestHandler = async (req, res) => {
 export const healthCheck: RequestHandler = async (req, res) => {
   try {
     // Test service connectivity
+    if (!vehicleService) {
+      return res.status(503).json({
+        success: false,
+        message: "Vehicle service not available",
+        timestamp: new Date().toISOString(),
+        serviceConnected: false,
+      });
+    }
     const testResult = await vehicleService.getVehicles(
       {},
       { page: 1, pageSize: 1 },
