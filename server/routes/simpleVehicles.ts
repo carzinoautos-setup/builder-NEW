@@ -5,9 +5,14 @@ import {
   SimpleVehicleFilters,
 } from "../types/simpleVehicle.js";
 
-// Use simplified mock service for testing
-console.log("🚀 Using SimpleMockVehicleService with original demo format");
-const vehicleService = new SimpleMockVehicleService();
+// Use simplified mock service for testing only when explicitly enabled via USE_MOCK
+let vehicleService: any = null;
+if (String(process.env.USE_MOCK || "").toLowerCase() === "true") {
+  console.log("🚀 USE_MOCK is true — using SimpleMockVehicleService (demo data)");
+  vehicleService = new SimpleMockVehicleService();
+} else {
+  console.log("⚠️ SimpleMockVehicleService disabled — set USE_MOCK=true to enable demo data");
+}
 
 /**
  * GET /api/simple-vehicles
@@ -98,7 +103,16 @@ export const getSimpleVehicles: RequestHandler = async (req, res) => {
     if (req.query.paymentMax)
       filters.paymentMax = req.query.paymentMax as string;
 
-    // Fetch vehicles from service (using mock service for now)
+      if (!vehicleService) {
+      return res.status(503).json({
+        success: false,
+        message: "Mock vehicle service disabled. Set USE_MOCK=true to enable demo data.",
+        data: [],
+        meta: { total: 0, page: 1, per_page: 0, total_pages: 0 },
+      });
+    }
+
+    // Fetch vehicles from service (using mock service when enabled)
     const result = await vehicleService.getVehicles(filters, pagination);
 
     // Return response
@@ -136,6 +150,10 @@ export const getSimpleVehicleById: RequestHandler = async (req, res) => {
       });
     }
 
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled." });
+    }
+
     const vehicle = await vehicleService.getVehicleById(id);
 
     if (!vehicle) {
@@ -164,6 +182,9 @@ export const getSimpleVehicleById: RequestHandler = async (req, res) => {
  */
 export const getSimpleFilterOptions: RequestHandler = async (req, res) => {
   try {
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled.", data: { makes: [], conditions: [], driveTypes: [], sellerTypes: [] } });
+    }
     const options = await vehicleService.getFilterOptions();
 
     res.status(200).json({
@@ -191,6 +212,9 @@ export const getSimpleFilterOptions: RequestHandler = async (req, res) => {
  */
 export const getDealers: RequestHandler = async (req, res) => {
   try {
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled.", data: [] });
+    }
     const dealers = await vehicleService.getDealers();
 
     res.status(200).json({
@@ -213,6 +237,9 @@ export const getDealers: RequestHandler = async (req, res) => {
  */
 export const getVehicleTypes: RequestHandler = async (req, res) => {
   try {
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled.", data: [] });
+    }
     const vehicleTypes = await vehicleService.getVehicleTypeCounts();
 
     res.status(200).json({
@@ -235,6 +262,9 @@ export const getVehicleTypes: RequestHandler = async (req, res) => {
  */
 export const simpleHealthCheck: RequestHandler = async (req, res) => {
   try {
+    if (!vehicleService) {
+      return res.status(503).json({ success: false, message: "Mock vehicle service disabled.", serviceConnected: false, usingMockData: false });
+    }
     // Test service connectivity
     const testResult = await vehicleService.getVehicles(
       {},

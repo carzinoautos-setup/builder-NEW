@@ -81,7 +81,51 @@ export class BuilderWooCommerceService {
     this.setState({ loading: true, error: null });
 
     try {
-      // Check if WooCommerce API is available
+      // Prefer the local /api/vehicles proxy (which itself proxies to WP custom API) to ensure ACF fields are returned
+      try {
+        const qs = new URLSearchParams(
+          filters as Record<string, any>,
+        ).toString();
+        console.log(
+          "🔄 Fetching vehicles from local proxy /api/vehicles...",
+          filters,
+        );
+        const res = await fetch(`/api/vehicles${qs ? `?${qs}` : ""}`);
+        if (!res.ok) throw new Error(`Proxy error ${res.status}`);
+        const json = await res.json();
+
+        // Normalize response shapes
+        let vehiclesData: any[] = [];
+        if (json && Array.isArray(json.data)) vehiclesData = json.data;
+        else if (Array.isArray(json)) vehiclesData = json;
+
+        const transformedVehicles = transformVehiclesForBuilder(vehiclesData);
+        const totalVehicles =
+          (json && json.meta && json.meta.totalRecords) || vehiclesData.length;
+        const perPage = parseInt((filters as any).per_page) || 20;
+        const currentPage = parseInt((filters as any).page) || 1;
+        const totalPages = Math.ceil(totalVehicles / perPage) || 1;
+
+        console.log(
+          `✅ Loaded ${vehiclesData.length} vehicles from /api/vehicles proxy`,
+        );
+
+        this.setState({
+          vehicles: transformedVehicles,
+          totalVehicles,
+          currentPage,
+          totalPages,
+          loading: false,
+        });
+        return;
+      } catch (err) {
+        console.warn(
+          "⚠️ Local /api/vehicles proxy failed, falling back to WooCommerce client:",
+          err,
+        );
+      }
+
+      // Fallback to WooCommerce client if proxy is not available
       if (!wooCommerceAPI.isAvailable()) {
         throw new Error(
           "WooCommerce API not available. Please check environment variables: VITE_WC_API_URL, VITE_WC_CONSUMER_KEY, VITE_WC_CONSUMER_SECRET",

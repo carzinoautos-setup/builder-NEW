@@ -35,6 +35,7 @@ import {
   clearCache as clearPaymentCache,
 } from "./routes/payments.js";
 import woocommerceRoutes from "./routes/woocommerce.js";
+import { getSellerByAccount, getSellersBatch } from "./routes/sellers.js";
 import WordPressSync from "./scripts/syncWordPressUpdates.js";
 
 // Track WordPress sync status
@@ -97,6 +98,11 @@ export function createServer() {
 
   // WooCommerce API routes (for production)
   app.use("/api/woocommerce", woocommerceRoutes);
+
+  // Sellers endpoint (lookup by account number)
+  app.get("/api/sellers/:account", getSellerByAccount);
+  // Batch sellers lookup to avoid per-card network overhead
+  app.post("/api/sellers/batch", getSellersBatch as any);
 
   // WordPress sync status endpoint
   app.get("/api/wordpress/sync-status", (_req, res) => {

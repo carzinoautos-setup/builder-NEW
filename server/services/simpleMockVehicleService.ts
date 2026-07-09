@@ -60,6 +60,11 @@ const DOORS = ["2 doors", "4 doors"];
 const SELLER_TYPES = ["Dealer", "Private Seller"];
 
 // Valid body styles - excludes "Uncategorized" per validation rules
+import {
+  ALLOWED_BODY_STYLES_SET,
+  normalizeBodyStyle,
+} from "../config/allowedBodyStyles.js";
+
 const VALID_BODY_STYLES = [
   "Sedan",
   "Crossover/SUV",
@@ -208,12 +213,17 @@ export class SimpleMockVehicleService {
     );
     this.generateMockData();
     // Apply validation rule to ensure no invalid body_type vehicles
-    this.vehicles = this.vehicles.filter(
-      (vehicle) =>
-        vehicle.body_type &&
-        vehicle.body_type !== "Uncategorized" &&
-        vehicle.body_type.trim() !== "",
-    );
+    this.vehicles = this.vehicles.filter((vehicle) => {
+      try {
+        const v = vehicle.body_type && String(vehicle.body_type).trim();
+        if (!v) return false;
+        if (v.toLowerCase() === "uncategorized") return false;
+        const base = normalizeBodyStyle(v);
+        return Boolean(base);
+      } catch (e) {
+        return false;
+      }
+    });
     console.log(
       `✅ SimpleMockVehicleService: ${this.vehicles.length} vehicles generated (invalid body_type excluded)`,
     );
@@ -433,12 +443,16 @@ export class SimpleMockVehicleService {
 
   async getVehicleTypeCounts(): Promise<{ name: string; count: number }[]> {
     // Only count vehicles with valid body_type
-    const validVehicles = this.vehicles.filter(
-      (v) =>
-        v.body_type &&
-        v.body_type !== "Uncategorized" &&
-        v.body_type.trim() !== "",
-    );
+    const validVehicles = this.vehicles.filter((v) => {
+      try {
+        const b = v.body_type && String(v.body_type).trim();
+        if (!b) return false;
+        if (b.toLowerCase() === "uncategorized") return false;
+        return ALLOWED_BODY_STYLES_SET.has(b.toLowerCase());
+      } catch (e) {
+        return false;
+      }
+    });
 
     // Count vehicles per body type
     const typeCounts = new Map<string, number>();
@@ -462,12 +476,16 @@ export class SimpleMockVehicleService {
     sellerTypes: string[];
   }> {
     // Only include options from vehicles with valid body_type
-    const validVehicles = this.vehicles.filter(
-      (v) =>
-        v.body_type &&
-        v.body_type !== "Uncategorized" &&
-        v.body_type.trim() !== "",
-    );
+    const validVehicles = this.vehicles.filter((v) => {
+      try {
+        const b = v.body_type && String(v.body_type).trim();
+        if (!b) return false;
+        if (b.toLowerCase() === "uncategorized") return false;
+        return ALLOWED_BODY_STYLES_SET.has(b.toLowerCase());
+      } catch (e) {
+        return false;
+      }
+    });
 
     // Extract makes from vehicle titles
     const makes = Array.from(

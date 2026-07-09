@@ -69,6 +69,10 @@ export interface VehicleFilters {
   bodyStyle?: string;
   certified?: boolean;
   sellerType?: string;
+  // Payment filter support
+  paymentMin?: number | string;
+  paymentMax?: number | string;
+  downPayment?: number | string;
 }
 
 // SQL query builder result

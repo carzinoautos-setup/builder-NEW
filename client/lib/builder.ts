@@ -7,7 +7,8 @@ import { builder } from "@builder.io/sdk";
 
 // Initialize Builder.io with your API key
 // You'll need to set VITE_BUILDER_API_KEY in your environment variables
-const BUILDER_API_KEY = import.meta.env.VITE_BUILDER_API_KEY;
+export const BUILDER_API_KEY = import.meta.env.VITE_BUILDER_API_KEY;
+export const BUILDER_ENABLED = Boolean(BUILDER_API_KEY);
 
 if (!BUILDER_API_KEY) {
   console.warn(

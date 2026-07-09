@@ -15,20 +15,21 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
   onToggle,
 }) => {
   return (
-    <div className="border-b border-gray-200 pb-3 mb-3">
+    <div className={`border-b border-gray-200 ${isCollapsed ? 'pb-2 mb-3' : 'pb-1 mb-2'}`}>
       <button
         type="button"
-        className="w-full flex items-center justify-between cursor-pointer py-2 hover:bg-gray-50 px-1 -mx-1 rounded"
+        className="w-full flex items-center justify-between cursor-pointer py-1 hover:bg-gray-50 px-1 -mx-1 rounded"
         onClick={onToggle}
       >
         <h3 className="carzino-filter-title">{title}</h3>
         <ChevronDown
-          className={`w-5 h-5 lg:w-5 lg:h-5 md:w-6 md:h-6 text-red-600 transition-transform mobile-chevron ${
+          strokeWidth={2.5}
+          className={`w-4 h-4 lg:w-4 lg:h-4 md:w-5 md:h-5 text-red-600 transition-transform mobile-chevron ${
             !isCollapsed ? "rotate-180" : ""
           }`}
         />
       </button>
-      {!isCollapsed && <div className="mt-2">{children}</div>}
+      {!isCollapsed && <div className="mt-1">{children}</div>}
     </div>
   );
 };

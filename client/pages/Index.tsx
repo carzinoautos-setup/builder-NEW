@@ -45,6 +45,30 @@ export default function Index() {
   const [vehicleImages, setVehicleImages] = useState<{ [key: string]: string }>(
     {},
   );
+
+  // Persisted custom vehicle type images in localStorage key
+  const VEHICLE_IMAGES_KEY = "carzino_vehicle_type_images";
+
+  const handleVehicleTypeImageUpload = async (type: string, file: File) => {
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        setVehicleImages((prev) => {
+          const next = { ...prev, [type]: result };
+          try {
+            localStorage.setItem(VEHICLE_IMAGES_KEY, JSON.stringify(next));
+          } catch (e) {
+            /* ignore */
+          }
+          return next;
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Failed to read vehicle image", err);
+    }
+  };
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [sortBy, setSortBy] = useState("relevance");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -329,6 +353,8 @@ export default function Index() {
       priceMax: "",
       paymentMin: "",
       paymentMax: "",
+      engineCylinders: [],
+      displacementLiters: [],
     });
     setPriceMin("10000");
     setPriceMax("100000");
@@ -770,14 +796,16 @@ export default function Index() {
     name: string;
     count: number;
   }) => (
-    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+    <label className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded min-w-0">
       <input type="checkbox" className="mr-2" />
       <div
-        className="w-4 h-4 rounded border border-gray-300 mr-2"
+        className="w-4 h-4 rounded border border-gray-300 mr-2 flex-shrink-0"
         style={{ backgroundColor: color }}
       ></div>
-      <span className="carzino-filter-option">{name}</span>
-      <span className="carzino-filter-count ml-1">({count})</span>
+      <span className="carzino-filter-option truncate max-w-[27ch] min-w-0">
+        {name}
+      </span>
+      <span className="carzino-filter-count ml-1 flex-shrink-0">({count})</span>
     </label>
   );
 
@@ -797,7 +825,7 @@ export default function Index() {
           --carzino-price-value: 16px;
           --carzino-dealer-info: 10px;
           --carzino-image-counter: 12px;
-          --carzino-filter-title: 16px;
+          --carzino-filter-title: 14px;
           --carzino-filter-option: 14px;
           --carzino-filter-count: 14px;
           --carzino-search-input: 14px;
@@ -835,7 +863,7 @@ export default function Index() {
             --carzino-price-value: 18px;
             --carzino-dealer-info: 12px;
             --carzino-image-counter: 14px;
-            --carzino-filter-title: 18px;
+            --carzino-filter-title: 14px;
             --carzino-filter-option: 16px;
             --carzino-filter-count: 16px;
             --carzino-search-input: 16px;
@@ -938,12 +966,12 @@ export default function Index() {
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.5);
-            z-index: 35;
+            z-index: 231;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
           }
-          
+
           .mobile-filter-overlay.open {
             opacity: 1;
             visibility: visible;
@@ -955,24 +983,34 @@ export default function Index() {
             left: 0;
             bottom: 0;
             background: white;
-            z-index: 40;
+            z-index: 232;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
-            width: 100% !important;
-            max-width: 100% !important;
+            width: 280px !important;
+            max-width: 280px !important;
+            height: 100vh;
+            max-height: 100vh;
             overflow-y: auto !important;
             overflow-x: hidden;
             display: block !important;
             -webkit-overflow-scrolling: touch;
           }
-          
+
           .mobile-filter-sidebar.open {
             transform: translateX(0);
           }
-          
+
           .mobile-chevron {
             width: 22px !important;
             height: 22px !important;
+          }
+        }
+
+        /* Mobile phones only: make sidebar full width */
+        @media (max-width: 640px) {
+          .mobile-filter-sidebar {
+            width: 100% !important;
+            max-width: 100% !important;
           }
         }
 
@@ -1027,7 +1065,7 @@ export default function Index() {
         }
       `}</style>
 
-      <div className="flex flex-col lg:flex-row min-h-screen max-w-[1325px] mx-auto">
+      <div className="flex flex-col lg:flex-row min-h-screen max-w-[1325px] mx-auto pb-12">
         <div
           className={`mobile-filter-overlay lg:hidden ${mobileFiltersOpen ? "open" : ""}`}
           onClick={() => setMobileFiltersOpen(false)}
@@ -1035,7 +1073,7 @@ export default function Index() {
 
         {/* Sidebar - Hidden on mobile by default */}
         <div
-          className={`bg-white border-r border-gray-200 mobile-filter-sidebar hidden lg:block ${mobileFiltersOpen ? "open" : ""}`}
+          className={`bg-white mobile-filter-sidebar hidden lg:block self-start ${mobileFiltersOpen ? "open" : ""}`}
           style={{
             width: "280px",
           }}
@@ -1096,7 +1134,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1111,7 +1149,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("make", item)}
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1126,7 +1164,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("model", item)}
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1141,25 +1179,111 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
-                  {appliedFilters.vehicleType.map((item) => (
-                    <span
-                      key={item}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("vehicleType", item)}
-                        className="ml-1 text-white"
+                  {(() => {
+                    const CAR_CHILD_SLUGS = [
+                      "sedan",
+                      "coupe",
+                      "hatchback",
+                      "wagon",
+                      "convertible",
+                      "crossover-suv",
+                      "van-minivan",
+                    ];
+                    const TRUCK_CHILD_SLUGS = [
+                      "crew-cab",
+                      "extended-cab",
+                      "regular-cab-truck",
+                    ];
+                    const selected = new Set(appliedFilters.vehicleType || []);
+                    const carAll = CAR_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
+                    const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
+                    const chips: string[] = [];
+                    if (carAll) chips.push("car");
+                    else
+                      CAR_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
+                    if (truckAll) chips.push("truck");
+                    else
+                      TRUCK_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
+                    for (const s of Array.from(selected)) {
+                      if (
+                        !CAR_CHILD_SLUGS.includes(s) &&
+                        !TRUCK_CHILD_SLUGS.includes(s) &&
+                        s !== "car" &&
+                        s !== "truck"
+                      ) {
+                        chips.push(s);
+                      }
+                    }
+                    return chips.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => {
+                          setAppliedFilters((prev) => {
+                            const nextSet = new Set(prev.vehicleType || []);
+                            if (item === "car") {
+                              CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                            } else if (item === "truck") {
+                              TRUCK_CHILD_SLUGS.forEach((s) =>
+                                nextSet.delete(s),
+                              );
+                            } else {
+                              nextSet.delete(item);
+                            }
+                            return {
+                              ...prev,
+                              vehicleType: Array.from(nextSet),
+                            };
+                          });
+                        }}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs"
                       >
-                        ×
-                      </button>
-                    </span>
-                  ))}
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item === "car"
+                          ? "All Cars"
+                          : item === "truck"
+                            ? "All Trucks"
+                            : item}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAppliedFilters((prev) => {
+                              const nextSet = new Set(prev.vehicleType || []);
+                              if (item === "car") {
+                                CAR_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
+                              } else if (item === "truck") {
+                                TRUCK_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
+                              } else {
+                                nextSet.delete(item);
+                              }
+                              return {
+                                ...prev,
+                                vehicleType: Array.from(nextSet),
+                              };
+                            });
+                          }}
+                          className="ml-1 text-white"
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
+                      </span>
+                    ));
+                  })()}
                   {appliedFilters.driveType.map((item) => (
                     <span
                       key={item}
@@ -1171,7 +1295,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("driveType", item)}
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1188,7 +1312,7 @@ export default function Index() {
                         }
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1203,7 +1327,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("sellerType", item)}
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1222,7 +1346,7 @@ export default function Index() {
                         }
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   )}
@@ -1243,7 +1367,7 @@ export default function Index() {
                         }}
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   )}
@@ -1262,7 +1386,7 @@ export default function Index() {
                         }
                         className="ml-1 text-white"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   )}
@@ -1271,7 +1395,7 @@ export default function Index() {
             </div>
 
             {/* Desktop Search Section */}
-            <div className="hidden lg:block mb-4 pb-4 border-b border-gray-200">
+            <div className="hidden lg:block mb-4 pb-4">
               <div className="relative">
                 <input
                   type="text"
@@ -1320,7 +1444,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("condition", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1335,7 +1459,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("make", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1350,7 +1474,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("model", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1365,25 +1489,111 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("trim", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
-                  {appliedFilters.vehicleType.map((item) => (
-                    <span
-                      key={item}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
-                    >
-                      <Check className="w-3 h-3 text-red-600" />
-                      {item}
-                      <button
-                        onClick={() => removeAppliedFilter("vehicleType", item)}
-                        className="ml-1 text-white hover:text-gray-300"
+                  {(() => {
+                    const CAR_CHILD_SLUGS = [
+                      "sedan",
+                      "coupe",
+                      "hatchback",
+                      "wagon",
+                      "convertible",
+                      "crossover-suv",
+                      "van-minivan",
+                    ];
+                    const TRUCK_CHILD_SLUGS = [
+                      "crew-cab",
+                      "extended-cab",
+                      "regular-cab-truck",
+                    ];
+                    const selected = new Set(appliedFilters.vehicleType || []);
+                    const carAll = CAR_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
+                    const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                      selected.has(s),
+                    );
+                    const chips: string[] = [];
+                    if (carAll) chips.push("car");
+                    else
+                      CAR_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
+                    if (truckAll) chips.push("truck");
+                    else
+                      TRUCK_CHILD_SLUGS.forEach(
+                        (s) => selected.has(s) && chips.push(s),
+                      );
+                    for (const s of Array.from(selected)) {
+                      if (
+                        !CAR_CHILD_SLUGS.includes(s) &&
+                        !TRUCK_CHILD_SLUGS.includes(s) &&
+                        s !== "car" &&
+                        s !== "truck"
+                      ) {
+                        chips.push(s);
+                      }
+                    }
+                    return chips.map((item) => (
+                      <span
+                        key={item}
+                        onClick={() => {
+                          setAppliedFilters((prev) => {
+                            const nextSet = new Set(prev.vehicleType || []);
+                            if (item === "car") {
+                              CAR_CHILD_SLUGS.forEach((s) => nextSet.delete(s));
+                            } else if (item === "truck") {
+                              TRUCK_CHILD_SLUGS.forEach((s) =>
+                                nextSet.delete(s),
+                              );
+                            } else {
+                              nextSet.delete(item);
+                            }
+                            return {
+                              ...prev,
+                              vehicleType: Array.from(nextSet),
+                            };
+                          });
+                        }}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-black text-white rounded-full text-xs"
                       >
-                        ×
-                      </button>
-                    </span>
-                  ))}
+                        <Check className="w-3 h-3 text-red-600" />
+                        {item === "car"
+                          ? "All Cars"
+                          : item === "truck"
+                            ? "All Trucks"
+                            : item}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAppliedFilters((prev) => {
+                              const nextSet = new Set(prev.vehicleType || []);
+                              if (item === "car") {
+                                CAR_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
+                              } else if (item === "truck") {
+                                TRUCK_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
+                              } else {
+                                nextSet.delete(item);
+                              }
+                              return {
+                                ...prev,
+                                vehicleType: Array.from(nextSet),
+                              };
+                            });
+                          }}
+                          className="ml-1 text-white hover:text-gray-300"
+                        >
+                          <X className="w-3 h-3 inline" />
+                        </button>
+                      </span>
+                    ));
+                  })()}
                   {appliedFilters.driveType.map((item) => (
                     <span
                       key={item}
@@ -1395,7 +1605,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("driveType", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1412,7 +1622,7 @@ export default function Index() {
                         }
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1427,7 +1637,7 @@ export default function Index() {
                         onClick={() => removeAppliedFilter("sellerType", item)}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   ))}
@@ -1446,7 +1656,7 @@ export default function Index() {
                         }
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   )}
@@ -1467,7 +1677,7 @@ export default function Index() {
                         }}
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   )}
@@ -1486,7 +1696,7 @@ export default function Index() {
                         }
                         className="ml-1 text-white hover:text-gray-300"
                       >
-                        ×
+                        <X className="w-3 h-3 inline" />
                       </button>
                     </span>
                   )}
@@ -1529,11 +1739,11 @@ export default function Index() {
               isCollapsed={collapsedFilters.make}
               onToggle={() => toggleFilter("make")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {displayedMakes.map((make, index) => (
                   <label
                     key={index}
-                    className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                    className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                   >
                     <input
                       type="checkbox"
@@ -1572,7 +1782,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.model}
               onToggle={() => toggleFilter("model")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {appliedFilters.make.length === 0 ? (
                   <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
                     Select a make first to see available models
@@ -1586,7 +1796,7 @@ export default function Index() {
                     {displayedModels.map((model, index) => (
                       <label
                         key={index}
-                        className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                        className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -1629,7 +1839,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.trim}
               onToggle={() => toggleFilter("trim")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {appliedFilters.make.length === 0 ? (
                   <div className="text-sm text-gray-500 italic p-2 bg-gray-50 rounded">
                     Select a make first to see available trims
@@ -1642,7 +1852,7 @@ export default function Index() {
                   displayedTrims.map((trim, index) => (
                     <label
                       key={index}
-                      className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer"
+                      className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -1828,8 +2038,8 @@ export default function Index() {
               isCollapsed={collapsedFilters.condition}
               onToggle={() => toggleFilter("condition")}
             >
-              <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+              <div className="space-y-0.5">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -1849,7 +2059,7 @@ export default function Index() {
                   <span className="carzino-filter-option">New</span>
                   <span className="carzino-filter-count ml-1">(125,989)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -1869,7 +2079,7 @@ export default function Index() {
                   <span className="carzino-filter-option">Used</span>
                   <span className="carzino-filter-count ml-1">(78,800)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -1898,7 +2108,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.mileage}
               onToggle={() => toggleFilter("mileage")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <select
                   className="carzino-dropdown-option w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none bg-white"
                   value={appliedFilters.mileage}
@@ -1943,6 +2153,7 @@ export default function Index() {
                 ) : (
                   availableBodyTypes.map((type, index) => (
                     <VehicleTypeCard
+                      onImageUpload={handleVehicleTypeImageUpload}
                       key={index}
                       type={type.name}
                       count={type.count}
@@ -1963,8 +2174,8 @@ export default function Index() {
               isCollapsed={collapsedFilters.driveType}
               onToggle={() => toggleFilter("driveType")}
             >
-              <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+              <div className="space-y-0.5">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -1984,7 +2195,7 @@ export default function Index() {
                   <span className="carzino-filter-option">AWD/4WD</span>
                   <span className="carzino-filter-count ml-1">(25,309)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2004,7 +2215,7 @@ export default function Index() {
                   <span className="carzino-filter-option">FWD</span>
                   <span className="carzino-filter-count ml-1">(12,057)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2033,20 +2244,20 @@ export default function Index() {
               isCollapsed={collapsedFilters.transmissionSpeed}
               onToggle={() => toggleFilter("transmissionSpeed")}
             >
-              <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+              <div className="space-y-0.5">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
                     4-Speed Automatic
                   </span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
                     6-Speed Automatic
                   </span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
                     8-Speed Automatic
@@ -2061,11 +2272,11 @@ export default function Index() {
               isCollapsed={collapsedFilters.exteriorColor}
               onToggle={() => toggleFilter("exteriorColor")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {exteriorColors.map((color, index) => (
                   <label
                     key={index}
-                    className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded"
+                    className="flex items-center text-sm cursor-pointer hover:bg-gray-50 py-0.5 px-1 rounded"
                   >
                     <input
                       type="checkbox"
@@ -2104,7 +2315,7 @@ export default function Index() {
               isCollapsed={collapsedFilters.interiorColor}
               onToggle={() => toggleFilter("interiorColor")}
             >
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {interiorColors.map((color, index) => (
                   <ColorSwatch
                     key={index}
@@ -2122,8 +2333,8 @@ export default function Index() {
               isCollapsed={collapsedFilters.sellerType}
               onToggle={() => toggleFilter("sellerType")}
             >
-              <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+              <div className="space-y-0.5">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2143,7 +2354,7 @@ export default function Index() {
                   <span className="carzino-filter-option">Dealer</span>
                   <span className="carzino-filter-count ml-1">(6,543)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -2174,15 +2385,15 @@ export default function Index() {
               isCollapsed={collapsedFilters.dealer}
               onToggle={() => toggleFilter("dealer")}
             >
-              <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+              <div className="space-y-0.5">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">
                     Bayside Auto Sales
                   </span>
                   <span className="carzino-filter-count ml-1">(234)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">ABC Car Sales</span>
                   <span className="carzino-filter-count ml-1">(156)</span>
@@ -2196,13 +2407,13 @@ export default function Index() {
               isCollapsed={collapsedFilters.state}
               onToggle={() => toggleFilter("state")}
             >
-              <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+              <div className="space-y-0.5">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Washington</span>
                   <span className="carzino-filter-count ml-1">(12,456)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Oregon</span>
                   <span className="carzino-filter-count ml-1">(8,234)</span>
@@ -2216,13 +2427,13 @@ export default function Index() {
               isCollapsed={collapsedFilters.city}
               onToggle={() => toggleFilter("city")}
             >
-              <div className="space-y-1">
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+              <div className="space-y-0.5">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Seattle</span>
                   <span className="carzino-filter-count ml-1">(4,567)</span>
                 </label>
-                <label className="flex items-center hover:bg-gray-50 p-1 rounded cursor-pointer">
+                <label className="flex items-center hover:bg-gray-50 py-0.5 px-1 rounded cursor-pointer">
                   <input type="checkbox" className="mr-2" />
                   <span className="carzino-filter-option">Portland</span>
                   <span className="carzino-filter-count ml-1">(3,234)</span>
@@ -2291,7 +2502,7 @@ export default function Index() {
                           onClick={() => removeAppliedFilter("condition", item)}
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     ))}
@@ -2306,7 +2517,7 @@ export default function Index() {
                           onClick={() => removeAppliedFilter("make", item)}
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     ))}
@@ -2321,7 +2532,7 @@ export default function Index() {
                           onClick={() => removeAppliedFilter("model", item)}
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     ))}
@@ -2336,27 +2547,115 @@ export default function Index() {
                           onClick={() => removeAppliedFilter("trim", item)}
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     ))}
-                    {appliedFilters.vehicleType.map((item) => (
-                      <span
-                        key={item}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
-                      >
-                        <Check className="w-3 h-3 text-red-600" />
-                        {item}
-                        <button
-                          onClick={() =>
-                            removeAppliedFilter("vehicleType", item)
-                          }
-                          className="ml-1 text-white"
+                    {(() => {
+                      const CAR_CHILD_SLUGS = [
+                        "sedan",
+                        "coupe",
+                        "hatchback",
+                        "wagon",
+                        "convertible",
+                        "crossover-suv",
+                        "van-minivan",
+                      ];
+                      const TRUCK_CHILD_SLUGS = [
+                        "crew-cab",
+                        "extended-cab",
+                        "regular-cab-truck",
+                      ];
+                      const selected = new Set(
+                        appliedFilters.vehicleType || [],
+                      );
+                      const carAll = CAR_CHILD_SLUGS.every((s) =>
+                        selected.has(s),
+                      );
+                      const truckAll = TRUCK_CHILD_SLUGS.every((s) =>
+                        selected.has(s),
+                      );
+                      const chips: string[] = [];
+                      if (carAll) chips.push("car");
+                      else
+                        CAR_CHILD_SLUGS.forEach(
+                          (s) => selected.has(s) && chips.push(s),
+                        );
+                      if (truckAll) chips.push("truck");
+                      else
+                        TRUCK_CHILD_SLUGS.forEach(
+                          (s) => selected.has(s) && chips.push(s),
+                        );
+                      for (const s of Array.from(selected)) {
+                        if (
+                          !CAR_CHILD_SLUGS.includes(s) &&
+                          !TRUCK_CHILD_SLUGS.includes(s) &&
+                          s !== "car" &&
+                          s !== "truck"
+                        ) {
+                          chips.push(s);
+                        }
+                      }
+                      return chips.map((item) => (
+                        <span
+                          key={item}
+                          onClick={() => {
+                            setAppliedFilters((prev) => {
+                              const nextSet = new Set(prev.vehicleType || []);
+                              if (item === "car") {
+                                CAR_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
+                              } else if (item === "truck") {
+                                TRUCK_CHILD_SLUGS.forEach((s) =>
+                                  nextSet.delete(s),
+                                );
+                              } else {
+                                nextSet.delete(item);
+                              }
+                              return {
+                                ...prev,
+                                vehicleType: Array.from(nextSet),
+                              };
+                            });
+                          }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-black text-white rounded-full text-xs whitespace-nowrap flex-shrink-0"
                         >
-                          ×
-                        </button>
-                      </span>
-                    ))}
+                          <Check className="w-3 h-3 text-red-600" />
+                          {item === "car"
+                            ? "All Cars"
+                            : item === "truck"
+                              ? "All Trucks"
+                              : item}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAppliedFilters((prev) => {
+                                const nextSet = new Set(prev.vehicleType || []);
+                                if (item === "car") {
+                                  CAR_CHILD_SLUGS.forEach((s) =>
+                                    nextSet.delete(s),
+                                  );
+                                } else if (item === "truck") {
+                                  TRUCK_CHILD_SLUGS.forEach((s) =>
+                                    nextSet.delete(s),
+                                  );
+                                } else {
+                                  nextSet.delete(item);
+                                }
+                                return {
+                                  ...prev,
+                                  vehicleType: Array.from(nextSet),
+                                };
+                              });
+                            }}
+                            className="ml-1 text-white"
+                          >
+                            <X className="w-3 h-3 inline" />
+                          </button>
+                        </span>
+                      ));
+                    })()}
                     {appliedFilters.driveType.map((item) => (
                       <span
                         key={item}
@@ -2368,7 +2667,7 @@ export default function Index() {
                           onClick={() => removeAppliedFilter("driveType", item)}
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     ))}
@@ -2385,7 +2684,7 @@ export default function Index() {
                           }
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     ))}
@@ -2404,7 +2703,7 @@ export default function Index() {
                           }
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     )}
@@ -2425,7 +2724,7 @@ export default function Index() {
                           }}
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     )}
@@ -2445,7 +2744,7 @@ export default function Index() {
                           }
                           className="ml-1 text-white"
                         >
-                          ×
+                          <X className="w-3 h-3 inline" />
                         </button>
                       </span>
                     )}
@@ -2653,7 +2952,7 @@ export default function Index() {
                 <p className="text-gray-600 text-sm mt-1">
                   {viewMode === "favorites"
                     ? `${favoritesCount} Vehicles`
-                    : `${totalResults.toLocaleString()} Matches`}
+                    : `${totalResults.toLocaleString()} Results`}
                 </p>
               </div>
 

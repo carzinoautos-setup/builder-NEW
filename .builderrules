@@ -1,0 +1,21 @@
+There should be two text boxes displayed side by side.
+
+Left Text Box:
+
+Contains the fields state_seller and city_seller.
+
+Example value: Seattle, WA
+
+Right Text Box:
+
+Contains the field account_type_seller.
+
+Example value: Dealer
+
+In addition, there is a hidden system field:
+
+Field: account_number_seller
+
+Purpose: Acts as the relationship field to match each record with the corresponding Seller Account information.
+
+This field should not be visible to the user.

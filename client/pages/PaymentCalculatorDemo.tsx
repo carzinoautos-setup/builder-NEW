@@ -12,6 +12,7 @@ const sampleVehicles = [
     images: ["/placeholder.svg"],
     badges: ["Low APR Available"],
     title: "2023 Honda Civic EX",
+    year: 2023,
     mileage: "15,000",
     transmission: "CVT",
     doors: "4 Doors",
@@ -30,6 +31,7 @@ const sampleVehicles = [
     images: ["/placeholder.svg"],
     badges: ["Certified Pre-Owned"],
     title: "2022 Toyota Camry LE",
+    year: 2022,
     mileage: "25,000",
     transmission: "Automatic",
     doors: "4 Doors",
@@ -48,6 +50,7 @@ const sampleVehicles = [
     images: ["/placeholder.svg"],
     badges: ["Special Financing"],
     title: "2021 Nissan Altima SR",
+    year: 2021,
     mileage: "35,000",
     transmission: "CVT",
     doors: "4 Doors",
@@ -77,10 +80,8 @@ export const PaymentCalculatorDemo: React.FC = () => {
     formattedAffordableRange,
   } = usePaymentFilters({
     initialState: {
-      paymentMin: "300",
-      paymentMax: "600",
-      interestRate: "4.9",
-      loanTermMonths: "60",
+      paymentMin: "Any",
+      paymentMax: "Any",
       downPayment: "3000",
     },
   });
@@ -89,7 +90,11 @@ export const PaymentCalculatorDemo: React.FC = () => {
   useEffect(() => {
     const updateVehiclePayments = async () => {
       const vehiclesWithPayments = await calculateBulkPayments(
-        vehicles.map((v) => ({ id: v.id, salePrice: v.rawPrice })),
+        vehicles.map((v) => ({
+          id: v.id,
+          salePrice: v.rawPrice,
+          year: (v as any).year,
+        })),
       );
 
       setVehicles((prev) =>
@@ -124,13 +129,65 @@ export const PaymentCalculatorDemo: React.FC = () => {
     });
   };
 
-  // Filter vehicles based on affordable price range
+  // Filter vehicles based on calculated monthly payment and the From/To selection
+  const toNumber = (v: string) => {
+    if (!v || v === "Any") return null;
+    if (v === "800+") return 800;
+    return parseFloat(v);
+  };
+
+  // Compute allowed To options based on the selected From value and ensure To stays valid
+  const paymentNumericOptions = [
+    100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700,
+  ];
+  const fromValue = paymentState.paymentMin;
+  const allowedToOptions: string[] = (() => {
+    if (fromValue === "Any")
+      return ["Any", ...paymentNumericOptions.map(String), "800+"];
+    if (fromValue === "800+") return ["Any", "800+"];
+    const fromNum = parseFloat(fromValue);
+    const opts = [
+      "Any",
+      ...paymentNumericOptions.filter((v) => v >= fromNum).map(String),
+    ];
+    if (fromNum <= 800) opts.push("800+");
+    return opts;
+  })();
+
+  useEffect(() => {
+    // Auto-correct paymentMax if it's no longer valid for the selected From
+    if (!allowedToOptions.includes(paymentState.paymentMax)) {
+      // default conservatively to Any so we don't accidentally exclude results
+      updatePaymentState({ paymentMax: "Any" });
+    }
+  }, [paymentState.paymentMin]);
+
   const filteredVehicles = vehicles.filter((vehicle) => {
-    if (!affordablePriceRange) return true;
-    return (
-      vehicle.rawPrice >= affordablePriceRange.min &&
-      vehicle.rawPrice <= affordablePriceRange.max
-    );
+    // If payment not yet calculated, include until calculation finishes so UI doesn't flash "no results"
+    if (!vehicle.payment) return true;
+
+    const numeric = Number(String(vehicle.payment).replace(/[^0-9.-]+/g, ""));
+    const minVal = toNumber(paymentState.paymentMin);
+    const maxVal = toNumber(paymentState.paymentMax);
+
+    if (paymentState.paymentMin === "Any" && paymentState.paymentMax === "Any")
+      return true;
+
+    if (paymentState.paymentMin === "800+") {
+      // include payments >= 800 (or Any)
+      if (paymentState.paymentMax === "Any") return numeric >= 800;
+      if (paymentState.paymentMax === "800+") return numeric >= 800;
+      const max = maxVal || Number.MAX_SAFE_INTEGER;
+      return numeric >= 800 && numeric <= max;
+    }
+
+    const min = minVal || 0;
+    const max = maxVal || Number.MAX_SAFE_INTEGER;
+
+    // enforce To >= From logic - if To is specified and below From, exclude
+    if (paymentState.paymentMax !== "Any" && max < min) return false;
+
+    return numeric >= min && numeric <= max;
   });
 
   return (
@@ -168,77 +225,85 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 <div className="flex gap-2">
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">
-                      Min
+                      From
                     </label>
-                    <input
-                      type="number"
+                    <select
                       value={paymentState.paymentMin}
                       onChange={(e) =>
                         updatePaymentState({ paymentMin: e.target.value })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                      placeholder="300"
-                    />
+                    >
+                      <option value="Any">Any</option>
+                      {[
+                        100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700,
+                      ].map((v) => (
+                        <option key={v} value={String(v)}>
+                          ${v}
+                        </option>
+                      ))}
+                      <option value="800+">$800+</option>
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">
-                      Max
+                      To
                     </label>
-                    <input
-                      type="number"
+                    <select
                       value={paymentState.paymentMax}
                       onChange={(e) =>
                         updatePaymentState({ paymentMax: e.target.value })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                      placeholder="600"
-                    />
+                    >
+                      {/* To options are constrained based on the selected From value */}
+                      {/* Any is always available */}
+                      <option value="Any">Any</option>
+                      {(() => {
+                        const from = paymentState.paymentMin;
+                        const baseOptions = [
+                          100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700,
+                        ];
+                        if (from === "Any") {
+                          return baseOptions.map((v) => (
+                            <option key={v} value={String(v)}>
+                              ${v}
+                            </option>
+                          ));
+                        }
+                        if (from === "800+") {
+                          return [
+                            <option key="800+" value="800+">
+                              $800+
+                            </option>,
+                          ];
+                        }
+                        const fromNum = parseFloat(from);
+                        return baseOptions
+                          .filter((v) => v >= fromNum)
+                          .map((v) => (
+                            <option key={v} value={String(v)}>
+                              ${v}
+                            </option>
+                          ))
+                          .concat(
+                            fromNum <= 800
+                              ? [
+                                  <option key="800+" value="800+">
+                                    $800+
+                                  </option>,
+                                ]
+                              : [],
+                          );
+                      })()}
+                    </select>
                   </div>
                 </div>
               </div>
 
               {/* Loan Parameters */}
               <div className="space-y-4 mb-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Interest Rate (APR)
-                  </label>
-                  <select
-                    value={paymentState.interestRate}
-                    onChange={(e) =>
-                      updatePaymentState({ interestRate: e.target.value })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                  >
-                    <option value="0">0% APR</option>
-                    <option value="2.9">2.9% APR</option>
-                    <option value="3.9">3.9% APR</option>
-                    <option value="4.9">4.9% APR</option>
-                    <option value="5.9">5.9% APR</option>
-                    <option value="6.9">6.9% APR</option>
-                    <option value="7.9">7.9% APR</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Loan Term
-                  </label>
-                  <select
-                    value={paymentState.loanTermMonths}
-                    onChange={(e) =>
-                      updatePaymentState({ loanTermMonths: e.target.value })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                  >
-                    <option value="36">36 months</option>
-                    <option value="48">48 months</option>
-                    <option value="60">60 months</option>
-                    <option value="72">72 months</option>
-                    <option value="84">84 months</option>
-                  </select>
-                </div>
-
+                {/* APR and Term are auto-assigned based on vehicle year/price */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Down Payment
@@ -308,14 +373,14 @@ export const PaymentCalculatorDemo: React.FC = () => {
               </p>
             </div>
 
-            {filteredVehicles.length === 0 ? (
+            {!isCalculating && filteredVehicles.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg">
                 <Calculator className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No vehicles match your payment criteria
+                  No vehicles found in this payment range
                 </h3>
                 <p className="text-gray-500 mb-4">
-                  Try adjusting your payment range or loan parameters
+                  Try adjusting your payment range
                 </p>
                 <button
                   onClick={resetPaymentFilters}
@@ -323,6 +388,16 @@ export const PaymentCalculatorDemo: React.FC = () => {
                 >
                   Reset Filters
                 </button>
+              </div>
+            ) : isCalculating && filteredVehicles.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-lg">
+                <TrendingUp className="w-16 h-16 text-blue-400 mx-auto mb-4 animate-pulse" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Searching for vehicles...
+                </h3>
+                <p className="text-gray-500 mb-4">
+                  Please wait while we calculate payments
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

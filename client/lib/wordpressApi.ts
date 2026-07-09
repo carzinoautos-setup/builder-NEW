@@ -5,8 +5,10 @@
 
 // Configure your WordPress site URL
 // Vite uses import.meta.env instead of process.env
-const WP_BASE_URL = import.meta.env.VITE_WP_URL || "https://your-site.com";
-const API_BASE = `${WP_BASE_URL}/wp-json/carzino/v1`;
+const WP_BASE_URL =
+  import.meta.env.VITE_WP_URL ||
+  "https://env-uploadbackup62225-czdev.kinsta.cloud";
+const API_BASE = `${WP_BASE_URL}/wp-json/custom/v1`;
 
 // Vehicle data structure matching your WooCommerce fields
 export interface WPVehicle {

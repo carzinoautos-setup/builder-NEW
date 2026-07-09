@@ -70,7 +70,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const paginationPages = getPaginationPages();
 
   return (
-    <div className="border-t border-gray-200 bg-white px-4 py-4 mt-4">
+    <div className="bg-white px-4 py-4 mt-4">
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="text-sm text-gray-700 text-center">
           Showing <span className="font-medium">{startResult}</span> to{" "}
@@ -78,7 +78,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <span className="font-medium">{totalResults}</span> results
         </div>
 
-        <div className="flex items-center justify-center space-x-4 sm:space-x-2 w-full">
+        <div className="flex items-center justify-center space-x-6 sm:space-x-2 w-full">
           {/* Previous Button */}
           <button
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
@@ -128,27 +128,6 @@ export const Pagination: React.FC<PaginationProps> = ({
             <ChevronRight className="w-5 h-5" />
             <span className="hidden sm:inline sm:ml-1">Next</span>
           </button>
-        </div>
-
-        {/* Mobile-only "Go to" section */}
-        <div className="sm:hidden mt-4 pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-center gap-3">
-            <span className="text-sm text-gray-600">Go to page:</span>
-            <select
-              value={currentPage}
-              onChange={(e) => onPageChange(parseInt(e.target.value))}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:border-red-600"
-            >
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <option key={page} value={page}>
-                    {page}
-                  </option>
-                ),
-              )}
-            </select>
-            <span className="text-sm text-gray-500">of {totalPages}</span>
-          </div>
         </div>
       </div>
     </div>

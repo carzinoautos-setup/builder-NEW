@@ -70,91 +70,122 @@ export interface FilterOptions {
   bodyStyles: string[];
   sellerTypes: string[];
 }
+import { fetchWithRetry } from "./fetchWithRetry";
 
-// API client class
+// If project doesn't provide a VITE_API_URL, keep base empty so relative paths are used
+const DEFAULT_BASE = (import.meta as any)?.env?.VITE_API_URL || "";
+
 class VehicleApiClient {
   private baseUrl: string;
 
   constructor() {
-    // Use environment variable or default to current host
-    this.baseUrl = import.meta.env.VITE_API_URL || "";
+    this.baseUrl = DEFAULT_BASE;
   }
 
-  private async request<T>(url: string): Promise<T> {
-    try {
-      const response = await fetch(`${this.baseUrl}${url}`);
+  private buildUrl(path: string) {
+    // Ensure leading slash
+    if (!path.startsWith("/")) path = `/${path}`;
+    return `${this.baseUrl}${path}`;
+  }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  private async request<T>(
+    path: string,
+    init: RequestInit = {},
+    retries = 2,
+    timeout = 15000,
+  ): Promise<T> {
+    const url = this.buildUrl(path);
+    try {
+      const res = await fetchWithRetry(url, init, retries, timeout);
+
+      // fetchWithRetry returns a graceful response-like object on final failure
+      if (!res || (res as any).ok === false) {
+        const text =
+          res && typeof res.text === "function"
+            ? await (res as any).text()
+            : "";
+        const message = text || (res as any).statusText || "Network error";
+        throw new Error(`Request failed: ${message}`);
       }
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("API request failed:", error);
-      throw error;
+      const data = await (res as any).json();
+      return data as T;
+    } catch (err) {
+      console.error(
+        "vehicleApi.request error",
+        path,
+        err && (err as any).message ? (err as any).message : err,
+      );
+      throw err;
     }
   }
 
-  /**
-   * Fetch paginated vehicles with optional filters
-   */
   async getVehicles(
-    page: number = 1,
-    pageSize: number = 20,
+    page = 1,
+    pageSize = 20,
     filters: VehicleFilters = {},
-    sortBy: string = "id",
+    sortBy = "id",
     sortOrder: "ASC" | "DESC" = "DESC",
   ): Promise<VehiclesApiResponse> {
     const params = new URLSearchParams({
-      page: page.toString(),
-      pageSize: pageSize.toString(),
+      page: String(page),
+      pageSize: String(pageSize),
       sortBy,
       sortOrder,
     });
 
-    // Add filters to params
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        params.append(key, value.toString());
-      }
+    Object.entries(filters).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "")
+        params.append(k, String(v));
     });
 
-    return this.request<VehiclesApiResponse>(`/api/vehicles?${params}`);
+    // Prefer calling the WordPress API directly (VITE_WP_URL) when available
+    // because the local proxy/dev server may be down. Do NOT fall back to demo/mock data.
+    try {
+      const env = (import.meta as any)?.env || {};
+      const wpBaseRaw = env.VITE_WP_URL || "";
+      const wpBase = String(wpBaseRaw).replace(/\/$/, "");
+      if (wpBase) {
+        const wpUrl = `${wpBase}/wp-json/custom/v1/vehicles?${params.toString()}`;
+        try {
+          const res = await fetchWithRetry(wpUrl, {}, 2, 15000);
+          if (res && (res as any).ok !== false) {
+            const data = await (res as any).json();
+            // If the WP API returned a top-level array or an object matching our expected shape, return it
+            return data as VehiclesApiResponse;
+          }
+          console.warn("vehicleApi: direct WP fetch returned non-ok, falling back to local /api/vehicles", res && (res as any).statusText);
+        } catch (wpFetchErr) {
+          console.warn("vehicleApi: direct WP fetch failed, falling back to local /api/vehicles", wpFetchErr && wpFetchErr.message ? wpFetchErr.message : wpFetchErr);
+        }
+      }
+    } catch (e) {
+      // swallow env read errors and continue to local proxy
+      console.warn("vehicleApi: error while attempting direct WP fetch", e && (e as any).message ? (e as any).message : e);
+    }
+
+    // Last-resort: use configured base (likely relative /api/vehicles) which may be a local proxy
+    return this.request<VehiclesApiResponse>(`/api/vehicles?${params.toString()}`);
   }
 
-  /**
-   * Fetch a single vehicle by ID
-   */
-  async getVehicleById(
-    id: number,
-  ): Promise<{ success: boolean; data?: VehicleRecord; message?: string }> {
+  async getVehicleById(id: number) {
     return this.request(`/api/vehicles/${id}`);
   }
 
-  /**
-   * Fetch available filter options
-   */
-  async getFilterOptions(): Promise<{ success: boolean; data: FilterOptions }> {
-    return this.request("/api/vehicles/filters");
+  async getFilterOptions(): Promise<
+    { success: boolean; data: FilterOptions } | any
+  > {
+    return this.request(`/api/vehicles/filters`);
   }
 
-  /**
-   * Check API health
-   */
-  async healthCheck(): Promise<{
-    success: boolean;
-    message: string;
-    dbConnected: boolean;
-  }> {
-    return this.request("/api/health");
+  async healthCheck() {
+    return this.request(`/api/health`, {}, 1, 5000);
   }
 }
 
-// Export singleton instance
 export const vehicleApi = new VehicleApiClient();
 
-// Utility functions
+// Utility helpers preserved for backward compatibility
 export function formatPrice(price: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -173,6 +204,20 @@ export function getVehicleTitle(vehicle: VehicleRecord): string {
 }
 
 export function getVehicleImageUrl(vehicle: VehicleRecord): string {
-  // Use a placeholder service or implement your image logic
-  return `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=450&h=300&fit=crop&auto=format&q=80`;
+  const featured =
+    (vehicle as any).featured_image || (vehicle as any).featuredImage;
+  if (featured) return String(featured);
+  const images = (vehicle as any).images;
+  if (images && Array.isArray(images) && images.length > 0) {
+    const first =
+      typeof images[0] === "string"
+        ? images[0]
+        : images[0].src || images[0].url;
+    if (first) return String(first);
+  }
+  return (
+    (import.meta as any)?.env?.VITE_PLACEHOLDER_IMAGE ||
+    "/assets/fallback-image-450.webp" ||
+    "/placeholder.svg"
+  );
 }

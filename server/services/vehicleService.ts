@@ -8,6 +8,7 @@ import {
   VehicleFilters,
   SqlQuery,
 } from "../types/vehicle.js";
+import { ALLOWED_BODY_STYLES } from "../config/allowedBodyStyles.js";
 
 export class VehicleService {
   private db = getDatabase();
@@ -49,8 +50,41 @@ export class VehicleService {
     }
 
     if (filters.condition) {
-      whereConditions.push("condition = ?");
-      params.push(filters.condition);
+      // Support multiple comma-separated condition values (e.g. "New,Used")
+      if (Array.isArray(filters.condition)) {
+        const parts = filters.condition
+          .map((p: any) => String(p).trim())
+          .filter(Boolean);
+        if (parts.length === 1) {
+          whereConditions.push("condition = ?");
+          params.push(parts[0]);
+        } else if (parts.length > 1) {
+          whereConditions.push(
+            `condition IN (${parts.map(() => "?").join(",")})`,
+          );
+          params.push(...parts);
+        }
+      } else if (
+        typeof filters.condition === "string" &&
+        filters.condition.includes(",")
+      ) {
+        const parts = String(filters.condition)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+        if (parts.length === 1) {
+          whereConditions.push("condition = ?");
+          params.push(parts[0]);
+        } else if (parts.length > 1) {
+          whereConditions.push(
+            `condition IN (${parts.map(() => "?").join(",")})`,
+          );
+          params.push(...parts);
+        }
+      } else {
+        whereConditions.push("condition = ?");
+        params.push(filters.condition);
+      }
     }
 
     if (filters.maxMileage) {
@@ -77,6 +111,8 @@ export class VehicleService {
       whereConditions.push("body_style = ?");
       params.push(filters.bodyStyle);
     }
+    // NOTE: do NOT exclude vehicles with missing body_style by default — some new products may be missing this ACF field
+    // Excluding them caused newly uploaded items to vanish shortly after appearing in the UI.
 
     if (filters.certified !== undefined) {
       whereConditions.push("certified = ?");
@@ -88,11 +124,96 @@ export class VehicleService {
       params.push(filters.sellerType);
     }
 
+    // Payment filters: support filtering by monthly payment range. If a downPayment override
+    // is supplied in filters.downPayment, use it; otherwise use per-vehicle down_payment column.
+    if (filters.paymentMin !== undefined || filters.paymentMax !== undefined) {
+      const minProvided =
+        filters.paymentMin !== undefined &&
+        filters.paymentMin !== null &&
+        filters.paymentMin !== "";
+      const maxProvided =
+        filters.paymentMax !== undefined &&
+        filters.paymentMax !== null &&
+        filters.paymentMax !== "";
+      const downProvided =
+        (filters as any).downPayment !== undefined &&
+        (filters as any).downPayment !== null &&
+        (filters as any).downPayment !== "";
+
+      // Build monthly payment expression
+      // Use parameter placeholder for provided down payment, otherwise use down_payment column
+      const downExpr = downProvided ? "?" : "down_payment";
+      // If interest_rate is 0, monthly = (price - down) / loan_term
+      const monthlyExpr = `(
+        CASE
+          WHEN interest_rate = 0 THEN ((price - ${downExpr}) / NULLIF(loan_term,0))
+          ELSE (((price - ${downExpr}) * (interest_rate/100/12)) / (1 - POW(1 + (interest_rate/100/12), -loan_term)))
+        END
+      )`;
+
+      if (minProvided) {
+        // If down payment param provided we need to push it before min value for this condition
+        if (downProvided) params.push(Number((filters as any).downPayment));
+        whereConditions.push(`${monthlyExpr} >= ?`);
+        params.push(Number(filters.paymentMin));
+      }
+      if (maxProvided) {
+        if (downProvided) params.push(Number((filters as any).downPayment));
+        whereConditions.push(`${monthlyExpr} <= ?`);
+        params.push(Number(filters.paymentMax));
+      }
+    }
+
     // Base query parts
+    // Enforce exclusion of vehicles with blank/uncategorized body_style and restrict to allowed list
+    // Allowed list is populated from server/config/allowedBodyStyles.ts
+    // Allowed list is imported at module top
+    let allowedListSql = "";
+    try {
+      const clauses: string[] = [];
+      for (const s of ALLOWED_BODY_STYLES) {
+        const key = String(s).toLowerCase();
+        if (key === "truck") {
+          clauses.push(
+            "(LOWER(TRIM(body_style)) LIKE '%truck%' OR LOWER(TRIM(body_style)) LIKE '%cab%' OR LOWER(TRIM(body_style)) LIKE '%pickup%')",
+          );
+        } else if (key === "suv") {
+          clauses.push(
+            "(LOWER(TRIM(body_style)) LIKE '%suv%' OR LOWER(TRIM(body_style)) LIKE '%crossover%')",
+          );
+        } else if (key === "van") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%van%'");
+        } else if (key === "sedan") {
+          clauses.push(
+            "(LOWER(TRIM(body_style)) LIKE '%sedan%' OR LOWER(TRIM(body_style)) LIKE '%saloon%')",
+          );
+        } else if (key === "coupe") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%coupe%'");
+        } else if (key === "hatchback") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%hatchback%'");
+        } else if (key === "wagon") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%wagon%'");
+        } else if (key === "convertible") {
+          clauses.push("LOWER(TRIM(body_style)) LIKE '%convertible%'");
+        } else {
+          clauses.push(
+            `LOWER(TRIM(body_style)) = '${key.replace(/'/g, "''")}'`,
+          );
+        }
+      }
+      if (clauses.length > 0) {
+        allowedListSql = `AND (${clauses.join(" OR ")})`;
+      }
+    } catch (e) {
+      allowedListSql = "";
+    }
+
+    const baseBodyFilter = `body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized' ${allowedListSql}`;
+
     const whereClause =
       whereConditions.length > 0
-        ? `WHERE ${whereConditions.join(" AND ")}`
-        : "";
+        ? `WHERE ${baseBodyFilter} AND ${whereConditions.join(" AND ")}`
+        : `WHERE ${baseBodyFilter}`;
     const sortBy = pagination.sortBy || "id";
     const sortOrder = pagination.sortOrder || "DESC";
     const offset = (pagination.page - 1) * pagination.pageSize;
@@ -113,12 +234,28 @@ export class VehicleService {
       ${whereClause}
     `;
 
-    return {
+    const result = {
       sql: sql.trim(),
       params: [...params, pagination.pageSize, offset],
       countSql: countSql.trim(),
       countParams: params,
     };
+
+    // Debug: log query when payment filters are present to help troubleshooting
+    if (
+      (filters as any).paymentMin !== undefined ||
+      (filters as any).paymentMax !== undefined
+    ) {
+      console.log("[VehicleService.buildQuery] SQL:", result.sql);
+      console.log("[VehicleService.buildQuery] params:", result.params);
+      console.log("[VehicleService.buildQuery] countSql:", result.countSql);
+      console.log(
+        "[VehicleService.buildQuery] countParams:",
+        result.countParams,
+      );
+    }
+
+    return result;
   }
 
   /**
@@ -213,29 +350,38 @@ export class VehicleService {
     sellerTypes: string[];
   }> {
     try {
+      // Use allowed list when computing filter options (ALLOWED_BODY_STYLES is imported at module top)
+      const allowedVals = ALLOWED_BODY_STYLES.map((s) =>
+        s.replace(/'/g, "''"),
+      ).map((s) => s.toLowerCase());
+      const allowedClause =
+        allowedVals.length > 0
+          ? `AND LOWER(TRIM(body_style)) IN (${allowedVals.map((v) => `'${v}'`).join(",")})`
+          : "";
+      const baseWhere = `WHERE body_style IS NOT NULL AND TRIM(body_style) <> '' AND LOWER(TRIM(body_style)) <> 'uncategorized' ${allowedClause}`;
       const [makesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT make FROM vehicles ORDER BY make",
+        `SELECT DISTINCT make FROM vehicles ${baseWhere} ORDER BY make`,
       );
       const [modelsResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT model FROM vehicles ORDER BY model",
+        `SELECT DISTINCT model FROM vehicles ${baseWhere} ORDER BY model`,
       );
       const [conditionsResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT condition FROM vehicles ORDER BY condition",
+        `SELECT DISTINCT condition FROM vehicles ${baseWhere} ORDER BY condition`,
       );
       const [fuelTypesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT fuel_type FROM vehicles ORDER BY fuel_type",
+        `SELECT DISTINCT fuel_type FROM vehicles ${baseWhere} ORDER BY fuel_type`,
       );
       const [transmissionsResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT transmission FROM vehicles ORDER BY transmission",
+        `SELECT DISTINCT transmission FROM vehicles ${baseWhere} ORDER BY transmission`,
       );
       const [drivetrainsResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT drivetrain FROM vehicles ORDER BY drivetrain",
+        `SELECT DISTINCT drivetrain FROM vehicles ${baseWhere} ORDER BY drivetrain`,
       );
       const [bodyStylesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT body_style FROM vehicles ORDER BY body_style",
+        `SELECT DISTINCT body_style FROM vehicles ${baseWhere} ORDER BY body_style`,
       );
       const [sellerTypesResult] = await this.db.execute<RowDataPacket[]>(
-        "SELECT DISTINCT seller_type FROM vehicles ORDER BY seller_type",
+        `SELECT DISTINCT seller_type FROM vehicles ${baseWhere} ORDER BY seller_type`,
       );
 
       return {

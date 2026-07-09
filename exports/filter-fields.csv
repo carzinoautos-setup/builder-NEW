@@ -1,0 +1,33 @@
+Client Field,API Param,Type,Description / Notes,Source (DB column / ACF key)
+condition,condition,string[],"Vehicle condition (New/Used/Certified)",vehicle.condition / ACF
+make,make,string[],"Vehicle make (brand)",vehicle.make / ACF (make)
+model,model,string[],"Vehicle model",vehicle.model / ACF (model)
+trim,trim,string[],"Trim level",vehicle.trim / ACF (trim)
+year,year,string[],"Year (single value used in URL)",vehicle.year / ACF (year)
+bodyStyle,body_style,string[],"Body style (sedan, suv, etc.)",vehicle.body_style / ACF
+vehicleType,body_style,string[],"Alias for bodyStyle (UI grouping)",vehicle.body_style / ACF
+driveType,drivetrain,string[],"Drivetrain (FWD/RWD/AWD)",vehicle.drivetrain / ACF
+transmission,transmission,string[],"Transmission (Automatic/Manual)",vehicle.transmission / ACF
+transmissionSpeed,transmission_speed,string[],"Transmission speed / type (e.g., 6-speed)",vehicle.transmission_speed / ACF
+mileage,max_mileage,string/number,"Max mileage filter (UI value maps to max_mileage param)",vehicle.mileage / ACF
+exteriorColor,exterior_color,string[],"Exterior color normalized",vehicle.exterior_color / ACF
+interiorColor,interior_color,string[],"Interior color normalized",vehicle.interior_color / ACF
+sellerType,account_type_seller,string[],"Seller type (Dealer/Private)",sellers.account_type / ACF (account_type_seller)
+dealer,account_name_seller,string[],"Dealer / seller name",sellers.account_name / ACF (account_name_seller)
+state,state_seller,string[],"Seller state (for location filters)",sellers.state / ACF (state_seller)
+city,city_seller,string[],"Seller city",sellers.city / ACF (city_seller)
+priceMin,min_price,string/number,"Minimum price filter",vehicle.price / ACF
+priceMax,max_price,string/number,"Maximum price filter",vehicle.price / ACF
+paymentMin,payment_min,string/number,"Minimum monthly payment (UI filter)",derived/payment fields (payment_min)
+paymentMax,payment_max,string/number,"Maximum monthly payment (UI filter)",derived/payment fields (payment_max)
+fuelType,fuel_type,string[],"Fuel type (Gas/Diesel/Electric)",vehicle.fuel_type / ACF
+certified,certified,string[],"Certified vehicles flag (true/false)",vehicle.certified / ACF
+doors,doors,string[],"Number of doors",vehicle.doors / ACF
+highwayMpg,highway_mpg,string[] or range,"Highway MPG filter (supports range)",vehicle.highway_mpg / ACF
+titleStatus,title_status,string[],"Title status (Clean/Salvage/etc.)",vehicle.title_status / ACF
+status,status,string[],"Vehicle availability/status",vehicle.status / ACF
+engineCylinders,engine_cylinders,string[],"Engine cylinder count",vehicle.engine_cylinders / ACF
+displacementLiters,displacement_liters,string[],"Engine displacement (liters)",vehicle.displacement_liters / ACF
+account_number_seller,account_number_seller,string,"Hidden relationship field linking seller account (not shown in UI)",sellers.account_number / ACF
+zip/location,lat_lng_radius,geo params,"Used for location-radius search (ZIP → lat/lng via /api/geocode/:zip)",derived via /api/geocode and seller/vehicle lat/lng
+unifiedSearch/search,search,string,"Full text search (client-side param maps to search query param)",N/A

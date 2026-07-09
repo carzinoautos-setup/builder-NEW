@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Gauge, Settings, ChevronDown, Heart, Check } from "lucide-react";
+import { fetchWithRetry } from "@/lib/fetchWithRetry";
 
 interface Vehicle {
   id: number;
@@ -28,7 +29,6 @@ interface VehicleCardProps {
   favorites: { [key: number]: Vehicle };
   onToggleFavorite: (vehicle: Vehicle) => void;
   keeperMessage: number | null;
-  // Payment calculation parameters
   termLength?: string;
   interestRate?: string;
   downPayment?: string;
@@ -43,61 +43,295 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   interestRate = "5",
   downPayment = "2000",
 }) => {
+  const parseFormattedPrice = (priceStr?: string | null): number | null => {
+    if (!priceStr) return null;
+    const num = parseFloat(String(priceStr).replace(/[^0-9.-]+/g, ""));
+    if (isNaN(num)) return null;
+    return num;
+  };
+
+  const hasValidSalePrice = (): boolean => {
+    const n = parseFormattedPrice(vehicle.salePrice);
+    return n !== null && n > 0;
+  };
+
   const isFavorited = (vehicleId: number) => !!favorites[vehicleId];
 
-  // Calculate monthly payment based on sale price and loan terms
-  const calculateMonthlyPayment = (
-    salePrice: string,
-    termMonths: string,
-    apr: string,
-    down: string,
-  ): string => {
-    // Parse sale price - remove $ and commas
-    const price = parseFloat(salePrice.replace(/[$,]/g, ""));
-    const downAmt = parseFloat(down) || 0;
-    const principal = price - downAmt;
-    const months = parseInt(termMonths) || 60;
-    const rate = parseFloat(apr) / 100 / 12; // Convert APR to monthly rate
+  // Compute monthly payment using explicit numeric inputs. aprDecimal expects a decimal (e.g. 0.055 for 5.5%)
+  const computeMonthlyFromNumbers = (
+    priceNum: number,
+    downNum: number,
+    aprDecimal: number,
+    termMonths: number,
+  ) => {
+    const principal = Math.max(0, priceNum - downNum);
+    const months = termMonths && termMonths > 0 ? termMonths : 60;
+    const monthlyRate = aprDecimal / 12; // aprDecimal already in decimal form
 
-    if (isNaN(price) || price <= 0 || principal <= 0) {
-      return vehicle.payment || "Call for Price";
+    if (principal <= 0 || months <= 0) return null;
+
+    if (!monthlyRate || monthlyRate === 0) {
+      return Math.round(principal / months);
     }
 
-    if (rate === 0) {
-      // 0% APR - simple division
-      const payment = principal / months;
-      return `$${Math.round(payment).toLocaleString()}`;
-    }
-
-    // Standard loan payment formula
-    const payment =
-      (principal * rate * Math.pow(1 + rate, months)) /
-      (Math.pow(1 + rate, months) - 1);
-    return `$${Math.round(payment).toLocaleString()}`;
+    const denom = 1 - Math.pow(1 + monthlyRate, -months);
+    if (denom === 0) return Math.round(principal / months);
+    const monthly = (principal * monthlyRate) / denom;
+    return Math.round(monthly);
   };
 
-  // Get the payment to display - either calculated or original
   const getDisplayPayment = (): string => {
-    if (
-      vehicle.salePrice &&
-      (termLength !== "60" || interestRate !== "5" || downPayment !== "2000")
-    ) {
-      // Recalculate if any payment parameters have changed from defaults
-      return calculateMonthlyPayment(
-        vehicle.salePrice,
-        termLength,
-        interestRate,
-        downPayment,
-      );
+    // Prefer ACF-backed per-vehicle values when available, and respect user-entered down payment (prop `downPayment`).
+    const salePriceNum = parseFormattedPrice(vehicle.salePrice) || null;
+    const userDown = downPayment
+      ? Number(String(downPayment).replace(/[^0-9.-]/g, ""))
+      : 0;
+
+    // Determine APR and term from vehicle ACF fields when present
+    const vehAprRaw = Number((vehicle as any).interest_rate ?? NaN);
+    const vehTerm = Number((vehicle as any).loan_term ?? NaN);
+
+    // Normalize APR to decimal (if stored as percent like 5 => 0.05)
+    let aprDecimal = NaN;
+    if (!isNaN(vehAprRaw)) {
+      aprDecimal = vehAprRaw > 1 ? vehAprRaw / 100 : vehAprRaw;
     }
-    return vehicle.payment || "Call for Price";
+
+    // If user provided a down payment value, recalculate instantly on client
+    if (salePriceNum !== null && userDown !== null && !isNaN(userDown)) {
+      const aprToUse = !isNaN(aprDecimal)
+        ? aprDecimal
+        : Number(interestRate) / 100;
+      const termToUse =
+        !isNaN(vehTerm) && vehTerm > 0 ? vehTerm : parseInt(termLength) || 60;
+      const monthlyNum = computeMonthlyFromNumbers(
+        salePriceNum,
+        userDown,
+        aprToUse,
+        termToUse,
+      );
+      if (monthlyNum !== null && !isNaN(monthlyNum)) {
+        return `$${monthlyNum.toLocaleString()}`;
+      }
+    }
+
+    // Default case: prefer per-vehicle ACF payment_min as the display 'from $X/mo'
+    const vehPaymentMin =
+      (vehicle as any).payment_min ?? (vehicle as any).payments ?? null;
+    if (
+      vehPaymentMin !== null &&
+      vehPaymentMin !== undefined &&
+      Number(vehPaymentMin) > 0
+    ) {
+      return `from $${Math.round(Number(vehPaymentMin)).toLocaleString()}`;
+    }
+
+    // Fallback: use vehicle.payment string if provided
+    if ((vehicle as any).payment) return (vehicle as any).payment;
+
+    return "Call for Price";
   };
+
+  const getMediumImage = (url?: string) => {
+    if (!url)
+      return (
+        import.meta.env.VITE_PLACEHOLDER_IMAGE ||
+        "/assets/fallback-image-450.webp" ||
+        "/placeholder.svg"
+      );
+
+    try {
+      const u = new URL(url);
+      if (
+        u.searchParams.has("w") ||
+        u.searchParams.has("width") ||
+        u.searchParams.has("h") ||
+        u.searchParams.has("height")
+      ) {
+        if (u.searchParams.has("w")) u.searchParams.set("w", "450");
+        if (u.searchParams.has("width")) u.searchParams.set("width", "450");
+        if (u.searchParams.has("h")) u.searchParams.set("h", "300");
+        if (u.searchParams.has("height")) u.searchParams.set("height", "300");
+        return u.toString();
+      }
+
+      if (
+        u.hostname.includes("images.unsplash.com") ||
+        u.hostname.includes("cdn.")
+      ) {
+        const s =
+          u.origin + u.pathname + `?w=450&h=300&fit=crop&auto=format&q=80`;
+        return s;
+      }
+
+      const pathname = u.pathname;
+      const lastDot = pathname.lastIndexOf(".");
+      if (lastDot > 0) {
+        const prefix = pathname.substring(0, lastDot);
+        const ext = pathname.substring(lastDot);
+        const sized = `${prefix}-450x300${ext}`;
+        return u.origin + sized;
+      }
+
+      return url;
+    } catch (e) {
+      if (url.includes("?")) {
+        return url + "&w=450&h=300";
+      }
+      const dot = url.lastIndexOf(".");
+      if (dot > 0) {
+        return url.substring(0, dot) + "-450x300" + url.substring(dot);
+      }
+      return url;
+    }
+  };
+
+  const sanitize = (v: any) => {
+    if (v === undefined || v === null) return "";
+    const s = String(v).trim();
+    if (/^unknown$/i.test(s)) return "";
+    return s;
+  };
+
+  const citySellerRaw = sanitize(
+    (vehicle as any).city_seller || (vehicle as any).city || "",
+  );
+  const stateSellerRaw = sanitize(
+    (vehicle as any).state_seller || (vehicle as any).state || "",
+  );
+  const fallbackLocation = sanitize(vehicle.location || "");
+
+  const [sellerInfo, setSellerInfo] = React.useState<any>(null);
+  const [sellerFetchFailed, setSellerFetchFailed] = React.useState(false);
+  const accountTypeField = sanitize(
+    (vehicle as any).account_type_seller || (vehicle as any).seller_type || "",
+  );
+
+  React.useEffect(() => {
+    // If the parent already provided sellerInfo (batch), use it and skip per-card fetch
+    if ((vehicle as any).sellerInfo) {
+      setSellerInfo((vehicle as any).sellerInfo);
+      return;
+    }
+
+    let mounted = true;
+    // Accept either naming convention for the account number
+    const acct =
+      (vehicle as any).seller_account_number ||
+      (vehicle as any).account_number_seller ||
+      (vehicle as any).account_number ||
+      null;
+    if (!acct) return;
+    if (sellerFetchFailed) return; // avoid retrying repeatedly if it already failed
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      try {
+        controller.abort();
+      } catch (err) {
+        /* ignore */
+      }
+    }, 5000);
+
+    (async () => {
+      try {
+        const url = `${window.location.origin}/api/sellers/${encodeURIComponent(acct)}`;
+        const resp = await fetchWithRetry(
+          url,
+          { signal: controller.signal },
+          0,
+          5000,
+        );
+        if (!resp) {
+          setSellerFetchFailed(true);
+          return;
+        }
+        if (!resp.ok) {
+          // mark failed to avoid repeated retries and log the status
+          setSellerFetchFailed(true);
+          try {
+            const text = await resp.text().catch(() => "");
+            console.warn(
+              `VehicleCard: seller fetch failed status=${resp.status} body=${text}`,
+            );
+          } catch (e) {
+            // ignore
+          }
+          return;
+        }
+        // If the request was aborted before json parsing, avoid parsing
+        if (controller.signal.aborted) return;
+        const json = await resp.json().catch(() => null);
+        if (mounted && json && json.success && json.data) {
+          setSellerInfo(json.data);
+        }
+      } catch (e: any) {
+        // Ignore AbortError silently, log others and mark failure to avoid retry storm
+        if (e && e.name === "AbortError") {
+          // request was aborted (timeout or unmount) - no-op
+        } else {
+          console.warn("VehicleCard: seller fetch error:", e);
+          setSellerFetchFailed(true);
+        }
+      } finally {
+        clearTimeout(timeout);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeout);
+      try {
+        if (!controller.signal.aborted) controller.abort();
+      } catch (err) {
+        /* ignore */
+      }
+    };
+  }, [
+    (vehicle as any).seller_account_number,
+    (vehicle as any).account_number_seller,
+    (vehicle as any).account_number,
+    sellerFetchFailed,
+    (vehicle as any).sellerInfo,
+  ]);
+
+  // Determine displayed city/state preferring sellerInfo (sanitize 'Unknown')
+  const displayedCity = sanitize(
+    (sellerInfo && (sellerInfo.city || sellerInfo.city_seller)) ||
+      citySellerRaw,
+  );
+  const displayedState = sanitize(
+    (sellerInfo && (sellerInfo.state || sellerInfo.state_seller)) ||
+      stateSellerRaw,
+  );
+  const locationDisplay =
+    displayedCity || displayedState
+      ? `${displayedCity}${displayedCity && displayedState ? ", " : ""}${displayedState}`
+      : fallbackLocation || "";
+
+  // Final account type to display: prefer sellerInfo, then vehicle custom field, then seller_type
+  const accountTypeSeller = sanitize(
+    (sellerInfo &&
+      (sellerInfo.accountType ||
+        sellerInfo.type ||
+        sellerInfo.account_type_seller)) ||
+      accountTypeField ||
+      (vehicle as any).seller_type ||
+      "",
+  );
+
+  // Ensure the relationship key is exposed in an accessible but hidden element for Builder binding
+  const acctNumberValue =
+    (vehicle as any).seller_account_number ||
+    (vehicle as any).account_number_seller ||
+    (vehicle as any).account_number ||
+    "";
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg lg:rounded-xl overflow-hidden hover:shadow-lg transition-shadow vehicle-card flex flex-col h-full">
       <div className="relative">
         <img
-          src={vehicle.images ? vehicle.images[0] : ""}
+          src={getMediumImage(vehicle.images ? vehicle.images[0] : "")}
           alt={vehicle.title}
           className="w-full object-cover"
           style={{ height: "200px" }}
@@ -152,7 +386,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             />
             {keeperMessage === vehicle.id && (
               <span className="text-xs text-gray-600 ml-1 animate-pulse">
-                That's a Keeper!
+                It's a Keeper!
               </span>
             )}
           </div>
@@ -196,7 +430,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               />
             )}
             <span className="text-black font-medium">
-              {vehicle.transmission}
+              {(() => {
+                const t = (vehicle.transmission || "").toString().trim();
+                if (!t) return "";
+                if (/^auto(matic)?$/i.test(t)) return "Auto";
+                return t;
+              })()}
             </span>
           </div>
           <div className="flex items-center gap-1">
@@ -222,39 +461,54 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         </div>
 
         <div className="flex justify-center items-start gap-6 mb-1 flex-1">
-          {vehicle.salePrice ? (
+          {hasValidSalePrice() ? (
             <>
               <div className="text-center">
-                <div className="carzino-price-label text-gray-500 mb-0">
+                <div
+                  className="carzino-price-label text-gray-500 mb-0"
+                  style={{ fontSize: "12px" }}
+                >
                   Sale Price
                 </div>
-                <div className="carzino-price-value text-gray-900">
+                <div
+                  className="carzino-price-value text-gray-900"
+                  style={{ fontSize: "12px" }}
+                >
                   {vehicle.salePrice}
                 </div>
               </div>
-              {vehicle.payment && (
-                <>
-                  <div className="w-px h-12 bg-gray-200"></div>
-                  <div className="text-center">
-                    <div className="carzino-price-label text-gray-500 mb-0">
-                      Payments
-                    </div>
-                    <div className="carzino-price-value text-red-600">
-                      {getDisplayPayment()}
-                      <span className="text-xs text-black font-normal">
-                        /mo*
-                      </span>
-                    </div>
+
+              <>
+                <div className="w-px h-12 bg-gray-200"></div>
+                <div className="text-center">
+                  <div
+                    className="carzino-price-label text-gray-500 mb-0"
+                    style={{ fontSize: "12px" }}
+                  >
+                    Payments
                   </div>
-                </>
-              )}
+                  <div
+                    className="carzino-price-value text-red-600"
+                    style={{ fontSize: "12px" }}
+                  >
+                    {getDisplayPayment()}
+                    <span className="text-xs text-black font-normal">/mo*</span>
+                  </div>
+                </div>
+              </>
             </>
           ) : (
             <div className="text-center">
-              <div className="carzino-price-label text-gray-500 mb-0">
+              <div
+                className="carzino-price-label text-gray-500 mb-0"
+                style={{ fontSize: "12px" }}
+              >
                 No Sale Price Listed
               </div>
-              <div className="carzino-price-value text-gray-900">
+              <div
+                className="carzino-price-value text-gray-900"
+                style={{ fontSize: "12px" }}
+              >
                 Call for Price
               </div>
             </div>
@@ -264,27 +518,88 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
       <div
         className="border-t border-gray-100 px-3 py-2 mt-auto"
-        style={{ backgroundColor: "#f9fafb" }}
+        style={{ backgroundColor: "#f9fafb", fontSize: "12px" }}
       >
-        <div className="flex justify-between items-start">
-          <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            {/* Left: City, State (city_seller, state_seller) */}
+            <input
+              readOnly
+              value={locationDisplay}
+              title={locationDisplay}
+              className="flex-1 min-w-0 bg-transparent rounded-md px-2 text-sm text-gray-900 truncate"
+              style={{
+                minWidth: 0,
+                backgroundColor: "transparent",
+                border: "none",
+                fontSize: "12px",
+                lineHeight: "12px",
+                padding: "0 8px",
+              }}
+            />
+
+            {/* Hidden relationship field (not shown to users) - kept for binding */}
+            <input
+              type="hidden"
+              value={acctNumberValue}
+              data-seller-account-hidden
+            />
+          </div>
+
+          <div className="flex-shrink-0 text-right">
             <div
-              className="text-black font-medium truncate"
-              style={{ fontSize: "12px" }}
+              className="text-gray-900"
+              style={{
+                fontSize: "12px",
+                lineHeight: "12px",
+                fontWeight: "400",
+                color: "rgb(17, 24, 39)",
+                minWidth: 80,
+                textAlign: "right",
+              }}
             >
-              {vehicle.location}
+              {accountTypeSeller || vehicle.seller_type}
             </div>
           </div>
-          <div className="text-right flex-shrink-0">
-            <div
-              className="text-black hover:text-gray-600 cursor-pointer"
-              style={{ fontSize: "12px", fontWeight: 500 }}
-            >
-              {vehicle.seller_type}
-            </div>
-          </div>
+        </div>
+
+        {/* Full-width hidden binding row for account number (kept visually hidden but present for Builder bindings) */}
+        <div className="sr-only mt-1" aria-hidden>
+          <span data-account-number-hidden>{acctNumberValue}</span>
         </div>
       </div>
     </div>
   );
 };
+
+export function VehicleCardSkeleton({
+  className = "",
+}: {
+  className?: string;
+}) {
+  return (
+    <div
+      className={`bg-white border border-gray-200 rounded-lg overflow-hidden animate-pulse ${className}`}
+    >
+      <div className="aspect-[4/3] bg-gray-200"></div>
+      <div className="p-4">
+        <div className="h-6 bg-gray-200 rounded mb-2"></div>
+        <div className="h-4 bg-gray-200 rounded mb-3 w-3/4"></div>
+        <div className="space-y-2 mb-3">
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded"></div>
+        </div>
+        <div className="h-4 bg-gray-200 rounded mb-3 w-1/2"></div>
+        <div className="border-t pt-3">
+          <div className="h-8 bg-gray-200 rounded mb-2 w-1/3"></div>
+          <div className="h-4 bg-gray-200 rounded mb-4"></div>
+          <div className="flex gap-2">
+            <div className="flex-1 h-10 bg-gray-200 rounded"></div>
+            <div className="h-10 w-20 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
